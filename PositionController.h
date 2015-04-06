@@ -7,7 +7,7 @@
 
 //objects that other classes can use to keep track of their positions and velocities
 //this object is used to that all other objects have a reusable interface when colliding with tiles
-
+///VELOCITY DATA GIVEN TO THIS OBJECT NEEDS TO BE IN METERS PER SECOND
 class PositionController {
 
     public:

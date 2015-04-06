@@ -11,7 +11,7 @@ Player::Player(const PlayerKeys& keyConfiguration):
     holdingJump(false),
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(220)),
-    positionController(glm::vec2(50, 50), glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(1, 0), glm::vec2(0, 1)),
+    positionController(glm::vec2(64, 64), glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(1, 0), glm::vec2(0, 1)),
     player(sf::Vector2f(100, 50)),
     controls(keyConfiguration)
     {
@@ -79,7 +79,7 @@ void Player::draw(sf::RenderWindow& window) {
 
 void Player::jump() {
 
-    if(canJump) {
+    if(checkCanJump()) {
 
         extraJumpTimer.restart();
         positionController.setVelocities(positionController.getVelocitiesObjectSpace().x, -MOVEMENT_VELOCITY.y);

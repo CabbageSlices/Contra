@@ -79,7 +79,7 @@ void PositionController::updateVelocities(const float& delta) {
 
 bool PositionController::moveAlongXAxis(const float& delta, const sf::FloatRect& worldBounds) {
 
-    float xOffset = velocitiesObjectSpace.x * METERS_TO_PIXEL_RATIO* delta;
+    float xOffset = velocitiesObjectSpace.x * METERS_TO_PIXEL_RATIO * delta;
     object.move(glm::vec2(xOffset, 0));
 
     //calculate the bounds of the world in object space and do bounds checking in object space

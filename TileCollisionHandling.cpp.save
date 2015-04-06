@@ -36,6 +36,11 @@ bool handleCollisionVertical(Tile& tile, PositionObject& object) {
             return handleSolidTileCollisionVertical(tile, object);
         }
 
+        case TileType::ONE_WAY: {
+
+            return handleOneWayTileCollisionVertically(tile, object);
+        }
+
         default:
             return false;
     }
@@ -61,13 +66,9 @@ void handleSolidTileCollisionHorizontal(Tile& tile, PositionObject& object) {
     glm::vec2 objPosObjectSpace = objectSpace.getPositionObjectSpace();
     glm::vec2 objSizeObjectSpace = objectSpace.getSizeObjectSpace();
 
-    float tileLeft = tilePosObjectSpace.x;
-    float tileRight = tilePosObjectSpace.x + tileSizeObjectSpace.x;
+    float tileLeft = glm::min(tilePosObjectSpace.x, tilePosObjectSpace.x + tileSizeObjectSpace.x);
+    float tileRight = glm::max(tilePosObjectSpace.x, tilePosObjectSpace.x + tileSizeObjectSpace.x);
 
-    tileLeft = glm::min(tileLeft, tileRight);
-    tileRight = glm::max(tileLeft, tileRight);
-
-    cout << tileL << "  ";
     if(objPosObjectSpace.x < tileLeft) {
 
         object.setPositionObjectSpace(glm::vec2(tileLeft - objSizeObjectSpace.x, objPosObjectSpace.y));
@@ -97,11 +98,8 @@ bool handleSolidTileCollisionVertical(Tile& tile, PositionObject& object) {
     glm::vec2 objPosObjectSpace = objectSpace.getPositionObjectSpace();
     glm::vec2 objSizeObjectSpace = objectSpace.getSizeObjectSpace();
 
-    float tileTop = tilePosObjectSpace.y;
-    float tileBottom = tilePosObjectSpace.y + tileSizeObjectSpace.y;
-
-    tileTop = glm::min(tileTop, tileBottom);
-    tileBottom = glm::max(tileTop, tileBottom);
+    float tileTop = glm::min(tilePosObjectSpace.y, tilePosObjectSpace.y + tileSizeObjectSpace.y);
+    float tileBottom = glm::max(tilePosObjectSpace.y, tilePosObjectSpace.y + tileSizeObjectSpace.y);
 
     object.setVelocities(object.getVelocitiesObjectSpace().x, 0);
 
@@ -113,6 +111,51 @@ bool handleSolidTileCollisionVertical(Tile& tile, PositionObject& object) {
     } else {
 
         object.setPositionObjectSpace(glm::vec2(objPosObjectSpace.x, tileBottom));
+    }
+
+    return false;
+}
+
+bool handleOneWayTileCollisionVertically(Tile& tile, PositionObject& object) {
+
+    sf::FloatRect tileBoundingBox = tile.getBoundingBox();
+
+    if(!object.getBoundingBoxObjectSpace().intersects(object.getObjectSpace().convertToObjectSpace(tileBoundingBox)  )) {
+
+        return false;
+    }
+
+    const ObjectSpaceManager &objectSpace = object.getObjectSpace();
+
+    //handle collision in the objects space because tile could have different top in object space
+    glm::vec2 tilePosObjectSpace = objectSpace.convertToObjectSpace(glm::vec2(tileBoundingBox.left, tileBoundingBox.top));
+    glm::vec2 tileSizeObjectSpace = objectSpace.convertToObjectSpace(glm::vec2(tileBoundingBox.width, tileBoundingBox.height));
+
+    glm::vec2 objPosObjectSpace = objectSpace.getPositionObjectSpace();
+    glm::vec2 objSizeObjectSpace = objectSpace.getSizeObjectSpace();
+
+    float tileTop = glm::min(tilePosObjectSpace.y, tilePosObjectSpace.y + tileSizeObjectSpace.y);
+    float tileBottom = glm::max(tilePosObjectSpace.y, tilePosObjectSpace.y + tileSizeObjectSpace.y);
+
+    float vel = object.getVelocitiesObjectSpace().y;
+    float delta = object.getLastDelta();
+    
+    float previousPosition = objPosObjectSpace.y + objSizeObjectSpace.y - object.getVelocitiesObjectSpace().y * object.getLastDelta();
+
+    //one way tiles only collide if object jumps on top of the tile
+    if(previousPosition > tileTop) {
+
+        //object jumped from underneath the tile so don't collide
+        return false;
+    }
+
+    object.setVelocities(object.getVelocitiesObjectSpace().x, 0);
+
+    if(objPosObjectSpace.y < tileTop) {
+
+        object.setPositionObjectSpace(glm::vec2(objPosObjectSpace.x, tileTop - objSizeObjectSpace.y));
+        return true;
+
     }
 
     return false;

@@ -40,19 +40,19 @@
 
 1427852681 c:\users\nimesh\documents\github\contra\globalconstants.h
 
-1428296716 source:c:\users\nimesh\documents\github\contra\main.cpp
+1428345268 source:c:\users\nimesh\documents\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
 	"Tile.h"
 
-1428293485 c:\users\nimesh\documents\github\contra\player.h
+1428344888 c:\users\nimesh\documents\github\contra\player.h
 	"SFML/Graphics.hpp"
 	"GlobalConstants.h"
 	"PositionController.h"
 	"Tile.h"
 
-1428295726 c:\users\nimesh\documents\github\contra\positioncontroller.h
+1428344719 c:\users\nimesh\documents\github\contra\positioncontroller.h
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
 	"ObjectSpaceManager.h"
@@ -61,15 +61,15 @@
 	<SFML/Graphics.hpp>
 	"glm/glm.hpp"
 
-1428295835 source:c:\users\nimesh\documents\github\contra\objectspacemanager.cpp
+1428344630 source:c:\users\nimesh\documents\github\contra\objectspacemanager.cpp
 	"ObjectSpaceManager.h"
 
-1428296680 source:c:\users\nimesh\documents\github\contra\player.cpp
+1428345205 source:c:\users\nimesh\documents\github\contra\player.cpp
 	"Player.h"
 	"TileCollisionHandling.h"
 	<iostream>
 
-1428295710 source:c:\users\nimesh\documents\github\contra\positioncontroller.cpp
+1428344591 source:c:\users\nimesh\documents\github\contra\positioncontroller.cpp
 	"PositionController.h"
 	"GlobalConstants.h"
 	<glm/glm.hpp>
@@ -83,12 +83,13 @@
 	"glm/glm.hpp"
 	"PositionController.h"
 
-1428296652 source:c:\users\nimesh\documents\github\contra\tilecollisionhandling.cpp
+1428344735 source:c:\users\nimesh\documents\github\contra\tilecollisionhandling.cpp
 	"TileCollisionHandling.h"
 	"ObjectSpaceManager.h"
+	"GlobalConstants.h"
 	<iostream>
 
-1428293656 c:\users\nimesh\documents\github\contra\tilecollisionhandling.h
+1428343998 c:\users\nimesh\documents\github\contra\tilecollisionhandling.h
 	"Tile.h"
 	"PositionController.h"
 

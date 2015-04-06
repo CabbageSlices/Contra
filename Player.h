@@ -34,6 +34,13 @@ class Player {
 
     private:
 
+        bool checkCanJump() {
+
+            //if player is falling it means he isn't standing on top of any object because if he was, his velocity would be 0
+            //therefore he can't jump if his velocity isn't 0
+            return canJump && positionController.getVelocitiesObjectSpace().y == 0;
+        }
+
         bool checkIsJumping() {
 
             //player is jumping if he is moving upwards and he isn't able to jump
