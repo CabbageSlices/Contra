@@ -1,0 +1,73 @@
+# depslib dependency file v1.0
+1427853550 source:c:\users\nimesh\desktop\c++\contra\main.cpp
+	"SFML/System.hpp"
+	"SFML/Graphics.hpp"
+	"Player.h"
+
+1427853710 source:c:\users\nimesh\desktop\c++\contra\globalconstants.cpp
+	"GlobalConstants.h"
+
+1427852681 c:\users\nimesh\desktop\c++\contra\globalconstants.h
+
+1428086436 c:\users\nimesh\desktop\c++\contra\player.h
+	"SFML/Graphics.hpp"
+	"GlobalConstants.h"
+	"PositionController.h"
+
+1428086632 source:c:\users\nimesh\desktop\c++\contra\player.cpp
+	"Player.h"
+
+1428086144 c:\users\nimesh\desktop\c++\contra\positioncontroller.h
+	"SFML/Graphics.hpp"
+	"glm/glm.hpp"
+	"ObjectSpaceManager.h"
+
+1428086072 source:c:\users\nimesh\desktop\c++\contra\positioncontroller.cpp
+	"PositionController.h"
+	"GlobalConstants.h"
+	<glm/glm.hpp>
+	<iostream>
+
+1428086298 c:\users\nimesh\desktop\c++\contra\objectspacemanager.h
+	<SFML/Graphics.hpp>
+	"glm/glm.hpp"
+
+1428086312 source:c:\users\nimesh\desktop\c++\contra\objectspacemanager.cpp
+	"ObjectSpaceManager.h"
+
+1427853710 source:c:\users\nimesh\documents\github\contra\globalconstants.cpp
+	"GlobalConstants.h"
+
+1427852681 c:\users\nimesh\documents\github\contra\globalconstants.h
+
+1427853550 source:c:\users\nimesh\documents\github\contra\main.cpp
+	"SFML/System.hpp"
+	"SFML/Graphics.hpp"
+	"Player.h"
+
+1428086436 c:\users\nimesh\documents\github\contra\player.h
+	"SFML/Graphics.hpp"
+	"GlobalConstants.h"
+	"PositionController.h"
+
+1428086144 c:\users\nimesh\documents\github\contra\positioncontroller.h
+	"SFML/Graphics.hpp"
+	"glm/glm.hpp"
+	"ObjectSpaceManager.h"
+
+1428086298 c:\users\nimesh\documents\github\contra\objectspacemanager.h
+	<SFML/Graphics.hpp>
+	"glm/glm.hpp"
+
+1428086312 source:c:\users\nimesh\documents\github\contra\objectspacemanager.cpp
+	"ObjectSpaceManager.h"
+
+1428086765 source:c:\users\nimesh\documents\github\contra\player.cpp
+	"Player.h"
+
+1428086072 source:c:\users\nimesh\documents\github\contra\positioncontroller.cpp
+	"PositionController.h"
+	"GlobalConstants.h"
+	<glm/glm.hpp>
+	<iostream>
+

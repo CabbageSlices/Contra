@@ -1,0 +1,25 @@
+#ifndef TILEMAP_H_INCLUDED
+#define TILEMAP_H_INCLUDED
+
+#include "SFML/Graphics.hpp"
+#include "SFML/System.hpp"
+
+#include <memory>
+#include <vector>
+
+class TileMap {
+
+    public:
+
+        TileMap();
+
+        //return all the tiles enclosed in the given region
+        //if any part of the region is out of bounds it will only return the tiles that are in boun
+        std::vector<std::shared_ptr<Tile> > getTilesInRegion(const sf::FloatRect& region);
+
+    private:
+
+        std::vector<std::shared_ptr<Tile> > tiles;
+};
+
+#endif // TILEMAP_H_INCLUDED

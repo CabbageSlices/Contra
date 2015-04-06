@@ -1,0 +1,10 @@
+#include "GlobalConstants.h"
+
+const float PI = 3.1415926F;
+const float DEG_TO_RAD_RATIO = PI / 180.f;
+const float RAD_TO_DEG_RATIO = 180.f
+
+const float
+const float
+
+const float
