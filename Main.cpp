@@ -13,7 +13,7 @@ int main() {
 
     sf::Clock timer;
 
-    Tile tile(glm::vec2(0, 704), TileType::ONE_WAY);
+    Tile tile(glm::vec2(960, 128), TileType::UPWARD_LEFT_1_1);
 
     while(window.isOpen()) {
 

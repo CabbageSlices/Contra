@@ -22,6 +22,7 @@ enum TileType {
 };
 
 glm::vec2 getSlopeForTileType(const TileType& type);
+glm::vec2 getInterceptsForTileType(const TileType& type);
 
 class Tile {
 

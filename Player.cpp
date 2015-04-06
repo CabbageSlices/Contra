@@ -11,7 +11,7 @@ Player::Player(const PlayerKeys& keyConfiguration):
     holdingJump(false),
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(220)),
-    positionController(glm::vec2(64, 64), glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(0, 1), glm::vec2(-1, 0)),
+    positionController(glm::vec2(64, 64), glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(0, -1), glm::vec2(1, 0)),
     player(sf::Vector2f(100, 50)),
     controls(keyConfiguration)
     {
@@ -56,7 +56,10 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
 
     positionController.moveAlongXAxis(deltaTime, worldBounds);
 
-    handleCollisionHorizontal(tile, positionController);
+    if(handleCollisionHorizontal(tile, positionController)) {
+
+        canJump = true;
+    }
 
     if(positionController.moveAlongYAxis(deltaTime, worldBounds)) {
 

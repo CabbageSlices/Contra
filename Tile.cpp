@@ -25,6 +25,31 @@ glm::vec2 getSlopeForTileType(const TileType& type) {
     return glm::vec2(1, 0);
 }
 
+glm::vec2 getInterceptsForTileType(const TileType& type) {
+
+    //when getting intercepts the point 0,0 is at top left of the tile
+    //positive x axis goes to right, positive y axis goes down
+    switch(type) {
+
+        case TileType::UPWARD_RIGHT_1_1:
+        case TileType::DOWNWARD_LEFT_1_1: {
+
+            return glm::vec2(TILE_SIZE, TILE_SIZE);
+        }
+
+        case TileType::UPWARD_LEFT_1_1:
+        case TileType::DOWNWARD_RIGHT_1_1: {
+
+            return glm::vec2(0, 0);
+        }
+
+        default:
+            return glm::vec2(0, 0);
+    }
+
+    return glm::vec2(0, 0);
+}
+
 Tile::Tile(const glm::vec2& worldPosition,  const TileType& tileType) :
     type(tileType),
     tile(sf::Vector2f(TILE_SIZE, TILE_SIZE))
