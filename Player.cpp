@@ -6,12 +6,12 @@ using std::cout;
 using std::endl;
 
 Player::Player(const PlayerKeys& keyConfiguration):
-    MOVEMENT_VELOCITY(4.f, 3.8f),
+    MOVEMENT_VELOCITY(4.f, 3.9f),
     canJump(false),
     holdingJump(false),
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(220)),
-    positionController(glm::vec2(64, 64), glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(1, 0), glm::vec2(0, 1)),
+    positionController(glm::vec2(64, 64), glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(0, 1), glm::vec2(-1, 0)),
     player(sf::Vector2f(100, 50)),
     controls(keyConfiguration)
     {

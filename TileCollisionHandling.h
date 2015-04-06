@@ -17,6 +17,5 @@ void handleSolidTileCollisionHorizontal(Tile& tile, PositionObject& object);
 bool handleCollisionVertical(Tile& tile, PositionObject& object);
 
 bool handleSolidTileCollisionVertical(Tile& tile, PositionObject& object);
-bool handleOneWayTileCollisionVertically(Tile& tile, PositionObject& object);
 
 #endif // TILECOLLISIONHANDLING_H_INCLUDED
