@@ -1,4 +1,9 @@
 #include "Player.h"
+#include "TileCollisionHandling.h"
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 Player::Player(const PlayerKeys& keyConfiguration):
     MOVEMENT_VELOCITY(4.f, 3.8f),
@@ -6,7 +11,7 @@ Player::Player(const PlayerKeys& keyConfiguration):
     holdingJump(false),
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(220)),
-    positionController(glm::vec2(50, 100), glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(1, 0), glm::vec2(0, 1)),
+    positionController(glm::vec2(50, 50), glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(1, 0), glm::vec2(0, 1)),
     player(sf::Vector2f(100, 50)),
     controls(keyConfiguration)
     {
@@ -40,7 +45,7 @@ void Player::handleKeystate(sf::RenderWindow& window) {
     holdingJump = sf::Keyboard::isKeyPressed(controls.jump);
 }
 
-void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds) {
+void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Tile& tile) {
 
     //since player velocity only changes in the y direction you can prevent gravity from pulling player down
     //when player is holding jump button and trying ot extend his jump height dont let gravity pull player down
@@ -51,7 +56,15 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds) {
 
     positionController.moveAlongXAxis(deltaTime, worldBounds);
 
+    handleCollisionHorizontal(tile, positionController);
+
     if(positionController.moveAlongYAxis(deltaTime, worldBounds)) {
+
+        canJump = true;
+        positionController.setVelocities(positionController.getVelocitiesObjectSpace().x, 0);
+    }
+
+    if(handleCollisionVertical(tile, positionController)) {
 
         canJump = true;
     }

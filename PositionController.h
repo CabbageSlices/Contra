@@ -19,11 +19,14 @@ class PositionController {
         void setVelocities(const glm::vec2& velocityObjectSpace);
         void setVelocities(const float& xVelocityObjectSpace, const float& yVelocityObjectSpace);
         void setPositionWorldSpace(const glm::vec2& position);
+        void setPositionObjectSpace(const glm::vec2& position);
 
-        const glm::vec2 getVelocitiesObjectSpace();
-        const glm::vec2 getVelocitiesWorldSpace();
-        const sf::FloatRect getBoundingBoxWorldSpace();
-        const float getLastDelta();
+        const glm::vec2 getVelocitiesObjectSpace() const;
+        const glm::vec2 getVelocitiesWorldSpace() const;
+        const sf::FloatRect getBoundingBoxWorldSpace() const;
+        const sf::FloatRect getBoundingBoxObjectSpace() const;
+        const float getLastDelta() const;
+        const ObjectSpaceManager& getObjectSpace() const;
 
         //update velocities applies gravity to the velocities
         void updateVelocities(const float& delta);

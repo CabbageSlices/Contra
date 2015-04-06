@@ -4,6 +4,7 @@
 #include "SFML/Graphics.hpp"
 #include "GlobalConstants.h"
 #include "PositionController.h"
+#include "Tile.h"
 
 struct PlayerKeys {
 
@@ -26,7 +27,7 @@ class Player {
         void handleKeystate(sf::RenderWindow& window);
 
         //time should be in seconds
-        void update(const float& deltaTime, const sf::FloatRect& worldBounds);
+        void update(const float& deltaTime, const sf::FloatRect& worldBounds, Tile& tile);
 
         void draw(sf::RenderWindow& window);
 

@@ -40,6 +40,10 @@
 		<Unit filename="Player.h" />
 		<Unit filename="PositionController.cpp" />
 		<Unit filename="PositionController.h" />
+		<Unit filename="Tile.cpp" />
+		<Unit filename="Tile.h" />
+		<Unit filename="TileCollisionHandling.cpp" />
+		<Unit filename="TileCollisionHandling.h" />
 		<Unit filename="TileMap.h" />
 		<Extensions>
 			<code_completion />

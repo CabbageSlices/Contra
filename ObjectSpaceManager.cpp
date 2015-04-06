@@ -9,12 +9,20 @@ ObjectSpaceManager::ObjectSpaceManager(const glm::vec2& xAxis, const glm::vec2& 
 
     }
 
-glm::vec2 ObjectSpaceManager::convertToObjectSpace(const glm::vec2& worldSpacePosition) {
+glm::vec2 ObjectSpaceManager::convertToObjectSpace(const glm::vec2& worldSpacePosition) const {
 
     return worldToObjectSpace * worldSpacePosition;
 }
 
-glm::vec2 ObjectSpaceManager::convertToWorldSpace(const glm::vec2& worldSpacePosition) {
+sf::FloatRect ObjectSpaceManager::convertToObjectSpace(const sf::FloatRect& rect) const {
+
+    glm::vec2 posObjectSpace = convertToObjectSpace(glm::vec2(rect.left, rect.top));
+    glm::vec2 sizeObjectSpace = convertToObjectSpace(glm::vec2(rect.width, rect.height));
+
+    return sf::FloatRect(posObjectSpace.x, posObjectSpace.y, sizeObjectSpace.x, sizeObjectSpace.y);
+}
+
+glm::vec2 ObjectSpaceManager::convertToWorldSpace(const glm::vec2& worldSpacePosition) const {
 
     return objectToWorldSpace * worldSpacePosition;
 }

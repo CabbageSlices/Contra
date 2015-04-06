@@ -1,20 +1,22 @@
 #include "ObjectSpaceManager.h"
 
-ObjectSpaceManager::ObjectSpaceManager(const glm::vec2& xAxis, const glm::vec2& yAxis, const glm::vec2& sizeInWorldSpace):
-    worldToObjectSpace(xAxis, yAxis),
-    objectToWorldSpace(glm::inverse(worldToObjectSpace)),
+ObjectSpaceManager::ObjectSpaceManager(const glm::vec2& xAxis, const glm::vec2& yAxis, const glm::vec2& sizeObjectSpace):
+    objectToWorldSpace(xAxis, yAxis),
+    worldToObjectSpace(glm::inverse(objectToWorldSpace)),
     positionInObjectSpace(0, 0),
-    sizeInObjectSpace(worldToObjectSpace * sizeInWorldSpace)
+    sizeInObjectSpace(sizeObjectSpace)
     {
 
     }
 
-glm::vec2 ObjectSpaceManager::convertToObjectSpace(const glm::vec2& worldSpacePosition) {
+glm::vec2 ObjectSpaceManager::convertToObjectSpace(const glm::vec2& worldSpacePosition) const {
 
     return worldToObjectSpace * worldSpacePosition;
 }
 
-glm::vec2 ObjectSpaceManager::convertToWorldSpace(const glm::vec2& worldSpacePosition) {
+glm::vec2 ObjectSpaceManager::convertToObjectSpace(const sf::FloatRect& rect) const;
+
+glm::vec2 ObjectSpaceManager::convertToWorldSpace(const glm::vec2& worldSpacePosition) const {
 
     return objectToWorldSpace * worldSpacePosition;
 }

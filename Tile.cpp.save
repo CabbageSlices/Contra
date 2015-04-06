@@ -1,0 +1,19 @@
+#include "Tile.h"
+
+const int TILE_SIZE = 64;
+
+Tile::Tile(const glm::vec2& worldPosition, const glm::vec2& tileSlope, const TileType& tileType) :
+    slope(tileSlope),
+    type(tileType)
+    tile(sf::Vector2f(TILE_SIZE, TILE_SIZE))
+    {
+        ;
+    }
+
+Tile::Tile() :
+    slope(1, 0),
+    type(TileType::EMPTY),
+    tile(sf::Vector2f(TILE_SIZE, TILE_SIZE))
+    {
+
+    }

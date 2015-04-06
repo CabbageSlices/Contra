@@ -1,0 +1,16 @@
+#ifndef TILECOLLISIONHANDLING_H_INCLUDED
+#define TILECOLLISIONHANDLING_H_INCLUDED
+
+#include "Tile.h"
+#include "PositionController.h"
+
+typedef PositionController PositionObject;
+
+//functions that solve collisions between position objects and tiles
+//character movement is broken into horizontal and vertical parts
+//so collision should work seperately as well
+void handleHorizontalCollision(Tile& tile, PositionObject& object);
+
+void handleSolidtileCollision(Tile& tile, PositionObject& object);
+
+#endif // TILECOLLISIONHANDLING_H_INCLUDED

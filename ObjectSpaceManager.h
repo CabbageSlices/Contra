@@ -13,10 +13,11 @@ class ObjectSpaceManager{
         //object's axis in world space, used to transform between spaces
         ObjectSpaceManager(const glm::vec2& xAxis, const glm::vec2& yAxis, const glm::vec2& sizeWorldSpace);
 
-        glm::vec2 convertToObjectSpace(const glm::vec2& worldSpacePosition);
+        glm::vec2 convertToObjectSpace(const glm::vec2& worldSpacePosition) const;
+        sf::FloatRect convertToObjectSpace(const sf::FloatRect& rect) const;
 
         //assumes the given coordinate is in this object's coordinate space
-        glm::vec2 convertToWorldSpace(const glm::vec2& objectSpacePosition);
+        glm::vec2 convertToWorldSpace(const glm::vec2& objectSpacePosition) const;
 
         void setPositionWorldSpace(const glm::vec2& worldPosition);
         void setPositionObjectSpace(const glm::vec2& objectSpacePosition);

@@ -33,24 +33,39 @@ void PositionController::setPositionWorldSpace(const glm::vec2& position) {
     object.setPositionWorldSpace(position);
 }
 
-const glm::vec2 PositionController::getVelocitiesObjectSpace() {
+void PositionController::setPositionObjectSpace(const glm::vec2& position) {
+
+    object.setPositionObjectSpace(position);
+}
+
+const glm::vec2 PositionController::getVelocitiesObjectSpace() const {
 
     return velocitiesObjectSpace;
 }
 
-const glm::vec2 PositionController::getVelocitiesWorldSpace() {
+const glm::vec2 PositionController::getVelocitiesWorldSpace() const {
 
     return object.convertToWorldSpace(velocitiesObjectSpace);
 }
 
-const sf::FloatRect PositionController::getBoundingBoxWorldSpace() {
+const sf::FloatRect PositionController::getBoundingBoxWorldSpace() const {
 
     return object.getBoundingBoxWorldSpace();
 }
 
-const float PositionController::getLastDelta() {
+const sf::FloatRect PositionController::getBoundingBoxObjectSpace() const {
+
+    return object.getBoundingBoxObjectSpace();
+}
+
+const float PositionController::getLastDelta() const {
 
     return previousDeltaTime;
+}
+
+const ObjectSpaceManager& PositionController::getObjectSpace() const {
+
+    return object;
 }
 
 void PositionController::updateVelocities(const float& delta) {

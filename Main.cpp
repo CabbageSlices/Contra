@@ -1,6 +1,7 @@
 #include "SFML/System.hpp"
 #include "SFML/Graphics.hpp"
 #include "Player.h"
+#include "Tile.h"
 
 int main() {
 
@@ -11,6 +12,8 @@ int main() {
     Player player;
 
     sf::Clock timer;
+
+    Tile tile(glm::vec2(128, 640), TileType::SOLID);
 
     while(window.isOpen()) {
 
@@ -28,10 +31,11 @@ int main() {
 
         sf::Time deltaTime = timer.restart();
 
-        player.update(deltaTime.asSeconds(), sf::FloatRect(0, 0, 1024, 768));
+        player.update(deltaTime.asSeconds(), sf::FloatRect(0, 0, 1024, 768), tile);
 
         window.clear();
 
+        tile.drawDebug(window);
         player.draw(window);
         window.display();
     }
