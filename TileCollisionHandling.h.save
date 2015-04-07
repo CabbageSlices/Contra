@@ -18,8 +18,55 @@ bool handleCollisionHorizontal(Tile& tile, PositionObject& object);
 bool handleCollisionVertical(Tile& tile, PositionObject& object);
 
 void handleSolidTileCollisionHorizontal(Tile& tile, PositionObject& object);
-void handleUpSlopeTileCollision(Tile& tile, PositionObject& object);
+bool handleUpSlopeTileCollision(Tile& tile, PositionObject& object);
 
 bool handleSolidTileCollisionVertical(Tile& tile, PositionObject& object);
+
+//checks if the object is in a position and state where a collision with the slope is valid
+//returns true if it is, false otherewise
+bool checkValidSlopeCollision(Tile& tile, PositionObject& object, const glm::vec2& objPositionPreviousFrame, const glm::vec2& objPosInTile) {
+
+    const ObjectSpaceManager& objectSpace = object.getObjectSpace();
+
+    sf::FloatRect tileBoundingBox = tile.getBoundingBox();
+
+    glm::vec2 tilePosObjectSpace = objectSpace.convertToObjectSpace(glm::vec2(tileBoundingBox.left, tileBoundingBox.top));
+    glm::vec2 tileSizeObjectSpace = objectSpace.convertToObjectSpace(glm::vec2(tileBoundingBox.width, tileBoundingBox.height));
+
+    glm::vec2 tileSlope = getSlopeForTileType(tile.getType());
+    glm::vec2 tileSlopeObjSpace = objectSpace.convertToObjectSpace(tileSlope);
+
+    int slopeHeightPreviousPosition =
+    
+    //sometimes when player is standing on top of a slope, the height calculated in the previous frame differs from his current height
+    //even though nothing has been changed. The player seems to move down by 1 pixel so when checking if player is below slope before
+    //mvoe the slope down by one pixel
+    if(objPositionPreviousFrame.y > previousPositionSlopeHeight + 1) {
+
+        //player was below slope before so don't handle collision
+        return false;
+    }
+
+    float rightEdge = glm::max(tilePosObjectSpace.x, tilePosObjectSpace.x + tileSizeObjectSpace.x) - tilePosObjectSpace.x;
+    float leftEdge = glm::min(tilePosObjectSpace.x, tilePosObjectSpace.x + tileSizeObjectSpace.x) - tilePosObjectSpace.x;
+
+    //if object is off the upper end of the slope in the last frame, as well as this frame, then don't snap him to slope
+    //but he should be snapped to slope if he was on the slope last frame, but got off this frame
+    //upper end of slope depends on direction of slope
+    if(tileSlopeObjSpace.y  / tileSlopeObjSpace.x > 0 && objPosInTile.x < leftEdge && objPositionPreviousFrame.x < leftEdge) {
+
+        return false;
+
+    } else if(tileSlopeObjSpace.y  / tileSlopeObjSpace.x < 0 && objPosInTile.x > rightEdge && objPositionPreviousFrame.x > rightEdge) {
+
+        return false;
+    }
+
+    //object is jumping, don't snap to slope
+    if(object.getVelocitiesObjectSpace().y < 0) {
+
+        return false;
+    }
+}
 
 #endif // TILECOLLISIONHANDLING_H_INCLUDED

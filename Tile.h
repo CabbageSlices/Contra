@@ -14,6 +14,7 @@ enum TileType {
 
     EMPTY = 0,
     SOLID,
+    PASS_THROUGH,//tiles that dont handle collision but have an image
     UPWARD_RIGHT_1_1, //upward slopes collide with bottom of entity
     UPWARD_LEFT_1_1,  //different direction chooses whether it collides with left or right side
     DOWNWARD_RIGHT_1_1, //downward slopes only collide with top of entity

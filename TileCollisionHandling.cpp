@@ -119,8 +119,6 @@ bool handleUpSlopeTileCollision(Tile& tile, PositionObject& object) {
         return false;
     }
 
-    glm::vec2 tileSize = objectSpace.convertToObjectSpace(glm::vec2(TILE_SIZE, TILE_SIZE));
-
     float rightEdge = glm::max(tilePosObjectSpace.x, tilePosObjectSpace.x + tileSizeObjectSpace.x) - tilePosObjectSpace.x;
     float leftEdge = glm::min(tilePosObjectSpace.x, tilePosObjectSpace.x + tileSizeObjectSpace.x) - tilePosObjectSpace.x;
 
@@ -150,13 +148,15 @@ bool handleUpSlopeTileCollision(Tile& tile, PositionObject& object) {
         return false;
     }
 
+    glm::vec2 tileSize = objectSpace.convertToObjectSpace(glm::vec2(TILE_SIZE, TILE_SIZE));
+
     //if object is off the lower end of the slope, it could have walked off the slope
     bool snapToBottom = (tileSlopeObjSpace.y  / tileSlopeObjSpace.x > 0 && objPosInTile.x > tileSize.x && previousPosition.x <= tileSize.x) ||
                         (tileSlopeObjSpace.y  / tileSlopeObjSpace.x < 0 && objPosInTile.x < 0 && previousPosition.x >= 0);
 
     if(snapToBottom) {
 
-        float tileBottom = glm::max(tilePosObjectSpace.y, tilePosObjectSpace.y + tileSizeObjectSpace.y);
+        float tileBottom = glm::max(tilePosObjectSpace.y, tilePosObjectSpace.y + tileSize.y);
 
         //object walked off edge of slope so snap to bottom of tile
         float yPosObjectSpace = tileBottom - objSizeObjectSpace.y;

@@ -3,6 +3,8 @@
 
 #include "SFML/Graphics.hpp"
 #include "SFML/System.hpp"
+#include "Tile.h"
+#include "glm/gtc/type_precision.hpp"
 
 #include <memory>
 #include <vector>
@@ -13,22 +15,31 @@ class TileMap {
 
         TileMap();
 
-        //return all the tiles enclosed in the given region
-        //if any part of the region is out of bounds it will only return the tiles that are in boun
-        //region coordinates are in world position in pixels
-        ///for all regions use region 0,0,0,0 to indicate you want to use entire tilemap
-        std::vector<std::shared_ptr<Tile> > getTilesInRegion(const sf::FloatRect& region);
+        //map width and height are in world coordinates, not grid coordinates, measured in pixels
+        TileMap(const unsigned &width, const unsigned &height);
 
-        void draw(sf::RenderWindow& window, const sf::FloatRect& regionToDraw);
+        void setTile(const sf::Vector2f& position, const TileType& type);
+
+        //return all the tiles enclosed in the given region
+        //if any part of the region is out of bounds it will only return the tiles that are in bounds
+        //region coordinates are in world position in pixels
+        std::vector<std::shared_ptr<Tile> > getTilesInRegion(const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
+
+        void draw(sf::RenderWindow& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
+        void drawDebug(sf::RenderWindow& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
 
     private:
 
-        //take the given region in world coordinates and convert it into grid indices, ensures region is valid
-        //left is the indice of hte left edge, width is the indice of the right edge (not width of region)
-        //same with top and bottom
-        sf::IntRect regionToGridIndices(const sf::FloatRect& region)
+        void createMap(const unsigned &mapWidth, const unsigned &mapHeight);
+
+        //turns the given world coordinate into grid coordinate
+        //doesn't check if its a valid coordinate
+        glm::i32vec2 convertToGridPosition(const glm::vec2 &worldPosition) const;
+        bool checkValidGridPosition(const glm::i32vec2 &gridPosition) const;
 
         std::vector<std::shared_ptr<Tile> > tiles;
+        int gridWidth;
+        int gridHeight;
 };
 
 #endif // TILEMAP_H_INCLUDED

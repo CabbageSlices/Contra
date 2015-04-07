@@ -45,7 +45,7 @@ void Player::handleKeystate(sf::RenderWindow& window) {
     holdingJump = sf::Keyboard::isKeyPressed(controls.jump);
 }
 
-void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Tile& tile) {
+void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds) {
 
     //since player velocity only changes in the y direction you can prevent gravity from pulling player down
     //when player is holding jump button and trying ot extend his jump height dont let gravity pull player down
@@ -56,20 +56,10 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
 
     positionController.moveAlongXAxis(deltaTime, worldBounds);
 
-    if(handleCollisionHorizontal(tile, positionController)) {
-
-        canJump = true;
-    }
-
     if(positionController.moveAlongYAxis(deltaTime, worldBounds)) {
 
         canJump = true;
         positionController.setVelocities(positionController.getVelocitiesObjectSpace().x, 0);
-    }
-
-    if(handleCollisionVertical(tile, positionController)) {
-
-        canJump = true;
     }
 
     player.setPosition(positionController.getBoundingBoxWorldSpace().left, positionController.getBoundingBoxWorldSpace().top);

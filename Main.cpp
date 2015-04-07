@@ -2,6 +2,7 @@
 #include "SFML/Graphics.hpp"
 #include "Player.h"
 #include "Tile.h"
+#include "TileMap.h"
 
 int main() {
 
@@ -13,7 +14,7 @@ int main() {
 
     sf::Clock timer;
 
-    Tile tile(glm::vec2(960, 128), TileType::UPWARD_LEFT_1_1);
+    TileMap tileMap(1024, 768);
 
     while(window.isOpen()) {
 
@@ -24,6 +25,14 @@ int main() {
                 window.close();
             }
 
+            if(event.type == sf::Event::KeyPressed) {
+
+                if(event.key.code == sf::Keyboard::Escape) {
+
+                    window.close();
+                }
+            }
+
             player.handleInputEvents(event, window);
         }
 
@@ -31,11 +40,11 @@ int main() {
 
         sf::Time deltaTime = timer.restart();
 
-        player.update(deltaTime.asSeconds(), sf::FloatRect(0, 0, 1024, 768), tile);
+        player.update(deltaTime.asSeconds(), sf::FloatRect(0, 0, 1024, 768));
 
         window.clear();
 
-        tile.drawDebug(window);
+        tileMap.drawDebug(window, glm::vec2(0, 0), glm::vec2(1024, 768));
         player.draw(window);
         window.display();
     }

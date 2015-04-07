@@ -44,6 +44,7 @@
 		<Unit filename="Tile.h" />
 		<Unit filename="TileCollisionHandling.cpp" />
 		<Unit filename="TileCollisionHandling.h" />
+		<Unit filename="TileMap.cpp" />
 		<Unit filename="TileMap.h" />
 		<Extensions>
 			<code_completion />

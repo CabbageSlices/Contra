@@ -27,7 +27,7 @@ class Player {
         void handleKeystate(sf::RenderWindow& window);
 
         //time should be in seconds
-        void update(const float& deltaTime, const sf::FloatRect& worldBounds, Tile& tile);
+        void update(const float& deltaTime, const sf::FloatRect& worldBounds);
 
         void draw(sf::RenderWindow& window);
 
