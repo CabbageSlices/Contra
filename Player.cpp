@@ -79,7 +79,7 @@ void Player::draw(sf::RenderWindow& window) {
     window.draw(player);
 }
 
-void Player::handleTileCollisionHorizontally(TileMap& map) {
+void Player::handleTileCollision(TileMap& map, bool(*collisionFunction)(std::shared_ptr<Tile>& tile, PositionObject& object)) {
 
     //calculate region encompassed by object
     //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
@@ -90,29 +90,21 @@ void Player::handleTileCollisionHorizontally(TileMap& map) {
 
     for(unsigned i = 0; i < tiles.size(); ++i) {
 
-        if(handleCollisionHorizontal(tiles[i], positionController)) {
+        if(collisionFunction(tiles[i], positionController)) {
 
             canJump = true;
         }
     }
 }
 
+void Player::handleTileCollisionHorizontally(TileMap& map) {
+
+    handleTileCollision(map, &handleCollisionHorizontal);
+}
+
 void Player::handleTileCollisionVertically(TileMap& map) {
 
-    //calculate region encompassed by object
-    //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
-    glm::vec2 regionTopLeft = positionController.getObjectSpace().getPositionWorldSpace() - glm::vec2(TILE_SIZE, TILE_SIZE);
-    glm::vec2 regionBottomRight = positionController.getObjectSpace().getPositionWorldSpace() + positionController.getObjectSpace().getSizeWorldSpace() + glm::vec2(TILE_SIZE, TILE_SIZE);
-
-    vector<shared_ptr<Tile> > tiles = map.getTilesInRegion(regionTopLeft, regionBottomRight);
-
-    for(unsigned i = 0; i < tiles.size(); ++i) {
-
-        if(handleCollisionVertical(tiles[i], positionController)) {
-
-            canJump = true;
-        }
-    }
+    handleTileCollision(map, &handleCollisionVertical);
 }
 
 void Player::jump() {

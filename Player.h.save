@@ -17,8 +17,6 @@ struct PlayerKeys {
     sf::Keyboard::Key shoot = sf::Keyboard::S;
 };
 
-
-
 class Player {
 
     public:
@@ -54,6 +52,10 @@ class Player {
 
             return holdingJump && extraJumpTimer.getElapsedTime() < extraJumpDuration;
         }
+        
+        //since vertical and horizontal tile collisions differ only in terms of the collision handling function they call, this function will handle both and allow you to s
+        void handleTileCollision(TileMap& map, bool(*collisionFunction)(std::shared_ptr<Tile>& tile, PositionObject& object));
+        void handleTileCollisionVertically(TileMap& map);
 
         void jump();
 

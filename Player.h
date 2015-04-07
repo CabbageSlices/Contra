@@ -53,6 +53,8 @@ class Player {
             return holdingJump && extraJumpTimer.getElapsedTime() < extraJumpDuration;
         }
 
+        //vertical and horizontal tile collisions differ only in terms of the collision handling function they call
+        void handleTileCollision(TileMap& map, bool(*collisionFunction)(std::shared_ptr<Tile>& tile, PositionObject& object));
         void handleTileCollisionHorizontally(TileMap& map);
         void handleTileCollisionVertically(TileMap& map);
 
