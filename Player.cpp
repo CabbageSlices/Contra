@@ -1,7 +1,12 @@
 #include "Player.h"
 #include "TileCollisionHandling.h"
 #include <iostream>
+#include <vector>
+#include <memory>
+#include "Tile.h"
 
+using std::vector;
+using std::shared_ptr;
 using std::cout;
 using std::endl;
 
@@ -45,7 +50,7 @@ void Player::handleKeystate(sf::RenderWindow& window) {
     holdingJump = sf::Keyboard::isKeyPressed(controls.jump);
 }
 
-void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds) {
+void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map) {
 
     //since player velocity only changes in the y direction you can prevent gravity from pulling player down
     //when player is holding jump button and trying ot extend his jump height dont let gravity pull player down
@@ -56,11 +61,15 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds) {
 
     positionController.moveAlongXAxis(deltaTime, worldBounds);
 
+    handleTileCollisionHorizontally(map);
+
     if(positionController.moveAlongYAxis(deltaTime, worldBounds)) {
 
         canJump = true;
         positionController.setVelocities(positionController.getVelocitiesObjectSpace().x, 0);
     }
+
+    handleTileCollisionVertically(map);
 
     player.setPosition(positionController.getBoundingBoxWorldSpace().left, positionController.getBoundingBoxWorldSpace().top);
 }
@@ -68,6 +77,42 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds) {
 void Player::draw(sf::RenderWindow& window) {
 
     window.draw(player);
+}
+
+void Player::handleTileCollisionHorizontally(TileMap& map) {
+
+    //calculate region encompassed by object
+    //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
+    glm::vec2 regionTopLeft = positionController.getObjectSpace().getPositionWorldSpace() - glm::vec2(TILE_SIZE, TILE_SIZE);
+    glm::vec2 regionBottomRight = positionController.getObjectSpace().getPositionWorldSpace() + positionController.getObjectSpace().getSizeWorldSpace() + glm::vec2(TILE_SIZE, TILE_SIZE);
+
+    vector<shared_ptr<Tile> > tiles = map.getTilesInRegion(regionTopLeft, regionBottomRight);
+
+    for(unsigned i = 0; i < tiles.size(); ++i) {
+
+        if(handleCollisionHorizontal(tiles[i], positionController)) {
+
+            canJump = true;
+        }
+    }
+}
+
+void Player::handleTileCollisionVertically(TileMap& map) {
+
+    //calculate region encompassed by object
+    //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
+    glm::vec2 regionTopLeft = positionController.getObjectSpace().getPositionWorldSpace() - glm::vec2(TILE_SIZE, TILE_SIZE);
+    glm::vec2 regionBottomRight = positionController.getObjectSpace().getPositionWorldSpace() + positionController.getObjectSpace().getSizeWorldSpace() + glm::vec2(TILE_SIZE, TILE_SIZE);
+
+    vector<shared_ptr<Tile> > tiles = map.getTilesInRegion(regionTopLeft, regionBottomRight);
+
+    for(unsigned i = 0; i < tiles.size(); ++i) {
+
+        if(handleCollisionVertical(tiles[i], positionController)) {
+
+            canJump = true;
+        }
+    }
 }
 
 void Player::jump() {

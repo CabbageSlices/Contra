@@ -14,8 +14,6 @@ int main() {
 
     sf::Clock timer;
 
-    Tile tile(glm::vec2(960, 128), TileType::UPWARD_LEFT_1_1);
-
     TileMap tileMap(1024, 768);
 
     while(window.isOpen()) {
@@ -35,6 +33,25 @@ int main() {
                 }
             }
 
+            if(event.type == sf::Event::MouseButtonPressed) {
+
+                sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getDefaultView());
+
+                if(event.mouseButton.button == sf::Mouse::Left) {
+                    
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::1)) {
+                        
+                        tileMap.setTile(mousePosition, TileType::UPWARD_RIGHT_1_1);
+                    }
+                    tileMap.setTile(mousePosition, TileType::SOLID);
+                }
+
+                if(event.mouseButton.button == sf::Mouse::Right) {
+
+                    tileMap.setTile(mousePosition, TileType::EMPTY);
+                }
+            }
+
             player.handleInputEvents(event, window);
         }
 
@@ -42,12 +59,11 @@ int main() {
 
         sf::Time deltaTime = timer.restart();
 
-        player.update(deltaTime.asSeconds(), sf::FloatRect(0, 0, 1024, 768), tile);
+        player.update(deltaTime.asSeconds(), sf::FloatRect(0, 0, 1024, 768), tileMap);
 
         window.clear();
 
-        tileMap.drawDebug(window, glm::vec2(-100, 0), glm::vec2(1, 0));
-        tile.drawDebug(window);
+        tileMap.drawDebug(window, glm::vec2(0, 0), glm::vec2(1024, 768));
         player.draw(window);
         window.display();
     }

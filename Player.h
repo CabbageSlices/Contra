@@ -4,7 +4,7 @@
 #include "SFML/Graphics.hpp"
 #include "GlobalConstants.h"
 #include "PositionController.h"
-#include "Tile.h"
+#include "TileMap.h"
 
 struct PlayerKeys {
 
@@ -27,7 +27,7 @@ class Player {
         void handleKeystate(sf::RenderWindow& window);
 
         //time should be in seconds
-        void update(const float& deltaTime, const sf::FloatRect& worldBounds);
+        void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
 
         void draw(sf::RenderWindow& window);
 
@@ -52,6 +52,9 @@ class Player {
 
             return holdingJump && extraJumpTimer.getElapsedTime() < extraJumpDuration;
         }
+
+        void handleTileCollisionHorizontally(TileMap& map);
+        void handleTileCollisionVertically(TileMap& map);
 
         void jump();
 

@@ -3,6 +3,8 @@
 
 #include "SFML/Graphics.hpp"
 #include "GlobalConstants.h"
+#include "PositionController.h"
+#include "TileMap.h"
 
 struct PlayerKeys {
 
@@ -15,6 +17,8 @@ struct PlayerKeys {
     sf::Keyboard::Key shoot = sf::Keyboard::S;
 };
 
+
+
 class Player {
 
     public:
@@ -25,21 +29,33 @@ class Player {
         void handleKeystate(sf::RenderWindow& window);
 
         //time should be in seconds
-        void update(const float& deltaTime, const sf::FloatRect& worldBounds);
+        void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
 
         void draw(sf::RenderWindow& window);
 
 
     private:
-        
-        bool checkIsJumping() {
-            
-            return velo
+
+        bool checkCanJump() {
+
+            //if player is falling it means he isn't standing on top of any object because if he was, his velocity would be 0
+            //therefore he can't jump if his velocity isn't 0
+            return canJump && positionController.getVelocitiesObjectSpace().y == 0;
         }
 
-        //time should be in seconds
-        void updateVelocities(const float& deltaTime);
-        void forceIntoWorldBounds(const sf::FloatRect& worldBounds);
+        bool checkIsJumping() {
+
+            //player is jumping if he is moving upwards and he isn't able to jump
+            return positionController.getVelocitiesObjectSpace().y < 0 && !canJump;
+        }
+
+        //check if player can extend his jump by holding the jump button
+        bool checkExtendJump() {
+
+            return holdingJump && extraJumpTimer.getElapsedTime() < extraJumpDuration;
+        }
+
+        void jump();
 
         //velocity of player when he begins to move
         //measured in meters per second
@@ -53,8 +69,9 @@ class Player {
         sf::Clock extraJumpTimer;
         const sf::Time extraJumpDuration;
 
-        sf::Vector2f velocities;
-        sf::RectangleShape boundingBox;
+        PositionController positionController;
+
+        sf::RectangleShape player;
 
         //the control setup for this player
         PlayerKeys controls;

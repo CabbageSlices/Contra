@@ -50,12 +50,47 @@ glm::vec2 getInterceptsForTileType(const TileType& type) {
     return glm::vec2(0, 0);
 }
 
+sf::Color getColorForTileType(const TileType& type) {
+
+    switch(type) {
+
+        case TileType::UPWARD_RIGHT_1_1:
+        case TileType::DOWNWARD_LEFT_1_1: {
+
+            return sf::Color::Red;
+        }
+
+        case TileType::UPWARD_LEFT_1_1:
+        case TileType::DOWNWARD_RIGHT_1_1: {
+
+            return sf::Color::Blue;
+        }
+
+        case TileType::SOLID: {
+
+            return sf::Color::White;
+        }
+
+        case TileType::ONE_WAY: {
+
+            return sf::Color::Green;
+        }
+
+        default:
+            return sf::Color::Black;
+    }
+
+    return sf::Color::Black;
+}
+
 Tile::Tile(const glm::vec2& worldPosition,  const TileType& tileType) :
     type(tileType),
     tile(sf::Vector2f(TILE_SIZE, TILE_SIZE))
     {
         setupEmptyTileColor();
         tile.setPosition(sf::Vector2f(worldPosition.x, worldPosition.y));
+
+        tile.setFillColor(getColorForTileType(type));
     }
 
 Tile::Tile() :
@@ -68,6 +103,7 @@ Tile::Tile() :
 void Tile::setType(const TileType& tileType) {
 
     type = tileType;
+    tile.setFillColor(getColorForTileType(type));
 }
 
 sf::FloatRect Tile::getBoundingBox() const {

@@ -4,14 +4,15 @@
 
 #include <iostream>
 
+using std::shared_ptr;
 using std::cout;
 using std::endl;
 
 const int MAX_SLOPE_SNAPPING_DISTANCE = 10;
 
-bool handleCollisionHorizontal(Tile& tile, PositionObject& object) {
+bool handleCollisionHorizontal(shared_ptr<Tile>& tile, PositionObject& object) {
 
-    TileType type = tile.getType();
+    TileType type = tile->getType();
 
     switch(type) {
 
@@ -34,9 +35,9 @@ bool handleCollisionHorizontal(Tile& tile, PositionObject& object) {
     return false;
 }
 
-bool handleCollisionVertical(Tile& tile, PositionObject& object) {
+bool handleCollisionVertical(shared_ptr<Tile>& tile, PositionObject& object) {
 
-    TileType type = tile.getType();
+    TileType type = tile->getType();
 
     switch(type) {
 
@@ -53,9 +54,9 @@ bool handleCollisionVertical(Tile& tile, PositionObject& object) {
     return false;
 }
 
-void handleSolidTileCollisionHorizontal(Tile& tile, PositionObject& object) {
+void handleSolidTileCollisionHorizontal(shared_ptr<Tile>& tile, PositionObject& object) {
 
-    sf::FloatRect tileBoundingBox = tile.getBoundingBox();
+    sf::FloatRect tileBoundingBox = tile->getBoundingBox();
 
     if(!tileBoundingBox.intersects(object.getBoundingBoxWorldSpace())) {
 
@@ -85,11 +86,11 @@ void handleSolidTileCollisionHorizontal(Tile& tile, PositionObject& object) {
     }
 }
 
-bool handleUpSlopeTileCollision(Tile& tile, PositionObject& object) {
+bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, PositionObject& object) {
 
     const ObjectSpaceManager& objectSpace = object.getObjectSpace();
 
-    sf::FloatRect tileBoundingBox = tile.getBoundingBox();
+    sf::FloatRect tileBoundingBox = tile->getBoundingBox();
 
     glm::vec2 tilePosObjectSpace = objectSpace.convertToObjectSpace(glm::vec2(tileBoundingBox.left, tileBoundingBox.top));
     glm::vec2 tileSizeObjectSpace = objectSpace.convertToObjectSpace(glm::vec2(tileBoundingBox.width, tileBoundingBox.height));
@@ -97,10 +98,10 @@ bool handleUpSlopeTileCollision(Tile& tile, PositionObject& object) {
     glm::vec2 objPosObjectSpace = objectSpace.getPositionObjectSpace();
     glm::vec2 objSizeObjectSpace = objectSpace.getSizeObjectSpace();
 
-    glm::vec2 tileSlope = getSlopeForTileType(tile.getType());
+    glm::vec2 tileSlope = getSlopeForTileType(tile->getType());
     glm::vec2 tileSlopeObjSpace = objectSpace.convertToObjectSpace(tileSlope);
 
-    glm::vec2 tileIntercepts = getInterceptsForTileType(tile.getType());
+    glm::vec2 tileIntercepts = getInterceptsForTileType(tile->getType());
     glm::vec2 tileInterceptsObjSpace = objectSpace.convertToObjectSpace(tileIntercepts);
 
     //for slope position calculations, use the center of the bottom of the object
@@ -174,9 +175,9 @@ bool handleUpSlopeTileCollision(Tile& tile, PositionObject& object) {
     return true;
 }
 
-bool handleSolidTileCollisionVertical(Tile& tile, PositionObject& object) {
+bool handleSolidTileCollisionVertical(shared_ptr<Tile>& tile, PositionObject& object) {
 
-    sf::FloatRect tileBoundingBox = tile.getBoundingBox();
+    sf::FloatRect tileBoundingBox = tile->getBoundingBox();
 
     if(!object.getBoundingBoxObjectSpace().intersects(object.getObjectSpace().convertToObjectSpace(tileBoundingBox)  )) {
 
@@ -199,7 +200,7 @@ bool handleSolidTileCollisionVertical(Tile& tile, PositionObject& object) {
 
     //one way tiles only collide if object jumps on top of the tile
     //round the position because transforming between coordinate spaces might introduce some errors
-    if(glm::round(previousPosition) > tileTop && tile.getType() == TileType::ONE_WAY) {
+    if(glm::round(previousPosition) > tileTop && tile->getType() == TileType::ONE_WAY) {
 
         //object jumped from underneath the tile so don't collide
         return false;
@@ -212,7 +213,7 @@ bool handleSolidTileCollisionVertical(Tile& tile, PositionObject& object) {
         object.setPositionObjectSpace(glm::vec2(objPosObjectSpace.x, tileTop - objSizeObjectSpace.y));
         return true;
 
-    } else if(tile.getType() != TileType::ONE_WAY){
+    } else if(tile->getType() != TileType::ONE_WAY){
 
         object.setPositionObjectSpace(glm::vec2(objPosObjectSpace.x, tileBottom));
     }

@@ -30,9 +30,9 @@ void TileMap::setTile(const sf::Vector2f& position, const TileType& type) {
         return;
     }
 
-    int index = position.y * gridWidth + position.x;
+    int index = gridPosition.y * gridWidth + gridPosition.x;
 
-    if(tiles.size() >= index) {
+    if(tiles.size() <= index) {
 
         return;
     }

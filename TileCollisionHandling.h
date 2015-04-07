@@ -3,6 +3,7 @@
 
 #include "Tile.h"
 #include "PositionController.h"
+#include <memory>
 
 typedef PositionController PositionObject;
 
@@ -14,12 +15,12 @@ extern const int MAX_SLOPE_SNAPPING_DISTANCE;
 //character movement is broken into horizontal and vertical parts
 //so collision should work seperately as well
 //function returns wether object is standing on top of the block now, useful for resetting jump
-bool handleCollisionHorizontal(Tile& tile, PositionObject& object);
-bool handleCollisionVertical(Tile& tile, PositionObject& object);
+bool handleCollisionHorizontal(std::shared_ptr<Tile>& tile, PositionObject& object);
+bool handleCollisionVertical(std::shared_ptr<Tile>& tile, PositionObject& object);
 
-void handleSolidTileCollisionHorizontal(Tile& tile, PositionObject& object);
-bool handleUpSlopeTileCollision(Tile& tile, PositionObject& object);
+void handleSolidTileCollisionHorizontal(std::shared_ptr<Tile>& tile, PositionObject& object);
+bool handleUpSlopeTileCollision(std::shared_ptr<Tile>& tile, PositionObject& object);
 
-bool handleSolidTileCollisionVertical(Tile& tile, PositionObject& object);
+bool handleSolidTileCollisionVertical(std::shared_ptr<Tile>& tile, PositionObject& object);
 
 #endif // TILECOLLISIONHANDLING_H_INCLUDED
