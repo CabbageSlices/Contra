@@ -135,10 +135,18 @@ bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, PositionObject& object) 
         return false;
     }
 
-    //object is jumping, don't snap to slope
+    //when object is jumping, if he moves towards the slope he will jump into the slope and skip collision
+    //so also check if he is moving into the slope while jumping
     if(object.getVelocitiesObjectSpace().y < 0) {
 
-        return false;
+        bool movingIntoLeftSlope = (tileSlopeObjSpace.y / tileSlopeObjSpace.x > 0 && object.getVelocitiesObjectSpace().x < 0);
+        bool movingIntoRightSlope = (tileSlopeObjSpace.y / tileSlopeObjSpace.x < 0 && object.getVelocitiesObjectSpace().x > 0);
+
+        //object is jumping without moving into a slope so its fine to skip this tile
+        if(!movingIntoLeftSlope && !movingIntoRightSlope) {
+
+            return false;
+        }
     }
 
     int currentSlopeHeight = (tileSlopeObjSpace.y / tileSlopeObjSpace.x) * objPosInTile.x + tileInterceptsObjSpace.y;
@@ -152,8 +160,8 @@ bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, PositionObject& object) 
     glm::vec2 tileSize = objectSpace.convertToObjectSpace(glm::vec2(TILE_SIZE, TILE_SIZE));
 
     //if object is off the lower end of the slope, it could have walked off the slope
-    bool snapToBottom = (tileSlopeObjSpace.y  / tileSlopeObjSpace.x > 0 && objPosInTile.x > tileSize.x && previousPosition.x <= tileSize.x) ||
-                        (tileSlopeObjSpace.y  / tileSlopeObjSpace.x < 0 && objPosInTile.x < 0 && previousPosition.x >= 0);
+    bool snapToBottom = (tileSlopeObjSpace.y  / tileSlopeObjSpace.x > 0 && objPosInTile.x > rightEdge && previousPosition.x <= rightEdge) ||
+                        (tileSlopeObjSpace.y  / tileSlopeObjSpace.x < 0 && objPosInTile.x < leftEdge && previousPosition.x >= leftEdge);
 
     if(snapToBottom) {
 
@@ -165,6 +173,16 @@ bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, PositionObject& object) 
 
         object.setPositionObjectSpace(glm::vec2(xPosObjectSpace, yPosObjectSpace));
         return true;
+    }
+
+    //object standing off lower end of slope but doesn't need to snap so don't do collision
+    if((tileSlopeObjSpace.y  / tileSlopeObjSpace.x > 0 && objPosInTile.x > rightEdge && previousPosition.x > rightEdge)) {
+
+        return false;
+
+    } else if(tileSlopeObjSpace.y  / tileSlopeObjSpace.x < 0 && objPosInTile.x < leftEdge && previousPosition.x < leftEdge) {
+
+        return false;
     }
 
     float yPosObjectSpace = currentSlopeHeight + tilePosObjectSpace.y - objSizeObjectSpace.y;
