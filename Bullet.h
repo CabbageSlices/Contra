@@ -7,9 +7,6 @@
 #include "glm/glm.hpp"
 #include "TileMap.h"
 
-//Bullet is fired in the given direction
-//the given direction becomes x-axis for the bullet, and a y-axis is calculated automatically
-//thus the bullet travels horizontally in object space
 class Bullet {
 
     public:
@@ -26,12 +23,14 @@ class Bullet {
 
         void handleTileCollision(TileMap& map);
 
-        //velocity in the x direction
-        const float xVelocity;
+        //magnitude of velocity
+        //this is multiplied to the bulletdirection to get the velcoity of bullect
+        const float velocity;
         sf::Time lifeTime;
         float timeElapsed;
 
         sf::RectangleShape bullet;
+        glm::vec2 direction;
 
         PositionController positionController;
 };

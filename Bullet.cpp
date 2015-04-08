@@ -11,23 +11,21 @@ using std::cout;
 using std::endl;
 
 Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, const float &bulletVel) :
-    xVelocity(bulletVel),
+    velocity(bulletVel),
     lifeTime(sf::seconds(5)),
     timeElapsed(0),
     bullet(sf::Vector2f(20, 20)),
-    positionController(glm::vec2(20, 20), glm::vec2(0, 0), glm::vec2(1, 1) * xVelocity, directionWorldSpace, glm::vec2(-directionWorldSpace.y, directionWorldSpace.x))
+    direction(directionWorldSpace),
+    positionController(glm::vec2(20, 20), glm::vec2(0, 0), glm::vec2(1, 1) * velocity, glm::vec2(1, 0), glm::vec2(0, 1))
     {
         bullet.setSize(sf::Vector2f(positionController.getObjectSpace().getSizeWorldSpace().x, positionController.getObjectSpace().getSizeWorldSpace().y));
         positionController.setPositionWorldSpace(positionWorldSpace);
-        positionController.setVelocities(xVelocity, 0);
+        positionController.setVelocities(directionWorldSpace * velocity);
     }
 
 void Bullet::update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map) {
 
     timeElapsed += delta;
-
-    float x = xVelocity * timeElapsed;
-    positionController.setVelocities(glm::cos(timeElapsed * 10) * xVelocity + timeElapsed * xVelocity, glm::sin(timeElapsed * 10) * xVelocity);
 
     positionController.move(delta, worldBounds);
     handleTileCollision(map);
@@ -52,8 +50,6 @@ void Bullet::draw(sf::RenderWindow &window) {
     window.draw(bullet);
 
     sf::FloatRect rect = positionController.getObjectSpace().getBoundingBoxWorldSpace();
-
-    cout << rect.left << "  " << rect.top << "  " << rect.width << "  " << rect.height << endl;
 
     sf::RectangleShape debug(sf::Vector2f(rect.width, rect.height));
     debug.setPosition(rect.left, rect.top);
