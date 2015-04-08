@@ -25,11 +25,11 @@ void Gun::fire(const glm::vec2 &userPositionWorldSpace, const Direction &fireDir
     createBullet(positionWorldSpace, directionWorldSpace);
 }
 
-void Gun::update(const float &delta, const sf::FloatRect &worldBounds) {
+void Gun::update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map) {
 
     for(unsigned i = 0; i < bullets.size();) {
 
-        bullets[i]->update(delta, worldBounds);
+        bullets[i]->update(delta, worldBounds, map);
 
         if(!bullets[i]->checkIsAlive()) {
 

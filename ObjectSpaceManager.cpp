@@ -1,4 +1,8 @@
 #include "ObjectSpaceManager.h"
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 ObjectSpaceManager::ObjectSpaceManager(const glm::vec2& xAxis, const glm::vec2& yAxis, const glm::vec2& sizeObjectSpace):
     objectToWorldSpace(xAxis, yAxis),
@@ -16,10 +20,20 @@ glm::vec2 ObjectSpaceManager::convertToObjectSpace(const glm::vec2& worldSpacePo
 
 sf::FloatRect ObjectSpaceManager::convertToObjectSpace(const sf::FloatRect& rect) const {
 
-    glm::vec2 posObjectSpace = convertToObjectSpace(glm::vec2(rect.left, rect.top));
-    glm::vec2 sizeObjectSpace = convertToObjectSpace(glm::vec2(rect.width, rect.height));
+    //get top left and bottom right in world coordinates
+    //find left, right, top, and bottom edges and create the rectangle
+    glm::vec2 topLeftObjectSpace = convertToObjectSpace(glm::vec2(rect.left, rect.top));
+    glm::vec2 bottomRightObjectSpace = convertToObjectSpace(glm::vec2(rect.left, rect.top) + glm::vec2(rect.width, rect.height));
 
-    return sf::FloatRect(posObjectSpace.x, posObjectSpace.y, sizeObjectSpace.x, sizeObjectSpace.y);
+    float left = glm::min(topLeftObjectSpace.x, bottomRightObjectSpace.x);
+    float top = glm::min(topLeftObjectSpace.y, bottomRightObjectSpace.y);
+
+    glm::vec2 size = topLeftObjectSpace - bottomRightObjectSpace;
+    size = glm::abs(size);
+
+    sf::FloatRect boundingBox(left, top, size.x, size.y);
+
+    return boundingBox;
 }
 
 glm::vec2 ObjectSpaceManager::convertToWorldSpace(const glm::vec2& worldSpacePosition) const {
@@ -59,30 +73,28 @@ glm::vec2 ObjectSpaceManager::getSizeObjectSpace() const {
 
 glm::vec2 ObjectSpaceManager::getSizeWorldSpace() const {
 
-    return objectToWorldSpace * sizeInObjectSpace;
+    //to calculate size you need to calculate the position of the top left and bottom right corner, and find the difference
+    glm::vec2 topLeftWorldSpace = getPositionWorldSpace();
+    glm::vec2 bottomRightWorldSpace = convertToWorldSpace(positionInObjectSpace + sizeInObjectSpace);
+
+    glm::vec2 size = topLeftWorldSpace - bottomRightWorldSpace;
+    size = glm::abs(size);
+
+    return size;
 }
 
 sf::FloatRect ObjectSpaceManager::getBoundingBoxWorldSpace() const {
 
-    //when converting from object space to world space you might end up with negative values for the size
-    //the position of the object might not refer to the top left of the bounding box
-    //so make sure that the bounding box top and left always refer to the top left of the object
-    glm::vec2 worldPosition = getPositionWorldSpace();
-    glm::vec2 worldSize = getSizeWorldSpace();
+    //get top left and bottom right in world coordinates
+    //find left, right, top, and bottom edges and create the rectangle
+    glm::vec2 topLeftWorldSpace = getPositionWorldSpace();
+    glm::vec2 bottomRightWorldSpace = convertToWorldSpace(positionInObjectSpace + sizeInObjectSpace);
 
-    sf::FloatRect boundingBox(worldPosition.x, worldPosition.y, worldSize.x, worldSize.y);
+    float left = glm::min(topLeftWorldSpace.x, bottomRightWorldSpace.x);
+    float top = glm::min(topLeftWorldSpace.y, bottomRightWorldSpace.y);
+    glm::vec2 size = getSizeWorldSpace();
 
-    if(worldSize.x < 0) {
-
-        boundingBox.left += worldSize.x;
-        boundingBox.width *= -1;
-    }
-
-    if(worldSize.y < 0) {
-
-        boundingBox.top += worldSize.y;
-        boundingBox.height *= -1;
-    }
+    sf::FloatRect boundingBox(left, top, size.x, size.y);
 
     return boundingBox;
 }

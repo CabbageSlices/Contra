@@ -19,6 +19,8 @@ int main() {
 
     ObjectSpaceManager objSpace(glm::vec2(1, 0), glm::vec2(0, 1), glm::vec2(64, 64));
 
+    Gun gun(objSpace, glm::vec2(500, 300));
+
     while(window.isOpen()) {
 
         while(window.pollEvent(event)) {
@@ -64,6 +66,8 @@ int main() {
                 if(event.mouseButton.button == sf::Mouse::Right) {
 
                     tileMap.setTile(mousePosition, TileType::EMPTY);
+
+                    gun.fire(glm::vec2(0, 0), Direction::UP_RIGHT);
                 }
             }
 
@@ -77,11 +81,13 @@ int main() {
         sf::FloatRect worldBounds = sf::FloatRect(0, 0, 1024, 768);
 
         player.update(deltaTime.asSeconds(), worldBounds, tileMap);
+        gun.update(deltaTime.asSeconds(), worldBounds, tileMap);
 
         window.clear();
 
         tileMap.drawDebug(window, glm::vec2(0, 0), glm::vec2(1024, 768));
         player.draw(window);
+        gun.draw(window);
         window.display();
     }
     return 0;

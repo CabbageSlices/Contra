@@ -10,6 +10,27 @@ using std::endl;
 
 const int MAX_SLOPE_SNAPPING_DISTANCE = 10;
 
+bool checkSolidTileIntersection(std::shared_ptr<Tile>& tile, PositionObject& object) {
+
+    TileType type = tile->getType();
+
+    sf::FloatRect tileBoundingBox = tile->getBoundingBox();
+    sf::FloatRect objBoundingBox = object.getObjectSpace().getBoundingBoxWorldSpace();
+
+    switch(type) {
+
+        case TileType::SOLID: {
+
+            return tileBoundingBox.intersects(objBoundingBox);
+        }
+
+        default:
+            return false;
+    }
+
+    return false;
+}
+
 bool handleCollisionHorizontal(shared_ptr<Tile>& tile, PositionObject& object) {
 
     TileType type = tile->getType();

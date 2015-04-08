@@ -11,6 +11,8 @@ typedef PositionController PositionObject;
 //but if he clips from too far away it looks wrong, so save the max distance player can clip
 extern const int MAX_SLOPE_SNAPPING_DISTANCE;
 
+bool checkSolidTileIntersection(std::shared_ptr<Tile>& tile, PositionObject& object);
+
 //functions that solve collisions between position objects and tiles
 //character movement is broken into horizontal and vertical parts
 //so collision should work seperately as well

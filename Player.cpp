@@ -16,7 +16,7 @@ Player::Player(const PlayerKeys& keyConfiguration):
     holdingJump(false),
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(220)),
-    positionController(glm::vec2(64, 64), glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(0, -1), glm::vec2(1, 0)),
+    positionController(glm::vec2(64, 128), glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(0, 1), glm::vec2(-1, 0)),
     player(sf::Vector2f(100, 50)),
     controls(keyConfiguration)
     {
@@ -81,10 +81,12 @@ void Player::draw(sf::RenderWindow& window) {
 
 void Player::handleTileCollision(TileMap& map, bool(*collisionFunction)(std::shared_ptr<Tile>& tile, PositionObject& object)) {
 
+    sf::FloatRect bounding = positionController.getObjectSpace().getBoundingBoxWorldSpace();
+
     //calculate region encompassed by object
     //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
-    glm::vec2 regionTopLeft = positionController.getObjectSpace().getPositionWorldSpace() - glm::vec2(TILE_SIZE, TILE_SIZE);
-    glm::vec2 regionBottomRight = positionController.getObjectSpace().getPositionWorldSpace() + positionController.getObjectSpace().getSizeWorldSpace() + glm::vec2(TILE_SIZE, TILE_SIZE);
+    glm::vec2 regionTopLeft = glm::vec2(bounding.left, bounding.top) - glm::vec2(TILE_SIZE, TILE_SIZE);
+    glm::vec2 regionBottomRight = glm::vec2(bounding.left + bounding.width, bounding.top + bounding.height) + glm::vec2(TILE_SIZE, TILE_SIZE);
 
     vector<shared_ptr<Tile> > tiles = map.getTilesInRegion(regionTopLeft, regionBottomRight);
 

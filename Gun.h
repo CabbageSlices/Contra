@@ -10,6 +10,8 @@
 #include "glm/glm.hpp"
 
 class Bullet;
+class TileMap;
+
 //gun object position is relative to top left corner of its owner (heirachal model)
 //the gun's initial firing direction is also specified by the owner
 //these traits of the gun are all in the space of the object that owns the gun
@@ -22,7 +24,7 @@ class Gun {
         Gun(const ObjectSpaceManager &userObjectSpace, const glm::vec2 &relativePosition);
 
         void fire(const glm::vec2 &userPositionWorldSpace, const Direction &fireDirection);
-        void update(const float &delta, const sf::FloatRect &worldBounds);
+        void update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map);
         void draw(sf::RenderWindow& window);
 
     private:

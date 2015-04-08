@@ -10,6 +10,31 @@ using std::endl;
 
 const int MAX_SLOPE_SNAPPING_DISTANCE = 10;
 
+bool checkSolidTileIntersection(std::shared_ptr<Tile>& tile, PositionObject& object) {
+    
+    TileType type = tile->getType();
+    
+    sf::FloatRect boundingBox = tile->getBoundingBox();
+
+    switch(type) {
+
+        case TileType::SOLID: {
+
+            handleSolidTileCollisionHorizontal(tile, object);
+            return false;
+        }
+
+        case TileType::UPWARD_LEFT_1_1:
+        case TileType::UPWARD_RIGHT_1_1: {
+
+            return handleUpSlopeTileCollision(tile, object);
+        }
+
+        default:
+            return false;
+    }
+}
+
 bool handleCollisionHorizontal(shared_ptr<Tile>& tile, PositionObject& object) {
 
     TileType type = tile->getType();
@@ -135,10 +160,18 @@ bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, PositionObject& object) 
         return false;
     }
 
-    //object is jumping, don't snap to slope
+    //when object is jumping, if he moves towards the slope he will jump into the slope and skip collision
+    //so also check if he is moving into the slope while jumping
     if(object.getVelocitiesObjectSpace().y < 0) {
 
-        return false;
+        bool movingIntoLeftSlope = (tileSlopeObjSpace.y / tileSlopeObjSpace.x > 0 && object.getVelocitiesObjectSpace().x < 0);
+        bool movingIntoRightSlope = (tileSlopeObjSpace.y / tileSlopeObjSpace.x < 0 && object.getVelocitiesObjectSpace().x > 0);
+
+        //object is jumping without moving into a slope so its fine to skip this tile
+        if(!movingIntoLeftSlope && !movingIntoRightSlope) {
+
+            return false;
+        }
     }
 
     int currentSlopeHeight = (tileSlopeObjSpace.y / tileSlopeObjSpace.x) * objPosInTile.x + tileInterceptsObjSpace.y;
@@ -166,10 +199,16 @@ bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, PositionObject& object) 
         object.setPositionObjectSpace(glm::vec2(xPosObjectSpace, yPosObjectSpace));
         return true;
     }
-    
-    //if object is standing off the lower side of the
-    bool dismissCollision = (tileSlopeObjSpace.y  / tileSlopeObjSpace.x > 0 && objPosInTile.x > rightEdge && previousPosition.x <= rightEdge) ||
-                        (tileSlopeObjSpace.y  / tileSlopeObjSpace.x < 0 && objPosInTile.x < leftEdge && previousPosition.x >= leftEdge);
+
+    //object standing off lower end of slope but doesn't need to snap so don't do collision
+    if((tileSlopeObjSpace.y  / tileSlopeObjSpace.x > 0 && objPosInTile.x > rightEdge && previousPosition.x > rightEdge)) {
+
+        return false;
+
+    } else if(tileSlopeObjSpace.y  / tileSlopeObjSpace.x < 0 && objPosInTile.x < leftEdge && previousPosition.x < leftEdge) {
+
+        return false;
+    }
 
     float yPosObjectSpace = currentSlopeHeight + tilePosObjectSpace.y - objSizeObjectSpace.y;
     float xPosObjectSpace = objPosObjectSpace.x;

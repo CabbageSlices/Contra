@@ -11,6 +11,8 @@ typedef PositionController PositionObject;
 //but if he clips from too far away it looks wrong, so save the max distance player can clip
 extern const int MAX_SLOPE_SNAPPING_DISTANCE;
 
+bool 
+
 //functions that solve collisions between position objects and tiles
 //character movement is broken into horizontal and vertical parts
 //so collision should work seperately as well
@@ -18,9 +20,9 @@ extern const int MAX_SLOPE_SNAPPING_DISTANCE;
 bool handleCollisionHorizontal(std::shared_ptr<Tile>& tile, PositionObject& object);
 bool handleCollisionVertical(std::shared_ptr<Tile>& tile, PositionObject& object);
 
-void handleSolidTileCollisionHorizontal(std:shared_ptr<Tile>& tile, PositionObject& object);
-bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, PositionObject& object);
+void handleSolidTileCollisionHorizontal(std::shared_ptr<Tile>& tile, PositionObject& object);
+bool handleUpSlopeTileCollision(std::shared_ptr<Tile>& tile, PositionObject& object);
 
-bool handleSolidTileCollisionVertical(shared_ptr<Tile>& tile, PositionObject& object);
+bool handleSolidTileCollisionVertical(std::shared_ptr<Tile>& tile, PositionObject& object);
 
 #endif // TILECOLLISIONHANDLING_H_INCLUDED
