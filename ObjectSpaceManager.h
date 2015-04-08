@@ -29,6 +29,7 @@ class ObjectSpaceManager{
         glm::vec2 getSizeWorldSpace() const;
         sf::FloatRect getBoundingBoxWorldSpace() const;
         sf::FloatRect getBoundingBoxObjectSpace() const;
+        const sf::Transform& getTransform() const;
 
     private:
 

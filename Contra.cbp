@@ -31,8 +31,14 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="Bullet.cpp" />
+		<Unit filename="Bullet.h" />
+		<Unit filename="Direction.cpp" />
+		<Unit filename="Direction.h" />
 		<Unit filename="GlobalConstants.cpp" />
 		<Unit filename="GlobalConstants.h" />
+		<Unit filename="Gun.cpp" />
+		<Unit filename="Gun.h" />
 		<Unit filename="Main.cpp" />
 		<Unit filename="ObjectSpaceManager.cpp" />
 		<Unit filename="ObjectSpaceManager.h" />

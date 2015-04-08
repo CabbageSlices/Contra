@@ -77,6 +77,14 @@ void PositionController::updateVelocities(const float& delta) {
     previousDeltaTime = delta;
 }
 
+void PositionController::move(const float &delta, const sf::FloatRect &worldBounds) {
+
+    previousDeltaTime = delta;
+
+    glm::vec2 offset = velocitiesObjectSpace * METERS_TO_PIXEL_RATIO * delta;
+    object.move(offset);
+}
+
 bool PositionController::moveAlongXAxis(const float& delta, const sf::FloatRect& worldBounds) {
 
     float xOffset = velocitiesObjectSpace.x * METERS_TO_PIXEL_RATIO * delta;

@@ -1,11 +1,11 @@
 #include "ObjectSpaceManager.h"
-#include "
 
 ObjectSpaceManager::ObjectSpaceManager(const glm::vec2& xAxis, const glm::vec2& yAxis, const glm::vec2& sizeObjectSpace):
     objectToWorldSpace(xAxis, yAxis),
     worldToObjectSpace(glm::inverse(objectToWorldSpace)),
     positionInObjectSpace(0, 0),
-    sizeInObjectSpace(sizeObjectSpace)
+    sizeInObjectSpace(sizeObjectSpace),
+    transform(xAxis.x, xAxis.y, 0, yAxis.x, yAxis.y, 0, 0, 0, 0)
     {
 
     }

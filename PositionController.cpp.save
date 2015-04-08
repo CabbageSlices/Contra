@@ -6,20 +6,19 @@
 using std::cout;
 using std::endl;
 
-PositionController::PositionController(const glm::vec2& sizeWorldSpace, const glm::vec2& gravityWorldSpace, const glm::vec2& terminalVelocitiesWorldSpace, const glm::vec2& xAxis, const glm::vec2& yAxis):
-    object(xAxis, yAxis, sizeWorldSpace),
-    gravityObjectSpace(object.convertToObjectSpace(gravityWorldSpace)),
-    terminalVelocitiesObjectSpace(object.convertToObjectSpace(terminalVelocitiesWorldSpace)),
+PositionController::PositionController(const glm::vec2& sizeObjectSpace, const glm::vec2& gravityInObjectSpace, const glm::vec2& terminalVelocityObjectSpace, const glm::vec2& xAxis, const glm::vec2& yAxis):
+    object(xAxis, yAxis, sizeObjectSpace),
+    gravityObjectSpace(gravityInObjectSpace),
+    terminalVelocitiesObjectSpace(terminalVelocityObjectSpace),
     velocitiesObjectSpace(0, 0),
     previousDeltaTime(0)
     {
-        terminalVelocitiesObjectSpace.x = glm::abs(terminalVelocitiesObjectSpace.x);
-        terminalVelocitiesObjectSpace.y = glm::abs(terminalVelocitiesObjectSpace.y);
+
     }
 
-void PositionController::setVelocities(const glm::vec2& velocitiesWorldSpace) {
+void PositionController::setVelocities(const glm::vec2& velocityObjectSpace) {
 
-    velocitiesObjectSpace = object.convertToObjectSpace(velocitiesWorldSpace);
+    velocitiesObjectSpace = velocityObjectSpace;
 
     capVelocities();
 }
@@ -34,24 +33,39 @@ void PositionController::setPositionWorldSpace(const glm::vec2& position) {
     object.setPositionWorldSpace(position);
 }
 
-const glm::vec2 PositionController::getVelocitiesObjectSpace() {
+void PositionController::setPositionObjectSpace(const glm::vec2& position) {
+
+    object.setPositionObjectSpace(position);
+}
+
+const glm::vec2 PositionController::getVelocitiesObjectSpace() const {
 
     return velocitiesObjectSpace;
 }
 
-const glm::vec2 PositionController::getVelocitiesWorldSpace() {
+const glm::vec2 PositionController::getVelocitiesWorldSpace() const {
 
     return object.convertToWorldSpace(velocitiesObjectSpace);
 }
 
-const sf::FloatRect PositionController::getBoundingBoxWorldSpace() {
+const sf::FloatRect PositionController::getBoundingBoxWorldSpace() const {
 
     return object.getBoundingBoxWorldSpace();
 }
 
-const float PositionController::getLastDelta() {
+const sf::FloatRect PositionController::getBoundingBoxObjectSpace() const {
+
+    return object.getBoundingBoxObjectSpace();
+}
+
+const float PositionController::getLastDelta() const {
 
     return previousDeltaTime;
+}
+
+const ObjectSpaceManager& PositionController::getObjectSpace() const {
+
+    return object;
 }
 
 void PositionController::updateVelocities(const float& delta) {
@@ -63,9 +77,17 @@ void PositionController::updateVelocities(const float& delta) {
     previousDeltaTime = delta;
 }
 
+bool PositionController::move(const float &delta, const sf::FloatRect &worldBounds) {
+    
+    bool snappedHorizontally = moveAlongXAxis(delta, worldBounds);
+    bool snappedVertically = moveAlongYAxis(delta, worldBounds);
+    
+    return snappedHorizontally 
+}
+
 bool PositionController::moveAlongXAxis(const float& delta, const sf::FloatRect& worldBounds) {
 
-    float xOffset = velocitiesObjectSpace.x * METERS_TO_PIXEL_RATIO* delta;
+    float xOffset = velocitiesObjectSpace.x * METERS_TO_PIXEL_RATIO * delta;
     object.move(glm::vec2(xOffset, 0));
 
     //calculate the bounds of the world in object space and do bounds checking in object space

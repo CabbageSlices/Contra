@@ -40,12 +40,13 @@
 
 1427852681 c:\users\nimesh\documents\github\contra\globalconstants.h
 
-1428379852 source:c:\users\nimesh\documents\github\contra\main.cpp
+1428455505 source:c:\users\nimesh\documents\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
 	"Tile.h"
 	"TileMap.h"
+	"Gun.h"
 
 1428444631 c:\users\nimesh\documents\github\contra\player.h
 	"SFML/Graphics.hpp"
@@ -53,19 +54,19 @@
 	"PositionController.h"
 	"TileMap.h"
 
-1428344719 c:\users\nimesh\documents\github\contra\positioncontroller.h
+1428453938 c:\users\nimesh\documents\github\contra\positioncontroller.h
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
 	"ObjectSpaceManager.h"
 
-1428295841 c:\users\nimesh\documents\github\contra\objectspacemanager.h
+1428456161 c:\users\nimesh\documents\github\contra\objectspacemanager.h
 	<SFML/Graphics.hpp>
 	"glm/glm.hpp"
 
-1428344630 source:c:\users\nimesh\documents\github\contra\objectspacemanager.cpp
+1428455959 source:c:\users\nimesh\documents\github\contra\objectspacemanager.cpp
 	"ObjectSpaceManager.h"
 
-1428381815 source:c:\users\nimesh\documents\github\contra\player.cpp
+1428455841 source:c:\users\nimesh\documents\github\contra\player.cpp
 	"Player.h"
 	"TileCollisionHandling.h"
 	<iostream>
@@ -73,7 +74,7 @@
 	<memory>
 	"Tile.h"
 
-1428344591 source:c:\users\nimesh\documents\github\contra\positioncontroller.cpp
+1428453950 source:c:\users\nimesh\documents\github\contra\positioncontroller.cpp
 	"PositionController.h"
 	"GlobalConstants.h"
 	<glm/glm.hpp>
@@ -109,4 +110,33 @@
 	"glm/gtc/type_precision.hpp"
 	<memory>
 	<vector>
+
+1428447561 source:c:\users\nimesh\documents\github\contra\direction.cpp
+	"Direction.h"
+
+1428447249 c:\users\nimesh\documents\github\contra\direction.h
+	"glm/glm.hpp"
+
+1428455463 source:c:\users\nimesh\documents\github\contra\bullet.cpp
+	"Bullet.h"
+	<iostream>
+
+1428455015 c:\users\nimesh\documents\github\contra\bullet.h
+	"PositionController.h"
+	"SFML/Graphics.hpp"
+	"SFML/System.hpp"
+	"glm/glm.hpp"
+
+1428453454 source:c:\users\nimesh\documents\github\contra\gun.cpp
+	"Gun.h"
+	"Bullet.h"
+
+1428452780 c:\users\nimesh\documents\github\contra\gun.h
+	<SFML/Graphics.hpp>
+	<SFML/Window.hpp>
+	"ObjectSpaceManager.h"
+	"Direction.h"
+	<vector>
+	<memory>
+	"glm/glm.hpp"
 

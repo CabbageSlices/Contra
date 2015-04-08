@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Tile.h"
 #include "TileMap.h"
+#include "Gun.h"
 
 int main() {
 
@@ -15,6 +16,8 @@ int main() {
     sf::Clock timer;
 
     TileMap tileMap(1024, 768);
+
+    ObjectSpaceManager objSpace(glm::vec2(1, 0), glm::vec2(0, 1), glm::vec2(64, 64));
 
     while(window.isOpen()) {
 
@@ -56,7 +59,6 @@ int main() {
                         tileMap.setTile(mousePosition, TileType::SOLID);
                     }
 
-
                 }
 
                 if(event.mouseButton.button == sf::Mouse::Right) {
@@ -72,7 +74,9 @@ int main() {
 
         sf::Time deltaTime = timer.restart();
 
-        player.update(deltaTime.asSeconds(), sf::FloatRect(0, 0, 1024, 768), tileMap);
+        sf::FloatRect worldBounds = sf::FloatRect(0, 0, 1024, 768);
+
+        player.update(deltaTime.asSeconds(), worldBounds, tileMap);
 
         window.clear();
 

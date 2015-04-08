@@ -31,6 +31,9 @@ class PositionController {
         //update velocities applies gravity to the velocities
         void updateVelocities(const float& delta);
 
+        //does not check if out of bounds
+        void move(const float& delta, const sf::FloatRect& worldBounds);
+
         //returns true if object hit the world bounds and snapped to the edge
         //useful if you want to set velocity to 0 or allow jumping when on top of a surface
         bool moveAlongXAxis(const float& delta, const sf::FloatRect& worldBounds);

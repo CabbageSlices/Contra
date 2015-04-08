@@ -7,7 +7,7 @@
 
 //objects that other classes can use to keep track of their positions and velocities
 //this object is used to that all other objects have a reusable interface when colliding with tiles
-
+///VELOCITY DATA GIVEN TO THIS OBJECT NEEDS TO BE IN METERS PER SECOND
 class PositionController {
 
     public:
@@ -19,14 +19,20 @@ class PositionController {
         void setVelocities(const glm::vec2& velocityObjectSpace);
         void setVelocities(const float& xVelocityObjectSpace, const float& yVelocityObjectSpace);
         void setPositionWorldSpace(const glm::vec2& position);
+        void setPositionObjectSpace(const glm::vec2& position);
 
-        const glm::vec2 getVelocitiesObjectSpace();
-        const glm::vec2 getVelocitiesWorldSpace();
-        const sf::FloatRect getBoundingBoxWorldSpace();
-        const float getLastDelta();
+        const glm::vec2 getVelocitiesObjectSpace() const;
+        const glm::vec2 getVelocitiesWorldSpace() const;
+        const sf::FloatRect getBoundingBoxWorldSpace() const;
+        const sf::FloatRect getBoundingBoxObjectSpace() const;
+        const float getLastDelta() const;
+        const ObjectSpaceManager& getObjectSpace() const;
 
         //update velocities applies gravity to the velocities
         void updateVelocities(const float& delta);
+
+        //does not check if out of bounds 
+        bool move(const float& delta, const sf::FloatRect& worldBounds);
 
         //returns true if object hit the world bounds and snapped to the edge
         //useful if you want to set velocity to 0 or allow jumping when on top of a surface
