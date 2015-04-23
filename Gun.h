@@ -16,7 +16,6 @@ class TileMap;
 //the gun's initial firing direction is also specified by the owner
 //these traits of the gun are all in the space of the object that owns the gun
 //thus when the gun is fired it requires transformations from owner object space to world space
-
 class Gun {
 
     public:
@@ -29,7 +28,15 @@ class Gun {
 
     private:
 
+        bool checkCanFire() {
+
+            return timeSinceLastFired > fireDelay;
+        }
+
         void createBullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace);
+
+        sf::Time timeSinceLastFired;
+        sf::Time fireDelay;
 
         //position of the gun relative to the user's top left
         glm::vec2 positionUserSpace;

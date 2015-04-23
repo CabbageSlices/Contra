@@ -9,6 +9,8 @@ using std::cout;
 using std::endl;
 
 Gun::Gun(const ObjectSpaceManager &userObjSpace, const glm::vec2 &relativePosition) :
+    timeSinceLastFired(sf::seconds(0)),
+    fireDelay(sf::seconds(0.1)),
     positionUserSpace(relativePosition),
     userObjectSpace(userObjSpace),
     bullets()
@@ -18,11 +20,13 @@ Gun::Gun(const ObjectSpaceManager &userObjSpace, const glm::vec2 &relativePositi
 
 void Gun::fire(const glm::vec2 &userPositionWorldSpace, const Direction &fireDirection) {
 
+    if(!checkCanFire()) {
+
+        return;
+    }
+
     glm::vec2 directionVector = getDirectionVector(fireDirection);
     directionVector = glm::normalize(directionVector);
-
-    glm::vec2 userSpacePos = userObjectSpace.convertToWorldSpace(positionUserSpace);
-
 
     //calculate position and direction of gun in world space
     glm::vec2 positionWorldSpace = userPositionWorldSpace;
@@ -39,9 +43,13 @@ void Gun::fire(const glm::vec2 &userPositionWorldSpace, const Direction &fireDir
     positionWorldSpace +=  worldSpaceDistanceToCenter + directionWorldSpace * glm::max(userSizeWorldSpace.x, userSizeWorldSpace.y) / 2.f;
 
     createBullet(positionWorldSpace, directionWorldSpace);
+
+    timeSinceLastFired = sf::seconds(0);
 }
 
 void Gun::update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map) {
+
+    timeSinceLastFired += sf::seconds(delta);
 
     for(unsigned i = 0; i < bullets.size();) {
 
