@@ -38,6 +38,16 @@ void PositionController::setPositionObjectSpace(const glm::vec2& position) {
     object.setPositionObjectSpace(position);
 }
 
+const glm::vec2 PositionController::getPositionWorldSpace() const {
+
+    return object.getPositionWorldSpace();
+}
+
+const glm::vec2 PositionController::getPositionObjectSpace() const {
+
+    return object.getPositionObjectSpace();
+}
+
 const glm::vec2 PositionController::getVelocitiesObjectSpace() const {
 
     return velocitiesObjectSpace;

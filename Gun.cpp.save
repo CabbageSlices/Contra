@@ -1,9 +1,12 @@
 #include "Gun.h"
 #include "Bullet.h"
+#include <iostream>
 
 using std::vector;
 using std::shared_ptr;
 using std::make_shared;
+using std::cout;
+using std::endl;
 
 Gun::Gun(const ObjectSpaceManager &userObjSpace, const glm::vec2 &relativePosition) :
     positionUserSpace(relativePosition),
@@ -18,18 +21,25 @@ void Gun::fire(const glm::vec2 &userPositionWorldSpace, const Direction &fireDir
     glm::vec2 directionVector = getDirectionVector(fireDirection);
     directionVector = glm::normalize(directionVector);
 
+    glm::vec2 userSpacePos = userObjectSpace.convertToWorldSpace(positionUserSpace);
+
+
     //calculate position and direction of gun in world space
-    glm::vec2 positionWorldSpace = userPositionWorldSpace + userObjectSpace.convertToWorldSpace(positionUserSpace);
+    glm::vec2 userSizeWorldSpace = userObjectSpace.getSizeWorldSpace();
+    glm::vec2 positionWorldSpace = userPositionWorldSpace;
+    
+    //origin of bullet varies depending on direction the gun is being fired in
+
     glm::vec2 directionWorldSpace = userObjectSpace.convertToWorldSpace(directionVector);
 
     createBullet(positionWorldSpace, directionWorldSpace);
 }
 
-void Gun::update(const float &delta, const sf::FloatRect &worldBounds) {
+void Gun::update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map) {
 
     for(unsigned i = 0; i < bullets.size();) {
 
-        bullets[i]->update(delta, worldBounds);
+        bullets[i]->update(delta, worldBounds, map);
 
         if(!bullets[i]->checkIsAlive()) {
 

@@ -3,16 +3,25 @@
 
 #include "glm/glm.hpp"
 
-enum Direction {
+enum HorizontalDirection {
 
-    UP,
-    UP_RIGHT,
-    RIGHT,
-    DOWN_RIGHT,
-    DOWN,
-    DOWN_LEFT,
     LEFT,
-    UP_LEFT,
+    RIGHT
+};
+
+enum VerticalDirection {
+
+    STRAIGHT,
+    UP,
+    DOWN,
+};
+
+struct Direction {
+
+    HorizontalDirection horizontal = RIGHT;
+    VerticalDirection vertical = STRAIGHT;
+
+    bool isFacingCompletelyVertical = false;
 };
 
 //calculate the normalized vector that points in the given direction

@@ -21,6 +21,8 @@ class PositionController {
         void setPositionWorldSpace(const glm::vec2& position);
         void setPositionObjectSpace(const glm::vec2& position);
 
+        const glm::vec2 getPositionWorldSpace() const;
+        const glm::vec2 getPositionObjectSpace() const;
         const glm::vec2 getVelocitiesObjectSpace() const;
         const glm::vec2 getVelocitiesWorldSpace() const;
         const sf::FloatRect getBoundingBoxWorldSpace() const;

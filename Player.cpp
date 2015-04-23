@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include "Gun.h"
 #include "Tile.h"
 
 using std::vector;
@@ -16,10 +17,19 @@ Player::Player(const PlayerKeys& keyConfiguration):
     holdingJump(false),
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(220)),
-    positionController(glm::vec2(64, 128), glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(0, 1), glm::vec2(-1, 0)),
+    positionController(glm::vec2(64, 128), glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(1, 0), glm::vec2(0, 1)),
+    direction(),
     player(sf::Vector2f(100, 50)),
+    gun(),
     controls(keyConfiguration)
     {
+        gun = std::make_shared<Gun>(positionController.getObjectSpace(), glm::vec2(0, 0));
+
+        if(!gun) {
+
+            exit(-1);
+        }
+
         player.setSize(sf::Vector2f(positionController.getBoundingBoxWorldSpace().width, positionController.getBoundingBoxWorldSpace().height));
     }
 
@@ -47,7 +57,14 @@ void Player::handleKeystate(sf::RenderWindow& window) {
         jump();
     }
 
+    if(sf::Keyboard::isKeyPressed(controls.fire)) {
+
+        gun->fire(positionController.getPositionWorldSpace(), direction);
+    }
+
     holdingJump = sf::Keyboard::isKeyPressed(controls.jump);
+
+    determineDirection();
 }
 
 void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map) {
@@ -72,10 +89,13 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
     handleTileCollisionVertically(map);
 
     player.setPosition(positionController.getBoundingBoxWorldSpace().left, positionController.getBoundingBoxWorldSpace().top);
+
+    gun->update(deltaTime, worldBounds, map);
 }
 
 void Player::draw(sf::RenderWindow& window) {
 
+    gun->draw(window);
     window.draw(player);
 }
 
@@ -107,6 +127,33 @@ void Player::handleTileCollisionHorizontally(TileMap& map) {
 void Player::handleTileCollisionVertically(TileMap& map) {
 
     handleTileCollision(map, &handleCollisionVertical);
+}
+
+void Player::determineDirection() {
+
+    if(positionController.getVelocitiesObjectSpace().x < 0) {
+
+        direction.horizontal = HorizontalDirection::LEFT;
+
+    } else if(positionController.getVelocitiesObjectSpace().x > 0) {
+
+        direction.horizontal = HorizontalDirection::RIGHT;
+    }
+
+    if(sf::Keyboard::isKeyPressed(controls.up)) {
+
+        direction.vertical = VerticalDirection::UP;
+
+    } else if(sf::Keyboard::isKeyPressed(controls.down)) {
+
+        direction.vertical = VerticalDirection::DOWN;
+
+    } else {
+
+        direction.vertical = VerticalDirection::STRAIGHT;
+    }
+
+    direction.isFacingCompletelyVertical = (positionController.getVelocitiesObjectSpace().x == 0 && direction.vertical != VerticalDirection::STRAIGHT);
 }
 
 void Player::jump() {

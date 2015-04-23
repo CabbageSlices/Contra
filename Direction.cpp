@@ -2,50 +2,47 @@
 
 glm::vec2 getDirectionVector(const Direction& direction) {
 
-    switch(direction) {
+    if(direction.isFacingCompletelyVertical && direction.vertical != VerticalDirection::STRAIGHT) {
 
-        case Direction::UP: {
+        if(direction.vertical == VerticalDirection::UP) {
 
             return glm::vec2(0, -1);
-        }
 
-        case Direction::UP_RIGHT: {
-
-            return glm::vec2(0.7071, -0.7071);
-        }
-
-        case Direction::RIGHT: {
-
-            return glm::vec2(1, 0);
-        }
-
-        case Direction::DOWN_RIGHT: {
-
-            return glm::vec2(0.7071, 0.7071);
-        }
-
-        case Direction::DOWN: {
+        } else if(direction.vertical == VerticalDirection::DOWN) {
 
             return glm::vec2(0, 1);
         }
+    }
 
-        case Direction::DOWN_LEFT: {
+    if(direction.horizontal == HorizontalDirection::LEFT) {
 
-            return glm::vec2(-0.7071, 0.7071);
-        }
-
-        case Direction::LEFT: {
+        if(direction.vertical == VerticalDirection::STRAIGHT) {
 
             return glm::vec2(-1, 0);
+
+        } else if(direction.vertical == VerticalDirection::UP) {
+
+            return glm::vec2(-0.707, -0.707);
+
+        } else if(direction.vertical == VerticalDirection::DOWN) {
+
+            return glm::vec2(-0.707, 0.707);
         }
 
-        case Direction::UP_LEFT: {
+    } else if(direction.horizontal == HorizontalDirection::RIGHT) {
 
-            return glm::vec2(-0.7071, -0.7071);
+        if(direction.vertical == VerticalDirection::STRAIGHT) {
+
+            return glm::vec2(1, 0);
+
+        } else if(direction.vertical == VerticalDirection::UP) {
+
+            return glm::vec2(0.707, -0.707);
+
+        } else if(direction.vertical == VerticalDirection::DOWN) {
+
+            return glm::vec2(0.707, 0.707);
         }
-
-        default:
-        return glm::vec2(0, 0);
     }
 
     return glm::vec2(0, 0);

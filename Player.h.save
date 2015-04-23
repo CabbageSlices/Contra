@@ -5,6 +5,10 @@
 #include "GlobalConstants.h"
 #include "PositionController.h"
 #include "TileMap.h"
+#include "Direction.h"
+#include <memory>
+
+class Gun;
 
 struct PlayerKeys {
 
@@ -14,7 +18,7 @@ struct PlayerKeys {
     sf::Keyboard::Key right = sf::Keyboard::Right;
 
     sf::Keyboard::Key jump = sf::Keyboard::A;
-    sf::Keyboard::Key shoot = sf::Keyboard::S;
+    sf::Keyboard::Key fire = sf::Keyboard::S;
 };
 
 class Player {
@@ -52,9 +56,10 @@ class Player {
 
             return holdingJump && extraJumpTimer.getElapsedTime() < extraJumpDuration;
         }
-        
-        //since vertical and horizontal tile collisions differ only in terms of the collision handling function they call, this function will handle both and allow you to s
+
+        //vertical and horizontal tile collisions differ only in terms of the collision handling function they call
         void handleTileCollision(TileMap& map, bool(*collisionFunction)(std::shared_ptr<Tile>& tile, PositionObject& object));
+        void handleTileCollisionHorizontally(TileMap& map);
         void handleTileCollisionVertically(TileMap& map);
 
         void jump();
@@ -73,7 +78,9 @@ class Player {
 
         PositionController positionController;
 
+        Direction direction;
         sf::RectangleShape player;
+        std::shared_ptr<Gun> gun;
 
         //the control setup for this player
         PlayerKeys controls;

@@ -5,6 +5,10 @@
 #include "GlobalConstants.h"
 #include "PositionController.h"
 #include "TileMap.h"
+#include "Direction.h"
+#include <memory>
+
+class Gun;
 
 struct PlayerKeys {
 
@@ -14,7 +18,7 @@ struct PlayerKeys {
     sf::Keyboard::Key right = sf::Keyboard::Right;
 
     sf::Keyboard::Key jump = sf::Keyboard::A;
-    sf::Keyboard::Key shoot = sf::Keyboard::S;
+    sf::Keyboard::Key fire = sf::Keyboard::S;
 };
 
 class Player {
@@ -58,6 +62,7 @@ class Player {
         void handleTileCollisionHorizontally(TileMap& map);
         void handleTileCollisionVertically(TileMap& map);
 
+        void determineDirection();
         void jump();
 
         //velocity of player when he begins to move
@@ -74,7 +79,9 @@ class Player {
 
         PositionController positionController;
 
+        Direction direction;
         sf::RectangleShape player;
+        std::shared_ptr<Gun> gun;
 
         //the control setup for this player
         PlayerKeys controls;

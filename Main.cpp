@@ -66,8 +66,6 @@ int main() {
                 if(event.mouseButton.button == sf::Mouse::Right) {
 
                     tileMap.setTile(mousePosition, TileType::EMPTY);
-
-                    gun.fire(glm::vec2(0, 0), Direction::UP_RIGHT);
                 }
             }
 

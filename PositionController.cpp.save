@@ -38,6 +38,11 @@ void PositionController::setPositionObjectSpace(const glm::vec2& position) {
     object.setPositionObjectSpace(position);
 }
 
+const glm::vec2 PositionController::getPositionWorldSpace() const {
+    
+    return objec
+}
+
 const glm::vec2 PositionController::getVelocitiesObjectSpace() const {
 
     return velocitiesObjectSpace;
@@ -77,12 +82,12 @@ void PositionController::updateVelocities(const float& delta) {
     previousDeltaTime = delta;
 }
 
-bool PositionController::move(const float &delta, const sf::FloatRect &worldBounds) {
-    
-    bool snappedHorizontally = moveAlongXAxis(delta, worldBounds);
-    bool snappedVertically = moveAlongYAxis(delta, worldBounds);
-    
-    return snappedHorizontally 
+void PositionController::move(const float &delta, const sf::FloatRect &worldBounds) {
+
+    previousDeltaTime = delta;
+
+    glm::vec2 offset = velocitiesObjectSpace * METERS_TO_PIXEL_RATIO * delta;
+    object.move(offset);
 }
 
 bool PositionController::moveAlongXAxis(const float& delta, const sf::FloatRect& worldBounds) {
