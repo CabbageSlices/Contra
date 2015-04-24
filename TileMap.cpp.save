@@ -20,6 +20,8 @@ TileMap::TileMap(const unsigned &mapWidth, const unsigned &mapHeight):
     {
         createMap(mapWidth, mapHeight);
     }
+    
+void Til
 
 void TileMap::setTile(const sf::Vector2f& position, const TileType& type) {
 
@@ -30,9 +32,9 @@ void TileMap::setTile(const sf::Vector2f& position, const TileType& type) {
         return;
     }
 
-    int index = position.y * gridWidth + position.x;
+    int index = gridPosition.y * gridWidth + gridPosition.x;
 
-    if(tiles.size() >= index) {
+    if(tiles.size() <= index) {
 
         return;
     }
@@ -69,9 +71,24 @@ vector<shared_ptr<Tile> > TileMap::getTilesInRegion(const glm::vec2 &upperLeft, 
     return tilesInRegion;
 }
 
-void TileMap::draw(sf::RenderWindow& window, const sf::FloatRect& regionToDraw) {
-    
-    
+void TileMap::draw(sf::RenderWindow& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight) {
+
+    vector<shared_ptr<Tile> > tilesInRegion = getTilesInRegion(upperLeft, lowerRight);
+
+    for(unsigned i = 0; i < tilesInRegion.size(); ++i) {
+
+        tilesInRegion[i]->draw(window);
+    }
+}
+
+void TileMap::drawDebug(sf::RenderWindow& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight) {
+
+    vector<shared_ptr<Tile> > tilesInRegion = getTilesInRegion(upperLeft, lowerRight);
+
+    for(unsigned i = 0; i < tilesInRegion.size(); ++i) {
+
+        tilesInRegion[i]->drawDebug(window);
+    }
 }
 
 void TileMap::createMap(const unsigned &mapWidth, const unsigned &mapHeight) {

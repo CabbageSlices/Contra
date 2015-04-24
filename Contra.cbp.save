@@ -33,6 +33,8 @@
 		</Compiler>
 		<Unit filename="Bullet.cpp" />
 		<Unit filename="Bullet.h" />
+		<Unit filename="Camera.cpp" />
+		<Unit filename="Camera.h" />
 		<Unit filename="Direction.cpp" />
 		<Unit filename="Direction.h" />
 		<Unit filename="GlobalConstants.cpp" />

@@ -4,6 +4,11 @@
 #include "Tile.h"
 #include "TileMap.h"
 #include "Gun.h"
+#include "Camera.h"
+
+#include <vector>
+
+using std::vector;
 
 int main() {
 
@@ -15,11 +20,15 @@ int main() {
 
     sf::Clock timer;
 
-    TileMap tileMap(1024, 768);
-
     ObjectSpaceManager objSpace(glm::vec2(1, 0), glm::vec2(0, 1), glm::vec2(64, 64));
 
     Gun gun(objSpace, glm::vec2(500, 300));
+
+    sf::FloatRect worldBounds(0, 0, 2048, 768);
+
+    TileMap tileMap(worldBounds.width, worldBounds.height);
+
+    Camera camera(window);
 
     while(window.isOpen()) {
 
@@ -76,10 +85,18 @@ int main() {
 
         sf::Time deltaTime = timer.restart();
 
-        sf::FloatRect worldBounds = sf::FloatRect(0, 0, 1024, 768);
+        vector<glm::vec2> playerPositions;
 
         player.update(deltaTime.asSeconds(), worldBounds, tileMap);
         gun.update(deltaTime.asSeconds(), worldBounds, tileMap);
+
+        playerPositions.push_back(glm::vec2(1500, 300));
+        playerPositions.push_back(player.getPositionWorldSpace());
+
+        camera.calculateProperties(playerPositions);
+        camera.update(deltaTime.asSeconds(), worldBounds);
+
+        camera.applyCamera(window);
 
         window.clear();
 

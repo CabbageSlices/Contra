@@ -99,6 +99,11 @@ void Player::draw(sf::RenderWindow& window) {
     window.draw(player);
 }
 
+const glm::vec2 Player::getPositionWorldSpace() const {
+
+    return positionController.getPositionWorldSpace();
+}
+
 void Player::handleTileCollision(TileMap& map, bool(*collisionFunction)(std::shared_ptr<Tile>& tile, PositionObject& object)) {
 
     sf::FloatRect bounding = positionController.getObjectSpace().getBoundingBoxWorldSpace();

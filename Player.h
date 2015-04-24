@@ -35,6 +35,7 @@ class Player {
 
         void draw(sf::RenderWindow& window);
 
+        const glm::vec2 getPositionWorldSpace() const;
 
     private:
 

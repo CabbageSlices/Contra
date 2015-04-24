@@ -18,6 +18,7 @@ class TileMap {
         //map width and height are in world coordinates, not grid coordinates, measured in pixels
         TileMap(const unsigned &width, const unsigned &height);
 
+        void resize(const unsigned &width, const unsigned &height);
         void setTile(const sf::Vector2f& position, const TileType& type);
 
         //return all the tiles enclosed in the given region
@@ -29,8 +30,6 @@ class TileMap {
         void drawDebug(sf::RenderWindow& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
 
     private:
-
-        void createMap(const unsigned &mapWidth, const unsigned &mapHeight);
 
         //turns the given world coordinate into grid coordinate
         //doesn't check if its a valid coordinate

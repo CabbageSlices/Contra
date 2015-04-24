@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Tile.h"
 #include "TileMap.h"
+#include "Gun.h"
 
 int main() {
 
@@ -14,7 +15,14 @@ int main() {
 
     sf::Clock timer;
 
+    ObjectSpaceManager objSpace(glm::vec2(1, 0), glm::vec2(0, 1), glm::vec2(64, 64));
+
+    Gun gun(objSpace, glm::vec2(500, 300));
+    
+    sf::FloatRect worldBounds(0, 0, 2048, 768);
+    
     TileMap tileMap(1024, 768);
+    
 
     while(window.isOpen()) {
 
@@ -38,12 +46,24 @@ int main() {
                 sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getDefaultView());
 
                 if(event.mouseButton.button == sf::Mouse::Left) {
-                    
-                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::1)) {
-                        
+
+                    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
+
                         tileMap.setTile(mousePosition, TileType::UPWARD_RIGHT_1_1);
+
+                    } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
+
+                        tileMap.setTile(mousePosition, TileType::UPWARD_LEFT_1_1);
+
+                    }  else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
+
+                        tileMap.setTile(mousePosition, TileType::ONE_WAY);
+
+                    } else {
+
+                        tileMap.setTile(mousePosition, TileType::SOLID);
                     }
-                    tileMap.setTile(mousePosition, TileType::SOLID);
+
                 }
 
                 if(event.mouseButton.button == sf::Mouse::Right) {
@@ -59,12 +79,16 @@ int main() {
 
         sf::Time deltaTime = timer.restart();
 
-        player.update(deltaTime.asSeconds(), sf::FloatRect(0, 0, 1024, 768), tileMap);
+        sf::FloatRect worldBounds = sf::FloatRect(0, 0, 1024, 768);
+
+        player.update(deltaTime.asSeconds(), worldBounds, tileMap);
+        gun.update(deltaTime.asSeconds(), worldBounds, tileMap);
 
         window.clear();
 
         tileMap.drawDebug(window, glm::vec2(0, 0), glm::vec2(1024, 768));
         player.draw(window);
+        gun.draw(window);
         window.display();
     }
     return 0;

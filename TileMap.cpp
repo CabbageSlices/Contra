@@ -18,8 +18,30 @@ TileMap::TileMap(const unsigned &mapWidth, const unsigned &mapHeight):
     gridWidth(),
     gridHeight()
     {
-        createMap(mapWidth, mapHeight);
+        resize(mapWidth, mapHeight);
     }
+
+void TileMap::resize(const unsigned &mapWidth, const unsigned &mapHeight) {
+
+    if(mapWidth < 0 || mapHeight < 0) {
+
+        return;
+    }
+
+    gridWidth = glm::ceil(mapWidth / static_cast<float>(TILE_SIZE));
+    gridHeight = glm::ceil(mapHeight / static_cast<float>(TILE_SIZE));
+
+    tiles.clear();
+
+    for(unsigned y = 0; y < gridHeight; ++y) {
+
+        for(unsigned x = 0; x < gridWidth; ++x) {
+
+            shared_ptr<Tile> tile = make_shared<Tile>(glm::vec2(x * TILE_SIZE, y * TILE_SIZE), TileType::EMPTY);
+            tiles.push_back(tile);
+        }
+    }
+}
 
 void TileMap::setTile(const sf::Vector2f& position, const TileType& type) {
 
@@ -86,28 +108,6 @@ void TileMap::drawDebug(sf::RenderWindow& window, const glm::vec2 &upperLeft, co
     for(unsigned i = 0; i < tilesInRegion.size(); ++i) {
 
         tilesInRegion[i]->drawDebug(window);
-    }
-}
-
-void TileMap::createMap(const unsigned &mapWidth, const unsigned &mapHeight) {
-
-    if(mapWidth < 0 || mapHeight < 0) {
-
-        return;
-    }
-
-    gridWidth = glm::ceil(mapWidth / static_cast<float>(TILE_SIZE));
-    gridHeight = glm::ceil(mapHeight / static_cast<float>(TILE_SIZE));
-
-    tiles.clear();
-
-    for(unsigned y = 0; y < gridHeight; ++y) {
-
-        for(unsigned x = 0; x < gridWidth; ++x) {
-
-            shared_ptr<Tile> tile = make_shared<Tile>(glm::vec2(x * TILE_SIZE, y * TILE_SIZE), TileType::EMPTY);
-            tiles.push_back(tile);
-        }
     }
 }
 

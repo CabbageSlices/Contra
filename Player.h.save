@@ -62,6 +62,7 @@ class Player {
         void handleTileCollisionHorizontally(TileMap& map);
         void handleTileCollisionVertically(TileMap& map);
 
+        void determineDirection();
         void jump();
 
         //velocity of player when he begins to move
