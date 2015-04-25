@@ -2,6 +2,7 @@
 #include "glm/gtx/compatibility.hpp"
 
 #include <iostream>
+#include "GlobalConstants.h"
 
 using std::cout;
 using std::endl;
@@ -10,14 +11,11 @@ using std::vector;
 Camera::Camera(sf::RenderWindow &window) :
     view(),
     defaultSize(1024, 768),
-    initialSize(1024, 768),
-    finalSize(1024, 768),
-    initialPosition(0, 0),
-    finalPosition(0, 0),
-    positionInterpolationTimeElapsed(0),
-    positionInterpolationTime(0.001),
-    sizeInterpolationTimeElapsed(0),
-    sizeInterpolationTime(0.001)
+    currentSize(1024, 768),
+    targetSize(1024, 768),
+    currentPosition(0, 0),
+    targetPosition(0, 0),
+    snapThreshold(50)
     {
         setupDefaultProperties(window);
     }
@@ -33,30 +31,28 @@ void Camera::setupDefaultProperties(sf::RenderWindow &window) {
 
 void Camera::resetZoom() {
 
-    initialSize = defaultSize;
-    finalSize = defaultSize;
-
-    sizeInterpolationTimeElapsed = 0;
+    currentSize = defaultSize;
+    targetSize = defaultSize;
 }
 
 void Camera::calculateProperties(const vector<glm::vec2> &targets) {
 
     if(targets.size() == 0) {
 
-        finishAllInterpolation();
+        finishAllTransitions();
         return;
     }
 
     glm::vec2 centerPos = calculateCenterPosition(targets);
-    finalPosition = centerPos;
+    targetPosition = centerPos;
 
     glm::vec2 size = calculateSize(targets);
-    finalSize = size;
+    targetSize = size;
 }
 
 void Camera::update(const float &delta, const sf::FloatRect &worldBounds) {
 
-    updateInterpolationParameters(delta);
+    handleTransitions(delta);
     calculateView(worldBounds);
 }
 
@@ -75,39 +71,124 @@ sf::FloatRect Camera::getCameraBounds() const {
     return sf::FloatRect(topLeft.x, topLeft.y, size.x, size.y);
 }
 
-void Camera::updateInterpolationParameters(const float &delta) {
+void Camera::handleTransitions(const float &delta) {
 
-    positionInterpolationTimeElapsed += delta;
+    if(checkShouldSnapPosition()) {
 
-    if(positionInterpolationTimeElapsed > positionInterpolationTime) {
+        snapToTargetPosition();
 
-        finishInterpolatingPosition();
+    } else {
+
+        glm::vec2 velocity = calculateVelocity();
+        currentPosition += velocity * delta;
     }
 
-    sizeInterpolationTimeElapsed += delta;
+    if(checkShouldSnapSize()) {
 
-    if(sizeInterpolationTimeElapsed > sizeInterpolationTime) {
+        snaptToTargetSize();
 
-        finishInterpolatingSize();
+    } else {
+
+        glm::vec2 sizeTransitionRate = calculateSizeTransitionRate();
+        currentSize += sizeTransitionRate * delta;
     }
 }
 
-void Camera::finishInterpolatingPosition() {
+void Camera::snapToTargetPosition() {
 
-    initialPosition = finalPosition;
-    positionInterpolationTimeElapsed = 0;
+    currentPosition = targetPosition;
 }
 
-void Camera::finishInterpolatingSize() {
+void Camera::snaptToTargetSize() {
 
-    initialSize = finalSize;
-    sizeInterpolationTimeElapsed = 0;
+    currentSize = targetSize;
 }
 
-void Camera::finishAllInterpolation() {
+void Camera::finishAllTransitions() {
 
-    finishInterpolatingPosition();
-    finishInterpolatingSize();
+    snapToTargetPosition();
+    snaptToTargetSize();
+}
+
+bool Camera::checkShouldSnapProperty(glm::vec2 currentValue, glm::vec2 targetValue) const {
+
+    glm::vec2 distance = glm::abs(targetValue - currentValue);
+    float minimumDistance = glm::min(distance.x, distance.y);
+
+    return minimumDistance < snapThreshold;
+}
+
+bool Camera::checkShouldSnapPosition() const {
+
+    return checkShouldSnapProperty(currentPosition, targetPosition);
+}
+
+bool Camera::checkShouldSnapSize() const {
+
+    return checkShouldSnapProperty(currentSize, targetSize);
+}
+
+glm::vec2 Camera::calculateVelocity() const {
+
+    glm::vec2 velocity(0, 0);
+
+    if(currentPosition.x < targetPosition.x) {
+
+        velocity.x = TERMINAL_VELOCITY * 2;
+
+    } else if(currentPosition.x > targetPosition.x) {
+
+        velocity.x = -TERMINAL_VELOCITY * 2;
+
+    } else {
+
+        velocity.x = 0;
+    }
+
+    if(currentPosition.y < targetPosition.y) {
+
+        velocity.y = TERMINAL_VELOCITY * 2;
+
+    } else if(currentPosition.y > targetPosition.y) {
+
+        velocity.y = -TERMINAL_VELOCITY * 2;
+
+    } else {
+
+        velocity.y = 0;
+    }
+
+    return velocity * METERS_TO_PIXEL_RATIO;
+}
+
+glm::vec2 Camera::calculateSizeTransitionRate() const {
+
+    glm::vec2 rate(0, 0);
+
+    const float UNIFORM_ZOOM_RATE = 400.f;
+
+    //determine wheter its zooming in or out
+    if(currentSize.x < targetSize.x) {
+
+        //zooming out
+        rate.x = UNIFORM_ZOOM_RATE;
+
+    } else if(currentSize.x > targetSize.x) {
+
+        //zooming in
+        rate.x = -UNIFORM_ZOOM_RATE;
+
+    } else {
+
+        rate.x = 0;
+    }
+
+    //you have to maintain aspect ratio so make the vertical zoom rate based on the horizontal
+    float aspectRatio = defaultSize.x / defaultSize.y;
+
+    rate.y = rate.x / aspectRatio;
+
+    return rate;
 }
 
 glm::vec2 Camera::calculateSize(const vector<glm::vec2> &targets) {
@@ -154,12 +235,14 @@ glm::vec2 Camera::calculateSize(const vector<glm::vec2> &targets) {
         size = calculateMaxSize();
     }
 
+    cout << size.x / size.y << endl;
+
     return size;
 }
 
 glm::vec2 Camera::calculateMaxSize() {
 
-    float maxScale = 2.2;
+    float maxScale = 2;
 
     return defaultSize * maxScale;
 }
@@ -178,10 +261,6 @@ glm::vec2 Camera::calculateCenterPosition(const vector<glm::vec2> &targets) {
 }
 
 void Camera::calculateView(const sf::FloatRect &worldBounds) {
-
-    //set view size and position and make sure its within bounds
-    glm::vec2 currentPosition = glm::lerp(initialPosition, finalPosition, positionInterpolationTimeElapsed / positionInterpolationTime);
-    glm::vec2 currentSize = glm::lerp(initialSize, finalSize, sizeInterpolationTimeElapsed / sizeInterpolationTime);
 
     glm::vec2 centerPosition = currentPosition;
 

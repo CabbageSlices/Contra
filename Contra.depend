@@ -40,7 +40,7 @@
 
 1427852681 c:\users\nimesh\documents\github\contra\globalconstants.h
 
-1429842772 source:c:\users\nimesh\documents\github\contra\main.cpp
+1429990667 source:c:\users\nimesh\documents\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -151,12 +151,13 @@
 	<memory>
 	"glm/glm.hpp"
 
-1429842681 source:c:\users\nimesh\documents\github\contra\camera.cpp
+1429990762 source:c:\users\nimesh\documents\github\contra\camera.cpp
 	"Camera.h"
 	"glm/gtx/compatibility.hpp"
 	<iostream>
+	"GlobalConstants.h"
 
-1429841682 c:\users\nimesh\documents\github\contra\camera.h
+1429988894 c:\users\nimesh\documents\github\contra\camera.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	<vector>

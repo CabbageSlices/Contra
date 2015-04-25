@@ -90,7 +90,7 @@ int main() {
         player.update(deltaTime.asSeconds(), worldBounds, tileMap);
         gun.update(deltaTime.asSeconds(), worldBounds, tileMap);
 
-        playerPositions.push_back(glm::vec2(1500, 300));
+        playerPositions.push_back(glm::vec2(1024, 300));
         playerPositions.push_back(player.getPositionWorldSpace());
 
         camera.calculateProperties(playerPositions);
