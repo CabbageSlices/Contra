@@ -10,32 +10,28 @@ using std::endl;
 
 const int MAX_SLOPE_SNAPPING_DISTANCE = 10;
 
-bool checkSolidTileIntersection(std::shared_ptr<Tile>& tile, PositionObject& object) {
-    
+CollisionResponse checkSolidTileIntersection(std::shared_ptr<Tile>& tile, PositionObject& object) {
+
     TileType type = tile->getType();
-    
-    sf::FloatRect boundingBox = tile->getBoundingBox();
+
+    sf::FloatRect tileBoundingBox = tile->getBoundingBox();
+    sf::FloatRect objBoundingBox = object.getObjectSpace().getBoundingBoxWorldSpace();
 
     switch(type) {
 
         case TileType::SOLID: {
 
-            handleSolidTileCollisionHorizontal(tile, object);
-            return false;
-        }
-
-        case TileType::UPWARD_LEFT_1_1:
-        case TileType::UPWARD_RIGHT_1_1: {
-
-            return handleUpSlopeTileCollision(tile, object);
+            return tileBoundingBox.intersects(objBoundingBox);
         }
 
         default:
             return false;
     }
+
+    return false;
 }
 
-bool handleCollisionHorizontal(shared_ptr<Tile>& tile, PositionObject& object) {
+CollisionResponse handleCollisionHorizontal(shared_ptr<Tile>& tile, PositionObject& object) {
 
     TileType type = tile->getType();
 

@@ -5,6 +5,7 @@
 #include "TileMap.h"
 #include "Gun.h"
 #include "Camera.h"
+#include "Enemy.h"
 
 #include <vector>
 
@@ -22,13 +23,14 @@ int main() {
 
     ObjectSpaceManager objSpace(glm::vec2(1, 0), glm::vec2(0, 1), glm::vec2(64, 64));
 
-    Gun gun(objSpace, glm::vec2(500, 300));
-
-    sf::FloatRect worldBounds(0, 0, 2048, 768);
+    sf::FloatRect worldBounds(0, 0, 3072, 768);
 
     TileMap tileMap(worldBounds.width, worldBounds.height);
 
     Camera camera(window);
+
+    Enemy enemy(glm::vec2(0, 0), glm::vec2(64, 64));
+    enemy.setInitialVelocity(glm::vec2(-TERMINAL_VELOCITY / 5, 0));
 
     while(window.isOpen()) {
 
@@ -47,9 +49,14 @@ int main() {
                 }
             }
 
+            if(event.type == sf::Event::Resized) {
+
+                camera.setupDefaultProperties(window);
+            }
+
             if(event.type == sf::Event::MouseButtonPressed) {
 
-                sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getDefaultView());
+                sf::Vector2f mousePosition = window.mapPixelToCoords(sf::Mouse::getPosition(window), window.getView());
 
                 if(event.mouseButton.button == sf::Mouse::Left) {
 
@@ -87,10 +94,10 @@ int main() {
 
         vector<glm::vec2> playerPositions;
 
-        player.update(deltaTime.asSeconds(), worldBounds, tileMap);
-        gun.update(deltaTime.asSeconds(), worldBounds, tileMap);
+        enemy.update(deltaTime.asSeconds(), worldBounds, tileMap);
 
-        playerPositions.push_back(glm::vec2(1024, 300));
+        player.update(deltaTime.asSeconds(), worldBounds, tileMap);
+
         playerPositions.push_back(player.getPositionWorldSpace());
 
         camera.calculateProperties(playerPositions);
@@ -100,9 +107,13 @@ int main() {
 
         window.clear();
 
-        tileMap.drawDebug(window, glm::vec2(0, 0), glm::vec2(1024, 768));
+        sf::FloatRect cameraBounds = camera.getCameraBounds();
+        glm::vec2 topLeft(cameraBounds.left, cameraBounds.top);
+        glm::vec2 bottomRight(cameraBounds.left + cameraBounds.width, cameraBounds.top + cameraBounds.height);
+
+        tileMap.drawDebug(window, topLeft, bottomRight);
         player.draw(window);
-        gun.draw(window);
+        enemy.draw(window);
         window.display();
     }
     return 0;

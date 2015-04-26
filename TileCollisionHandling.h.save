@@ -5,13 +5,16 @@
 #include "PositionController.h"
 #include <memory>
 
+//tile collision information to return when object collides with some tile
+struct 
+
 typedef PositionController PositionObject;
 
 //when player is on a slope he needs to clip to his new height
 //but if he clips from too far away it looks wrong, so save the max distance player can clip
 extern const int MAX_SLOPE_SNAPPING_DISTANCE;
 
-bool 
+bool checkSolidTileIntersection(std::shared_ptr<Tile>& tile, PositionObject& object);
 
 //functions that solve collisions between position objects and tiles
 //character movement is broken into horizontal and vertical parts

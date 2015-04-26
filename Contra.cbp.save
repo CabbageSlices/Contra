@@ -37,6 +37,8 @@
 		<Unit filename="Camera.h" />
 		<Unit filename="Direction.cpp" />
 		<Unit filename="Direction.h" />
+		<Unit filename="Enemy.cpp" />
+		<Unit filename="Enemy.h" />
 		<Unit filename="GlobalConstants.cpp" />
 		<Unit filename="GlobalConstants.h" />
 		<Unit filename="Gun.cpp" />

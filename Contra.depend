@@ -40,7 +40,7 @@
 
 1427852681 c:\users\nimesh\documents\github\contra\globalconstants.h
 
-1429990667 source:c:\users\nimesh\documents\github\contra\main.cpp
+1430009246 source:c:\users\nimesh\documents\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -48,12 +48,14 @@
 	"TileMap.h"
 	"Gun.h"
 	"Camera.h"
+	"Enemy.h"
 	<vector>
 
-1429841818 c:\users\nimesh\documents\github\contra\player.h
+1430011911 c:\users\nimesh\documents\github\contra\player.h
 	"SFML/Graphics.hpp"
 	"GlobalConstants.h"
 	"PositionController.h"
+	"TileCollisionHandling.h"
 	"TileMap.h"
 	"Direction.h"
 	<memory>
@@ -63,7 +65,7 @@
 	"glm/glm.hpp"
 	"ObjectSpaceManager.h"
 
-1428456161 c:\users\nimesh\documents\github\contra\objectspacemanager.h
+1430010645 c:\users\nimesh\documents\github\contra\objectspacemanager.h
 	<SFML/Graphics.hpp>
 	"glm/glm.hpp"
 
@@ -71,9 +73,8 @@
 	"ObjectSpaceManager.h"
 	<iostream>
 
-1429842474 source:c:\users\nimesh\documents\github\contra\player.cpp
+1430006875 source:c:\users\nimesh\documents\github\contra\player.cpp
 	"Player.h"
-	"TileCollisionHandling.h"
 	<iostream>
 	<vector>
 	<memory>
@@ -94,13 +95,13 @@
 	"glm/glm.hpp"
 	"PositionController.h"
 
-1428461549 source:c:\users\nimesh\documents\github\contra\tilecollisionhandling.cpp
+1430006545 source:c:\users\nimesh\documents\github\contra\tilecollisionhandling.cpp
 	"TileCollisionHandling.h"
 	"ObjectSpaceManager.h"
 	"GlobalConstants.h"
 	<iostream>
 
-1428460471 c:\users\nimesh\documents\github\contra\tilecollisionhandling.h
+1430006584 c:\users\nimesh\documents\github\contra\tilecollisionhandling.h
 	"Tile.h"
 	"PositionController.h"
 	<memory>
@@ -117,10 +118,10 @@
 	<memory>
 	<vector>
 
-1429757684 source:c:\users\nimesh\documents\github\contra\direction.cpp
+1430011852 source:c:\users\nimesh\documents\github\contra\direction.cpp
 	"Direction.h"
 
-1429757635 c:\users\nimesh\documents\github\contra\direction.h
+1430011859 c:\users\nimesh\documents\github\contra\direction.h
 	"glm/glm.hpp"
 
 1428466179 source:c:\users\nimesh\documents\github\contra\bullet.cpp
@@ -137,12 +138,12 @@
 	"glm/glm.hpp"
 	"TileMap.h"
 
-1429758643 source:c:\users\nimesh\documents\github\contra\gun.cpp
+1430008482 source:c:\users\nimesh\documents\github\contra\gun.cpp
 	"Gun.h"
 	"Bullet.h"
 	<iostream>
 
-1429758566 c:\users\nimesh\documents\github\contra\gun.h
+1430008380 c:\users\nimesh\documents\github\contra\gun.h
 	<SFML/Graphics.hpp>
 	<SFML/Window.hpp>
 	"ObjectSpaceManager.h"
@@ -151,7 +152,7 @@
 	<memory>
 	"glm/glm.hpp"
 
-1429990762 source:c:\users\nimesh\documents\github\contra\camera.cpp
+1430007023 source:c:\users\nimesh\documents\github\contra\camera.cpp
 	"Camera.h"
 	"glm/gtx/compatibility.hpp"
 	<iostream>
@@ -162,4 +163,16 @@
 	"SFML/Graphics.hpp"
 	<vector>
 	<glm/glm.hpp>
+
+1430007825 source:c:\users\nimesh\documents\github\contra\enemy.cpp
+	"Enemy.h"
+	"GlobalConstants.h"
+	<vector>
+
+1430007914 c:\users\nimesh\documents\github\contra\enemy.h
+	"SFML/Graphics.hpp"
+	"PositionController.h"
+	"TileCollisionHandling.h"
+	"TileMap.h"
+	<memory>
 

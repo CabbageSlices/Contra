@@ -31,57 +31,63 @@ bool checkSolidTileIntersection(std::shared_ptr<Tile>& tile, PositionObject& obj
     return false;
 }
 
-bool handleCollisionHorizontal(shared_ptr<Tile>& tile, PositionObject& object) {
+CollisionResponse handleCollisionHorizontal(shared_ptr<Tile>& tile, PositionObject& object) {
 
     TileType type = tile->getType();
+
+    CollisionResponse response;
 
     switch(type) {
 
         case TileType::SOLID: {
 
-            handleSolidTileCollisionHorizontal(tile, object);
-            return false;
+            response.handledHorizontal = handleSolidTileCollisionHorizontal(tile, object);
+            return response;
         }
 
         case TileType::UPWARD_LEFT_1_1:
         case TileType::UPWARD_RIGHT_1_1: {
 
-            return handleUpSlopeTileCollision(tile, object);
+            response.handledVertical = handleUpSlopeTileCollision(tile, object);
+            return response;
         }
 
         default:
-            return false;
+            return response;
     }
 
-    return false;
+    return response;
 }
 
-bool handleCollisionVertical(shared_ptr<Tile>& tile, PositionObject& object) {
+CollisionResponse handleCollisionVertical(shared_ptr<Tile>& tile, PositionObject& object) {
 
     TileType type = tile->getType();
+
+    CollisionResponse response;
 
     switch(type) {
 
         case TileType::ONE_WAY:
         case TileType::SOLID: {
 
-            return handleSolidTileCollisionVertical(tile, object);
+            response.handledVertical = handleSolidTileCollisionVertical(tile, object);
+            return response;
         }
 
         default:
-            return false;
+            return response;
     }
 
-    return false;
+    return response;
 }
 
-void handleSolidTileCollisionHorizontal(shared_ptr<Tile>& tile, PositionObject& object) {
+bool handleSolidTileCollisionHorizontal(shared_ptr<Tile>& tile, PositionObject& object) {
 
     sf::FloatRect tileBoundingBox = tile->getBoundingBox();
 
     if(!tileBoundingBox.intersects(object.getBoundingBoxWorldSpace())) {
 
-        return;
+        return false;
     }
 
     const ObjectSpaceManager &objectSpace = object.getObjectSpace();
@@ -99,12 +105,13 @@ void handleSolidTileCollisionHorizontal(shared_ptr<Tile>& tile, PositionObject& 
     if(objPosObjectSpace.x < tileLeft) {
 
         object.setPositionObjectSpace(glm::vec2(tileLeft - objSizeObjectSpace.x, objPosObjectSpace.y));
-        return;
 
     } else {
 
         object.setPositionObjectSpace(glm::vec2(tileRight, objPosObjectSpace.y));
     }
+
+    return true;
 }
 
 bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, PositionObject& object) {

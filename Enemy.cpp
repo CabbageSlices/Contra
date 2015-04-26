@@ -1,0 +1,80 @@
+#include "Enemy.h"
+#include "GlobalConstants.h"
+#include <vector>
+
+using std::vector;
+using std::shared_ptr;
+
+Enemy::Enemy(const glm::vec2 &positionWorldSpace, const glm::vec2 &sizeWorldSpace) :
+    positionController(sizeWorldSpace, glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(1, 0), glm::vec2(0, 1)),
+    enemy(sf::Vector2f(64, 64))
+    {
+        sf::Vector2f size(positionController.getBoundingBoxWorldSpace().width, positionController.getBoundingBoxWorldSpace().height);
+        enemy.setSize(size);
+    }
+
+void Enemy::setInitialVelocity(const glm::vec2 &velocityObjectSpace) {
+
+    positionController.setVelocities(velocityObjectSpace);
+}
+
+void Enemy::update(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {
+
+    positionController.updateVelocities(deltaTime);
+
+    if(positionController.moveAlongXAxis(deltaTime, worldBounds)) {
+
+        //change directions
+        glm::vec2 currentVelocity = positionController.getVelocitiesObjectSpace();
+        currentVelocity.x *= -1;
+        positionController.setVelocities(currentVelocity);
+    }
+
+    handleTileCollisionHorizontally(map);
+
+    if(positionController.moveAlongYAxis(deltaTime, worldBounds)) {
+
+        positionController.setVelocities(positionController.getVelocitiesObjectSpace().x, 0);
+    }
+
+    handleTileCollisionVertically(map);
+
+    enemy.setPosition(positionController.getBoundingBoxWorldSpace().left, positionController.getBoundingBoxWorldSpace().top);
+}
+
+void Enemy::draw(sf::RenderWindow &window) {
+
+    window.draw(enemy);
+}
+
+void Enemy::handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, PositionObject& object)) {
+
+     sf::FloatRect bounding = positionController.getObjectSpace().getBoundingBoxWorldSpace();
+
+    //calculate region encompassed by object
+    //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
+    glm::vec2 regionTopLeft = glm::vec2(bounding.left, bounding.top) - glm::vec2(TILE_SIZE, TILE_SIZE);
+    glm::vec2 regionBottomRight = glm::vec2(bounding.left + bounding.width, bounding.top + bounding.height) + glm::vec2(TILE_SIZE, TILE_SIZE);
+
+    vector<shared_ptr<Tile> > tiles = map.getTilesInRegion(regionTopLeft, regionBottomRight);
+
+    for(unsigned i = 0; i < tiles.size(); ++i) {
+
+        CollisionResponse response = collisionFunction(tiles[i], positionController);
+
+        if(response.handledHorizontal) {
+
+            positionController.setVelocities(-positionController.getVelocitiesObjectSpace().x, positionController.getVelocitiesObjectSpace().y);
+        }
+    }
+}
+
+void Enemy::handleTileCollisionHorizontally(TileMap& map) {
+
+    handleTileCollision(map, &handleCollisionHorizontal);
+}
+
+void Enemy::handleTileCollisionVertically(TileMap& map) {
+
+    handleTileCollision(map, &handleCollisionVertical);
+}

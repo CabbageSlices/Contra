@@ -4,6 +4,7 @@
 #include "SFML/Graphics.hpp"
 #include "GlobalConstants.h"
 #include "PositionController.h"
+#include "TileCollisionHandling.h"
 #include "TileMap.h"
 #include "Direction.h"
 #include <memory>
@@ -52,14 +53,24 @@ class Player {
             return positionController.getVelocitiesObjectSpace().y < 0 && !canJump;
         }
 
+        bool checkIsCrouching() const {
+
+            //player is crouching if he is holding down, not moving, and on the ground
+            return canJump && sf::Keyboard::isKeyPressed(controls.down) && positionController.getVelocitiesObjectSpace().x == 0;
+        }
+
         //check if player can extend his jump by holding the jump button
         bool checkExtendJump() {
 
             return holdingJump && extraJumpTimer.getElapsedTime() < extraJumpDuration;
         }
 
+        //calculate the position where the gun produces bullets relative to the player
+        //differs whenever player is facing in different directions
+        glm::vec2 calculateGunfireOrigin() const;
+
         //vertical and horizontal tile collisions differ only in terms of the collision handling function they call
-        void handleTileCollision(TileMap& map, bool(*collisionFunction)(std::shared_ptr<Tile>& tile, PositionObject& object));
+        void handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, PositionObject& object));
         void handleTileCollisionHorizontally(TileMap& map);
         void handleTileCollisionVertically(TileMap& map);
 
@@ -68,6 +79,7 @@ class Player {
 
         //velocity of player when he begins to move
         //measured in meters per second
+        //in object space
         const sf::Vector2f MOVEMENT_VELOCITY;
 
         bool canJump;

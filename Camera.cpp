@@ -218,7 +218,7 @@ glm::vec2 Camera::calculateSize(const vector<glm::vec2> &targets) {
     //use the larger ratio to scale the default size
     //however scale the size by a bit more than the actual ratio
     //this way the targets aren't at the edge of the camera
-    float defaultSizeScale = 1.35;
+    float defaultSizeScale = 1.4;
     defaultSizeScale *= glm::max(horizontalRatio, verticalRatio);
 
     glm::vec2 size = defaultSize * defaultSizeScale;
@@ -234,8 +234,6 @@ glm::vec2 Camera::calculateSize(const vector<glm::vec2> &targets) {
 
         size = calculateMaxSize();
     }
-
-    cout << size.x / size.y << endl;
 
     return size;
 }

@@ -1,5 +1,4 @@
 #include "Player.h"
-#include "TileCollisionHandling.h"
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -23,7 +22,7 @@ Player::Player(const PlayerKeys& keyConfiguration):
     gun(),
     controls(keyConfiguration)
     {
-        gun = std::make_shared<Gun>(positionController.getObjectSpace(), glm::vec2(0, 0));
+        gun = std::make_shared<Gun>(positionController.getObjectSpace());
 
         if(!gun) {
 
@@ -59,7 +58,7 @@ void Player::handleKeystate(sf::RenderWindow& window) {
 
     if(sf::Keyboard::isKeyPressed(controls.fire)) {
 
-        gun->fire(positionController.getPositionWorldSpace(), direction);
+        gun->fire(positionController.getPositionWorldSpace(), calculateGunfireOrigin(), direction);
     }
 
     holdingJump = sf::Keyboard::isKeyPressed(controls.jump);
@@ -104,7 +103,58 @@ const glm::vec2 Player::getPositionWorldSpace() const {
     return positionController.getPositionWorldSpace();
 }
 
-void Player::handleTileCollision(TileMap& map, bool(*collisionFunction)(std::shared_ptr<Tile>& tile, PositionObject& object)) {
+glm::vec2 Player::calculateGunfireOrigin() const {
+
+    //default facing right so its at the right side of the player
+    glm::vec2 gunPosition(player.getGlobalBounds().width, player.getGlobalBounds().height / 2);
+
+    if(direction.isFacingCompletelyVertical && !checkIsCrouching()) {
+
+        gunPosition.x = player.getGlobalBounds().width / 2;
+
+        if(direction.vertical == VerticalDirection::UP) {
+
+            gunPosition.y = 0;
+
+        } else {
+
+            gunPosition.y = player.getGlobalBounds().height;
+        }
+
+        return gunPosition;
+    }
+
+    if(direction.horizontal == HorizontalDirection::RIGHT) {
+
+        gunPosition.x = player.getGlobalBounds().width;
+
+    } else {
+
+        gunPosition.x = 0;
+    }
+
+    if(direction.vertical == VerticalDirection::UP) {
+
+        gunPosition.y = 0;
+
+    } else if(direction.vertical == VerticalDirection::DOWN) {
+
+        gunPosition.y = player.getGlobalBounds().height;
+
+    } else {
+
+        gunPosition.y = player.getGlobalBounds().height / 2;
+    }
+
+    if(checkIsCrouching()) {
+
+        gunPosition.y = player.getGlobalBounds().height / 5 * 4;
+    }
+
+    return gunPosition;
+}
+
+void Player::handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, PositionObject& object)) {
 
     sf::FloatRect bounding = positionController.getObjectSpace().getBoundingBoxWorldSpace();
 
@@ -117,7 +167,9 @@ void Player::handleTileCollision(TileMap& map, bool(*collisionFunction)(std::sha
 
     for(unsigned i = 0; i < tiles.size(); ++i) {
 
-        if(collisionFunction(tiles[i], positionController)) {
+        CollisionResponse response = collisionFunction(tiles[i], positionController);
+
+        if(response.handledVertical) {
 
             canJump = true;
         }
@@ -154,6 +206,11 @@ void Player::determineDirection() {
         direction.vertical = VerticalDirection::DOWN;
 
     } else {
+
+        direction.vertical = VerticalDirection::STRAIGHT;
+    }
+
+    if(checkIsCrouching()) {
 
         direction.vertical = VerticalDirection::STRAIGHT;
     }

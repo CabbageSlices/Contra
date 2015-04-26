@@ -33,11 +33,11 @@ class ObjectSpaceManager{
 
     private:
 
-        sf::Transform transform;
         glm::mat2 objectToWorldSpace;
         glm::mat2 worldToObjectSpace;
         glm::vec2 positionInObjectSpace;
         glm::vec2 sizeInObjectSpace;
+        glm::vec2 primarySize
 };
 
 #endif // OBJECTSPACEMANAGER_H_INCLUDED

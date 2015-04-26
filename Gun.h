@@ -20,9 +20,9 @@ class Gun {
 
     public:
 
-        Gun(const ObjectSpaceManager &userObjectSpace, const glm::vec2 &relativePosition);
+        Gun(const ObjectSpaceManager &userObjectSpace);
 
-        void fire(const glm::vec2 &userPositionWorldSpace, const Direction &fireDirection);
+        void fire(const glm::vec2 &userPositionWorldSpace, const glm::vec2 &bulletOriginUserSpace, const Direction &fireDirection);
         void update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map);
         void draw(sf::RenderWindow& window);
 
@@ -37,9 +37,6 @@ class Gun {
 
         sf::Time timeSinceLastFired;
         sf::Time fireDelay;
-
-        //position of the gun relative to the user's top left
-        glm::vec2 positionUserSpace;
 
         //object space of the user of the gun, used to transform gun's directions
         const ObjectSpaceManager& userObjectSpace;
