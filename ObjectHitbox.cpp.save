@@ -4,8 +4,8 @@
 using std::cout;
 using std::endl;
 
-ObjectHitbox::ObjectHitbox(const glm::vec2 &originPosition) :
-    origin(originPosition),
+ObjectHitbox::ObjectHitbox() :
+    origin(0, 0),
     hitboxes(),
     idActiveHitbox(0)
     {
@@ -18,11 +18,10 @@ inline void ObjectHitbox::insertHitbox(const sf::FloatRect &hitboxObjectSpace) {
 }
 
 inline void ObjectHitbox::removeHitbox(const unsigned &id) {
-    
+
     if(checkIdValid(id)) {
-        
-        //make sure the active hitbox's id isn't invalidated by the remove
-        if(idActiveHitbox >= id &&)
+
+        hitboxes.erase(hitboxes.begin() + id);
     }
 }
 
@@ -87,6 +86,6 @@ inline sf::FloatRect ObjectHitbox::getHitBoxObjectSpace(const unsigned &id) cons
 }
 
 bool ObjectHitbox::checkIdValid(const unsigned &id) const {
-    
+
     return id >= 0 && id < hitboxes.size();
 }

@@ -3,12 +3,12 @@
 
 #include "SFML/Graphics.hpp"
 #include "glm/glm.hpp"
-#include "PositionController.h"
+#include "HitboxMovementController.h"
 
 extern const int TILE_SIZE;
 
 //typedef the position controller incase you want to change to pointer type later
-typedef PositionController PositionObject;
+typedef HitboxMovementController HitboxMovementController;
 
 enum TileType {
 

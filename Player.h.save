@@ -3,7 +3,8 @@
 
 #include "SFML/Graphics.hpp"
 #include "GlobalConstants.h"
-#include "PositionController.h"
+#include "ObjectHitbox.h"
+#include "HitboxMovementController.h"
 #include "TileCollisionHandling.h"
 #include "TileMap.h"
 #include "Direction.h"
@@ -36,7 +37,7 @@ class Player {
 
         void draw(sf::RenderWindow& window);
 
-        const glm::vec2 getPositionWorldSpace() const;
+        const glm::vec2 getPosition() const;
 
     private:
 
@@ -44,19 +45,19 @@ class Player {
 
             //if player is falling it means he isn't standing on top of any object because if he was, his velocity would be 0
             //therefore he can't jump if his velocity isn't 0
-            return canJump && positionController.getVelocitiesObjectSpace().y == 0;
+            return canJump && hitboxMovementController.getVelocities().y == 0;
         }
 
         bool checkIsJumping() {
 
             //player is jumping if he is moving upwards and he isn't able to jump
-            return positionController.getVelocitiesObjectSpace().y < 0 && !canJump;
+            return hitboxMovementController.getVelocities().y < 0 && !canJump;
         }
 
-        bool checkIsCrouching() {
+        bool checkIsCrouching() const {
 
             //player is crouching if he is holding down, not moving, and on the ground
-            return canJump && direction.isFacingCompletelyVertical && direction.vertical == VerticalDirection::DOWN;
+            return canJump && sf::Keyboard::isKeyPressed(controls.down) && hitboxMovementController.getVelocities().x == 0;
         }
 
         //check if player can extend his jump by holding the jump button
@@ -70,7 +71,7 @@ class Player {
         glm::vec2 calculateGunfireOrigin() const;
 
         //vertical and horizontal tile collisions differ only in terms of the collision handling function they call
-        void handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, PositionObject& object));
+        void handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxController& object));
         void handleTileCollisionHorizontally(TileMap& map);
         void handleTileCollisionVertically(TileMap& map);
 
@@ -90,12 +91,8 @@ class Player {
         sf::Clock extraJumpTimer;
         const sf::Time extraJumpDuration;
 
-        //two seperate controllers, one is used while player is in a normal state
-        //other is used when the player is crouching
-        PositionController positionController;
-        PositionController positionWhileCrouching;
-        
-        //the currently active PositionController
+        ObjectHitbox hitbox;
+        HitboxMovementController hitboxMovementController;
 
         Direction direction;
         sf::RectangleShape player;

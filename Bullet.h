@@ -1,11 +1,12 @@
 #ifndef BULLET_H_INCLUDED
 #define BULLET_H_INCLUDED
 
-#include "PositionController.h"
+#include "HitboxMovementController.h"
 #include "SFML/Graphics.hpp"
 #include "SFML/System.hpp"
 #include "glm/glm.hpp"
 #include "TileMap.h"
+#include "ObjectHitbox.h"
 
 class Bullet {
 
@@ -32,7 +33,8 @@ class Bullet {
         sf::RectangleShape bullet;
         glm::vec2 direction;
 
-        PositionController positionController;
+        ObjectHitbox hitbox;
+        HitboxMovementController hitboxMovementController;
 };
 
 #endif // BULLET_H_INCLUDED

@@ -21,8 +21,6 @@ int main() {
 
     sf::Clock timer;
 
-    ObjectSpaceManager objSpace(glm::vec2(1, 0), glm::vec2(0, 1), glm::vec2(64, 64));
-
     sf::FloatRect worldBounds(0, 0, 3072, 768);
 
     TileMap tileMap(worldBounds.width, worldBounds.height);
@@ -31,6 +29,8 @@ int main() {
 
     Enemy enemy(glm::vec2(0, 0), glm::vec2(64, 64));
     enemy.setInitialVelocity(glm::vec2(-TERMINAL_VELOCITY / 5, 0));
+
+    bool slowed = false;
 
     while(window.isOpen()) {
 
@@ -46,6 +46,11 @@ int main() {
                 if(event.key.code == sf::Keyboard::Escape) {
 
                     window.close();
+                }
+
+                if(event.key.code == sf::Keyboard::Z) {
+
+                    slowed = !slowed;
                 }
             }
 
@@ -92,13 +97,18 @@ int main() {
 
         sf::Time deltaTime = timer.restart();
 
+        if(slowed) {
+
+            deltaTime /= 10.f;
+        }
+
         vector<glm::vec2> playerPositions;
 
         enemy.update(deltaTime.asSeconds(), worldBounds, tileMap);
 
         player.update(deltaTime.asSeconds(), worldBounds, tileMap);
 
-        playerPositions.push_back(player.getPositionWorldSpace());
+        playerPositions.push_back(player.getPosition());
 
         camera.calculateProperties(playerPositions);
         camera.update(deltaTime.asSeconds(), worldBounds);

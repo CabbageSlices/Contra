@@ -1,46 +1,46 @@
 #include "Enemy.h"
 #include "GlobalConstants.h"
-#include "TileCollisionHandling.h"
 #include <vector>
 
 using std::vector;
 using std::shared_ptr;
 
 Enemy::Enemy(const glm::vec2 &positionWorldSpace, const glm::vec2 &sizeWorldSpace) :
-    positionController(glm::vec2(64, 64), glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(1, 0), glm::vec2(0, 1)),
+    hitbox(),
+    hitboxMovementController(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), &hitbox),
     enemy(sf::Vector2f(64, 64))
     {
-        sf::Vector2f size(positionController.getBoundingBoxWorldSpace().width, positionController.getBoundingBoxWorldSpace().height);
-        enemy.setSize(size);
+        hitbox.insertHitbox(sf::FloatRect(0, 0, enemy.getSize().x, enemy.getSize().y));
+        hitbox.setActiveHitbox(0);
     }
 
-void Enemy::setInitialVelocity(const glm::vec2 &velocityObjectSpace) {
+void Enemy::setInitialVelocity(const glm::vec2 &velocity) {
 
-    positionController.setVelocities(velocityObjectSpace);
+    hitboxMovementController.setVelocities(velocity);
 }
 
 void Enemy::update(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {
 
-    positionController.updateVelocities(deltaTime);
+    hitboxMovementController.updateVelocities(deltaTime);
 
-    if(positionController.moveAlongXAxis(deltaTime, worldBounds)) {
+    if(hitboxMovementController.moveAlongXAxis(deltaTime, worldBounds)) {
 
         //change directions
-        glm::vec2 currentVelocity = positionController.getVelocitiesObjectSpace();
+        glm::vec2 currentVelocity = hitboxMovementController.getVelocities();
         currentVelocity.x *= -1;
-        positionController.setVelocities(currentVelocity);
+        hitboxMovementController.setVelocities(currentVelocity);
     }
 
     handleTileCollisionHorizontally(map);
 
-    if(positionController.moveAlongYAxis(deltaTime, worldBounds)) {
+    if(hitboxMovementController.moveAlongYAxis(deltaTime, worldBounds)) {
 
-        positionController.setVelocities(positionController.getVelocitiesObjectSpace().x, 0);
+        hitboxMovementController.setVelocities(hitboxMovementController.getVelocitiesObjectSpace().x, 0);
     }
 
     handleTileCollisionVertically(map);
 
-    enemy.setPosition(positionController.getBoundingBoxWorldSpace().left, positionController.getBoundingBoxWorldSpace().top);
+    enemy.setPosition(hitboxMovementController.getBoundingBoxWorldSpace().left, hitboxMovementController.getBoundingBoxWorldSpace().top);
 }
 
 void Enemy::draw(sf::RenderWindow &window) {
@@ -48,9 +48,9 @@ void Enemy::draw(sf::RenderWindow &window) {
     window.draw(enemy);
 }
 
-void Enemy::handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, PositionObject& object)) {
+void Enemy::handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
 
-     sf::FloatRect bounding = positionController.getObjectSpace().getBoundingBoxWorldSpace();
+     sf::FloatRect bounding = hitboxMovementController.getObjectSpace().getBoundingBoxWorldSpace();
 
     //calculate region encompassed by object
     //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
@@ -61,11 +61,11 @@ void Enemy::handleTileCollision(TileMap &map, CollisionResponse(*collisionFuncti
 
     for(unsigned i = 0; i < tiles.size(); ++i) {
 
-        CollisionResponse response = collisionFunction(tiles[i], positionController);
+        CollisionResponse response = collisionFunction(tiles[i], hitboxMovementController);
 
         if(response.handledHorizontal) {
 
-            positionController.setVelocities(-positionController.getVelocitiesObjectSpace().x, positionController.getVelocitiesObjectSpace().y);
+            hitboxMovementController.setVelocities(-hitboxMovementController.getVelocitiesObjectSpace().x, hitboxMovementController.getVelocitiesObjectSpace().y);
         }
     }
 }

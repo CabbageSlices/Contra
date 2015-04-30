@@ -16,21 +16,23 @@ Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWo
     timeElapsed(0),
     bullet(sf::Vector2f(20, 20)),
     direction(directionWorldSpace),
-    positionController(glm::vec2(20, 20), glm::vec2(0, 0), glm::vec2(1, 1) * velocity, glm::vec2(1, 0), glm::vec2(0, 1))
+    hitbox(),
+    hitboxMovementController(glm::vec2(0, 0), glm::vec2(1, 1) * velocity, &hitbox)
     {
-        bullet.setSize(sf::Vector2f(positionController.getObjectSpace().getSizeWorldSpace().x, positionController.getObjectSpace().getSizeWorldSpace().y));
-        positionController.setPositionWorldSpace(positionWorldSpace);
-        positionController.setVelocities(directionWorldSpace * velocity);
+        hitbox.setOrigin(positionWorldSpace);
+        hitbox.insertHitbox(sf::FloatRect(0, 0, bullet.getSize().x, bullet.getSize().y));
+        hitbox.setActiveHitbox(0);
+        hitboxMovementController.setVelocities(directionWorldSpace * velocity);
     }
 
 void Bullet::update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map) {
 
     timeElapsed += delta;
 
-    positionController.move(delta, worldBounds);
+    hitboxMovementController.move(delta);
     handleTileCollision(map);
 
-    glm::vec2 position = positionController.getObjectSpace().getPositionWorldSpace();
+    glm::vec2 position = hitbox.getOrigin();
 
     bullet.setPosition(position.x, position.y);
 }
@@ -49,7 +51,7 @@ void Bullet::draw(sf::RenderWindow &window) {
 
     window.draw(bullet);
 
-    sf::FloatRect rect = positionController.getObjectSpace().getBoundingBoxWorldSpace();
+    sf::FloatRect rect = hitbox.getActiveHitboxWorldSpace();
 
     sf::RectangleShape debug(sf::Vector2f(rect.width, rect.height));
     debug.setPosition(rect.left, rect.top);
@@ -59,7 +61,7 @@ void Bullet::draw(sf::RenderWindow &window) {
 
 void Bullet::handleTileCollision(TileMap& map) {
 
-    sf::FloatRect bounding = positionController.getObjectSpace().getBoundingBoxWorldSpace();
+    sf::FloatRect bounding = hitbox.getActiveHitboxWorldSpace();
 
     //calculate region encompassed by object
     //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
@@ -70,7 +72,7 @@ void Bullet::handleTileCollision(TileMap& map) {
 
     for(unsigned i = 0; i < tiles.size(); ++i) {
 
-        if(checkSolidTileIntersection(tiles[i], positionController)) {
+        if(checkSolidTileIntersection(tiles[i], hitboxMovementController)) {
 
             killBullet();
         }

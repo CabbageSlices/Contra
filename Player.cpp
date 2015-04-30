@@ -16,20 +16,22 @@ Player::Player(const PlayerKeys& keyConfiguration):
     holdingJump(false),
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(220)),
-    positionController(glm::vec2(64, 128), glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), glm::vec2(1, 0), glm::vec2(0, 1)),
+    hitbox(),
+    hitboxMovementController(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), &hitbox),
     direction(),
-    player(sf::Vector2f(100, 50)),
+    player(sf::Vector2f(50, 100)),
     gun(),
     controls(keyConfiguration)
     {
-        gun = std::make_shared<Gun>(positionController.getObjectSpace());
+        gun = std::make_shared<Gun>();
 
         if(!gun) {
 
             exit(-1);
         }
 
-        player.setSize(sf::Vector2f(positionController.getBoundingBoxWorldSpace().width, positionController.getBoundingBoxWorldSpace().height));
+        hitbox.insertHitbox(sf::FloatRect(0, 0, 50, 100));
+        hitbox.setActiveHitbox(0);
     }
 
 void Player::handleInputEvents(sf::Event& event, sf::RenderWindow& window) {
@@ -40,15 +42,15 @@ void Player::handleKeystate(sf::RenderWindow& window) {
 
     if(sf::Keyboard::isKeyPressed(controls.left)) {
 
-        positionController.setVelocities(-MOVEMENT_VELOCITY.x, positionController.getVelocitiesObjectSpace().y);
+        hitboxMovementController.setVelocities(-MOVEMENT_VELOCITY.x, hitboxMovementController.getVelocities().y);
 
     } else if(sf::Keyboard::isKeyPressed(controls.right)) {
 
-        positionController.setVelocities(MOVEMENT_VELOCITY.x, positionController.getVelocitiesObjectSpace().y);
+        hitboxMovementController.setVelocities(MOVEMENT_VELOCITY.x, hitboxMovementController.getVelocities().y);
 
     } else {
 
-        positionController.setVelocities(0, positionController.getVelocitiesObjectSpace().y);
+        hitboxMovementController.setVelocities(0, hitboxMovementController.getVelocities().y);
     }
 
     if(sf::Keyboard::isKeyPressed(controls.jump)) {
@@ -58,7 +60,7 @@ void Player::handleKeystate(sf::RenderWindow& window) {
 
     if(sf::Keyboard::isKeyPressed(controls.fire)) {
 
-        gun->fire(positionController.getPositionWorldSpace(), calculateGunfireOrigin(), direction);
+        gun->fire(hitbox.getOrigin(), calculateGunfireOrigin(), direction);
     }
 
     holdingJump = sf::Keyboard::isKeyPressed(controls.jump);
@@ -72,22 +74,22 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
     //when player is holding jump button and trying ot extend his jump height dont let gravity pull player down
     if(!checkExtendJump()) {
 
-        positionController.updateVelocities(deltaTime);
+        hitboxMovementController.updateVelocities(deltaTime);
     }
 
-    positionController.moveAlongXAxis(deltaTime, worldBounds);
+    hitboxMovementController.moveAlongXAxis(deltaTime, worldBounds);
 
     handleTileCollisionHorizontally(map);
 
-    if(positionController.moveAlongYAxis(deltaTime, worldBounds)) {
+    if(hitboxMovementController.moveAlongYAxis(deltaTime, worldBounds)) {
 
         canJump = true;
-        positionController.setVelocities(positionController.getVelocitiesObjectSpace().x, 0);
+        hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, 0);
     }
 
     handleTileCollisionVertically(map);
 
-    player.setPosition(positionController.getBoundingBoxWorldSpace().left, positionController.getBoundingBoxWorldSpace().top);
+    player.setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
 
     gun->update(deltaTime, worldBounds, map);
 }
@@ -98,9 +100,9 @@ void Player::draw(sf::RenderWindow& window) {
     window.draw(player);
 }
 
-const glm::vec2 Player::getPositionWorldSpace() const {
+const glm::vec2 Player::getPosition() const {
 
-    return positionController.getPositionWorldSpace();
+    return hitbox.getOrigin();
 }
 
 glm::vec2 Player::calculateGunfireOrigin() const {
@@ -154,9 +156,9 @@ glm::vec2 Player::calculateGunfireOrigin() const {
     return gunPosition;
 }
 
-void Player::handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, PositionObject& object)) {
+void Player::handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
 
-    sf::FloatRect bounding = positionController.getObjectSpace().getBoundingBoxWorldSpace();
+    sf::FloatRect bounding = hitbox.getActiveHitboxWorldSpace();
 
     //calculate region encompassed by object
     //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
@@ -167,7 +169,7 @@ void Player::handleTileCollision(TileMap& map, CollisionResponse(*collisionFunct
 
     for(unsigned i = 0; i < tiles.size(); ++i) {
 
-        CollisionResponse response = collisionFunction(tiles[i], positionController);
+        CollisionResponse response = collisionFunction(tiles[i], hitboxMovementController);
 
         if(response.handledVertical) {
 
@@ -188,11 +190,11 @@ void Player::handleTileCollisionVertically(TileMap& map) {
 
 void Player::determineDirection() {
 
-    if(positionController.getVelocitiesObjectSpace().x < 0) {
+    if(hitboxMovementController.getVelocities().x < 0) {
 
         direction.horizontal = HorizontalDirection::LEFT;
 
-    } else if(positionController.getVelocitiesObjectSpace().x > 0) {
+    } else if(hitboxMovementController.getVelocities().x > 0) {
 
         direction.horizontal = HorizontalDirection::RIGHT;
     }
@@ -215,7 +217,7 @@ void Player::determineDirection() {
         direction.vertical = VerticalDirection::STRAIGHT;
     }
 
-    direction.isFacingCompletelyVertical = (positionController.getVelocitiesObjectSpace().x == 0 && direction.vertical != VerticalDirection::STRAIGHT);
+    direction.isFacingCompletelyVertical = (hitboxMovementController.getVelocities().x == 0 && direction.vertical != VerticalDirection::STRAIGHT);
 }
 
 void Player::jump() {
@@ -223,7 +225,7 @@ void Player::jump() {
     if(checkCanJump()) {
 
         extraJumpTimer.restart();
-        positionController.setVelocities(positionController.getVelocitiesObjectSpace().x, -MOVEMENT_VELOCITY.y);
+        hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, -MOVEMENT_VELOCITY.y);
         canJump = false;
     }
 }

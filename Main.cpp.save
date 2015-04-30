@@ -21,10 +21,6 @@ int main() {
 
     sf::Clock timer;
 
-    ObjectSpaceManager objSpace(glm::vec2(1, 0), glm::vec2(0, 1), glm::vec2(64, 64));
-
-    Gun gun(objSpace, glm::vec2(500, 300));
-
     sf::FloatRect worldBounds(0, 0, 3072, 768);
 
     TileMap tileMap(worldBounds.width, worldBounds.height);
@@ -32,6 +28,7 @@ int main() {
     Camera camera(window);
 
     Enemy enemy(glm::vec2(0, 0), glm::vec2(64, 64));
+    enemy.setInitialVelocity(glm::vec2(-TERMINAL_VELOCITY / 5, 0));
 
     while(window.isOpen()) {
 
@@ -94,11 +91,10 @@ int main() {
         sf::Time deltaTime = timer.restart();
 
         vector<glm::vec2> playerPositions;
-        
-        enemy.draw(w)
+
+        enemy.update(deltaTime.asSeconds(), worldBounds, tileMap);
 
         player.update(deltaTime.asSeconds(), worldBounds, tileMap);
-        gun.update(deltaTime.asSeconds(), worldBounds, tileMap);
 
         playerPositions.push_back(player.getPositionWorldSpace());
 
@@ -115,7 +111,7 @@ int main() {
 
         tileMap.drawDebug(window, topLeft, bottomRight);
         player.draw(window);
-        gun.draw(window);
+        enemy.draw(window);
         window.display();
     }
     return 0;

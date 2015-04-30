@@ -16,25 +16,21 @@ Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWo
     timeElapsed(0),
     bullet(sf::Vector2f(20, 20)),
     direction(directionWorldSpace),
-    positionController(glm::vec2(20, 20), glm::vec2(0, 0), glm::vec2(1, 1) * velocity, glm::vec2(1, 0), glm::vec2(0, 1))
+    hitboxMovementController(glm::vec2(20, 20), glm::vec2(0, 0), glm::vec2(1, 1) * velocity, glm::vec2(1, 0), glm::vec2(0, 1))
     {
-        bullet.setSize(sf::Vector2f(positionController.getObjectSpace().getSizeWorldSpace().x, positionController.getObjectSpace().getSizeWorldSpace().y));
-        positionController.setPositionWorldSpace(positionWorldSpace);
-        positionController.setVelocities(directionWorldSpace * velocity);
+        bullet.setSize(sf::Vector2f(hitboxMovementController.getObjectSpace().getSizeWorldSpace().x, hitboxMovementController.getObjectSpace().getSizeWorldSpace().y));
+        hitboxMovementController.setPositionWorldSpace(positionWorldSpace);
+        hitboxMovementController.setVelocities(directionWorldSpace * velocity);
     }
 
 void Bullet::update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map) {
 
     timeElapsed += delta;
 
-    float x = velocity * timeElapsed * velocity;
-
-    positionController.setVelocities(direction.x, direction.y * sin(x * 20));
-
-    positionController.move(delta, worldBounds);
+    hitboxMovementController.move(delta, worldBounds);
     handleTileCollision(map);
 
-    glm::vec2 position = positionController.getObjectSpace().getPositionWorldSpace();
+    glm::vec2 position = hitboxMovementController.getObjectSpace().getPositionWorldSpace();
 
     bullet.setPosition(position.x, position.y);
 }
@@ -53,7 +49,7 @@ void Bullet::draw(sf::RenderWindow &window) {
 
     window.draw(bullet);
 
-    sf::FloatRect rect = positionController.getObjectSpace().getBoundingBoxWorldSpace();
+    sf::FloatRect rect = hitboxMovementController.getObjectSpace().getBoundingBoxWorldSpace();
 
     sf::RectangleShape debug(sf::Vector2f(rect.width, rect.height));
     debug.setPosition(rect.left, rect.top);
@@ -63,7 +59,7 @@ void Bullet::draw(sf::RenderWindow &window) {
 
 void Bullet::handleTileCollision(TileMap& map) {
 
-    sf::FloatRect bounding = positionController.getObjectSpace().getBoundingBoxWorldSpace();
+    sf::FloatRect bounding = hitboxMovementController.getObjectSpace().getBoundingBoxWorldSpace();
 
     //calculate region encompassed by object
     //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
@@ -74,7 +70,7 @@ void Bullet::handleTileCollision(TileMap& map) {
 
     for(unsigned i = 0; i < tiles.size(); ++i) {
 
-        if(checkSolidTileIntersection(tiles[i], positionController)) {
+        if(checkSolidTileIntersection(tiles[i], hitboxMovementController)) {
 
             killBullet();
         }

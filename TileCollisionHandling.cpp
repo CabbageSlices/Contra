@@ -1,5 +1,5 @@
 #include "TileCollisionHandling.h"
-#include "ObjectSpaceManager.h"
+#include "ObjectHitbox.h"
 #include "GlobalConstants.h"
 
 #include <iostream>
@@ -10,12 +10,17 @@ using std::endl;
 
 const int MAX_SLOPE_SNAPPING_DISTANCE = 10;
 
-bool checkSolidTileIntersection(std::shared_ptr<Tile>& tile, PositionObject& object) {
+bool checkSolidTileIntersection(std::shared_ptr<Tile>& tile, HitboxMovementController& object) {
+
+    if(!object.getHitbox()) {
+
+        return false;
+    }
 
     TileType type = tile->getType();
 
     sf::FloatRect tileBoundingBox = tile->getBoundingBox();
-    sf::FloatRect objBoundingBox = object.getObjectSpace().getBoundingBoxWorldSpace();
+    sf::FloatRect objBoundingBox = object.getHitbox()->getActiveHitboxWorldSpace();
 
     switch(type) {
 
@@ -31,7 +36,7 @@ bool checkSolidTileIntersection(std::shared_ptr<Tile>& tile, PositionObject& obj
     return false;
 }
 
-CollisionResponse handleCollisionHorizontal(shared_ptr<Tile>& tile, PositionObject& object) {
+CollisionResponse handleCollisionHorizontal(shared_ptr<Tile>& tile, HitboxMovementController& object) {
 
     TileType type = tile->getType();
 
@@ -59,7 +64,7 @@ CollisionResponse handleCollisionHorizontal(shared_ptr<Tile>& tile, PositionObje
     return response;
 }
 
-CollisionResponse handleCollisionVertical(shared_ptr<Tile>& tile, PositionObject& object) {
+CollisionResponse handleCollisionVertical(shared_ptr<Tile>& tile, HitboxMovementController& object) {
 
     TileType type = tile->getType();
 
@@ -81,63 +86,63 @@ CollisionResponse handleCollisionVertical(shared_ptr<Tile>& tile, PositionObject
     return response;
 }
 
-bool handleSolidTileCollisionHorizontal(shared_ptr<Tile>& tile, PositionObject& object) {
+bool handleSolidTileCollisionHorizontal(shared_ptr<Tile>& tile, HitboxMovementController& object) {
 
-    sf::FloatRect tileBoundingBox = tile->getBoundingBox();
-
-    if(!tileBoundingBox.intersects(object.getBoundingBoxWorldSpace())) {
+    if(!object.getHitbox()) {
 
         return false;
     }
 
-    const ObjectSpaceManager &objectSpace = object.getObjectSpace();
+    sf::FloatRect tileBoundingBox = tile->getBoundingBox();
+    const sf::FloatRect objectHitbox = object.getHitbox()->getActiveHitboxWorldSpace();
 
-    //handle collision in the objects space because tile could have different edge in object space
-    glm::vec2 tilePosObjectSpace = objectSpace.convertToObjectSpace(glm::vec2(tileBoundingBox.left, tileBoundingBox.top));
-    glm::vec2 tileSizeObjectSpace = objectSpace.convertToObjectSpace(glm::vec2(tileBoundingBox.width, tileBoundingBox.height));
+    if(!tileBoundingBox.intersects(objectHitbox)) {
 
-    glm::vec2 objPosObjectSpace = objectSpace.getPositionObjectSpace();
-    glm::vec2 objSizeObjectSpace = objectSpace.getSizeObjectSpace();
+        return false;
+    }
 
-    float tileLeft = glm::min(tilePosObjectSpace.x, tilePosObjectSpace.x + tileSizeObjectSpace.x);
-    float tileRight = glm::max(tilePosObjectSpace.x, tilePosObjectSpace.x + tileSizeObjectSpace.x);
+    float tileLeft = tileBoundingBox.left;
+    float tileRight = tileBoundingBox.left + tileBoundingBox.width;
 
-    if(objPosObjectSpace.x < tileLeft) {
+    float offset = 0;
 
-        object.setPositionObjectSpace(glm::vec2(tileLeft - objSizeObjectSpace.x, objPosObjectSpace.y));
+    if(objectHitbox.left < tileLeft) {
+
+        offset = tileLeft - (objectHitbox.left + objectHitbox.width);
 
     } else {
 
-        object.setPositionObjectSpace(glm::vec2(tileRight, objPosObjectSpace.y));
+        offset = tileRight - objectHitbox.left;
     }
+
+    object.getHitbox()->move(glm::vec2(offset, 0));
 
     return true;
 }
 
-bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, PositionObject& object) {
+bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, HitboxMovementController& object) {
 
-    const ObjectSpaceManager& objectSpace = object.getObjectSpace();
+    if(!object.getHitbox()) {
 
+        return false;
+    }
+
+    const sf::FloatRect& objectHitbox = object.getHitbox()->getActiveHitboxWorldSpace();
     sf::FloatRect tileBoundingBox = tile->getBoundingBox();
 
-    glm::vec2 tilePosObjectSpace = objectSpace.convertToObjectSpace(glm::vec2(tileBoundingBox.left, tileBoundingBox.top));
-    glm::vec2 tileSizeObjectSpace = objectSpace.convertToObjectSpace(glm::vec2(tileBoundingBox.width, tileBoundingBox.height));
-
-    glm::vec2 objPosObjectSpace = objectSpace.getPositionObjectSpace();
-    glm::vec2 objSizeObjectSpace = objectSpace.getSizeObjectSpace();
-
     glm::vec2 tileSlope = getSlopeForTileType(tile->getType());
-    glm::vec2 tileSlopeObjSpace = objectSpace.convertToObjectSpace(tileSlope);
-
     glm::vec2 tileIntercepts = getInterceptsForTileType(tile->getType());
-    glm::vec2 tileInterceptsObjSpace = objectSpace.convertToObjectSpace(tileIntercepts);
+    glm::vec2 tilePosition(tileBoundingBox.left, tileBoundingBox.top);
+
+    glm::vec2 objPosition(objectHitbox.left, objectHitbox.top);
+    glm::vec2 objSize(objectHitbox.width, objectHitbox.height);
 
     //for slope position calculations, use the center of the bottom of the object
     //also make it so tile position is at 0,0
-    glm::vec2 objPosInTile = objPosObjectSpace + glm::vec2(objSizeObjectSpace.x / 2, objSizeObjectSpace.y) - tilePosObjectSpace;
+    glm::vec2 objPosInTile = objPosition + glm::vec2(objSize.x / 2, objSize.y) - tilePosition;
 
-    glm::vec2 previousPosition = objPosInTile - glm::vec2(object.getVelocitiesObjectSpace().x, 0) * METERS_TO_PIXEL_RATIO * object.getLastDelta();
-    int previousPositionSlopeHeight = (tileSlopeObjSpace.y / tileSlopeObjSpace.x) * previousPosition.x + tileInterceptsObjSpace.y;
+    glm::vec2 previousPosition = objPosInTile - glm::vec2(object.getVelocities().x, 0) * METERS_TO_PIXEL_RATIO * object.getLastDelta();
+    int previousPositionSlopeHeight = (tileSlope.y / tileSlope.x) * previousPosition.x + tileIntercepts.y;
 
     //sometimes when player is standing on top of a slope, the height calculated in the previous frame differs from his current height
     //even though nothing has been changed. The player seems to move down by 1 pixel so when checking if player is below slope before
@@ -148,27 +153,27 @@ bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, PositionObject& object) 
         return false;
     }
 
-    float rightEdge = glm::max(tilePosObjectSpace.x, tilePosObjectSpace.x + tileSizeObjectSpace.x) - tilePosObjectSpace.x;
-    float leftEdge = glm::min(tilePosObjectSpace.x, tilePosObjectSpace.x + tileSizeObjectSpace.x) - tilePosObjectSpace.x;
+    float leftEdgeTileSpace = 0;
+    float rightEdgeTileSpace = tileBoundingBox.width;
 
     //if object is off the upper end of the slope in the last frame, as well as this frame, then don't snap him to slope
     //but he should be snapped to slope if he was on the slope last frame, but got off this frame
     //upper end of slope depends on direction of slope
-    if(tileSlopeObjSpace.y  / tileSlopeObjSpace.x > 0 && objPosInTile.x < leftEdge && previousPosition.x < leftEdge) {
+    if(tileSlope.y  / tileSlope.x > 0 && objPosInTile.x < leftEdgeTileSpace && previousPosition.x < leftEdgeTileSpace) {
 
         return false;
 
-    } else if(tileSlopeObjSpace.y  / tileSlopeObjSpace.x < 0 && objPosInTile.x > rightEdge && previousPosition.x > rightEdge) {
+    } else if(tileSlope.y  / tileSlope.x < 0 && objPosInTile.x > rightEdgeTileSpace && previousPosition.x > rightEdgeTileSpace) {
 
         return false;
     }
 
     //when object is jumping, if he moves towards the slope he will jump into the slope and skip collision
     //so also check if he is moving into the slope while jumping
-    if(object.getVelocitiesObjectSpace().y < 0) {
+    if(object.getVelocities().y < 0) {
 
-        bool movingIntoLeftSlope = (tileSlopeObjSpace.y / tileSlopeObjSpace.x > 0 && object.getVelocitiesObjectSpace().x < 0);
-        bool movingIntoRightSlope = (tileSlopeObjSpace.y / tileSlopeObjSpace.x < 0 && object.getVelocitiesObjectSpace().x > 0);
+        bool movingIntoLeftSlope = (tileSlope.y / tileSlope.x > 0 && object.getVelocities().x < 0);
+        bool movingIntoRightSlope = (tileSlope.y / tileSlope.x < 0 && object.getVelocities().x > 0);
 
         //object is jumping without moving into a slope so its fine to skip this tile
         if(!movingIntoLeftSlope && !movingIntoRightSlope) {
@@ -177,7 +182,7 @@ bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, PositionObject& object) 
         }
     }
 
-    int currentSlopeHeight = (tileSlopeObjSpace.y / tileSlopeObjSpace.x) * objPosInTile.x + tileInterceptsObjSpace.y;
+    int currentSlopeHeight = (tileSlope.y / tileSlope.x) * objPosInTile.x + tileIntercepts.y;
 
     //object needs to snap to tiles, make sure the snapping distance isn't too large
     if(currentSlopeHeight - objPosInTile.y > MAX_SLOPE_SNAPPING_DISTANCE) {
@@ -185,83 +190,84 @@ bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, PositionObject& object) 
         return false;
     }
 
-    glm::vec2 tileSize = objectSpace.convertToObjectSpace(glm::vec2(TILE_SIZE, TILE_SIZE));
+    glm::vec2 tileSize = glm::vec2(TILE_SIZE, TILE_SIZE);
 
     //if object is off the lower end of the slope, it could have walked off the slope
-    bool snapToBottom = (tileSlopeObjSpace.y  / tileSlopeObjSpace.x > 0 && objPosInTile.x > rightEdge && previousPosition.x <= rightEdge) ||
-                        (tileSlopeObjSpace.y  / tileSlopeObjSpace.x < 0 && objPosInTile.x < leftEdge && previousPosition.x >= leftEdge);
+    bool snapToBottom = (tileSlope.y  / tileSlope.x > 0 && objPosInTile.x > rightEdgeTileSpace && previousPosition.x <= rightEdgeTileSpace) ||
+                        (tileSlope.y  / tileSlope.x < 0 && objPosInTile.x < leftEdgeTileSpace && previousPosition.x >= leftEdgeTileSpace);
 
     if(snapToBottom) {
 
-        float tileBottom = glm::max(tilePosObjectSpace.y, tilePosObjectSpace.y + tileSize.y);
+        //calculate offset needed to move object so that it will be standing at base of tile
+        float objectBottom = objectHitbox.top + objectHitbox.height;
+        float tileBottom = tileBoundingBox.top + tileBoundingBox.height;
+        float yOffset = tileBottom - objectBottom;
 
-        //object walked off edge of slope so snap to bottom of tile
-        float yPosObjectSpace = tileBottom - objSizeObjectSpace.y;
-        float xPosObjectSpace = objPosObjectSpace.x;
-
-        object.setPositionObjectSpace(glm::vec2(xPosObjectSpace, yPosObjectSpace));
+        object.getHitbox()->move(glm::vec2(0, yOffset));
         return true;
     }
 
     //object standing off lower end of slope but doesn't need to snap so don't do collision
-    if((tileSlopeObjSpace.y  / tileSlopeObjSpace.x > 0 && objPosInTile.x > rightEdge && previousPosition.x > rightEdge)) {
+    if((tileSlope.y  / tileSlope.x > 0 && objPosInTile.x > rightEdgeTileSpace && previousPosition.x > rightEdgeTileSpace)) {
 
         return false;
 
-    } else if(tileSlopeObjSpace.y  / tileSlopeObjSpace.x < 0 && objPosInTile.x < leftEdge && previousPosition.x < leftEdge) {
+    } else if(tileSlope.y  / tileSlope.x < 0 && objPosInTile.x < leftEdgeTileSpace && previousPosition.x < leftEdgeTileSpace) {
 
         return false;
     }
 
-    float yPosObjectSpace = currentSlopeHeight + tilePosObjectSpace.y - objSizeObjectSpace.y;
-    float xPosObjectSpace = objPosObjectSpace.x;
+    //object is in the tile and needs to snap to the y position at its current x position
+    //calculate offset requried
+    float yPositionTileSpace = (tileSlope.y / tileSlope.x) * objPosInTile.x + tileIntercepts.y;
+    float yPositionWorldSpace = yPositionTileSpace + tileBoundingBox.top;
+    float yOffset = yPositionWorldSpace - (objectHitbox.top + objectHitbox.height);
 
-    object.setPositionObjectSpace(glm::vec2(xPosObjectSpace, yPosObjectSpace));
-    object.setVelocities(object.getVelocitiesObjectSpace().x, 0);
+    object.getHitbox()->move(glm::vec2(0, yOffset));
+    object.setVelocities(object.getVelocities().x, 0);
     return true;
 }
 
-bool handleSolidTileCollisionVertical(shared_ptr<Tile>& tile, PositionObject& object) {
+bool handleSolidTileCollisionVertical(shared_ptr<Tile>& tile, HitboxMovementController& object) {
 
-    sf::FloatRect tileBoundingBox = tile->getBoundingBox();
-
-    if(!object.getBoundingBoxObjectSpace().intersects(object.getObjectSpace().convertToObjectSpace(tileBoundingBox)  )) {
+    if(!object.getHitbox()) {
 
         return false;
     }
 
-    const ObjectSpaceManager &objectSpace = object.getObjectSpace();
+    sf::FloatRect objectHitbox = object.getHitbox()->getActiveHitboxWorldSpace();
+    sf::FloatRect tileBoundingBox = tile->getBoundingBox();
 
-    //handle collision in the objects space because tile could have different top in object space
-    glm::vec2 tilePosObjectSpace = objectSpace.convertToObjectSpace(glm::vec2(tileBoundingBox.left, tileBoundingBox.top));
-    glm::vec2 tileSizeObjectSpace = objectSpace.convertToObjectSpace(glm::vec2(tileBoundingBox.width, tileBoundingBox.height));
+    if(!tileBoundingBox.intersects(objectHitbox)) {
 
-    glm::vec2 objPosObjectSpace = objectSpace.getPositionObjectSpace();
-    glm::vec2 objSizeObjectSpace = objectSpace.getSizeObjectSpace();
+        return false;
+    }
 
-    float tileTop = glm::min(tilePosObjectSpace.y, tilePosObjectSpace.y + tileSizeObjectSpace.y);
-    float tileBottom = glm::max(tilePosObjectSpace.y, tilePosObjectSpace.y + tileSizeObjectSpace.y);
+    float tileTop = tileBoundingBox.top;
+    float tileBottom = tileBoundingBox.top + tileBoundingBox.height;
 
-    float previousPosition = objPosObjectSpace.y + objSizeObjectSpace.y - object.getVelocitiesObjectSpace().y * METERS_TO_PIXEL_RATIO * object.getLastDelta();
+    float previousPosition = objectHitbox.top + objectHitbox.height - object.getVelocities().y * METERS_TO_PIXEL_RATIO * object.getLastDelta();
 
     //one way tiles only collide if object jumps on top of the tile
-    //round the position because transforming between coordinate spaces might introduce some errors
+    //round the position because floating point math might cause inaccuracies
     if(glm::round(previousPosition) > tileTop && tile->getType() == TileType::ONE_WAY) {
 
         //object jumped from underneath the tile so don't collide
         return false;
     }
 
-    object.setVelocities(object.getVelocitiesObjectSpace().x, 0);
+    object.setVelocities(object.getVelocities().x, 0);
 
-    if(objPosObjectSpace.y < tileTop) {
+    if(objectHitbox.top < tileTop) {
 
-        object.setPositionObjectSpace(glm::vec2(objPosObjectSpace.x, tileTop - objSizeObjectSpace.y));
+        float offset = tileTop - (objectHitbox.top + objectHitbox.height);
+        object.getHitbox()->move(glm::vec2(0, offset));
         return true;
 
-    } else if(tile->getType() != TileType::ONE_WAY){
+    } else if(tile->getType() != TileType::ONE_WAY) {
 
-        object.setPositionObjectSpace(glm::vec2(objPosObjectSpace.x, tileBottom));
+        float offset = tileBottom - objectHitbox.top;
+        object.getHitbox()->move(glm::vec2(0, offset));
     }
 
     return false;

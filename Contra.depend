@@ -40,7 +40,7 @@
 
 1427852681 c:\users\nimesh\documents\github\contra\globalconstants.h
 
-1430009246 source:c:\users\nimesh\documents\github\contra\main.cpp
+1430355661 source:c:\users\nimesh\documents\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -51,19 +51,20 @@
 	"Enemy.h"
 	<vector>
 
-1430011911 c:\users\nimesh\documents\github\contra\player.h
+1430351427 c:\users\nimesh\documents\github\contra\player.h
 	"SFML/Graphics.hpp"
 	"GlobalConstants.h"
-	"PositionController.h"
+	"ObjectHitbox.h"
+	"HitboxMovementController.h"
 	"TileCollisionHandling.h"
 	"TileMap.h"
 	"Direction.h"
 	<memory>
 
-1429753580 c:\users\nimesh\documents\github\contra\positioncontroller.h
+1430345335 c:\users\nimesh\documents\github\contra\positioncontroller.h
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
-	"ObjectSpaceManager.h"
+	"ObjectHitbox.h"
 
 1430010645 c:\users\nimesh\documents\github\contra\objectspacemanager.h
 	<SFML/Graphics.hpp>
@@ -73,7 +74,7 @@
 	"ObjectSpaceManager.h"
 	<iostream>
 
-1430006875 source:c:\users\nimesh\documents\github\contra\player.cpp
+1430355491 source:c:\users\nimesh\documents\github\contra\player.cpp
 	"Player.h"
 	<iostream>
 	<vector>
@@ -90,20 +91,20 @@
 1428378511 source:c:\users\nimesh\documents\github\contra\tile.cpp
 	"Tile.h"
 
-1428378512 c:\users\nimesh\documents\github\contra\tile.h
+1430351427 c:\users\nimesh\documents\github\contra\tile.h
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
-	"PositionController.h"
+	"HitboxMovementController.h"
 
-1430006545 source:c:\users\nimesh\documents\github\contra\tilecollisionhandling.cpp
+1430356791 source:c:\users\nimesh\documents\github\contra\tilecollisionhandling.cpp
 	"TileCollisionHandling.h"
-	"ObjectSpaceManager.h"
+	"ObjectHitbox.h"
 	"GlobalConstants.h"
 	<iostream>
 
-1430006584 c:\users\nimesh\documents\github\contra\tilecollisionhandling.h
+1430351427 c:\users\nimesh\documents\github\contra\tilecollisionhandling.h
 	"Tile.h"
-	"PositionController.h"
+	"HitboxMovementController.h"
 	<memory>
 
 1429841293 source:c:\users\nimesh\documents\github\contra\tilemap.cpp
@@ -124,29 +125,30 @@
 1430011859 c:\users\nimesh\documents\github\contra\direction.h
 	"glm/glm.hpp"
 
-1428466179 source:c:\users\nimesh\documents\github\contra\bullet.cpp
+1430354461 source:c:\users\nimesh\documents\github\contra\bullet.cpp
 	"Bullet.h"
 	"TileCollisionHandling.h"
 	<vector>
 	<memory>
 	<iostream>
 
-1429756946 c:\users\nimesh\documents\github\contra\bullet.h
-	"PositionController.h"
+1430351427 c:\users\nimesh\documents\github\contra\bullet.h
+	"HitboxMovementController.h"
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
 	"glm/glm.hpp"
 	"TileMap.h"
+	"ObjectHitbox.h"
 
-1430008482 source:c:\users\nimesh\documents\github\contra\gun.cpp
+1430354714 source:c:\users\nimesh\documents\github\contra\gun.cpp
 	"Gun.h"
 	"Bullet.h"
 	<iostream>
 
-1430008380 c:\users\nimesh\documents\github\contra\gun.h
+1430351054 c:\users\nimesh\documents\github\contra\gun.h
 	<SFML/Graphics.hpp>
 	<SFML/Window.hpp>
-	"ObjectSpaceManager.h"
+	"ObjectHitbox.h"
 	"Direction.h"
 	<vector>
 	<memory>
@@ -164,15 +166,36 @@
 	<vector>
 	<glm/glm.hpp>
 
-1430007825 source:c:\users\nimesh\documents\github\contra\enemy.cpp
+1430354681 source:c:\users\nimesh\documents\github\contra\enemy.cpp
 	"Enemy.h"
 	"GlobalConstants.h"
 	<vector>
 
-1430007914 c:\users\nimesh\documents\github\contra\enemy.h
+1430354688 c:\users\nimesh\documents\github\contra\enemy.h
 	"SFML/Graphics.hpp"
-	"PositionController.h"
+	"HitboxMovementController.h"
+	"ObjectHitbox.h"
 	"TileCollisionHandling.h"
 	"TileMap.h"
 	<memory>
+
+1430354939 c:\users\nimesh\documents\github\contra\objecthitbox.h
+	<SFML/Graphics.hpp>
+	"glm/glm.hpp"
+	<vector>
+
+1430351054 c:\users\nimesh\documents\github\contra\hitboxmovementcontroller.h
+	"SFML/Graphics.hpp"
+	"glm/glm.hpp"
+	"ObjectHitbox.h"
+
+1430355338 source:c:\users\nimesh\documents\github\contra\hitboxmovementcontroller.cpp
+	"HitboxMovementController.h"
+	"GlobalConstants.h"
+	<glm/glm.hpp>
+	<iostream>
+
+1430355267 source:c:\users\nimesh\documents\github\contra\objecthitbox.cpp
+	"ObjectHitbox.h"
+	<iostream>
 

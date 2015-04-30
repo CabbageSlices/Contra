@@ -8,16 +8,15 @@ using std::make_shared;
 using std::cout;
 using std::endl;
 
-Gun::Gun(const ObjectSpaceManager &userObjSpace) :
+Gun::Gun() :
     timeSinceLastFired(sf::seconds(0)),
     fireDelay(sf::seconds(0.1)),
-    userObjectSpace(userObjSpace),
     bullets()
     {
 
     }
 
-void Gun::fire(const glm::vec2 &userPositionWorldSpace, const glm::vec2 &bulletOriginUserSpace, const Direction &fireDirection) {
+void Gun::fire(const glm::vec2 &userPosition, const glm::vec2 &bulletOriginUserSpace, const Direction &fireDirection) {
 
     if(!checkCanFire()) {
 
@@ -27,13 +26,9 @@ void Gun::fire(const glm::vec2 &userPositionWorldSpace, const glm::vec2 &bulletO
     glm::vec2 directionVector = getDirectionVector(fireDirection);
     directionVector = glm::normalize(directionVector);
 
-    //calculate position and direction of gun in world space
-    glm::vec2 positionWorldSpace = userPositionWorldSpace;
-    glm::vec2 directionWorldSpace = userObjectSpace.convertToWorldSpace(directionVector);
+    glm::vec2 bulletOrigin = userPosition + bulletOriginUserSpace;
 
-    glm::vec2 bulletOrigin = positionWorldSpace + userObjectSpace.convertToWorldSpace(bulletOriginUserSpace);
-
-    createBullet(bulletOrigin, directionWorldSpace);
+    createBullet(bulletOrigin, directionVector);
 
     timeSinceLastFired = sf::seconds(0);
 }
@@ -71,6 +66,5 @@ void Gun::createBullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &dir
     if(bullet) {
 
        bullets.push_back(bullet);
-
     }
 }

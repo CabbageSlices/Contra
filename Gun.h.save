@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include "ObjectSpaceManager.h"
+#include "ObjectHitbox.h"
 #include "Direction.h"
 #include <vector>
 #include <memory>
@@ -16,32 +16,29 @@ class TileMap;
 //the gun's initial firing direction is also specified by the owner
 //these traits of the gun are all in the space of the object that owns the gun
 //thus when the gun is fired it requires transformations from owner object space to world space
-
 class Gun {
 
     public:
 
-        Gun(const ObjectSpaceManager &userObjectSpace, const glm::vec2 &relativePosition);
+        Gun();
         
-
-        bool checkCanFire();
-
-        void fire(const glm::vec2 &userPositionWorldSpace, const Direction &fireDirection);
+        //user position is position of user in the world
+        //bulletOriginUserSpace is the relative origin of the bullet with respect to the player
+        void fire(const glm::vec2 &userPosition, const glm::vec2 &bulletOriginUserSpace, const Direction &fireDirection);
         void update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map);
         void draw(sf::RenderWindow& window);
 
     private:
 
+        bool checkCanFire() {
+
+            return timeSinceLastFired > fireDelay;
+        }
+
         void createBullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace);
 
         sf::Time timeSinceLastFired;
         sf::Time fireDelay;
-
-        //position of the gun relative to the user's top left
-        glm::vec2 positionUserSpace;
-
-        //object space of the user of the gun, used to transform gun's directions
-        const ObjectSpaceManager& userObjectSpace;
 
         std::vector<std::shared_ptr<Bullet> > bullets;
 };

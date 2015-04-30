@@ -8,34 +8,39 @@ using std::make_shared;
 using std::cout;
 using std::endl;
 
-Gun::Gun(const ObjectSpaceManager &userObjSpace, const glm::vec2 &relativePosition) :
-    positionUserSpace(relativePosition),
+Gun::Gun(const ObjectHitbox &userObjSpace) :
+    timeSinceLastFired(sf::seconds(0)),
+    fireDelay(sf::seconds(0.1)),
     userObjectSpace(userObjSpace),
     bullets()
     {
 
     }
 
-void Gun::fire(const glm::vec2 &userPositionWorldSpace, const Direction &fireDirection) {
+void Gun::fire(const glm::vec2 &userPositionWorldSpace, const glm::vec2 &bulletOriginUserSpace, const Direction &fireDirection) {
+
+    if(!checkCanFire()) {
+
+        return;
+    }
 
     glm::vec2 directionVector = getDirectionVector(fireDirection);
     directionVector = glm::normalize(directionVector);
 
-    glm::vec2 userSpacePos = userObjectSpace.convertToWorldSpace(positionUserSpace);
-
-
     //calculate position and direction of gun in world space
-    glm::vec2 userSizeWorldSpace = userObjectSpace.getSizeWorldSpace();
     glm::vec2 positionWorldSpace = userPositionWorldSpace;
-    
-    //origin of bullet varies depending on direction the gun is being fired in
-
     glm::vec2 directionWorldSpace = userObjectSpace.convertToWorldSpace(directionVector);
 
-    createBullet(positionWorldSpace, directionWorldSpace);
+    glm::vec2 bulletOrigin = positionWorldSpace + userObjectSpace.convertToWorldSpace(bulletOriginUserSpace);
+
+    createBullet(bulletOrigin, directionWorldSpace);
+
+    timeSinceLastFired = sf::seconds(0);
 }
 
 void Gun::update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map) {
+
+    timeSinceLastFired += sf::seconds(delta);
 
     for(unsigned i = 0; i < bullets.size();) {
 
@@ -66,5 +71,6 @@ void Gun::createBullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &dir
     if(bullet) {
 
        bullets.push_back(bullet);
+
     }
 }

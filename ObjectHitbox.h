@@ -16,33 +16,33 @@ class ObjectHitbox {
     public:
 
         //size in pixels
-        ObjectHitbox(const glm::vec2 &originPosition);
+        ObjectHitbox();
 
         //given hitbox's position should be relative to the origin of the object
-        inline void insertHitbox(const sf::FloatRect &hitboxObjectSpace);
-        
+        void insertHitbox(const sf::FloatRect &hitboxObjectSpace);
+
         //after removal the active hitbox isn't guaranteed to be correct, so you must set the hitbox again
-        inline void removeHitbox(const unsigned &id);
+        void removeHitbox(const unsigned &id);
 
         //translate the origin
-        inline void move(const glm::vec2& displacement);
+        void move(const glm::vec2& displacement);
 
         //all in pixels
-        inline void setOrigin(const glm::vec2& position);
-        inline void setActiveHitbox(const unsigned &id); //does nothing if id is invalid
+        void setOrigin(const glm::vec2& position);
+        void setActiveHitbox(const unsigned &id); //does nothing if id is invalid
 
-        inline glm::vec2 getOrigin() const;
-        inline unsigned getHitboxCount() const;
+        glm::vec2 getOrigin() const;
+        unsigned getHitboxCount() const;
 
         //returns a hitbox of size 0 if there are no hitboxes
-        inline sf::FloatRect getActiveHitboxWorldSpace() const;
-        inline sf::FloatRect getHitBoxWorldSpace(const unsigned &id) const;
+        sf::FloatRect getActiveHitboxWorldSpace() const;
+        sf::FloatRect getHitBoxWorldSpace(const unsigned &id) const;
 
-        inline sf::FloatRect getActiveHitboxObjectSpace() const;
-        inline sf::FloatRect getHitBoxObjectSpace(const unsigned &id) const;
+        sf::FloatRect getActiveHitboxObjectSpace() const;
+        sf::FloatRect getHitBoxObjectSpace(const unsigned &id) const;
 
     private:
-        
+
         bool checkIdValid(const unsigned &id) const;
 
         glm::vec2 origin;

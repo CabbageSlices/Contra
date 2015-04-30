@@ -6,9 +6,9 @@
 using std::cout;
 using std::endl;
 
-HitboxMovementController::HitboxMovementController(const glm::vec2& gravity, const glm::vec2& terminalVelocity, ObjectHitbox *hitbox):
+HitboxMovementController::HitboxMovementController(const glm::vec2& objectGravity, const glm::vec2& terminalVelocity, ObjectHitbox *hitbox):
     objectHitbox(hitbox),
-    gravity(gravity),
+    gravity(objectGravity),
     terminalVelocities(terminalVelocity),
     velocities(0, 0),
     previousDeltaTime(0)
@@ -33,12 +33,17 @@ void HitboxMovementController::setVelocities(const float& xVelocity, const float
     setVelocities(glm::vec2(xVelocity, yVelocity));
 }
 
+const glm::vec2 HitboxMovementController::getVelocities() const {
+
+    return velocities;
+}
+
 const float HitboxMovementController::getLastDelta() const {
 
     return previousDeltaTime;
 }
 
-ObjectHitbox* HitboxMovementController::getHitBox() {
+ObjectHitbox* HitboxMovementController::getHitbox() {
 
     return objectHitbox;
 }
@@ -73,26 +78,28 @@ bool HitboxMovementController::moveAlongXAxis(const float& delta, const sf::Floa
     }
 
     float xOffset = velocities.x * METERS_TO_PIXEL_RATIO * delta;
-    object->move(glm::vec2(xOffset, 0));
+    objectHitbox->move(glm::vec2(xOffset, 0));
 
     bool snappedToEdge = false;
 
     float leftEdge = worldBounds.left;
-    float rightDege = worldBounds.left + worldBounds.width;
-    
+    float rightEdge = worldBounds.left + worldBounds.width;
+
     sf::FloatRect activeHitbox = objectHitbox->getActiveHitboxWorldSpace();
 
-    if(activeHitbox.lef < leftEdge) {
+    float offset = 0;
+    if(activeHitbox.left < leftEdge) {
 
+        offset = leftEdge - activeHitbox.left;
         snappedToEdge = true;
-        object.setPosition(glm::vec2(leftEdge, object.getPosition().y));
+
+    } else if(activeHitbox.left + activeHitbox.width > rightEdge) {
+
+        offset = rightEdge - (activeHitbox.left + activeHitbox.width);
+        snappedToEdge = true;
     }
 
-    if(object.getPosition().x + object.getSize().x > rightEdge) {
-
-        snappedToEdge = true;
-        object.setPosition(glm::vec2(rightEdge - object.getSize().x, object.getPosition().y));
-    }
+    objectHitbox->move(glm::vec2(offset, 0));
 
     previousDeltaTime = delta;
 
@@ -101,34 +108,34 @@ bool HitboxMovementController::moveAlongXAxis(const float& delta, const sf::Floa
 
 bool HitboxMovementController::moveAlongYAxis(const float& delta, const sf::FloatRect& worldBounds) {
 
+    if(!objectHitbox) {
+
+        return false;
+    }
+
     float yOffset = velocities.y * METERS_TO_PIXEL_RATIO * delta;
-    object.move(glm::vec2(0, yOffset));
-
-    //calculate the bounds of the world in object space and do bounds checking in object space
-    glm::vec2 boundsPosition(worldBounds.left, worldBounds.top);
-    glm::vec2 boundsSize(worldBounds.width, worldBounds.height);
-
-    glm::vec2 boundsPosition = object.convertTo(boundsPosition);
-    glm::vec2 boundsSize = object.convertTo(boundsSize);
-
-    //make sure the top position referes to top edge and top + height revers to right edge
-    //after doing a space transformation this may change due to multiplication by a negative
-    float topEdge = glm::min(boundsPosition.y, boundsPosition.y + boundsSize.y);
-    float bottomEdge = glm::max(boundsPosition.y, boundsPosition.y + boundsSize.y);
+    objectHitbox->move(glm::vec2(0, yOffset));
 
     bool snappedToEdge = false;
 
-    if(object.getPosition().y < topEdge) {
+    float topEdge = worldBounds.top;
+    float bottomEdge = worldBounds.top + worldBounds.height;
 
+    sf::FloatRect activeHitbox = objectHitbox->getActiveHitboxWorldSpace();
+
+    float offset = 0;
+    if(activeHitbox.top < topEdge) {
+
+        offset = topEdge - activeHitbox.top;
         snappedToEdge = true;
-        object.setPosition(glm::vec2(object.getPosition().x, topEdge));
+
+    } else if(activeHitbox.top + activeHitbox.height > bottomEdge) {
+
+        offset = bottomEdge - (activeHitbox.top + activeHitbox.height);
+        snappedToEdge = true;
     }
 
-    if(object.getPosition().y + object.getSize().y > bottomEdge) {
-
-        snappedToEdge = true;
-        object.setPosition(glm::vec2(object.getPosition().x, bottomEdge - object.getSize().y));
-    }
+    objectHitbox->move(glm::vec2(0, offset));
 
     previousDeltaTime = delta;
 

@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include "ObjectSpaceManager.h"
+#include "ObjectHitbox.h"
 #include "Direction.h"
 #include <vector>
 #include <memory>
@@ -20,9 +20,11 @@ class Gun {
 
     public:
 
-        Gun(const ObjectSpaceManager &userObjectSpace);
+        Gun();
 
-        void fire(const glm::vec2 &userPositionWorldSpace, const glm::vec2 &bulletOriginUserSpace, const Direction &fireDirection);
+        //user position is position of user in the world
+        //bulletOriginUserSpace is the relative origin of the bullet with respect to the user's position
+        void fire(const glm::vec2 &userPosition, const glm::vec2 &bulletOriginUserSpace, const Direction &fireDirection);
         void update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map);
         void draw(sf::RenderWindow& window);
 
@@ -37,9 +39,6 @@ class Gun {
 
         sf::Time timeSinceLastFired;
         sf::Time fireDelay;
-
-        //object space of the user of the gun, used to transform gun's directions
-        const ObjectSpaceManager& userObjectSpace;
 
         std::vector<std::shared_ptr<Bullet> > bullets;
 };
