@@ -13,6 +13,7 @@ using std::endl;
 Player::Player(const PlayerKeys& keyConfiguration):
     MOVEMENT_VELOCITY(4.f, 3.9f),
     standingOnSolid(false),
+    standingOnTile(false),
     holdingJump(false),
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(220)),
@@ -80,7 +81,7 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
 
     hitboxMovementController.moveAlongXAxis(deltaTime, worldBounds);
 
-    handleTileCollisionHorizontally(map);
+    CollisionResponse collisionResponseHorizontal = handleTileCollisionHorizontally(map);
 
     if(hitboxMovementController.moveAlongYAxis(deltaTime, worldBounds)) {
 
@@ -92,7 +93,9 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
         standingOnSolid = false;
     }
 
-    handleTileCollisionVertically(map);
+    CollisionResponse collisionResponseVertical = handleTileCollisionVertically(map);
+
+    standingOnTile = (collisionResponseHorizontal.handledVertical || collisionResponseVertical.handledVertical);
 
     sf::FloatRect activeHitbox = hitbox.getActiveHitboxWorldSpace();
     player.setPosition(activeHitbox.left, activeHitbox.top);
@@ -163,7 +166,7 @@ glm::vec2 Player::calculateGunfireOrigin() const {
     return gunPosition;
 }
 
-void Player::handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
+CollisionResponse Player::handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
 
     sf::FloatRect bounding = hitbox.getActiveHitboxWorldSpace();
 
@@ -174,25 +177,34 @@ void Player::handleTileCollision(TileMap& map, CollisionResponse(*collisionFunct
 
     vector<shared_ptr<Tile> > tiles = map.getTilesInRegion(regionTopLeft, regionBottomRight);
 
+    CollisionResponse collisionResponse;
+
     for(unsigned i = 0; i < tiles.size(); ++i) {
 
         CollisionResponse response = collisionFunction(tiles[i], hitboxMovementController);
 
         if(response.handledVertical) {
 
-            standingOnSolid = true;
+            collisionResponse.handledVertical = true;
+        }
+
+        if(response.handledHorizontal) {
+
+            collisionResponse.handledHorizontal = true;
         }
     }
+
+    return collisionResponse;
 }
 
-void Player::handleTileCollisionHorizontally(TileMap& map) {
+CollisionResponse Player::handleTileCollisionHorizontally(TileMap& map) {
 
-    handleTileCollision(map, &handleCollisionHorizontal);
+    return handleTileCollision(map, &handleCollisionHorizontal);
 }
 
-void Player::handleTileCollisionVertically(TileMap& map) {
+CollisionResponse Player::handleTileCollisionVertically(TileMap& map) {
 
-    handleTileCollision(map, &handleCollisionVertical);
+    return handleTileCollision(map, &handleCollisionVertical);
 }
 
 void Player::determineDirection() {

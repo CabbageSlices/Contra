@@ -13,6 +13,7 @@ using std::endl;
 Player::Player(const PlayerKeys& keyConfiguration):
     MOVEMENT_VELOCITY(4.f, 3.9f),
     standingOnSolid(false),
+    standingOnTile(false),
     holdingJump(false),
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(220)),
@@ -86,6 +87,10 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
 
         standingOnSolid = true;
         hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, 0);
+
+    } else {
+
+        standingOnSolid = false;
     }
 
     handleTileCollisionVertically(map);
@@ -170,19 +175,24 @@ void Player::handleTileCollision(TileMap& map, CollisionResponse(*collisionFunct
 
     vector<shared_ptr<Tile> > tiles = map.getTilesInRegion(regionTopLeft, regionBottomRight);
 
+    CollisionResponse collisionResponse;
+
     for(unsigned i = 0; i < tiles.size(); ++i) {
 
         CollisionResponse response = collisionFunction(tiles[i], hitboxMovementController);
 
         if(response.handledVertical) {
 
-            standingOnSolid = true;
+            collisionResponse.handledVertical = true;
+        }
+        
+        if(response.handledHorizontal) {
             
-        } else if(!response.handledHorizontal && !response.handledVertical) {
-            
-            //if there was no vertical collision handling then player didn't stand on any tile
+            collisionResponse.handledHorizontal = true;
         }
     }
+
+    return collis
 }
 
 void Player::handleTileCollisionHorizontally(TileMap& map) {

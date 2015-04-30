@@ -49,7 +49,7 @@ class Player {
 
             //if player is falling it means he isn't standing on top of any object because if he was, his velocity would be 0
             //therefore he can't jump if his velocity isn't 0
-            return standingOnSolid && hitboxMovementController.getVelocities().y == 0;
+            return (standingOnSolid || standingOnTile) && hitboxMovementController.getVelocities().y == 0;
         }
 
         bool checkIsJumping() const {
@@ -75,9 +75,9 @@ class Player {
         glm::vec2 calculateGunfireOrigin() const;
 
         //vertical and horizontal tile collisions differ only in terms of the collision handling function they call
-        void handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
-        void handleTileCollisionHorizontally(TileMap& map);
-        void handleTileCollisionVertically(TileMap& map);
+        CollisionResponse handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
+        CollisionResponse handleTileCollisionHorizontally(TileMap& map);
+        CollisionResponse handleTileCollisionVertically(TileMap& map);
 
         void determineDirection();
         void jump();
@@ -87,7 +87,9 @@ class Player {
         //in object space
         const sf::Vector2f MOVEMENT_VELOCITY;
 
+        //seperate flags to keep track of player standing on blocks/ground and tiles
         bool standingOnSolid;
+        bool standingOnTile;
 
         //when user is holding jump he will jump higher
         //it will basically disable gravity until extra jump timer exceeds the max time allowed for user to hold jump
