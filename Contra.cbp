@@ -43,13 +43,13 @@
 		<Unit filename="GlobalConstants.h" />
 		<Unit filename="Gun.cpp" />
 		<Unit filename="Gun.h" />
+		<Unit filename="HitboxMovementController.cpp" />
+		<Unit filename="HitboxMovementController.h" />
 		<Unit filename="Main.cpp" />
-		<Unit filename="ObjectSpaceManager.cpp" />
-		<Unit filename="ObjectSpaceManager.h" />
+		<Unit filename="ObjectHitbox.cpp" />
+		<Unit filename="ObjectHitbox.h" />
 		<Unit filename="Player.cpp" />
 		<Unit filename="Player.h" />
-		<Unit filename="PositionController.cpp" />
-		<Unit filename="PositionController.h" />
 		<Unit filename="Tile.cpp" />
 		<Unit filename="Tile.h" />
 		<Unit filename="TileCollisionHandling.cpp" />
