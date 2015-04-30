@@ -19,7 +19,7 @@ Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWo
     hitbox(),
     hitboxMovementController(glm::vec2(0, 0), glm::vec2(1, 1) * velocity, &hitbox)
     {
-        hitbox.setOrigin(positionWorldSpace);
+        hitbox.setOrigin(positionWorldSpace - glm::vec2(10, 10));
         hitbox.insertHitbox(sf::FloatRect(0, 0, bullet.getSize().x, bullet.getSize().y));
         hitbox.setActiveHitbox(0);
         hitboxMovementController.setVelocities(directionWorldSpace * velocity);

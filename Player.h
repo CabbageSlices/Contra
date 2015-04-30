@@ -9,6 +9,10 @@
 #include "TileMap.h"
 #include "Direction.h"
 #include <memory>
+#include <iostream>
+
+using std::cout;
+using std::endl;
 
 class Gun;
 
@@ -41,27 +45,27 @@ class Player {
 
     private:
 
-        bool checkCanJump() {
+        bool checkCanJump() const {
 
             //if player is falling it means he isn't standing on top of any object because if he was, his velocity would be 0
             //therefore he can't jump if his velocity isn't 0
-            return canJump && hitboxMovementController.getVelocities().y == 0;
+            return standingOnSolid && hitboxMovementController.getVelocities().y == 0;
         }
 
-        bool checkIsJumping() {
+        bool checkIsJumping() const {
 
             //player is jumping if he is moving upwards and he isn't able to jump
-            return hitboxMovementController.getVelocities().y < 0 && !canJump;
+            return hitboxMovementController.getVelocities().y < 0 && !standingOnSolid;
         }
 
         bool checkIsCrouching() const {
 
             //player is crouching if he is holding down, not moving, and on the ground
-            return canJump && sf::Keyboard::isKeyPressed(controls.down) && hitboxMovementController.getVelocities().x == 0;
+            return checkCanJump() && sf::Keyboard::isKeyPressed(controls.down) && hitboxMovementController.getVelocities().x == 0;
         }
 
         //check if player can extend his jump by holding the jump button
-        bool checkExtendJump() {
+        bool checkExtendJump() const {
 
             return holdingJump && extraJumpTimer.getElapsedTime() < extraJumpDuration;
         }
@@ -83,7 +87,7 @@ class Player {
         //in object space
         const sf::Vector2f MOVEMENT_VELOCITY;
 
-        bool canJump;
+        bool standingOnSolid;
 
         //when user is holding jump he will jump higher
         //it will basically disable gravity until extra jump timer exceeds the max time allowed for user to hold jump

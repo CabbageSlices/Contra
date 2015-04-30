@@ -12,7 +12,7 @@ using std::endl;
 
 Player::Player(const PlayerKeys& keyConfiguration):
     MOVEMENT_VELOCITY(4.f, 3.9f),
-    canJump(false),
+    standingOnSolid(false),
     holdingJump(false),
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(220)),
@@ -31,6 +31,7 @@ Player::Player(const PlayerKeys& keyConfiguration):
         }
 
         hitbox.insertHitbox(sf::FloatRect(0, 0, 50, 100));
+        hitbox.insertHitbox(sf::FloatRect(-25, 50, 100, 50));
         hitbox.setActiveHitbox(0);
     }
 
@@ -83,13 +84,19 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
 
     if(hitboxMovementController.moveAlongYAxis(deltaTime, worldBounds)) {
 
-        canJump = true;
+        standingOnSolid = true;
         hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, 0);
+
+    } else {
+
+        standingOnSolid = false;
     }
 
     handleTileCollisionVertically(map);
 
-    player.setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
+    sf::FloatRect activeHitbox = hitbox.getActiveHitboxWorldSpace();
+    player.setPosition(activeHitbox.left, activeHitbox.top);
+    player.setSize(sf::Vector2f(activeHitbox.width, activeHitbox.height));
 
     gun->update(deltaTime, worldBounds, map);
 }
@@ -150,7 +157,7 @@ glm::vec2 Player::calculateGunfireOrigin() const {
 
     if(checkIsCrouching()) {
 
-        gunPosition.y = player.getGlobalBounds().height / 5 * 4;
+        gunPosition.y = player.getGlobalBounds().height;
     }
 
     return gunPosition;
@@ -173,7 +180,7 @@ void Player::handleTileCollision(TileMap& map, CollisionResponse(*collisionFunct
 
         if(response.handledVertical) {
 
-            canJump = true;
+            standingOnSolid = true;
         }
     }
 }
@@ -215,6 +222,11 @@ void Player::determineDirection() {
     if(checkIsCrouching()) {
 
         direction.vertical = VerticalDirection::STRAIGHT;
+        hitbox.setActiveHitbox(1);
+
+    } else {
+
+        hitbox.setActiveHitbox(0);
     }
 
     direction.isFacingCompletelyVertical = (hitboxMovementController.getVelocities().x == 0 && direction.vertical != VerticalDirection::STRAIGHT);
@@ -226,6 +238,6 @@ void Player::jump() {
 
         extraJumpTimer.restart();
         hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, -MOVEMENT_VELOCITY.y);
-        canJump = false;
+        standingOnSolid = false;
     }
 }

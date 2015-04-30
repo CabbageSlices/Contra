@@ -12,14 +12,14 @@ using std::endl;
 
 Player::Player(const PlayerKeys& keyConfiguration):
     MOVEMENT_VELOCITY(4.f, 3.9f),
-    canJump(false),
+    standingOnSolid(false),
     holdingJump(false),
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(220)),
     hitbox(),
     hitboxMovementController(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), &hitbox),
     direction(),
-    player(sf::Vector2f(100, 50)),
+    player(sf::Vector2f(50, 100)),
     gun(),
     controls(keyConfiguration)
     {
@@ -30,7 +30,8 @@ Player::Player(const PlayerKeys& keyConfiguration):
             exit(-1);
         }
 
-        hitbox.insertHitbox(sf::FloatRect(0, 0, 100, 50));
+        hitbox.insertHitbox(sf::FloatRect(0, 0, 50, 100));
+        hitbox.insertHitbox(sf::FloatRect(-25, 50, 100, 50));
         hitbox.setActiveHitbox(0);
     }
 
@@ -42,7 +43,7 @@ void Player::handleKeystate(sf::RenderWindow& window) {
 
     if(sf::Keyboard::isKeyPressed(controls.left)) {
 
-        hitboxMovementController.setVelocities(-MOVEMENT_VELOCITY.x, );
+        hitboxMovementController.setVelocities(-MOVEMENT_VELOCITY.x, hitboxMovementController.getVelocities().y);
 
     } else if(sf::Keyboard::isKeyPressed(controls.right)) {
 
@@ -83,13 +84,15 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
 
     if(hitboxMovementController.moveAlongYAxis(deltaTime, worldBounds)) {
 
-        canJump = true;
+        standingOnSolid = true;
         hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, 0);
     }
 
     handleTileCollisionVertically(map);
 
-    player.setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
+    sf::FloatRect activeHitbox = hitbox.getActiveHitboxWorldSpace();
+    player.setPosition(activeHitbox.left, activeHitbox.top);
+    player.setSize(sf::Vector2f(activeHitbox.width, activeHitbox.height));
 
     gun->update(deltaTime, worldBounds, map);
 }
@@ -150,13 +153,13 @@ glm::vec2 Player::calculateGunfireOrigin() const {
 
     if(checkIsCrouching()) {
 
-        gunPosition.y = player.getGlobalBounds().height / 5 * 4;
+        gunPosition.y = player.getGlobalBounds().height;
     }
 
     return gunPosition;
 }
 
-void Player::handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxController& object)) {
+void Player::handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
 
     sf::FloatRect bounding = hitbox.getActiveHitboxWorldSpace();
 
@@ -173,7 +176,11 @@ void Player::handleTileCollision(TileMap& map, CollisionResponse(*collisionFunct
 
         if(response.handledVertical) {
 
-            canJump = true;
+            standingOnSolid = true;
+            
+        } else if(!response.handledHorizontal && !response.handledVertical) {
+            
+            //if there was no vertical collision handling then player didn't stand on any tile
         }
     }
 }
@@ -215,6 +222,11 @@ void Player::determineDirection() {
     if(checkIsCrouching()) {
 
         direction.vertical = VerticalDirection::STRAIGHT;
+        hitbox.setActiveHitbox(1);
+
+    } else {
+
+        hitbox.setActiveHitbox(0);
     }
 
     direction.isFacingCompletelyVertical = (hitboxMovementController.getVelocities().x == 0 && direction.vertical != VerticalDirection::STRAIGHT);
@@ -226,6 +238,6 @@ void Player::jump() {
 
         extraJumpTimer.restart();
         hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, -MOVEMENT_VELOCITY.y);
-        canJump = false;
+        standingOnSolid = false;
     }
 }

@@ -51,7 +51,7 @@
 	"Enemy.h"
 	<vector>
 
-1430351427 c:\users\nimesh\documents\github\contra\player.h
+1430358712 c:\users\nimesh\documents\github\contra\player.h
 	"SFML/Graphics.hpp"
 	"GlobalConstants.h"
 	"ObjectHitbox.h"
@@ -60,6 +60,7 @@
 	"TileMap.h"
 	"Direction.h"
 	<memory>
+	<iostream>
 
 1430345335 c:\users\nimesh\documents\github\contra\positioncontroller.h
 	"SFML/Graphics.hpp"
@@ -74,7 +75,7 @@
 	"ObjectSpaceManager.h"
 	<iostream>
 
-1430355491 source:c:\users\nimesh\documents\github\contra\player.cpp
+1430358537 source:c:\users\nimesh\documents\github\contra\player.cpp
 	"Player.h"
 	<iostream>
 	<vector>
@@ -125,7 +126,7 @@
 1430011859 c:\users\nimesh\documents\github\contra\direction.h
 	"glm/glm.hpp"
 
-1430354461 source:c:\users\nimesh\documents\github\contra\bullet.cpp
+1430357788 source:c:\users\nimesh\documents\github\contra\bullet.cpp
 	"Bullet.h"
 	"TileCollisionHandling.h"
 	<vector>
@@ -189,7 +190,7 @@
 	"glm/glm.hpp"
 	"ObjectHitbox.h"
 
-1430355338 source:c:\users\nimesh\documents\github\contra\hitboxmovementcontroller.cpp
+1430356919 source:c:\users\nimesh\documents\github\contra\hitboxmovementcontroller.cpp
 	"HitboxMovementController.h"
 	"GlobalConstants.h"
 	<glm/glm.hpp>
