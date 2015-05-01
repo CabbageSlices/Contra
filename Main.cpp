@@ -6,9 +6,13 @@
 #include "Gun.h"
 #include "Camera.h"
 #include "Enemy.h"
+#include "EnemySpawners.h"
 
 #include <vector>
+#include <memory>
 
+using std::shared_ptr;
+using std::make_shared;
 using std::vector;
 
 int main() {
@@ -21,14 +25,19 @@ int main() {
 
     sf::Clock timer;
 
-    sf::FloatRect worldBounds(0, 0, 3072, 768);
+    sf::FloatRect worldBounds(0, 0, 3072, 1920);
 
     TileMap tileMap(worldBounds.width, worldBounds.height);
 
     Camera camera(window);
 
-    Enemy enemy(glm::vec2(0, 0), glm::vec2(64, 64));
+    Enemy enemy(glm::vec2(0, 0), Direction());
     enemy.setInitialVelocity(glm::vec2(-TERMINAL_VELOCITY / 5, 0));
+
+    vector<shared_ptr<Enemy> > enemies;
+    vector<shared_ptr<SpawnPoint> > spawnPoints;
+
+    InformationForSpawner spawnInfo(enemies, spawnPoints, camera.getCameraBounds(), worldBounds);
 
     bool slowed = false;
 
@@ -73,9 +82,14 @@ int main() {
 
                         tileMap.setTile(mousePosition, TileType::UPWARD_LEFT_1_1);
 
-                    }  else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
+                    } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
 
                         tileMap.setTile(mousePosition, TileType::ONE_WAY);
+
+                    } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+
+                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(1.5));
+                        spawnPoints.push_back(point);
 
                     } else {
 
@@ -106,14 +120,28 @@ int main() {
 
         enemy.update(deltaTime.asSeconds(), worldBounds, tileMap);
 
+
+        for(unsigned i = 0; i < enemies.size(); ++i) {
+
+            enemies[i]->update(deltaTime.asSeconds(), worldBounds, tileMap);
+        }
+
         player.update(deltaTime.asSeconds(), worldBounds, tileMap);
 
         playerPositions.push_back(player.getPosition());
+        playerPositions.push_back(glm::vec2(0, 1920));
 
         camera.calculateProperties(playerPositions);
         camera.update(deltaTime.asSeconds(), worldBounds);
 
         camera.applyCamera(window);
+
+        spawnInfo.currentCameraBounds = camera.getCameraBounds();
+
+        if(spawnEnemyOffscreen(spawnInfo)) {
+
+            cout << "spawned" << endl;
+        }
 
         window.clear();
 
@@ -123,7 +151,12 @@ int main() {
 
         tileMap.drawDebug(window, topLeft, bottomRight);
         player.draw(window);
-        enemy.draw(window);
+
+        for(unsigned i = 0; i < enemies.size(); ++i) {
+
+            enemies[i]->draw(window);
+        }
+
         window.display();
     }
     return 0;

@@ -1,0 +1,36 @@
+#ifndef OFFSCREENENEMYSPAWNER_H_INCLUDED
+#define OFFSCREENENEMYSPAWNER_H_INCLUDED
+
+#include "glm/glm.hpp"
+#include "SFML/System.hpp"
+#include <vector>
+#include <memory>
+
+class Enemy;
+
+//information that a spawner can use for spawning
+struct InformationForSpawner {
+    
+    std::vector<std::shared_ptr<Enemy> > enemies;
+    std::vector<glm::vec2> spawnPoints;
+    sf::FloatRect currentCameraBounds;
+    sf::FloatRect worldBounds;
+};
+
+//spawns an enemy at the edge of the players screen
+//this spawner will try to find a valid position that is out of the view of the player and spawn an enemy at that position and make the enemy move towards the center of the camera
+class OffscreenEnemySpawner {
+    
+    public:
+        
+        OffscreenEnemySpawner();
+        
+        bool handleEnemySpawn()
+        
+    private:
+        
+        sf::Clock spawnTimer;
+        sf::Time spawnDelay;
+};
+
+#endif // OFFSCREENENEMYSPAWNER_H_INCLUDED

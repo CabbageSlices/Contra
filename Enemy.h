@@ -6,13 +6,14 @@
 #include "ObjectHitbox.h"
 #include "TileCollisionHandling.h"
 #include "TileMap.h"
+#include "Direction.h"
 #include <memory>
 
 class Enemy {
 
     public:
 
-        Enemy(const glm::vec2 &position, const glm::vec2 &size);
+        Enemy(const glm::vec2 &position, const Direction &initialDirection);
 
         void setInitialVelocity(const glm::vec2 &velocity);
         void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);

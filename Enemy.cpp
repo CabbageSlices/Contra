@@ -5,13 +5,22 @@
 using std::vector;
 using std::shared_ptr;
 
-Enemy::Enemy(const glm::vec2 &positionWorldSpace, const glm::vec2 &sizeWorldSpace) :
+Enemy::Enemy(const glm::vec2 &positionWorldSpace, const Direction &initialDirection) :
     hitbox(),
     hitboxMovementController(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), &hitbox),
     enemy(sf::Vector2f(64, 64))
     {
         hitbox.insertHitbox(sf::FloatRect(0, 0, enemy.getSize().x, enemy.getSize().y));
         hitbox.setActiveHitbox(0);
+
+        if(initialDirection.horizontal == HorizontalDirection::RIGHT) {
+
+            setInitialVelocity(glm::vec2(TERMINAL_VELOCITY, 0));
+
+        } else {
+
+            setInitialVelocity(glm::vec2(-TERMINAL_VELOCITY, 0));
+        }
     }
 
 void Enemy::setInitialVelocity(const glm::vec2 &velocity) {

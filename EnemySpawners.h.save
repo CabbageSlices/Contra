@@ -1,0 +1,50 @@
+#ifndef ENEMYSPAWNERS_H_INCLUDED
+#define ENEMYSPAWNERS_H_INCLUDED
+
+#include "SFML/System.hpp"
+#include "glm/glm.hpp"
+#include <vector>
+#include <memory>
+
+class Enemy;
+
+struct SpawnPoint {
+
+    SpawnPoint(const glm::vec2 &position, const sf::Time &delay) :
+        spawnPosition(position),
+        spawnTimer(),
+        spawnDelay(delay);
+    {
+
+    }
+
+    bool checkCanSpawn() {
+
+        return spawnTimer.getElapsedTime() > spawnDelay;
+    }
+
+    void resetSpawnTimer() {
+
+        spawnTimer.restart();
+    }
+
+    glm::vec2 spawnPosition;
+    sf::Clock spawnTimer;
+    sf::Time spawnDelay;
+};
+
+//information that a spawner can use for spawning
+struct InformationForSpawner {
+
+    std::vector<std::shared_ptr<Enemy> > &enemies;
+    std::vector<std::shared_ptr<SpawnPoint> > &spawnPoints;
+    sf::FloatRect currentCameraBounds;
+    sf::FloatRect worldBounds;
+};
+
+//returns null if no point is available for use
+std::shared_ptr<SpawnPoint>& findClosestPointOffscreen(InformationForSpawner &spawnInfo);
+
+bool spawnEnemyOffscreen(InformationForSpawner *spawnInfo);
+
+#endif // ENEMYSPAWNERS_H_INCLUDED

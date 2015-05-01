@@ -39,6 +39,8 @@
 		<Unit filename="Direction.h" />
 		<Unit filename="Enemy.cpp" />
 		<Unit filename="Enemy.h" />
+		<Unit filename="EnemySpawners.cpp" />
+		<Unit filename="EnemySpawners.h" />
 		<Unit filename="GlobalConstants.cpp" />
 		<Unit filename="GlobalConstants.h" />
 		<Unit filename="Gun.cpp" />
