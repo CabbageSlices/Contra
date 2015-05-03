@@ -13,10 +13,11 @@ class Enemy {
 
     public:
 
-        Enemy(const glm::vec2 &position, const Direction &initialDirection);
+        Enemy(const glm::vec2 &position, const Direction &initialDirection, const int initialHealth = 1);
 
         void setInitialVelocity(const glm::vec2 &velocity);
         void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
+        bool checkIsAlive() const;
 
         void draw(sf::RenderWindow &window);
 
@@ -29,6 +30,7 @@ class Enemy {
         ObjectHitbox hitbox;
         HitboxMovementController hitboxMovementController;
         sf::RectangleShape enemy;
+        int health;
 };
 
 #endif // ENEMY_H_INCLUDED

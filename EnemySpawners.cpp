@@ -1,6 +1,9 @@
 #include "EnemySpawners.h"
 #include "Enemy.h"
+#include <iostream>
 
+using std::cout;
+using std::endl;
 using std::vector;
 using std::shared_ptr;
 using std::make_shared;
@@ -18,13 +21,15 @@ int findClosestSpawnPointOffscreen(InformationForSpawner &spawnInfo) {
 
     const float cameraHorizontalCenter = spawnInfo.currentCameraBounds.left + spawnInfo.currentCameraBounds.width / 2;
 
-    for(unsigned i = 1; i < spawnPoints.size(); ++i) {
+
+    for(unsigned i = 0; i < spawnPoints.size(); ++i) {
 
         sf::Vector2f &position = spawnPoints[i]->spawnPosition;
 
         if(spawnInfo.currentCameraBounds.contains(position) || !spawnPoints[i]->checkCanSpawn()) {
 
             //in camera bounds or the spawner isn't active, so we can't use this
+            cout << spawnInfo.currentCameraBounds.contains(position) << !spawnPoints[i]->checkCanSpawn() << endl;
             continue;
         }
 
@@ -39,6 +44,7 @@ int findClosestSpawnPointOffscreen(InformationForSpawner &spawnInfo) {
 
         bool isCloser = glm::abs(position.x - cameraHorizontalCenter) < glm::abs(closestPoint->spawnPosition.x - cameraHorizontalCenter);
 
+        cout << closestPointId << endl;
         if(isCloser) {
 
             closestPointId = i;

@@ -1,12 +1,13 @@
 #include "EnemySpawners.h"
 #include "Enemy.h"
+#
 
 using std::vector;
 using std::shared_ptr;
 using std::make_shared;
 
 int findClosestSpawnPointOffscreen(InformationForSpawner &spawnInfo) {
-    
+
     int closestPointId = -1;
 
     vector<shared_ptr<SpawnPoint> > spawnPoints = spawnInfo.spawnPoints;
@@ -16,6 +17,8 @@ int findClosestSpawnPointOffscreen(InformationForSpawner &spawnInfo) {
         return -1;
     }
 
+    cout << "asdf" << endl;
+
     const float cameraHorizontalCenter = spawnInfo.currentCameraBounds.left + spawnInfo.currentCameraBounds.width / 2;
 
     for(unsigned i = 1; i < spawnPoints.size(); ++i) {
@@ -24,39 +27,43 @@ int findClosestSpawnPointOffscreen(InformationForSpawner &spawnInfo) {
 
         if(spawnInfo.currentCameraBounds.contains(position) || !spawnPoints[i]->checkCanSpawn()) {
 
+            cout << "AAA" << endl;
             //in camera bounds or the spawner isn't active, so we can't use this
             continue;
         }
 
         if(closestPointId < 0) {
 
+            cout << "ZZZZ" << endl;
             //closest point hasn't been initialized yet so just set it to the current point
             closestPointId = i;
             continue;
         }
-        
-        shared_ptr<SpawnPoint> closestPoint
+
+        shared_ptr<SpawnPoint> &closestPoint = spawnPoints[closestPointId];
 
         bool isCloser = glm::abs(position.x - cameraHorizontalCenter) < glm::abs(closestPoint->spawnPosition.x - cameraHorizontalCenter);
 
         if(isCloser) {
 
-            closestPoint = spawnPoints[i];
+            closestPointId = i;
         }
     }
 
-    return closestPoint;
+    return closestPointId;
 }
 
 bool spawnEnemyOffscreen(InformationForSpawner &spawnInfo) {
 
-    shared_ptr<SpawnPoint> closestPoint = findClosestSpawnPointOffscreen(spawnInfo);
+    int idClosestPoint = findClosestSpawnPointOffscreen(spawnInfo);
 
-    if(!closestPoint) {
+    if(idClosestPoint < 0 || idClosestPoint > spawnInfo.spawnPoints.size()) {
 
         //no valid point found so don't spawn anything
         return false;
     }
+
+    shared_ptr<SpawnPoint> &closestPoint = spawnInfo.spawnPoints[idClosestPoint];
 
     Direction direction;
 
@@ -77,6 +84,7 @@ bool spawnEnemyOffscreen(InformationForSpawner &spawnInfo) {
         return false;
     }
 
+    closestPoint->resetSpawnTimer();
     spawnInfo.enemies.push_back(enemy);
-    return false;
+    return true;
 }

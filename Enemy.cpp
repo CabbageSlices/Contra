@@ -5,27 +5,29 @@
 using std::vector;
 using std::shared_ptr;
 
-Enemy::Enemy(const glm::vec2 &positionWorldSpace, const Direction &initialDirection) :
+Enemy::Enemy(const glm::vec2 &positionWorldSpace, const Direction &initialDirection, const int initialHealth) :
     hitbox(),
     hitboxMovementController(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), &hitbox),
-    enemy(sf::Vector2f(64, 64))
+    enemy(sf::Vector2f(64, 64)),
+    health(initialHealth)
     {
+        hitbox.setOrigin(positionWorldSpace);
         hitbox.insertHitbox(sf::FloatRect(0, 0, enemy.getSize().x, enemy.getSize().y));
         hitbox.setActiveHitbox(0);
 
         if(initialDirection.horizontal == HorizontalDirection::RIGHT) {
 
-            setInitialVelocity(glm::vec2(TERMINAL_VELOCITY, 0));
+            setInitialVelocity(glm::vec2(TERMINAL_VELOCITY / 5, 0));
 
         } else {
 
-            setInitialVelocity(glm::vec2(-TERMINAL_VELOCITY, 0));
+            setInitialVelocity(glm::vec2(-TERMINAL_VELOCITY / 5, 0));
         }
     }
 
-void Enemy::setInitialVelocity(const glm::vec2 &velocity) {
+bool Enemy::checkIsAlive() const {
 
-    hitboxMovementController.setVelocities(velocity);
+    return health > 0;
 }
 
 void Enemy::update(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {
@@ -55,6 +57,22 @@ void Enemy::update(const float &deltaTime, const sf::FloatRect &worldBounds, Til
 void Enemy::draw(sf::RenderWindow &window) {
 
     window.draw(enemy);
+}
+
+bool Enemy::getHit(int damage) {
+
+    health -= damage;
+    return checkIsAlive();
+}
+
+void Enemy::setInitialVelocity(const glm::vec2 &velocity) {
+
+    hitboxMovementController.setVelocities(velocity);
+}
+
+const ObjectHitbox &Enemy::getHitbox() const {
+
+    return hitbox;
 }
 
 void Enemy::handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {

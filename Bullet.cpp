@@ -1,8 +1,8 @@
 #include "Bullet.h"
 #include "TileCollisionHandling.h"
+#include "Enemy.h"
 
 #include <vector>
-#include <memory>
 #include <iostream>
 
 using std::vector;
@@ -37,16 +37,6 @@ void Bullet::update(const float &delta, const sf::FloatRect &worldBounds, TileMa
     bullet.setPosition(position.x, position.y);
 }
 
-void Bullet::killBullet() {
-
-    timeElapsed = lifeTime.asSeconds() * 2;
-}
-
-bool Bullet::checkIsAlive() {
-
-    return timeElapsed < lifeTime.asSeconds();
-}
-
 void Bullet::draw(sf::RenderWindow &window) {
 
     window.draw(bullet);
@@ -57,6 +47,27 @@ void Bullet::draw(sf::RenderWindow &window) {
     debug.setPosition(rect.left, rect.top);
     debug.setFillColor(sf::Color::Magenta);
     window.draw(debug);
+}
+
+void Bullet::handleEnemyCollision(shared_ptr<Enemy> &enemy) {
+
+    enemy->getHit(1);
+    killBullet();
+}
+
+void Bullet::killBullet() {
+
+    lifeTime = sf::seconds(0);
+}
+
+bool Bullet::checkIsAlive() {
+
+    return timeElapsed < lifeTime.asSeconds();
+}
+
+const ObjectHitbox &Bullet::getHitbox() const {
+
+    return hitbox;
 }
 
 void Bullet::handleTileCollision(TileMap& map) {

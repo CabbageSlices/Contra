@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "Enemy.h"
 #include "EnemySpawners.h"
+#include "Bullet.h"
 
 #include <vector>
 #include <memory>
@@ -88,7 +89,7 @@ int main() {
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
-                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(1.5));
+                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(3));
                         spawnPoints.push_back(point);
 
                     } else {
@@ -116,18 +117,34 @@ int main() {
             deltaTime /= 10.f;
         }
 
-        vector<glm::vec2> playerPositions;
-
         enemy.update(deltaTime.asSeconds(), worldBounds, tileMap);
-
-
-        for(unsigned i = 0; i < enemies.size(); ++i) {
-
-            enemies[i]->update(deltaTime.asSeconds(), worldBounds, tileMap);
-        }
 
         player.update(deltaTime.asSeconds(), worldBounds, tileMap);
 
+        vector<shared_ptr<Bullet> > &playerBullets = player.getGun()->getBullets();
+
+        for(unsigned i = 0; i < enemies.size();) {
+
+            enemies[i]->update(deltaTime.asSeconds(), worldBounds, tileMap);
+
+            if(!enemies[i]->checkIsAlive()) {
+
+                enemies.erase(enemies.begin() + i);
+                continue;
+            }
+
+            for(unsigned j = 0; j < playerBullets.size(); ++j) {
+
+                if(playerBullets[j]->getHitbox().getActiveHitboxWorldSpace().intersects(enemies[i]->getHitbox().getActiveHitboxWorldSpace()) && playerBullets[j]->checkIsAlive()) {
+
+                    playerBullets[j]->handleEnemyCollision(enemies[i]);
+                }
+            }
+
+            ++i;
+        }
+
+        vector<glm::vec2> playerPositions;
         playerPositions.push_back(player.getPosition());
         playerPositions.push_back(glm::vec2(0, 1920));
 
@@ -137,11 +154,7 @@ int main() {
         camera.applyCamera(window);
 
         spawnInfo.currentCameraBounds = camera.getCameraBounds();
-
-        if(spawnEnemyOffscreen(spawnInfo)) {
-
-            cout << "spawned" << endl;
-        }
+        spawnEnemyOffscreen(spawnInfo);
 
         window.clear();
 

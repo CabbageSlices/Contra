@@ -13,12 +13,16 @@ class Enemy {
 
     public:
 
-        Enemy(const glm::vec2 &position, const Direction &initialDirection);
+        Enemy(const glm::vec2 &position, const Direction &initialDirection, const int initialHealth = 1);
+
+        bool checkIsAlive() const;
+        void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
+        void draw(sf::RenderWindow &window);
+        bool getHit(int damage = 1); //returns true if enemy is still alive, false if dead
 
         void setInitialVelocity(const glm::vec2 &velocity);
-        void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
 
-        void draw(sf::RenderWindow &window);
+        const ObjectHitbox &getHitbox() const;
 
     private:
 
@@ -29,6 +33,7 @@ class Enemy {
         ObjectHitbox hitbox;
         HitboxMovementController hitboxMovementController;
         sf::RectangleShape enemy;
+        int health;
 };
 
 #endif // ENEMY_H_INCLUDED

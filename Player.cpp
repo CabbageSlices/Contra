@@ -115,6 +115,11 @@ const glm::vec2 Player::getPosition() const {
     return hitbox.getOrigin();
 }
 
+shared_ptr<Gun> &Player::getGun() {
+
+    return gun;
+}
+
 glm::vec2 Player::calculateGunfireOrigin() const {
 
     //default facing right so its at the right side of the player

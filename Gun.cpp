@@ -10,7 +10,7 @@ using std::endl;
 
 Gun::Gun() :
     timeSinceLastFired(sf::seconds(0)),
-    fireDelay(sf::seconds(0.1)),
+    fireDelay(sf::seconds(0.35)),
     bullets()
     {
 
@@ -57,6 +57,11 @@ void Gun::draw(sf::RenderWindow& window) {
 
         bullets[i]->draw(window);
     }
+}
+
+vector<shared_ptr<Bullet> > &Gun::getBullets() {
+
+    return bullets;
 }
 
 void Gun::createBullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace) {

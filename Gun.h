@@ -28,6 +28,8 @@ class Gun {
         void update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map);
         void draw(sf::RenderWindow& window);
 
+        std::vector<std::shared_ptr<Bullet> > &getBullets();
+
     private:
 
         bool checkCanFire() {
