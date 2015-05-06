@@ -15,7 +15,7 @@ class Bullet {
 
     public:
 
-        Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, const float &bulletVel = 10.f);
+        Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, const float &bulletVel = 11.f);
 
         void update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map);
         void draw(sf::RenderWindow &window);

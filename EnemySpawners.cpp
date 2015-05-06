@@ -28,8 +28,6 @@ int findClosestSpawnPointOffscreen(InformationForSpawner &spawnInfo) {
 
         if(spawnInfo.currentCameraBounds.contains(position) || !spawnPoints[i]->checkCanSpawn()) {
 
-            //in camera bounds or the spawner isn't active, so we can't use this
-            cout << spawnInfo.currentCameraBounds.contains(position) << !spawnPoints[i]->checkCanSpawn() << endl;
             continue;
         }
 

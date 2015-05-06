@@ -10,7 +10,7 @@ using std::endl;
 
 Gun::Gun() :
     timeSinceLastFired(sf::seconds(0)),
-    fireDelay(sf::seconds(0.35)),
+    fireDelay(sf::seconds(0.3)),
     bullets()
     {
 

@@ -54,6 +54,7 @@ CollisionResponse handleCollisionHorizontal(shared_ptr<Tile>& tile, HitboxMoveme
         case TileType::UPWARD_RIGHT_1_1: {
 
             response.handledVertical = handleUpSlopeTileCollision(tile, object);
+            response.canFallThroughGround = response.handledVertical; //object can fall through this tile if the collision was handled
             return response;
         }
 
@@ -72,7 +73,12 @@ CollisionResponse handleCollisionVertical(shared_ptr<Tile>& tile, HitboxMovement
 
     switch(type) {
 
-        case TileType::ONE_WAY:
+        case TileType::ONE_WAY: {
+            
+            response.handledVertical = handleSolidTileCollisionVertical(tile, object);
+            response.canFallThroughGround = response.handledVertical; //object can fall through this tile if the collision was handled
+            return response;
+        }
         case TileType::SOLID: {
 
             response.handledVertical = handleSolidTileCollisionVertical(tile, object);
@@ -220,8 +226,8 @@ bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, HitboxMovementController
     //object is in the tile and needs to snap to the y position at its current x position
     //calculate offset requried
     float yPositionTileSpace = (tileSlope.y / tileSlope.x) * objPosInTile.x + tileIntercepts.y;
-    float yPositionWorldSpace = yPositionTileSpace + tile
-    float yOffset = yPosition - (objectHitbox.top + objectHitbox.height);
+    float yPositionWorldSpace = yPositionTileSpace + tileBoundingBox.top;
+    float yOffset = yPositionWorldSpace - (objectHitbox.top + objectHitbox.height);
 
     object.getHitbox()->move(glm::vec2(0, yOffset));
     object.setVelocities(object.getVelocities().x, 0);

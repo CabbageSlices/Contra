@@ -26,7 +26,7 @@ int main() {
 
     sf::Clock timer;
 
-    sf::FloatRect worldBounds(0, 0, 3072, 1920);
+    sf::FloatRect worldBounds(0, 0, 1024 * 5, 768 * 2);
 
     TileMap tileMap(worldBounds.width, worldBounds.height);
 
@@ -89,7 +89,7 @@ int main() {
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
-                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(3));
+                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(6));
                         spawnPoints.push_back(point);
 
                     } else {
@@ -159,7 +159,7 @@ int main() {
 
         vector<glm::vec2> playerPositions;
         playerPositions.push_back(player.getPosition());
-        playerPositions.push_back(glm::vec2(0, 1920));
+        //playerPositions.push_back(glm::vec2(0, 1920));
 
         camera.calculateProperties(playerPositions);
         camera.update(deltaTime.asSeconds(), worldBounds);

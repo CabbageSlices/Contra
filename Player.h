@@ -55,6 +55,7 @@ class Player {
     private:
 
         bool checkCanJump() const;
+        bool checkCanJumpDown() const; //check if player can jump down from the current platform
         bool checkIsJumping() const;
         bool checkIsCrouching() const;
 
@@ -72,6 +73,8 @@ class Player {
 
         void determineDirection();
         void jump();
+        void jumpDown();
+        void stopStandingOnPlatforms();
 
         void die();
 
@@ -91,6 +94,7 @@ class Player {
         //seperate flags to keep track of player standing on blocks/ground and tiles
         bool standingOnSolid;
         bool standingOnTile;
+        bool standingOnPassablePlatform;//whether player is standing on a platform from which he can jump down
 
         //when user is holding jump he will jump higher
         //it will basically disable gravity until extra jump timer exceeds the max time allowed for user to hold jump

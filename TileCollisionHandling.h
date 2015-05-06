@@ -10,7 +10,13 @@ struct CollisionResponse {
 
     bool handledHorizontal = false;
     bool handledVertical = false;
+    bool canFallThroughGround = false;
 };
+
+//if the bottom of an object is within this distance from the top of a colliding tile the collision resoultion occurs
+//otherwise it is skipped
+//this allows players to jump down from passable platforms
+extern const float fallThroughTopThreshold;
 
 typedef HitboxMovementController HitboxMovementController;
 

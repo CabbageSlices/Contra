@@ -8,6 +8,7 @@ using std::shared_ptr;
 using std::cout;
 using std::endl;
 
+const float fallThroughTopThreshold = 10.f;
 const int MAX_SLOPE_SNAPPING_DISTANCE = 10;
 
 bool checkSolidTileIntersection(std::shared_ptr<Tile>& tile, HitboxMovementController& object) {
@@ -54,6 +55,7 @@ CollisionResponse handleCollisionHorizontal(shared_ptr<Tile>& tile, HitboxMoveme
         case TileType::UPWARD_RIGHT_1_1: {
 
             response.handledVertical = handleUpSlopeTileCollision(tile, object);
+            response.canFallThroughGround = response.handledVertical; //object can fall through this tile if the collision was handled
             return response;
         }
 
@@ -72,7 +74,12 @@ CollisionResponse handleCollisionVertical(shared_ptr<Tile>& tile, HitboxMovement
 
     switch(type) {
 
-        case TileType::ONE_WAY:
+        case TileType::ONE_WAY: {
+
+            response.handledVertical = handleSolidTileCollisionVertical(tile, object);
+            response.canFallThroughGround = response.handledVertical; //object can fall through this tile if the collision was handled
+            return response;
+        }
         case TileType::SOLID: {
 
             response.handledVertical = handleSolidTileCollisionVertical(tile, object);
@@ -258,7 +265,7 @@ bool handleSolidTileCollisionVertical(shared_ptr<Tile>& tile, HitboxMovementCont
 
     object.setVelocities(object.getVelocities().x, 0);
 
-    if(objectHitbox.top < tileTop) {
+    if(objectHitbox.top + objectHitbox.height < tileTop + fallThroughTopThreshold) {
 
         float offset = tileTop - (objectHitbox.top + objectHitbox.height);
         object.getHitbox()->move(glm::vec2(0, offset));

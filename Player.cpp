@@ -12,9 +12,10 @@ using std::endl;
 
 Player::Player(const PlayerKeys& keyConfiguration):
     lifeState(ALIVE),
-    MOVEMENT_VELOCITY(4.f, 3.9f),
+    MOVEMENT_VELOCITY(4.f * 2, 3.9f  *2),
     standingOnSolid(false),
     standingOnTile(false),
+    standingOnPassablePlatform(false),
     holdingJump(false),
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(220)),
@@ -65,7 +66,11 @@ void Player::handleKeystate(sf::RenderWindow& window) {
         hitboxMovementController.setVelocities(0, hitboxMovementController.getVelocities().y);
     }
 
-    if(sf::Keyboard::isKeyPressed(controls.jump)) {
+    if(sf::Keyboard::isKeyPressed(controls.jump) && sf::Keyboard::isKeyPressed(controls.down)) {
+
+        jumpDown();
+
+    } else if(sf::Keyboard::isKeyPressed(controls.jump)) {
 
         jump();
     }
@@ -106,6 +111,7 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
     CollisionResponse collisionResponseVertical = handleTileCollisionVertically(map);
 
     standingOnTile = (collisionResponseHorizontal.handledVertical || collisionResponseVertical.handledVertical);
+    standingOnPassablePlatform = collisionResponseHorizontal.canFallThroughGround || collisionResponseVertical.canFallThroughGround;
 
     sf::FloatRect activeHitbox = hitbox.getActiveHitboxWorldSpace();
     player.setPosition(activeHitbox.left, activeHitbox.top);
@@ -185,9 +191,15 @@ int Player::getLives() const {
 
 bool Player::checkCanJump() const {
 
+    return true;
     //if player is falling it means he isn't standing on top of any object because if he was, his velocity would be 0
     //therefore he can't jump if his velocity isn't 0
     return (standingOnSolid || standingOnTile) && (hitboxMovementController.getVelocities().y == 0) && (lifeState == ALIVE);
+}
+
+bool Player::checkCanJumpDown() const {
+
+    return standingOnPassablePlatform && checkCanJump();
 }
 
 bool Player::checkIsJumping() const {
@@ -271,6 +283,7 @@ CollisionResponse Player::handleTileCollision(TileMap& map, CollisionResponse(*c
     vector<shared_ptr<Tile> > tiles = map.getTilesInRegion(regionTopLeft, regionBottomRight);
 
     CollisionResponse collisionResponse;
+    collisionResponse.canFallThroughGround = true;
 
     for(unsigned i = 0; i < tiles.size(); ++i) {
 
@@ -279,6 +292,11 @@ CollisionResponse Player::handleTileCollision(TileMap& map, CollisionResponse(*c
         if(response.handledVertical) {
 
             collisionResponse.handledVertical = true;
+
+            //if player ever stands on a solid tile that prevents fall through then don't let him fall through floor
+            //this makes it so player can only fall through ground if all checks allow him to fall through ground
+            collisionResponse.canFallThroughGround = collisionResponse.canFallThroughGround && response.canFallThroughGround;
+
         }
 
         if(response.handledHorizontal) {
@@ -286,6 +304,9 @@ CollisionResponse Player::handleTileCollision(TileMap& map, CollisionResponse(*c
             collisionResponse.handledHorizontal = true;
         }
     }
+
+    //if vertical collision was never handled then don't let player call through ground
+    collisionResponse.canFallThroughGround = collisionResponse.canFallThroughGround && collisionResponse.handledVertical;
 
     return collisionResponse;
 }
@@ -343,8 +364,30 @@ void Player::jump() {
 
         extraJumpTimer.restart();
         hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, -MOVEMENT_VELOCITY.y);
-        standingOnSolid = false;
+        stopStandingOnPlatforms();
     }
+}
+
+void Player::jumpDown() {
+
+    if(checkCanJumpDown()) {
+
+        stopStandingOnPlatforms();
+
+        //when jumping down just push the player down into the ground since the collision detection code should allow him to pass
+        //push him just out of the threshold so collision resolution won't occur
+        hitbox.move(glm::vec2(0, fallThroughTopThreshold + 1.f));
+
+        //also set his velocity to go downwards that way it looks a bit smoother
+        hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, 1.0f);
+    }
+}
+
+void Player::stopStandingOnPlatforms() {
+
+    standingOnPassablePlatform = false;
+    standingOnSolid = false;
+    standingOnTile = false;
 }
 
 void Player::die() {
