@@ -12,7 +12,7 @@ using std::endl;
 
 Player::Player(const PlayerKeys& keyConfiguration):
     lifeState(ALIVE),
-    MOVEMENT_VELOCITY(4.f * 2, 3.9f  *2),
+    MOVEMENT_VELOCITY(4.f, 3.9f),
     standingOnSolid(false),
     standingOnTile(false),
     standingOnPassablePlatform(false),
@@ -191,7 +191,6 @@ int Player::getLives() const {
 
 bool Player::checkCanJump() const {
 
-    return true;
     //if player is falling it means he isn't standing on top of any object because if he was, his velocity would be 0
     //therefore he can't jump if his velocity isn't 0
     return (standingOnSolid || standingOnTile) && (hitboxMovementController.getVelocities().y == 0) && (lifeState == ALIVE);
