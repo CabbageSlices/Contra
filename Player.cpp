@@ -11,6 +11,7 @@ using std::cout;
 using std::endl;
 
 Player::Player(const PlayerKeys& keyConfiguration):
+    lifeState(ALIVE),
     MOVEMENT_VELOCITY(4.f, 3.9f),
     standingOnSolid(false),
     standingOnTile(false),
@@ -22,7 +23,10 @@ Player::Player(const PlayerKeys& keyConfiguration):
     direction(),
     player(sf::Vector2f(50, 100)),
     gun(),
-    controls(keyConfiguration)
+    controls(keyConfiguration),
+    lives(3),
+    respawnInvinsibilityTimer(),
+    respawnInvinsibilityDuration(sf::seconds(3))
     {
         gun = std::make_shared<Gun>();
 
@@ -41,6 +45,12 @@ void Player::handleInputEvents(sf::Event& event, sf::RenderWindow& window) {
 }
 
 void Player::handleKeystate(sf::RenderWindow& window) {
+
+    if(!checkIsAlive()) {
+
+        hitboxMovementController.setVelocities(0, hitboxMovementController.getVelocities().y);
+        return; //don't handle controls if player is dead
+    }
 
     if(sf::Keyboard::isKeyPressed(controls.left)) {
 
@@ -104,10 +114,58 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
     gun->update(deltaTime, worldBounds, map);
 }
 
+void Player::getHit() {
+
+    if(respawnInvinsibilityTimer.getElapsedTime() < respawnInvinsibilityDuration || !checkIsAlive()) {
+
+        return;
+    }
+
+    ///later this should start a death animation and set lifestate to dying, and once the animation finishes the player should actually die
+    ///for now just make player die
+    die();
+}
+
+bool Player::checkIsAlive() {
+
+    return lifeState == ALIVE;
+}
+
+bool Player::checkCanRespawn() {
+
+    return lifeState == DEAD && lives > 0;
+}
+
+void Player::respawn(const sf::FloatRect &cameraBounds) {
+
+    lifeState = ALIVE;
+    glm::vec2 spawnPosition(cameraBounds.left + hitbox.getActiveHitboxObjectSpace().width, cameraBounds.top);
+    hitbox.setOrigin(spawnPosition);
+
+    setLives(lives - 1);
+
+    respawnInvinsibilityTimer.restart();
+}
+
 void Player::draw(sf::RenderWindow& window) {
+
+    if(lifeState == DEAD) {
+
+        return;
+    }
 
     gun->draw(window);
     window.draw(player);
+}
+
+void Player::setLives(const int &newLives) {
+
+    lives = newLives;
+}
+
+const ObjectHitbox& Player::getHitbox() const {
+
+    return hitbox;
 }
 
 const glm::vec2 Player::getPosition() const {
@@ -118,6 +176,36 @@ const glm::vec2 Player::getPosition() const {
 shared_ptr<Gun> &Player::getGun() {
 
     return gun;
+}
+
+int Player::getLives() const {
+
+    return lives;
+}
+
+bool Player::checkCanJump() const {
+
+    //if player is falling it means he isn't standing on top of any object because if he was, his velocity would be 0
+    //therefore he can't jump if his velocity isn't 0
+    return (standingOnSolid || standingOnTile) && (hitboxMovementController.getVelocities().y == 0) && (lifeState == ALIVE);
+}
+
+bool Player::checkIsJumping() const {
+
+    //player is jumping if he is moving upwards and he isn't able to jump
+    return hitboxMovementController.getVelocities().y < 0 && !standingOnSolid;
+}
+
+bool Player::checkIsCrouching() const {
+
+    //player is crouching if he is holding down, not moving, and on the ground
+    return checkCanJump() && sf::Keyboard::isKeyPressed(controls.down) && hitboxMovementController.getVelocities().x == 0;
+}
+
+//check if player can extend his jump by holding the jump button
+bool Player::checkExtendJump() const {
+
+    return holdingJump && extraJumpTimer.getElapsedTime() < extraJumpDuration;
 }
 
 glm::vec2 Player::calculateGunfireOrigin() const {
@@ -257,4 +345,10 @@ void Player::jump() {
         hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, -MOVEMENT_VELOCITY.y);
         standingOnSolid = false;
     }
+}
+
+void Player::die() {
+
+    ///later this should stop animations but for now just kill player
+    lifeState = DEAD;
 }

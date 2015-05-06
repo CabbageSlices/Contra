@@ -52,6 +52,7 @@
 		<Unit filename="ObjectHitbox.h" />
 		<Unit filename="Player.cpp" />
 		<Unit filename="Player.h" />
+		<Unit filename="PlayerManager.h" />
 		<Unit filename="Tile.cpp" />
 		<Unit filename="Tile.h" />
 		<Unit filename="TileCollisionHandling.cpp" />

@@ -121,6 +121,11 @@ int main() {
 
         player.update(deltaTime.asSeconds(), worldBounds, tileMap);
 
+        if(player.checkCanRespawn()) {
+
+            player.respawn(camera.getCameraBounds());
+        }
+
         vector<shared_ptr<Bullet> > &playerBullets = player.getGun()->getBullets();
 
         for(unsigned i = 0; i < enemies.size();) {
@@ -139,6 +144,14 @@ int main() {
 
                     playerBullets[j]->handleEnemyCollision(enemies[i]);
                 }
+            }
+
+            sf::FloatRect enemyHitbox = enemies[i]->getHitbox().getActiveHitboxWorldSpace();
+            sf::FloatRect playerHitbox = player.getHitbox().getActiveHitboxWorldSpace();
+
+            if(enemyHitbox.intersects(playerHitbox)) {
+
+                player.getHit();
             }
 
             ++i;

@@ -38,38 +38,28 @@ class Player {
 
         //time should be in seconds
         void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
+        void getHit();
+        bool checkIsAlive();
+        bool checkCanRespawn();
+        void respawn(const sf::FloatRect &cameraBounds);//spawns at top of camera
 
         void draw(sf::RenderWindow& window);
 
+        void setLives(const int &newLives);
+
+        const ObjectHitbox& getHitbox() const;
         const glm::vec2 getPosition() const;
         std::shared_ptr<Gun> &getGun();
+        int getLives() const;
 
     private:
 
-        bool checkCanJump() const {
-
-            //if player is falling it means he isn't standing on top of any object because if he was, his velocity would be 0
-            //therefore he can't jump if his velocity isn't 0
-            return (standingOnSolid || standingOnTile) && hitboxMovementController.getVelocities().y == 0;
-        }
-
-        bool checkIsJumping() const {
-
-            //player is jumping if he is moving upwards and he isn't able to jump
-            return hitboxMovementController.getVelocities().y < 0 && !standingOnSolid;
-        }
-
-        bool checkIsCrouching() const {
-
-            //player is crouching if he is holding down, not moving, and on the ground
-            return checkCanJump() && sf::Keyboard::isKeyPressed(controls.down) && hitboxMovementController.getVelocities().x == 0;
-        }
+        bool checkCanJump() const;
+        bool checkIsJumping() const;
+        bool checkIsCrouching() const;
 
         //check if player can extend his jump by holding the jump button
-        bool checkExtendJump() const {
-
-            return holdingJump && extraJumpTimer.getElapsedTime() < extraJumpDuration;
-        }
+        bool checkExtendJump() const;
 
         //calculate the position where the gun produces bullets relative to the player
         //differs whenever player is facing in different directions
@@ -82,6 +72,16 @@ class Player {
 
         void determineDirection();
         void jump();
+
+        void die();
+
+        enum LifeState {
+
+            ALIVE, //while player is dying or dead he can't move or jump
+            DYING,  //but he can't respawn unless he is dead
+            DEAD
+
+        } lifeState;
 
         //velocity of player when he begins to move
         //measured in meters per second
@@ -107,6 +107,11 @@ class Player {
 
         //the control setup for this player
         PlayerKeys controls;
+
+        int lives;
+
+        sf::Clock respawnInvinsibilityTimer;
+        sf::Time respawnInvinsibilityDuration;
 };
 
 #endif // PLAYER_H_INCLUDED

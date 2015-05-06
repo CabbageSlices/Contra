@@ -89,7 +89,7 @@ int main() {
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
-                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(4));
+                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(3));
                         spawnPoints.push_back(point);
 
                     } else {
@@ -137,10 +137,14 @@ int main() {
 
                 if(playerBullets[j]->getHitbox().getActiveHitboxWorldSpace().intersects(enemies[i]->getHitbox().getActiveHitboxWorldSpace()) && playerBullets[j]->checkIsAlive()) {
 
-                    playerBullets[i]->handleEnemyCollision(enemies[i]);
-                    playerBullets[i]->
+                    playerBullets[j]->handleEnemyCollision(enemies[i]);
                 }
             }
+            
+            sf::FloatRect enemyHitBox = enemies[i]->getHitbox().getActiveHitboxWorldSpace();
+            sf::FloatRect playerHitBox = player.getHitbox
+            
+            if()
 
             ++i;
         }
@@ -155,6 +159,7 @@ int main() {
         camera.applyCamera(window);
 
         spawnInfo.currentCameraBounds = camera.getCameraBounds();
+        spawnEnemyOffscreen(spawnInfo);
 
         window.clear();
 
