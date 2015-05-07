@@ -40,7 +40,7 @@
 
 1427852681 c:\users\nimesh\documents\github\contra\globalconstants.h
 
-1430950868 source:c:\users\nimesh\documents\github\contra\main.cpp
+1430967419 source:c:\users\nimesh\documents\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -51,6 +51,7 @@
 	"Enemy.h"
 	"EnemySpawners.h"
 	"Bullet.h"
+	"TurretEnemy.h"
 	<vector>
 	<memory>
 
@@ -78,7 +79,7 @@
 	"ObjectSpaceManager.h"
 	<iostream>
 
-1430953482 source:c:\users\nimesh\documents\github\contra\player.cpp
+1430953770 source:c:\users\nimesh\documents\github\contra\player.cpp
 	"Player.h"
 	<iostream>
 	<vector>
@@ -145,12 +146,12 @@
 	"ObjectHitbox.h"
 	<memory>
 
-1430950757 source:c:\users\nimesh\documents\github\contra\gun.cpp
+1430958575 source:c:\users\nimesh\documents\github\contra\gun.cpp
 	"Gun.h"
 	"Bullet.h"
 	<iostream>
 
-1430499967 c:\users\nimesh\documents\github\contra\gun.h
+1430958559 c:\users\nimesh\documents\github\contra\gun.h
 	<SFML/Graphics.hpp>
 	<SFML/Window.hpp>
 	"ObjectHitbox.h"
@@ -185,7 +186,7 @@
 	"Direction.h"
 	<memory>
 
-1430354939 c:\users\nimesh\documents\github\contra\objecthitbox.h
+1430958219 c:\users\nimesh\documents\github\contra\objecthitbox.h
 	<SFML/Graphics.hpp>
 	"glm/glm.hpp"
 	<vector>
@@ -201,7 +202,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1430355267 source:c:\users\nimesh\documents\github\contra\objecthitbox.cpp
+1430958175 source:c:\users\nimesh\documents\github\contra\objecthitbox.cpp
 	"ObjectHitbox.h"
 	<iostream>
 
@@ -216,4 +217,16 @@
 	"glm/glm.hpp"
 	<vector>
 	<memory>
+
+1430964873 source:c:\users\nimesh\documents\github\contra\turretenemey.cpp
+	"TurretEnemy.h"
+	"GlobalConstants.h"
+	<cmath>
+
+1430964749 c:\users\nimesh\documents\github\contra\turretenemy.h
+	"Gun.h"
+	"Direction.h"
+	"HitboxMovementController.h"
+	<memory>
+	<vector>
 

@@ -20,7 +20,7 @@ class Gun {
 
     public:
 
-        Gun();
+        Gun(const sf::Time &gunfireDelay = sf::seconds(0.3));
 
         //user position is position of user in the world
         //bulletOriginUserSpace is the relative origin of the bullet with respect to the user's position

@@ -8,9 +8,9 @@ using std::make_shared;
 using std::cout;
 using std::endl;
 
-Gun::Gun() :
+Gun::Gun(const sf::Time &gunfireDelay) :
     timeSinceLastFired(sf::seconds(0)),
-    fireDelay(sf::seconds(0.3)),
+    fireDelay(gunfireDelay),
     bullets()
     {
 

@@ -25,6 +25,12 @@ void ObjectHitbox::removeHitbox(const unsigned &id) {
     }
 }
 
+void ObjectHitbox::clearHitboxes() {
+
+    hitboxes.clear();
+    idActiveHitbox = 0;
+}
+
 void ObjectHitbox::move(const glm::vec2 &displacement) {
 
     origin += displacement;

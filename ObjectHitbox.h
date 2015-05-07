@@ -24,6 +24,8 @@ class ObjectHitbox {
         //after removal the active hitbox isn't guaranteed to be correct, so you must set the hitbox again
         void removeHitbox(const unsigned &id);
 
+        void clearHitboxes();
+
         //translate the origin
         void move(const glm::vec2& displacement);
 

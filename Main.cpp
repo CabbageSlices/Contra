@@ -8,6 +8,7 @@
 #include "Enemy.h"
 #include "EnemySpawners.h"
 #include "Bullet.h"
+#include "TurretEnemy.h"
 
 #include <vector>
 #include <memory>
@@ -41,6 +42,8 @@ int main() {
     InformationForSpawner spawnInfo(enemies, spawnPoints, camera.getCameraBounds(), worldBounds);
 
     bool slowed = false;
+
+    TurretEnemy enem(glm::vec2(256, 768 * 2 - 256));
 
     while(window.isOpen()) {
 
@@ -161,6 +164,8 @@ int main() {
         playerPositions.push_back(player.getPosition());
         //playerPositions.push_back(glm::vec2(0, 1920));
 
+        enem.update(deltaTime.asSeconds(), worldBounds, tileMap, playerPositions);
+
         camera.calculateProperties(playerPositions);
         camera.update(deltaTime.asSeconds(), worldBounds);
 
@@ -182,6 +187,8 @@ int main() {
 
             enemies[i]->draw(window);
         }
+
+        enem.draw(window);
 
         window.display();
     }

@@ -12,12 +12,12 @@ ObjectHitbox::ObjectHitbox() :
 
     }
 
-inline void ObjectHitbox::insertHitbox(const sf::FloatRect &hitboxObjectSpace) {
+void ObjectHitbox::insertHitbox(const sf::FloatRect &hitboxObjectSpace) {
 
     hitboxes.push_back(hitboxObjectSpace);
 }
 
-inline void ObjectHitbox::removeHitbox(const unsigned &id) {
+void ObjectHitbox::removeHitbox(const unsigned &id) {
 
     if(checkIdValid(id)) {
 
@@ -25,17 +25,23 @@ inline void ObjectHitbox::removeHitbox(const unsigned &id) {
     }
 }
 
-inline void ObjectHitbox::move(const glm::vec2 &displacement) {
+void ObjectHitbox::clearHitboxes() {
+
+    hitboxes.clear();
+    
+}
+
+void ObjectHitbox::move(const glm::vec2 &displacement) {
 
     origin += displacement;
 }
 
-inline void ObjectHitbox::setOrigin(const glm::vec2 &position) {
+void ObjectHitbox::setOrigin(const glm::vec2 &position) {
 
     origin = position;
 }
 
-inline void ObjectHitbox::setActiveHitbox(const unsigned &id) {
+void ObjectHitbox::setActiveHitbox(const unsigned &id) {
 
     if(checkIdValid(id)) {
 
@@ -43,22 +49,22 @@ inline void ObjectHitbox::setActiveHitbox(const unsigned &id) {
     }
 }
 
-inline glm::vec2 ObjectHitbox::getOrigin() const {
+glm::vec2 ObjectHitbox::getOrigin() const {
 
     return origin;
 }
 
-inline unsigned ObjectHitbox::getHitboxCount() const {
+unsigned ObjectHitbox::getHitboxCount() const {
 
     return hitboxes.size();
 }
 
-inline sf::FloatRect ObjectHitbox::getActiveHitboxWorldSpace() const {
+sf::FloatRect ObjectHitbox::getActiveHitboxWorldSpace() const {
 
     return getHitBoxWorldSpace(idActiveHitbox);
 }
 
-inline sf::FloatRect ObjectHitbox::getHitBoxWorldSpace(const unsigned &id) const {
+sf::FloatRect ObjectHitbox::getHitBoxWorldSpace(const unsigned &id) const {
 
     sf::FloatRect hitbox = getHitBoxObjectSpace(id);
 
@@ -72,17 +78,19 @@ inline sf::FloatRect ObjectHitbox::getHitBoxWorldSpace(const unsigned &id) const
     return hitbox;
 }
 
-inline sf::FloatRect ObjectHitbox::getActiveHitboxObjectSpace() const {
+sf::FloatRect ObjectHitbox::getActiveHitboxObjectSpace() const {
 
     return getHitBoxObjectSpace(idActiveHitbox);
 }
 
-inline sf::FloatRect ObjectHitbox::getHitBoxObjectSpace(const unsigned &id) const {
+sf::FloatRect ObjectHitbox::getHitBoxObjectSpace(const unsigned &id) const {
 
     if(checkIdValid(id)) {
 
         return hitboxes[id];
     }
+
+    return sf::FloatRect(0, 0, 0, 0);
 }
 
 bool ObjectHitbox::checkIdValid(const unsigned &id) const {
