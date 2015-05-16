@@ -79,7 +79,7 @@
 	"ObjectSpaceManager.h"
 	<iostream>
 
-1431727778 source:c:\users\nimesh\documents\github\contra\player.cpp
+1431806645 source:c:\users\nimesh\documents\github\contra\player.cpp
 	"Player.h"
 	<iostream>
 	<vector>
@@ -177,14 +177,13 @@
 	"GlobalConstants.h"
 	<vector>
 
-1430500322 c:\users\nimesh\documents\github\contra\enemy.h
+1431808887 c:\users\nimesh\documents\github\contra\enemy.h
 	"SFML/Graphics.hpp"
-	"HitboxMovementController.h"
 	"ObjectHitbox.h"
 	"TileCollisionHandling.h"
 	"TileMap.h"
 	"Direction.h"
-	<memory>
+	"EntityBase.h"
 
 1430958219 c:\users\nimesh\documents\github\contra\objecthitbox.h
 	<SFML/Graphics.hpp>

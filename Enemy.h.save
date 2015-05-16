@@ -2,35 +2,24 @@
 #define ENEMY_H_INCLUDED
 
 #include "SFML/Graphics.hpp"
-#include "HitboxMovementController.h"
 #include "ObjectHitbox.h"
 #include "TileCollisionHandling.h"
 #include "TileMap.h"
 #include "Direction.h"
-#include <memory>
+#include "EntityBase.h"
 
-class Enemy {
+class Enemy : EntityBase {
 
     public:
 
         Enemy(const glm::vec2 &position, const Direction &initialDirection, const int initialHealth = 1);
 
+        virtual void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
         void setInitialVelocity(const glm::vec2 &velocity);
-        void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
-        bool checkIsAlive() const;
-
-        void draw(sf::RenderWindow &window);
 
     private:
 
-        void handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
-        void handleTileCollisionHorizontally(TileMap& map);
-        void handleTileCollisionVertically(TileMap& map);
-
-        ObjectHitbox hitbox;
-        HitboxMovementController hitboxMovementController;
-        sf::RectangleShape enemy;
-        int health;
+        virtual CollisionResponse handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
 };
 
 #endif // ENEMY_H_INCLUDED

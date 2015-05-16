@@ -6,29 +6,22 @@ using std::vector;
 using std::shared_ptr;
 
 Enemy::Enemy(const glm::vec2 &positionWorldSpace, const Direction &initialDirection, const int initialHealth) :
-    hitbox(),
-    hitboxMovementController(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), &hitbox),
-    enemy(sf::Vector2f(64, 64)),
-    health(initialHealth)
+    EntityBase(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY / 5, 0), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), initialHealth)
     {
+        entity.setSize(sf::Vector2f(64, 64));
         hitbox.setOrigin(positionWorldSpace);
-        hitbox.insertHitbox(sf::FloatRect(0, 0, enemy.getSize().x, enemy.getSize().y));
+        hitbox.insertHitbox(sf::FloatRect(0, 0, entity.getSize().x, entity.getSize().y));
         hitbox.setActiveHitbox(0);
 
         if(initialDirection.horizontal == HorizontalDirection::RIGHT) {
 
-            setInitialVelocity(glm::vec2(TERMINAL_VELOCITY / 5, 0));
+            setInitialVelocity(glm::vec2(MOVEMENT_VELOCITY.x, 0));
 
         } else {
 
-            setInitialVelocity(glm::vec2(-TERMINAL_VELOCITY / 5, 0));
+            setInitialVelocity(glm::vec2(-MOVEMENT_VELOCITY.x, 0));
         }
     }
-
-bool Enemy::checkIsAlive() const {
-
-    return health > 0;
-}
 
 void Enemy::update(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {
 
@@ -51,58 +44,33 @@ void Enemy::update(const float &deltaTime, const sf::FloatRect &worldBounds, Til
 
     handleTileCollisionVertically(map);
 
-    enemy.setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
+    entity.setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
 }
 
-void Enemy::draw(sf::RenderWindow &window) {
-
-    window.draw(enemy);
-}
-
-bool Enemy::getHit(int damage) {
-
-    health -= damage;
-    return checkIsAlive();
-}
 
 void Enemy::setInitialVelocity(const glm::vec2 &velocity) {
 
     hitboxMovementController.setVelocities(velocity);
 }
 
-const ObjectHitbox &Enemy::getHitbox() const {
+CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
 
-    return hitbox;
-}
+    vector<shared_ptr<Tile> > tiles = getSurroundingTiles(map, glm::vec2(TILE_SIZE, TILE_SIZE));
 
-void Enemy::handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
-
-     sf::FloatRect bounding = hitbox.getActiveHitboxWorldSpace();
-
-    //calculate region encompassed by object
-    //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
-    glm::vec2 regionTopLeft = glm::vec2(bounding.left, bounding.top) - glm::vec2(TILE_SIZE, TILE_SIZE);
-    glm::vec2 regionBottomRight = glm::vec2(bounding.left + bounding.width, bounding.top + bounding.height) + glm::vec2(TILE_SIZE, TILE_SIZE);
-
-    vector<shared_ptr<Tile> > tiles = map.getTilesInRegion(regionTopLeft, regionBottomRight);
+    CollisionResponse response;
 
     for(unsigned i = 0; i < tiles.size(); ++i) {
 
-        CollisionResponse response = collisionFunction(tiles[i], hitboxMovementController);
+        CollisionResponse currentResponse = collisionFunction(tiles[i], hitboxMovementController);
 
-        if(response.handledHorizontal) {
+        if(currentResponse.handledHorizontal) {
 
+            response.handledHorizontal = true;
             hitboxMovementController.setVelocities(-hitboxMovementController.getVelocities().x, hitboxMovementController.getVelocities().y);
         }
+
+        response.handledVertical = currentResponse.handledVertical || response.handledVertical;
     }
-}
 
-void Enemy::handleTileCollisionHorizontally(TileMap& map) {
-
-    handleTileCollision(map, &handleCollisionHorizontal);
-}
-
-void Enemy::handleTileCollisionVertically(TileMap& map) {
-
-    handleTileCollision(map, &handleCollisionVertical);
+    return response;
 }
