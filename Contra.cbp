@@ -31,6 +31,8 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="AnimatedSprite.cpp" />
+		<Unit filename="AnimatedSprite.h" />
 		<Unit filename="Bullet.cpp" />
 		<Unit filename="Bullet.h" />
 		<Unit filename="Camera.cpp" />
