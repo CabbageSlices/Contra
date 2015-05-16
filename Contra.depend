@@ -172,7 +172,7 @@
 	<vector>
 	<glm/glm.hpp>
 
-1430500322 source:c:\users\nimesh\documents\github\contra\enemy.cpp
+1431808908 source:c:\users\nimesh\documents\github\contra\enemy.cpp
 	"Enemy.h"
 	"GlobalConstants.h"
 	<vector>
@@ -223,10 +223,10 @@
 	<cmath>
 	<iostream>
 
-1430964749 c:\users\nimesh\documents\github\contra\turretenemy.h
-	"Gun.h"
+1431810463 c:\users\nimesh\documents\github\contra\turretenemy.h
+	"ShootingEntity.h"
 	"Direction.h"
-	"HitboxMovementController.h"
+	"ShootingEntity.h"
 	<memory>
 	<vector>
 
@@ -244,7 +244,7 @@
 1431806555 source:c:\users\nimesh\documents\github\contra\entitybase.cpp
 	"EntityBase.h"
 
-1431806318 c:\users\nimesh\documents\github\contra\entitybase.h
+1431810473 c:\users\nimesh\documents\github\contra\entitybase.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"TileMap.h"
@@ -255,4 +255,13 @@
 	"glm/glm.hpp"
 	<memory>
 	<vector>
+
+1431810508 c:\users\nimesh\documents\github\contra\shootingentity.h
+	"EntityBase.h"
+	"Gun.h"
+	"Direction.h"
+	<memory>
+
+1431810510 source:c:\users\nimesh\documents\github\contra\shootingentity.cpp
+	"ShootingEntity.h"
 

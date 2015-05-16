@@ -21,7 +21,7 @@ class EntityBase {
         EntityBase(const glm::vec2 &gravity, const glm::vec2 &movementVelocity, const glm::vec2 &terminalVelocity, const unsigned &initialHealth);
 
         virtual void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map) = 0;
-        void draw(sf::RenderWindow &window);
+        virtual void draw(sf::RenderWindow &window);
         virtual bool checkIsAlive();
         void getHit(int damage = 1);
 

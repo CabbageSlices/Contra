@@ -1,0 +1,21 @@
+#ifndef SHOOTINGENTITY_H_INCLUDED
+#define SHOOTINGENTITY_H_INCLUDED
+
+#include "EntityBase.h"
+#include "Gun.h"
+#include "Direction.h"
+
+#include <memory>
+
+class ShootingEntity : public EntityBase {
+    
+    public:
+    
+        virtual void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map) = 0;
+    private:
+        
+        std::shared_ptr<Gun> gun;
+        Direction direction;
+};
+
+#endif // SHOOTINGENTITY_H_INCLUDED

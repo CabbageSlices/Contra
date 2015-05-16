@@ -10,25 +10,16 @@ using std::shared_ptr;
 using std::make_shared;
 
 TurretEnemy::TurretEnemy(const glm::vec2 &position, const int initialHealth) :
-    gun(),
-    hitbox(),
-    hitboxMovementController(glm::vec2(0, 0), glm::vec2(0, 0), &hitbox),
-    enemy(sf::Vector2f(128, 128)),
-    direction(),
-    health(initialHealth)
+    ShootingEntity(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), initialHealth)
     {
+        entity.setSize(sf::Vector2f(128, 128));
         hitbox.setOrigin(position);
-        hitbox.insertHitbox(sf::FloatRect(0, 0, enemy.getSize().x, enemy.getSize().y));
+        hitbox.insertHitbox(sf::FloatRect(0, 0, entity.getSize().x, entity.getSize().y));
         hitbox.setActiveHitbox(0);
-        enemy.setPosition(position.x, position.y);
+        entity.setPosition(position.x, position.y);
 
         gun = make_shared<Gun>();
     }
-
-bool TurretEnemy::checkIsAlive() const {
-
-    return health > 0;
-}
 
 void TurretEnemy::update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map, const vector<glm::vec2> &targetPositions) {
 
@@ -48,7 +39,6 @@ void TurretEnemy::update(const float& deltaTime, const sf::FloatRect& worldBound
     gun->fire(hitbox.getOrigin(), gunfireOrigin, direction);
 }
 
-
 void TurretEnemy::createHitboxes(const vector<sf::FloatRect> &hitboxes) {
 
     hitbox.clearHitboxes();
@@ -57,23 +47,6 @@ void TurretEnemy::createHitboxes(const vector<sf::FloatRect> &hitboxes) {
 
         hitbox.insertHitbox(hitboxes[i]);
     }
-}
-
-void TurretEnemy::draw(sf::RenderWindow &window) {
-
-    gun->draw(window);
-    window.draw(enemy);
-}
-
-bool TurretEnemy::getHit(int damage) {
-
-    health -= damage;
-    return checkIsAlive();
-}
-
-const ObjectHitbox& TurretEnemy::getHitbox() const {
-
-    return hitbox;
 }
 
 unsigned TurretEnemy::getIdOfClosestTarget(const vector<glm::vec2> &targetPositions) const {
