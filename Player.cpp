@@ -66,11 +66,15 @@ void Player::handleKeystate(sf::RenderWindow& window) {
         hitboxMovementController.setVelocities(0, hitboxMovementController.getVelocities().y);
     }
 
+
     if(sf::Keyboard::isKeyPressed(controls.jump) && sf::Keyboard::isKeyPressed(controls.down)) {
 
         jumpDown();
 
-    } else if(sf::Keyboard::isKeyPressed(controls.jump)) {
+    }
+
+    //don't put this in an if else statement with the downjumping because if you do then players won't be able to jump while running and holding the down button
+    if(sf::Keyboard::isKeyPressed(controls.jump)) {
 
         jump();
     }
@@ -196,9 +200,10 @@ bool Player::checkCanJump() const {
     return (standingOnSolid || standingOnTile) && (hitboxMovementController.getVelocities().y == 0) && (lifeState == ALIVE);
 }
 
+//don't let players jump down while running
 bool Player::checkCanJumpDown() const {
 
-    return standingOnPassablePlatform && checkCanJump();
+    return standingOnPassablePlatform && checkCanJump() && hitboxMovementController.getVelocities().x == 0;
 }
 
 bool Player::checkIsJumping() const {

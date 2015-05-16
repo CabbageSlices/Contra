@@ -104,7 +104,7 @@ glm::vec2 TurretEnemy::calculateGunfireOrigin(const glm::vec2 &targetPosition) c
 
     //for now just shoot from the center
     sf::FloatRect bounds = hitbox.getActiveHitboxObjectSpace();
-    return glm::vec2(bounds.left + bounds.width, bounds.top + bounds.height);
+    return glm::vec2(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
 }
 
 void TurretEnemy::determineDirection(const glm::vec2 &targetPosition) {
@@ -118,13 +118,13 @@ void TurretEnemy::determineDirection(const glm::vec2 &targetPosition) {
     //angle goes positive in clockwise direction when tis hould be counter clockwise so negate it
     float angleDegrees = angleRadians * RAD_TO_DEG_RATIO * -1;
 
-    cout << angleDegrees << endl;
+    direction.isFacingCompletelyVertical = false;
 
     if(angleDegrees <= 60 && angleDegrees >= -60) {
 
         direction.horizontal = RIGHT;
 
-    } else if(angleDegrees >= 120 && angleDegrees <= -120) {
+    } else if(angleDegrees >= 120 || angleDegrees <= -120) {
 
         direction.horizontal = LEFT;
 
