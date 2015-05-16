@@ -55,15 +55,12 @@
 	<vector>
 	<memory>
 
-1430953099 c:\users\nimesh\documents\github\contra\player.h
+1431812106 c:\users\nimesh\documents\github\contra\player.h
 	"SFML/Graphics.hpp"
 	"GlobalConstants.h"
-	"ObjectHitbox.h"
-	"HitboxMovementController.h"
 	"TileCollisionHandling.h"
 	"TileMap.h"
-	"Direction.h"
-	<memory>
+	"ShootingEntity.h"
 	<iostream>
 
 1430345335 c:\users\nimesh\documents\github\contra\positioncontroller.h
@@ -79,7 +76,7 @@
 	"ObjectSpaceManager.h"
 	<iostream>
 
-1431806645 source:c:\users\nimesh\documents\github\contra\player.cpp
+1431812038 source:c:\users\nimesh\documents\github\contra\player.cpp
 	"Player.h"
 	<iostream>
 	<vector>
@@ -217,7 +214,7 @@
 	<vector>
 	<memory>
 
-1431041879 source:c:\users\nimesh\documents\github\contra\turretenemey.cpp
+1431810537 source:c:\users\nimesh\documents\github\contra\turretenemey.cpp
 	"TurretEnemy.h"
 	"GlobalConstants.h"
 	<cmath>
@@ -244,7 +241,7 @@
 1431806555 source:c:\users\nimesh\documents\github\contra\entitybase.cpp
 	"EntityBase.h"
 
-1431810473 c:\users\nimesh\documents\github\contra\entitybase.h
+1431811984 c:\users\nimesh\documents\github\contra\entitybase.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"TileMap.h"

@@ -23,7 +23,7 @@ class EntityBase {
         virtual void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map) = 0;
         virtual void draw(sf::RenderWindow &window);
         virtual bool checkIsAlive();
-        void getHit(int damage = 1);
+        virtual void getHit(int damage = 1);
 
         const ObjectHitbox& getHitbox() const;
         const glm::vec2 getPosition() const;
@@ -42,7 +42,7 @@ class EntityBase {
 
         ObjectHitbox hitbox;
         HitboxMovementController hitboxMovementController;
-        const glm::vec2 MOVEMENT_VELOCITY;
+        const glm::vec2 MOVEMENT_VELOCITY; //measured in meters per second
         unsigned health;
 
         sf::RectangleShape entity;

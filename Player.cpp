@@ -11,21 +11,15 @@ using std::cout;
 using std::endl;
 
 Player::Player(const PlayerKeys& keyConfiguration):
+    ShootingEntity(glm::vec2(0, GRAVITY), glm::vec2(4.f, 4.05f), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), 3),
     lifeState(ALIVE),
-    MOVEMENT_VELOCITY(4.f, 4.05f),
     standingOnSolid(false),
     standingOnTile(false),
     standingOnPassablePlatform(false),
     holdingJump(false),
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(200)),
-    hitbox(),
-    hitboxMovementController(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), &hitbox),
-    direction(),
-    player(sf::Vector2f(50, 100)),
-    gun(),
     controls(keyConfiguration),
-    lives(3),
     respawnInvinsibilityTimer(),
     respawnInvinsibilityDuration(sf::seconds(3))
     {
@@ -35,6 +29,8 @@ Player::Player(const PlayerKeys& keyConfiguration):
 
             exit(-1);
         }
+
+        entity.setSize(sf::Vector2f(50, 100));
 
         hitbox.insertHitbox(sf::FloatRect(0, 0, 50, 100));
         hitbox.insertHitbox(sf::FloatRect(-25, 50, 100, 50));
@@ -118,13 +114,13 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
     standingOnPassablePlatform = collisionResponseHorizontal.canFallThroughGround || collisionResponseVertical.canFallThroughGround;
 
     sf::FloatRect activeHitbox = hitbox.getActiveHitboxWorldSpace();
-    player.setPosition(activeHitbox.left, activeHitbox.top);
-    player.setSize(sf::Vector2f(activeHitbox.width, activeHitbox.height));
+    entity.setPosition(activeHitbox.left, activeHitbox.top);
+    entity.setSize(sf::Vector2f(activeHitbox.width, activeHitbox.height));
 
     gun->update(deltaTime, worldBounds, map);
 }
 
-void Player::getHit() {
+void Player::getHit(int damage) {
 
     if(respawnInvinsibilityTimer.getElapsedTime() < respawnInvinsibilityDuration || !checkIsAlive()) {
 
@@ -132,7 +128,7 @@ void Player::getHit() {
     }
 
     ///later this should start a death animation and set lifestate to dying, and once the animation finishes the player should actually die
-    ///for now just make player die
+    ///for now just make player die since there are no animations yet
     die();
 }
 
@@ -143,7 +139,7 @@ bool Player::checkIsAlive() {
 
 bool Player::checkCanRespawn() {
 
-    return lifeState == DEAD && lives > 0;
+    return lifeState == DEAD && health > 0;
 }
 
 void Player::respawn(const sf::FloatRect &cameraBounds) {
@@ -152,7 +148,7 @@ void Player::respawn(const sf::FloatRect &cameraBounds) {
     glm::vec2 spawnPosition(cameraBounds.left + hitbox.getActiveHitboxObjectSpace().width, cameraBounds.top);
     hitbox.setOrigin(spawnPosition);
 
-    setLives(lives - 1);
+    setLives(health - 1);
 
     respawnInvinsibilityTimer.restart();
 }
@@ -164,33 +160,18 @@ void Player::draw(sf::RenderWindow& window) {
         return;
     }
 
-    gun->draw(window);
-    window.draw(player);
+    ShootingEntity::draw(window);
 }
 
 void Player::setLives(const int &newLives) {
 
-    lives = newLives;
-}
-
-const ObjectHitbox& Player::getHitbox() const {
-
-    return hitbox;
-}
-
-const glm::vec2 Player::getPosition() const {
-
-    return hitbox.getOrigin();
-}
-
-shared_ptr<Gun> &Player::getGun() {
-
-    return gun;
+    //health parameter is the player's lives
+    health = newLives;
 }
 
 int Player::getLives() const {
 
-    return lives;
+    return health;
 }
 
 bool Player::checkCanJump() const {
@@ -227,11 +208,11 @@ bool Player::checkExtendJump() const {
 glm::vec2 Player::calculateGunfireOrigin() const {
 
     //default facing right so its at the right side of the player
-    glm::vec2 gunPosition(player.getGlobalBounds().width, player.getGlobalBounds().height / 2);
+    glm::vec2 gunPosition(entity.getGlobalBounds().width, entity.getGlobalBounds().height / 2);
 
     if(direction.isFacingCompletelyVertical && !checkIsCrouching()) {
 
-        gunPosition.x = player.getGlobalBounds().width / 2;
+        gunPosition.x = entity.getGlobalBounds().width / 2;
 
         if(direction.vertical == VerticalDirection::UP) {
 
@@ -239,7 +220,7 @@ glm::vec2 Player::calculateGunfireOrigin() const {
 
         } else {
 
-            gunPosition.y = player.getGlobalBounds().height;
+            gunPosition.y = entity.getGlobalBounds().height;
         }
 
         return gunPosition;
@@ -247,7 +228,7 @@ glm::vec2 Player::calculateGunfireOrigin() const {
 
     if(direction.horizontal == HorizontalDirection::RIGHT) {
 
-        gunPosition.x = player.getGlobalBounds().width;
+        gunPosition.x = entity.getGlobalBounds().width;
 
     } else {
 
@@ -260,16 +241,16 @@ glm::vec2 Player::calculateGunfireOrigin() const {
 
     } else if(direction.vertical == VerticalDirection::DOWN) {
 
-        gunPosition.y = player.getGlobalBounds().height;
+        gunPosition.y = entity.getGlobalBounds().height;
 
     } else {
 
-        gunPosition.y = player.getGlobalBounds().height / 2;
+        gunPosition.y = entity.getGlobalBounds().height / 2;
     }
 
     if(checkIsCrouching()) {
 
-        gunPosition.y = player.getGlobalBounds().height;
+        gunPosition.y = entity.getGlobalBounds().height;
     }
 
     return gunPosition;
@@ -277,14 +258,7 @@ glm::vec2 Player::calculateGunfireOrigin() const {
 
 CollisionResponse Player::handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
 
-    sf::FloatRect bounding = hitbox.getActiveHitboxWorldSpace();
-
-    //calculate region encompassed by object
-    //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
-    glm::vec2 regionTopLeft = glm::vec2(bounding.left, bounding.top) - glm::vec2(TILE_SIZE, TILE_SIZE);
-    glm::vec2 regionBottomRight = glm::vec2(bounding.left + bounding.width, bounding.top + bounding.height) + glm::vec2(TILE_SIZE, TILE_SIZE);
-
-    vector<shared_ptr<Tile> > tiles = map.getTilesInRegion(regionTopLeft, regionBottomRight);
+    vector<shared_ptr<Tile> > tiles = getSurroundingTiles(map, glm::vec2(TILE_SIZE, TILE_SIZE));
 
     CollisionResponse collisionResponse;
     collisionResponse.canFallThroughGround = true;
@@ -313,16 +287,6 @@ CollisionResponse Player::handleTileCollision(TileMap& map, CollisionResponse(*c
     collisionResponse.canFallThroughGround = collisionResponse.canFallThroughGround && collisionResponse.handledVertical;
 
     return collisionResponse;
-}
-
-CollisionResponse Player::handleTileCollisionHorizontally(TileMap& map) {
-
-    return handleTileCollision(map, &handleCollisionHorizontal);
-}
-
-CollisionResponse Player::handleTileCollisionVertically(TileMap& map) {
-
-    return handleTileCollision(map, &handleCollisionVertical);
 }
 
 void Player::determineDirection() {

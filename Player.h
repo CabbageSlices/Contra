@@ -3,18 +3,13 @@
 
 #include "SFML/Graphics.hpp"
 #include "GlobalConstants.h"
-#include "ObjectHitbox.h"
-#include "HitboxMovementController.h"
 #include "TileCollisionHandling.h"
 #include "TileMap.h"
-#include "Direction.h"
-#include <memory>
+#include "ShootingEntity.h"
 #include <iostream>
 
 using std::cout;
 using std::endl;
-
-class Gun;
 
 struct PlayerKeys {
 
@@ -27,7 +22,8 @@ struct PlayerKeys {
     sf::Keyboard::Key fire = sf::Keyboard::S;
 };
 
-class Player {
+//since player inherits from EntityBase his lives is equal to the health
+class Player : public ShootingEntity{
 
     public:
 
@@ -37,19 +33,15 @@ class Player {
         void handleKeystate(sf::RenderWindow& window);
 
         //time should be in seconds
-        void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
-        void getHit();
-        bool checkIsAlive();
+        virtual void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
+        virtual bool checkIsAlive();
+        virtual void draw(sf::RenderWindow& window);
+        virtual void getHit(int damage = 1);//damage parameters is pretty much ignored, its only needed for inheritance purposes
+
         bool checkCanRespawn();
         void respawn(const sf::FloatRect &cameraBounds);//spawns at top of camera
-
-        void draw(sf::RenderWindow& window);
-
         void setLives(const int &newLives);
 
-        const ObjectHitbox& getHitbox() const;
-        const glm::vec2 getPosition() const;
-        std::shared_ptr<Gun> &getGun();
         int getLives() const;
 
     private:
@@ -67,9 +59,7 @@ class Player {
         glm::vec2 calculateGunfireOrigin() const;
 
         //vertical and horizontal tile collisions differ only in terms of the collision handling function they call
-        CollisionResponse handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
-        CollisionResponse handleTileCollisionHorizontally(TileMap& map);
-        CollisionResponse handleTileCollisionVertically(TileMap& map);
+        virtual CollisionResponse handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
 
         void determineDirection();
         void jump();
@@ -86,11 +76,6 @@ class Player {
 
         } lifeState;
 
-        //velocity of player when he begins to move
-        //measured in meters per second
-        //in object space
-        const sf::Vector2f MOVEMENT_VELOCITY;
-
         //seperate flags to keep track of player standing on blocks/ground and tiles
         bool standingOnSolid;
         bool standingOnTile;
@@ -102,17 +87,8 @@ class Player {
         sf::Clock extraJumpTimer;
         const sf::Time extraJumpDuration;
 
-        ObjectHitbox hitbox;
-        HitboxMovementController hitboxMovementController;
-
-        Direction direction;
-        sf::RectangleShape player;
-        std::shared_ptr<Gun> gun;
-
         //the control setup for this player
         PlayerKeys controls;
-
-        int lives;
 
         sf::Clock respawnInvinsibilityTimer;
         sf::Time respawnInvinsibilityDuration;

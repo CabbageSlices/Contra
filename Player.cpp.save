@@ -11,19 +11,14 @@ using std::cout;
 using std::endl;
 
 Player::Player(const PlayerKeys& keyConfiguration):
+    ShootingEntity(glm::vec2(0, GRAVITY), glm::vec2(4.f, 4.05f), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), 3),
     lifeState(ALIVE),
-    MOVEMENT_VELOCITY(4.f * 2, 3.9f  *2),
     standingOnSolid(false),
     standingOnTile(false),
     standingOnPassablePlatform(false),
     holdingJump(false),
     extraJumpTimer(),
-    extraJumpDuration(sf::milliseconds(220)),
-    hitbox(),
-    hitboxMovementController(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), &hitbox),
-    direction(),
-    player(sf::Vector2f(50, 100)),
-    gun(),
+    extraJumpDuration(sf::milliseconds(200)),
     controls(keyConfiguration),
     lives(3),
     respawnInvinsibilityTimer(),
@@ -35,6 +30,8 @@ Player::Player(const PlayerKeys& keyConfiguration):
 
             exit(-1);
         }
+        
+        entity.setSize(sf::Vector2f(50, 100));
 
         hitbox.insertHitbox(sf::FloatRect(0, 0, 50, 100));
         hitbox.insertHitbox(sf::FloatRect(-25, 50, 100, 50));
@@ -66,6 +63,14 @@ void Player::handleKeystate(sf::RenderWindow& window) {
         hitboxMovementController.setVelocities(0, hitboxMovementController.getVelocities().y);
     }
 
+
+    if(sf::Keyboard::isKeyPressed(controls.jump) && sf::Keyboard::isKeyPressed(controls.down)) {
+
+        jumpDown();
+
+    }
+
+    //don't put this in an if else statement with the downjumping because if you do then players won't be able to jump while running and holding the down button
     if(sf::Keyboard::isKeyPressed(controls.jump)) {
 
         jump();
@@ -116,7 +121,7 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
     gun->update(deltaTime, worldBounds, map);
 }
 
-void Player::getHit() {
+void Player::getHit(int damage) {
 
     if(respawnInvinsibilityTimer.getElapsedTime() < respawnInvinsibilityDuration || !checkIsAlive()) {
 
@@ -156,46 +161,31 @@ void Player::draw(sf::RenderWindow& window) {
         return;
     }
 
-    gun->draw(window);
-    window.draw(player);
+    ShootingEntity::draw(window);
 }
 
 void Player::setLives(const int &newLives) {
 
-    lives = newLives;
-}
-
-const ObjectHitbox& Player::getHitbox() const {
-
-    return hitbox;
-}
-
-const glm::vec2 Player::getPosition() const {
-
-    return hitbox.getOrigin();
-}
-
-shared_ptr<Gun> &Player::getGun() {
-
-    return gun;
+    //health parameter is the player's lives
+    health = newLives;
 }
 
 int Player::getLives() const {
 
-    return lives;
+    return health;
 }
 
 bool Player::checkCanJump() const {
 
-    return true;
     //if player is falling it means he isn't standing on top of any object because if he was, his velocity would be 0
     //therefore he can't jump if his velocity isn't 0
     return (standingOnSolid || standingOnTile) && (hitboxMovementController.getVelocities().y == 0) && (lifeState == ALIVE);
 }
 
+//don't let players jump down while running
 bool Player::checkCanJumpDown() const {
 
-    return standingOnPassablePlatform && checkCanJump();
+    return standingOnPassablePlatform && checkCanJump() && hitboxMovementController.getVelocities().x == 0;
 }
 
 bool Player::checkIsJumping() const {
@@ -269,14 +259,7 @@ glm::vec2 Player::calculateGunfireOrigin() const {
 
 CollisionResponse Player::handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
 
-    sf::FloatRect bounding = hitbox.getActiveHitboxWorldSpace();
-
-    //calculate region encompassed by object
-    //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
-    glm::vec2 regionTopLeft = glm::vec2(bounding.left, bounding.top) - glm::vec2(TILE_SIZE, TILE_SIZE);
-    glm::vec2 regionBottomRight = glm::vec2(bounding.left + bounding.width, bounding.top + bounding.height) + glm::vec2(TILE_SIZE, TILE_SIZE);
-
-    vector<shared_ptr<Tile> > tiles = map.getTilesInRegion(regionTopLeft, regionBottomRight);
+    vector<shared_ptr<Tile> > tiles = getSurroundingTiles(map, glm::vec2(TILE_SIZE, TILE_SIZE));
 
     CollisionResponse collisionResponse;
     collisionResponse.canFallThroughGround = true;
@@ -305,16 +288,6 @@ CollisionResponse Player::handleTileCollision(TileMap& map, CollisionResponse(*c
     collisionResponse.canFallThroughGround = collisionResponse.canFallThroughGround && collisionResponse.handledVertical;
 
     return collisionResponse;
-}
-
-CollisionResponse Player::handleTileCollisionHorizontally(TileMap& map) {
-
-    return handleTileCollision(map, &handleCollisionHorizontal);
-}
-
-CollisionResponse Player::handleTileCollisionVertically(TileMap& map) {
-
-    return handleTileCollision(map, &handleCollisionVertical);
 }
 
 void Player::determineDirection() {
@@ -371,8 +344,19 @@ void Player::jumpDown() {
         stopStandingOnPlatforms();
 
         //when jumping down just push the player down into the ground since the collision detection code should allow him to pass
-        //push him just out of the threshold so collisio
+        //push him just out of the threshold so collision resolution won't occur
+        hitbox.move(glm::vec2(0, fallThroughTopThreshold + 1.f));
+
+        //also set his velocity to go downwards that way it looks a bit smoother
+        hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, 1.0f);
     }
+}
+
+void Player::stopStandingOnPlatforms() {
+
+    standingOnPassablePlatform = false;
+    standingOnSolid = false;
+    standingOnTile = false;
 }
 
 void Player::die() {
