@@ -43,6 +43,8 @@
 		<Unit filename="Enemy.h" />
 		<Unit filename="EnemySpawners.cpp" />
 		<Unit filename="EnemySpawners.h" />
+		<Unit filename="EntityBase.cpp" />
+		<Unit filename="EntityBase.h" />
 		<Unit filename="GlobalConstants.cpp" />
 		<Unit filename="GlobalConstants.h" />
 		<Unit filename="Gun.cpp" />

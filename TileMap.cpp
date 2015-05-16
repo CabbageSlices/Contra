@@ -62,7 +62,7 @@ void TileMap::setTile(const sf::Vector2f& position, const TileType& type) {
     tiles[index]->setType(type);
 }
 
-vector<shared_ptr<Tile> > TileMap::getTilesInRegion(const glm::vec2 &upperLeft, const glm::vec2& bottomRight) {
+vector<shared_ptr<Tile> > TileMap::getTilesInRegion(const glm::vec2 &upperLeft, const glm::vec2& bottomRight) const {
 
     glm::i32vec2 gridTopLeft = convertToGridPosition(upperLeft);
     glm::i32vec2 gridBottomRight = convertToGridPosition(bottomRight);

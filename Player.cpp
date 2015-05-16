@@ -12,13 +12,13 @@ using std::endl;
 
 Player::Player(const PlayerKeys& keyConfiguration):
     lifeState(ALIVE),
-    MOVEMENT_VELOCITY(4.f, 3.9f),
+    MOVEMENT_VELOCITY(4.f, 4.05f),
     standingOnSolid(false),
     standingOnTile(false),
     standingOnPassablePlatform(false),
     holdingJump(false),
     extraJumpTimer(),
-    extraJumpDuration(sf::milliseconds(220)),
+    extraJumpDuration(sf::milliseconds(200)),
     hitbox(),
     hitboxMovementController(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), &hitbox),
     direction(),

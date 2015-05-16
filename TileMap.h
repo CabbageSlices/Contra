@@ -24,7 +24,7 @@ class TileMap {
         //return all the tiles enclosed in the given region
         //if any part of the region is out of bounds it will only return the tiles that are in bounds
         //region coordinates are in world position in pixels
-        std::vector<std::shared_ptr<Tile> > getTilesInRegion(const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
+        std::vector<std::shared_ptr<Tile> > getTilesInRegion(const glm::vec2 &upperLeft, const glm::vec2 &lowerRight) const;
 
         void draw(sf::RenderWindow& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
         void drawDebug(sf::RenderWindow& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);

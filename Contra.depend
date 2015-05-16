@@ -112,11 +112,11 @@
 	"HitboxMovementController.h"
 	<memory>
 
-1429841293 source:c:\users\nimesh\documents\github\contra\tilemap.cpp
+1431806417 source:c:\users\nimesh\documents\github\contra\tilemap.cpp
 	"TileMap.h"
 	"glm/glm.hpp"
 
-1429841378 c:\users\nimesh\documents\github\contra\tilemap.h
+1431806417 c:\users\nimesh\documents\github\contra\tilemap.h
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
 	"Tile.h"
@@ -228,6 +228,32 @@
 	"Gun.h"
 	"Direction.h"
 	"HitboxMovementController.h"
+	<memory>
+	<vector>
+
+1431748224 source:c:\users\nimesh\documents\github\contra\animatedsprite.cpp
+	"AnimatedSprite.h"
+	<utility>
+
+1431748204 c:\users\nimesh\documents\github\contra\animatedsprite.h
+	<map>
+	<vector>
+	<string>
+	"SFML/Graphics.hpp"
+	"SFML/System.hpp"
+
+1431806555 source:c:\users\nimesh\documents\github\contra\entitybase.cpp
+	"EntityBase.h"
+
+1431806318 c:\users\nimesh\documents\github\contra\entitybase.h
+	"SFML/System.hpp"
+	"SFML/Graphics.hpp"
+	"TileMap.h"
+	"Tile.h"
+	"TileCollisionHandling.h"
+	"ObjectHitbox.h"
+	"HitboxMovementController.h"
+	"glm/glm.hpp"
 	<memory>
 	<vector>
 
