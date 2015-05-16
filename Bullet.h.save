@@ -7,40 +7,37 @@
 #include "glm/glm.hpp"
 #include "TileMap.h"
 #include "ObjectHitbox.h"
+#include "EntityBase.h"
 #include <memory>
 
 class Enemy;
 
-class Bullet {
+class Bullet : public EntityBase {
 
     public:
 
-        Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, const float &bulletVel = 10.f);
+        Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, const float &bulletVel = 11.f);
 
-        void update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map);
-        void draw(sf::RenderWindow &window);
+        virtual void update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map);
+        virtual bool checkIsAlive();
         
-        void handleEnemyCollision(std::shared_ptr<Enemy> &enemy);
+        //take a raw pointer instead of shared pointer because shared pointers don't support polymorphism
+        void handleEntityCollision(EntityBase *collidingEntity);
         void killBullet();
-        bool checkIsAlive();
-        
-        const ObjectHitbox &getHitBox() const;
 
     private:
 
         void handleTileCollision(TileMap& map);
+        virtual CollisionResponse handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object))  {
 
-        //magnitude of velocity
-        //this is multiplied to the bulletdirection to get the velcoity of bullect
-        const float velocity;
+            //empty since bullets don't need to handle collision
+            return CollisionResponse();
+        }
+
         sf::Time lifeTime;
         float timeElapsed;
 
-        sf::RectangleShape bullet;
         glm::vec2 direction;
-
-        ObjectHitbox hitbox;
-        HitboxMovementController hitboxMovementController;
 };
 
 #endif // BULLET_H_INCLUDED

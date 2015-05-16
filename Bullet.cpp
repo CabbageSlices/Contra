@@ -11,18 +11,16 @@ using std::cout;
 using std::endl;
 
 Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, const float &bulletVel) :
-    velocity(bulletVel),
+    EntityBase(glm::vec2(0, 0), directionWorldSpace * bulletVel, glm::vec2(bulletVel, bulletVel), 1),
     lifeTime(sf::seconds(5)),
     timeElapsed(0),
-    bullet(sf::Vector2f(20, 20)),
-    direction(directionWorldSpace),
-    hitbox(),
-    hitboxMovementController(glm::vec2(0, 0), glm::vec2(1, 1) * velocity, &hitbox)
+    direction(directionWorldSpace)
     {
+        entity.setSize(sf::Vector2f(20, 20));
         hitbox.setOrigin(positionWorldSpace - glm::vec2(10, 10));
-        hitbox.insertHitbox(sf::FloatRect(0, 0, bullet.getSize().x, bullet.getSize().y));
+        hitbox.insertHitbox(sf::FloatRect(0, 0, entity.getSize().x, entity.getSize().y));
         hitbox.setActiveHitbox(0);
-        hitboxMovementController.setVelocities(directionWorldSpace * velocity);
+        hitboxMovementController.setVelocities(MOVEMENT_VELOCITY);
     }
 
 void Bullet::update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map) {
@@ -34,24 +32,17 @@ void Bullet::update(const float &delta, const sf::FloatRect &worldBounds, TileMa
 
     glm::vec2 position = hitbox.getOrigin();
 
-    bullet.setPosition(position.x, position.y);
+    entity.setPosition(position.x, position.y);
 }
 
-void Bullet::draw(sf::RenderWindow &window) {
+bool Bullet::checkIsAlive() {
 
-    window.draw(bullet);
-
-    sf::FloatRect rect = hitbox.getActiveHitboxWorldSpace();
-
-    sf::RectangleShape debug(sf::Vector2f(rect.width, rect.height));
-    debug.setPosition(rect.left, rect.top);
-    debug.setFillColor(sf::Color::Magenta);
-    window.draw(debug);
+    return timeElapsed < lifeTime.asSeconds();
 }
 
-void Bullet::handleEnemyCollision(shared_ptr<Enemy> &enemy) {
+void Bullet::handleEntityCollision(EntityBase *collidingEntity) {
 
-    enemy->getHit(1);
+    collidingEntity->getHit(1);
     killBullet();
 }
 
@@ -60,26 +51,9 @@ void Bullet::killBullet() {
     lifeTime = sf::seconds(0);
 }
 
-bool Bullet::checkIsAlive() {
-
-    return timeElapsed < lifeTime.asSeconds();
-}
-
-const ObjectHitbox &Bullet::getHitbox() const {
-
-    return hitbox;
-}
-
 void Bullet::handleTileCollision(TileMap& map) {
 
-    sf::FloatRect bounding = hitbox.getActiveHitboxWorldSpace();
-
-    //calculate region encompassed by object
-    //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
-    glm::vec2 regionTopLeft = glm::vec2(bounding.left, bounding.top) - glm::vec2(TILE_SIZE, TILE_SIZE);
-    glm::vec2 regionBottomRight = glm::vec2(bounding.left + bounding.width, bounding.top + bounding.height) + glm::vec2(TILE_SIZE, TILE_SIZE);
-
-    vector<shared_ptr<Tile> > tiles = map.getTilesInRegion(regionTopLeft, regionBottomRight);
+    vector<shared_ptr<Tile> > tiles = getSurroundingTiles(map, glm::vec2(TILE_SIZE, TILE_SIZE));
 
     for(unsigned i = 0; i < tiles.size(); ++i) {
 

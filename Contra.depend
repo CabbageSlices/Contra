@@ -40,7 +40,7 @@
 
 1427852681 c:\users\nimesh\documents\github\contra\globalconstants.h
 
-1430967419 source:c:\users\nimesh\documents\github\contra\main.cpp
+1431813525 source:c:\users\nimesh\documents\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -127,20 +127,21 @@
 1430011859 c:\users\nimesh\documents\github\contra\direction.h
 	"glm/glm.hpp"
 
-1430500303 source:c:\users\nimesh\documents\github\contra\bullet.cpp
+1431813485 source:c:\users\nimesh\documents\github\contra\bullet.cpp
 	"Bullet.h"
 	"TileCollisionHandling.h"
 	"Enemy.h"
 	<vector>
 	<iostream>
 
-1430950868 c:\users\nimesh\documents\github\contra\bullet.h
+1431813778 c:\users\nimesh\documents\github\contra\bullet.h
 	"HitboxMovementController.h"
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
 	"glm/glm.hpp"
 	"TileMap.h"
 	"ObjectHitbox.h"
+	"EntityBase.h"
 	<memory>
 
 1430958575 source:c:\users\nimesh\documents\github\contra\gun.cpp
