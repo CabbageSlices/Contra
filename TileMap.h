@@ -27,6 +27,8 @@ class TileMap {
         std::vector<std::shared_ptr<Tile> > getTilesInRegion(const glm::vec2 &upperLeft, const glm::vec2 &lowerRight) const;
 
         void draw(sf::RenderWindow& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
+        void drawTiles(sf::RenderTarget& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
+        void drawTilesDebug(sf::RenderTarget& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
 
     private:
 
@@ -34,9 +36,6 @@ class TileMap {
         //doesn't check if its a valid coordinate
         glm::i32vec2 convertToGridPosition(const glm::vec2 &worldPosition) const;
         bool checkValidGridPosition(const glm::i32vec2 &gridPosition) const;
-
-        void drawTiles(sf::RenderTarget& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
-        void drawTilesDebug(sf::RenderTarget& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
 
         void createRenderedAreas();
 

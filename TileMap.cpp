@@ -14,7 +14,7 @@ TileMap::TileMap() :
     gridWidth(0),
     gridHeight(0),
     areas(),
-    areaSize(sf::Texture::getMaximumSize()),
+    areaSize(1024),
     areaCountHorizontal(0),
     areaCountVertical(0)
     {
@@ -26,7 +26,7 @@ TileMap::TileMap(const unsigned &mapWidth, const unsigned &mapHeight):
     gridWidth(0),
     gridHeight(0),
     areas(),
-    areaSize(sf::Texture::getMaximumSize()),
+    areaSize(1024),
     areaCountHorizontal(0),
     areaCountVertical(0)
     {
@@ -132,12 +132,15 @@ void TileMap::draw(sf::RenderWindow& window, const glm::vec2 &upperLeft, const g
 
         for(int x = areaUpperLeft.x; x <= areaLowerRight.x; ++x) {
 
-            int index = y * areaSize + x;
+            int index = y * areaCountHorizontal + x;
+            cout << index << " ";
             sf::Sprite& toDraw = areas[index]->sprite;
 
             window.draw(toDraw);
         }
     }
+
+    cout << endl;
 }
 
 void TileMap::drawTiles(sf::RenderTarget& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight) {
@@ -177,6 +180,8 @@ bool TileMap::checkValidGridPosition(const glm::i32vec2 &gridPosition) const {
 
 void TileMap::createRenderedAreas() {
 
+    areas.clear();
+
     for(int y = 0; y < areaCountVertical; ++y) {
 
         for(int x = 0; x < areaCountHorizontal; ++x) {
@@ -195,7 +200,7 @@ void TileMap::createRenderedAreas() {
             area->texture.setView(view);
 
             //render tiles to the texture
-            drawTiles(area->texture, glm::vec2(left, top), glm::vec2(left + areaSize, top + areaSize));
+            drawTilesDebug(area->texture, glm::vec2(left, top), glm::vec2(left + areaSize, top + areaSize));
             area->texture.display();
 
             //create sprite from texture
