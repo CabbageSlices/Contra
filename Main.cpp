@@ -92,7 +92,7 @@ int main() {
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
-                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(6));
+                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.1));
                         spawnPoints.push_back(point);
 
                     } else {
@@ -172,6 +172,8 @@ int main() {
         camera.applyCamera(window);
 
         spawnInfo.currentCameraBounds = camera.getCameraBounds();
+
+        if(enemies.size() < 100)
         spawnEnemyOffscreen(spawnInfo);
 
         window.clear();
@@ -180,7 +182,7 @@ int main() {
         glm::vec2 topLeft(cameraBounds.left, cameraBounds.top);
         glm::vec2 bottomRight(cameraBounds.left + cameraBounds.width, cameraBounds.top + cameraBounds.height);
 
-        tileMap.drawDebug(window, topLeft, bottomRight);
+        tileMap.draw(window, topLeft, bottomRight);
         player.draw(window);
 
         for(unsigned i = 0; i < enemies.size(); ++i) {

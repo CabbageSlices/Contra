@@ -12,7 +12,7 @@ using std::endl;
 
 Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, const float &bulletVel) :
     EntityBase(glm::vec2(0, 0), directionWorldSpace * bulletVel, glm::vec2(bulletVel, bulletVel), 1),
-    lifeTime(sf::seconds(5)),
+    lifeTime(sf::seconds(1.5)),
     timeElapsed(0),
     direction(directionWorldSpace)
     {

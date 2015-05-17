@@ -27,7 +27,6 @@ class TileMap {
         std::vector<std::shared_ptr<Tile> > getTilesInRegion(const glm::vec2 &upperLeft, const glm::vec2 &lowerRight) const;
 
         void draw(sf::RenderWindow& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
-        void drawDebug(sf::RenderWindow& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
 
     private:
 
@@ -36,9 +35,31 @@ class TileMap {
         glm::i32vec2 convertToGridPosition(const glm::vec2 &worldPosition) const;
         bool checkValidGridPosition(const glm::i32vec2 &gridPosition) const;
 
+        void drawTiles(sf::RenderTarget& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
+        void drawTilesDebug(sf::RenderTarget& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
+
+        void createRenderedAreas();
+
         std::vector<std::shared_ptr<Tile> > tiles;
         int gridWidth;
         int gridHeight;
+
+        //tilemap will render to a texture that way it doesn't slow down when drawing a large area of tiles
+        //however the given area of a tilemap might be too large to fit in a single texture, so the tilemap will store multiple textures and sprites in order to draw entire tilemap
+        struct RenderedArea {
+
+            sf::RenderTexture texture;
+            sf::Sprite sprite;
+        };
+
+        //divides the entire tilemap into smaller areas that can fit onto a single texture
+        std::vector<std::shared_ptr<RenderedArea> > areas;
+
+        //size of each individual area, should be equal to the largest possible size of a texture
+        int areaSize;
+
+        int areaCountHorizontal;
+        int areaCountVertical;
 };
 
 #endif // TILEMAP_H_INCLUDED

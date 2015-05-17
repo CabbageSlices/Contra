@@ -1,6 +1,10 @@
 #include "TileMap.h"
 #include "glm/glm.hpp"
 
+#include <iostream>
+
+using std::cout;
+using std::endl;
 using std::vector;
 using std::shared_ptr;
 using std::make_shared;
@@ -8,15 +12,23 @@ using std::make_shared;
 TileMap::TileMap() :
     tiles(),
     gridWidth(0),
-    gridHeight(0)
+    gridHeight(0),
+    areas(),
+    areaSize(sf::Texture::getMaximumSize()),
+    areaCountHorizontal(0),
+    areaCountVertical(0)
     {
 
     }
 
 TileMap::TileMap(const unsigned &mapWidth, const unsigned &mapHeight):
     tiles(),
-    gridWidth(),
-    gridHeight()
+    gridWidth(0),
+    gridHeight(0),
+    areas(),
+    areaSize(sf::Texture::getMaximumSize()),
+    areaCountHorizontal(0),
+    areaCountVertical(0)
     {
         resize(mapWidth, mapHeight);
     }
@@ -41,6 +53,11 @@ void TileMap::resize(const unsigned &mapWidth, const unsigned &mapHeight) {
             tiles.push_back(tile);
         }
     }
+
+    areaCountHorizontal = glm::ceil(mapWidth / (float)areaSize);
+    areaCountVertical = glm::ceil(mapHeight / (float)areaSize);
+
+    createRenderedAreas();
 }
 
 void TileMap::setTile(const sf::Vector2f& position, const TileType& type) {
@@ -60,6 +77,7 @@ void TileMap::setTile(const sf::Vector2f& position, const TileType& type) {
     }
 
     tiles[index]->setType(type);
+    createRenderedAreas();
 }
 
 vector<shared_ptr<Tile> > TileMap::getTilesInRegion(const glm::vec2 &upperLeft, const glm::vec2& bottomRight) const {
@@ -93,6 +111,37 @@ vector<shared_ptr<Tile> > TileMap::getTilesInRegion(const glm::vec2 &upperLeft, 
 
 void TileMap::draw(sf::RenderWindow& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight) {
 
+    //convert positions to area positions
+    glm::i32vec2 areaUpperLeft(upperLeft.x / areaSize, upperLeft.y / areaSize);
+    glm::i32vec2 areaLowerRight(lowerRight.x / areaSize, lowerRight.y / areaSize);
+
+    //make sure positions are valid
+    if(areaUpperLeft.x > areaLowerRight.x || areaUpperLeft.y > areaLowerRight.y) {
+
+        return;
+    }
+
+    //clamp all values to edge of grid
+    areaUpperLeft.x = glm::clamp(areaUpperLeft.x, 0, areaCountHorizontal - 1);
+    areaUpperLeft.y = glm::clamp(areaUpperLeft.y, 0, areaCountVertical - 1);
+    areaLowerRight.x = glm::clamp(areaLowerRight.x, 0, areaCountHorizontal - 1);
+    areaLowerRight.y = glm::clamp(areaLowerRight.y, 0, areaCountVertical - 1);
+
+    //loop through all areas and render them
+    for(int y = areaUpperLeft.y; y <= areaLowerRight.y; ++y) {
+
+        for(int x = areaUpperLeft.x; x <= areaLowerRight.x; ++x) {
+
+            int index = y * areaSize + x;
+            sf::Sprite& toDraw = areas[index]->sprite;
+
+            window.draw(toDraw);
+        }
+    }
+}
+
+void TileMap::drawTiles(sf::RenderTarget& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight) {
+
     vector<shared_ptr<Tile> > tilesInRegion = getTilesInRegion(upperLeft, lowerRight);
 
     for(unsigned i = 0; i < tilesInRegion.size(); ++i) {
@@ -101,7 +150,7 @@ void TileMap::draw(sf::RenderWindow& window, const glm::vec2 &upperLeft, const g
     }
 }
 
-void TileMap::drawDebug(sf::RenderWindow& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight) {
+void TileMap::drawTilesDebug(sf::RenderTarget& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight) {
 
     vector<shared_ptr<Tile> > tilesInRegion = getTilesInRegion(upperLeft, lowerRight);
 
@@ -124,4 +173,36 @@ bool TileMap::checkValidGridPosition(const glm::i32vec2 &gridPosition) const {
     }
 
     return true;
+}
+
+void TileMap::createRenderedAreas() {
+
+    for(int y = 0; y < areaCountVertical; ++y) {
+
+        for(int x = 0; x < areaCountHorizontal; ++x) {
+
+            shared_ptr<RenderedArea> area = make_shared<RenderedArea>();
+            area->texture.create(areaSize, areaSize);
+            area->texture.clear();
+
+            //determine the offset of the topleft tile in this area, and use thsi position to create the view that way tiles that are offscreen are still drawn
+            int left = x * areaSize;
+            int top = y * areaSize;
+
+            sf::FloatRect viewArea(left, top, areaSize, areaSize);
+            sf::View view(viewArea);
+
+            area->texture.setView(view);
+
+            //render tiles to the texture
+            drawTiles(area->texture, glm::vec2(left, top), glm::vec2(left + areaSize, top + areaSize));
+            area->texture.display();
+
+            //create sprite from texture
+            area->sprite.setTexture(area->texture.getTexture());
+            area->sprite.setPosition(left, top);
+
+            areas.push_back(area);
+        }
+    }
 }

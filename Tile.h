@@ -40,8 +40,8 @@ class Tile {
         sf::FloatRect getBoundingBox() const;
         TileType getType() const;
 
-        void draw(sf::RenderWindow& window);
-        void drawDebug(sf::RenderWindow& window);
+        void draw(sf::RenderTarget& window);
+        void drawDebug(sf::RenderTarget& window);
 
     private:
 

@@ -116,7 +116,7 @@ TileType Tile::getType() const {
     return type;
 }
 
-void Tile::draw(sf::RenderWindow& window) {
+void Tile::draw(sf::RenderTarget& window) {
 
     if(type != TileType::EMPTY) {
 
@@ -124,7 +124,7 @@ void Tile::draw(sf::RenderWindow& window) {
     }
 }
 
-void Tile::drawDebug(sf::RenderWindow& window) {
+void Tile::drawDebug(sf::RenderTarget& window) {
 
     window.draw(tile);
 }
