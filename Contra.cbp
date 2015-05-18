@@ -70,7 +70,7 @@
 		<Unit filename="TileCollisionHandling.h" />
 		<Unit filename="TileMap.cpp" />
 		<Unit filename="TileMap.h" />
-		<Unit filename="TurretEnemey.cpp" />
+		<Unit filename="TurretEnemy.cpp" />
 		<Unit filename="TurretEnemy.h" />
 		<Extensions>
 			<code_completion />

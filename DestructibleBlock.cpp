@@ -65,7 +65,12 @@ CollisionResponse DestructibleBlock::handleCollision(EntityBase *collidingEntity
     if(minimumTranslation.y < 0) {
 
         response.pushedToTop = true;
-        collidingEntity->getMovementController().setVelocities(collidingEntity->getMovementController().getVelocities().x, 0);
+
+        //if object is falling ontop of the block, negate velocity
+        if(collidingEntity->getMovementController().getVelocities().y > 0) {
+
+          collidingEntity->getMovementController().setVelocities(collidingEntity->getMovementController().getVelocities().x, 0);
+        }
     }
 
     collidingRect = collidingEntity->getHitbox().getActiveHitboxWorldSpace();
@@ -73,6 +78,13 @@ CollisionResponse DestructibleBlock::handleCollision(EntityBase *collidingEntity
     if(minimumTranslation.x != 0) {
 
         response.handledHorizontal = true;
+    }
+
+    //if this was hit from the bottom then destory itself, only do it if object is jumping
+    if(minimumTranslation.y > 0 && checkCanGetHit() && collidingEntity->getMovementController().getVelocities().y < 0) {
+
+        getHit(1);
+        collidingEntity->getMovementController().setVelocities(collidingEntity->getMovementController().getVelocities().x, 0);
     }
 
     return response;

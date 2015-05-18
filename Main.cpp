@@ -46,7 +46,7 @@ int main() {
 
     TurretEnemy enem(glm::vec2(256, 768 * 2 - 256));
 
-    DestructibleBlock block(glm::vec2(256, 768 * 2 - 128));
+    DestructibleBlock block(glm::vec2(512, 768 * 2 - 256));
 
     while(window.isOpen()) {
 
@@ -132,9 +132,10 @@ int main() {
             player.respawn(camera.getCameraBounds());
         }
 
-        block.handleCollision(&player);
-
         vector<shared_ptr<Bullet> > &playerBullets = player.getGun()->getBullets();
+
+        if(block.checkIsAlive())
+        block.handleCollision(&player);
 
         for(unsigned i = 0; i < enemies.size();) {
 
