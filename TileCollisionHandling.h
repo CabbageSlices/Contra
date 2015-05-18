@@ -3,15 +3,8 @@
 
 #include "Tile.h"
 #include "HitboxMovementController.h"
+#include "CollisionResponse.h"
 #include <memory>
-
-//tile collision information to indicate on which axis collision was handled
-struct CollisionResponse {
-
-    bool handledHorizontal = false;
-    bool handledVertical = false;
-    bool canFallThroughGround = false;
-};
 
 //if the bottom of an object is within this distance from the top of a colliding tile the collision resoultion occurs
 //otherwise it is skipped

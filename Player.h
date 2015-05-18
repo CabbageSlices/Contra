@@ -33,7 +33,8 @@ class Player : public ShootingEntity{
         void handleKeystate(sf::RenderWindow& window);
 
         //time should be in seconds
-        virtual void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
+        virtual void updatePhysics(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
+        void updateRendering();
         virtual bool checkIsAlive();
         virtual void draw(sf::RenderWindow& window);
         virtual bool checkCanGetHit();

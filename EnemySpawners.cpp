@@ -42,7 +42,6 @@ int findClosestSpawnPointOffscreen(InformationForSpawner &spawnInfo) {
 
         bool isCloser = glm::abs(position.x - cameraHorizontalCenter) < glm::abs(closestPoint->spawnPosition.x - cameraHorizontalCenter);
 
-        cout << closestPointId << endl;
         if(isCloser) {
 
             closestPointId = i;

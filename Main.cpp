@@ -123,25 +123,22 @@ int main() {
             deltaTime /= 10.f;
         }
 
-        enemy.update(deltaTime.asSeconds(), worldBounds, tileMap);
-        block.update(deltaTime.asSeconds(), worldBounds, tileMap);
-        player.update(deltaTime.asSeconds(), worldBounds, tileMap);
+        enemy.updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
+        block.updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
+        player.updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
 
         if(player.checkCanRespawn()) {
 
             player.respawn(camera.getCameraBounds());
         }
 
-        if(player.getHitbox().getActiveHitboxWorldSpace().intersects(block.getHitbox().getActiveHitboxWorldSpace()) && block.checkCanGetHit()) {
-
-            block.getHit();
-        }
+        block.handleCollision(&player);
 
         vector<shared_ptr<Bullet> > &playerBullets = player.getGun()->getBullets();
 
         for(unsigned i = 0; i < enemies.size();) {
 
-            enemies[i]->update(deltaTime.asSeconds(), worldBounds, tileMap);
+            enemies[i]->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
 
             if(!enemies[i]->checkIsAlive()) {
 
@@ -172,7 +169,7 @@ int main() {
         playerPositions.push_back(player.getPosition());
         //playerPositions.push_back(glm::vec2(0, 1920));
 
-        enem.update(deltaTime.asSeconds(), worldBounds, tileMap, playerPositions);
+        enem.updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap, playerPositions);
 
         camera.calculateProperties(playerPositions);
         camera.update(deltaTime.asSeconds(), worldBounds);
@@ -184,19 +181,31 @@ int main() {
         if(enemies.size() < 100)
         spawnEnemyOffscreen(spawnInfo);
 
+        sf::FloatRect collidingRect = player.getHitbox().getActiveHitboxWorldSpace();
+
+        player.updateRendering();
+        enem.updateRendering();
+        for(unsigned i = 0; i < enemies.size(); ++i) {
+
+            enemies[i]->updateRendering();
+        }
+
+        block.updateRendering();
+
         window.clear();
 
         sf::FloatRect cameraBounds = camera.getCameraBounds();
         glm::vec2 topLeft(cameraBounds.left, cameraBounds.top);
         glm::vec2 bottomRight(cameraBounds.left + cameraBounds.width, cameraBounds.top + cameraBounds.height);
 
-        tileMap.draw(window, topLeft, bottomRight);
+        tileMap.drawTilesDebug(window, topLeft, bottomRight);
         player.draw(window);
 
         for(unsigned i = 0; i < enemies.size(); ++i) {
 
             enemies[i]->draw(window);
         }
+
         block.draw(window);
         enem.draw(window);
 

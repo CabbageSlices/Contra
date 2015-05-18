@@ -33,13 +33,13 @@ void Gun::fire(const glm::vec2 &userPosition, const glm::vec2 &bulletOriginUserS
     timeSinceLastFired = sf::seconds(0);
 }
 
-void Gun::update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map) {
+void Gun::updatePhysics(const float &delta, const sf::FloatRect &worldBounds, TileMap& map) {
 
     timeSinceLastFired += sf::seconds(delta);
 
     for(unsigned i = 0; i < bullets.size();) {
 
-        bullets[i]->update(delta, worldBounds, map);
+        bullets[i]->updatePhysics(delta, worldBounds, map);
 
         if(!bullets[i]->checkIsAlive()) {
 
@@ -48,6 +48,14 @@ void Gun::update(const float &delta, const sf::FloatRect &worldBounds, TileMap& 
         }
 
         ++i;
+    }
+}
+
+void Gun::updateRendering() {
+
+    for(unsigned i = 0; i < bullets.size(); i++) {
+
+        bullets[i]->updateRendering();
     }
 }
 

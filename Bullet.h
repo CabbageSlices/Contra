@@ -18,7 +18,8 @@ class Bullet : public EntityBase {
 
         Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, const float &bulletVel = 11.f);
 
-        virtual void update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map);
+        virtual void updatePhysics(const float &delta, const sf::FloatRect &worldBounds, TileMap& map);
+        void updateRendering();
         virtual bool checkIsAlive();
 
         //take a raw pointer instead of shared pointer because shared pointers don't support polymorphism

@@ -40,7 +40,7 @@
 
 1427852681 c:\users\nimesh\documents\github\contra\globalconstants.h
 
-1431917135 source:c:\users\nimesh\documents\github\contra\main.cpp
+1431923147 source:c:\users\nimesh\documents\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -56,7 +56,7 @@
 	<vector>
 	<memory>
 
-1431812106 c:\users\nimesh\documents\github\contra\player.h
+1431922228 c:\users\nimesh\documents\github\contra\player.h
 	"SFML/Graphics.hpp"
 	"GlobalConstants.h"
 	"TileCollisionHandling.h"
@@ -77,7 +77,7 @@
 	"ObjectSpaceManager.h"
 	<iostream>
 
-1431812038 source:c:\users\nimesh\documents\github\contra\player.cpp
+1431922509 source:c:\users\nimesh\documents\github\contra\player.cpp
 	"Player.h"
 	<iostream>
 	<vector>
@@ -99,18 +99,19 @@
 	"glm/glm.hpp"
 	"HitboxMovementController.h"
 
-1430953095 source:c:\users\nimesh\documents\github\contra\tilecollisionhandling.cpp
+1431920828 source:c:\users\nimesh\documents\github\contra\tilecollisionhandling.cpp
 	"TileCollisionHandling.h"
 	"ObjectHitbox.h"
 	"GlobalConstants.h"
 	<iostream>
 
-1430953042 c:\users\nimesh\documents\github\contra\tilecollisionhandling.h
+1431918719 c:\users\nimesh\documents\github\contra\tilecollisionhandling.h
 	"Tile.h"
 	"HitboxMovementController.h"
+	"CollisionResponse.h"
 	<memory>
 
-1431908363 source:c:\users\nimesh\documents\github\contra\tilemap.cpp
+1431923008 source:c:\users\nimesh\documents\github\contra\tilemap.cpp
 	"TileMap.h"
 	"glm/glm.hpp"
 	<iostream>
@@ -129,14 +130,14 @@
 1430011859 c:\users\nimesh\documents\github\contra\direction.h
 	"glm/glm.hpp"
 
-1431887919 source:c:\users\nimesh\documents\github\contra\bullet.cpp
+1431922688 source:c:\users\nimesh\documents\github\contra\bullet.cpp
 	"Bullet.h"
 	"TileCollisionHandling.h"
 	"Enemy.h"
 	<vector>
 	<iostream>
 
-1431813778 c:\users\nimesh\documents\github\contra\bullet.h
+1431922561 c:\users\nimesh\documents\github\contra\bullet.h
 	"HitboxMovementController.h"
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
@@ -146,12 +147,12 @@
 	"EntityBase.h"
 	<memory>
 
-1430958575 source:c:\users\nimesh\documents\github\contra\gun.cpp
+1431923192 source:c:\users\nimesh\documents\github\contra\gun.cpp
 	"Gun.h"
 	"Bullet.h"
 	<iostream>
 
-1431887273 c:\users\nimesh\documents\github\contra\gun.h
+1431922898 c:\users\nimesh\documents\github\contra\gun.h
 	<SFML/Graphics.hpp>
 	<SFML/Window.hpp>
 	"ObjectHitbox.h"
@@ -172,12 +173,12 @@
 	<vector>
 	<glm/glm.hpp>
 
-1431808908 source:c:\users\nimesh\documents\github\contra\enemy.cpp
+1431922599 source:c:\users\nimesh\documents\github\contra\enemy.cpp
 	"Enemy.h"
 	"GlobalConstants.h"
 	<vector>
 
-1431808887 c:\users\nimesh\documents\github\contra\enemy.h
+1431922561 c:\users\nimesh\documents\github\contra\enemy.h
 	"SFML/Graphics.hpp"
 	"ObjectHitbox.h"
 	"TileCollisionHandling.h"
@@ -205,7 +206,7 @@
 	"ObjectHitbox.h"
 	<iostream>
 
-1430950426 source:c:\users\nimesh\documents\github\contra\enemyspawners.cpp
+1431921910 source:c:\users\nimesh\documents\github\contra\enemyspawners.cpp
 	"EnemySpawners.h"
 	"Enemy.h"
 	<iostream>
@@ -217,13 +218,13 @@
 	<vector>
 	<memory>
 
-1431810537 source:c:\users\nimesh\documents\github\contra\turretenemey.cpp
+1431921795 source:c:\users\nimesh\documents\github\contra\turretenemey.cpp
 	"TurretEnemy.h"
 	"GlobalConstants.h"
 	<cmath>
 	<iostream>
 
-1431810463 c:\users\nimesh\documents\github\contra\turretenemy.h
+1431922561 c:\users\nimesh\documents\github\contra\turretenemy.h
 	"ShootingEntity.h"
 	"Direction.h"
 	"ShootingEntity.h"
@@ -241,10 +242,10 @@
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
 
-1431916842 source:c:\users\nimesh\documents\github\contra\entitybase.cpp
+1431920982 source:c:\users\nimesh\documents\github\contra\entitybase.cpp
 	"EntityBase.h"
 
-1431916841 c:\users\nimesh\documents\github\contra\entitybase.h
+1431921795 c:\users\nimesh\documents\github\contra\entitybase.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"TileMap.h"
@@ -256,7 +257,7 @@
 	<memory>
 	<vector>
 
-1431810508 c:\users\nimesh\documents\github\contra\shootingentity.h
+1431921795 c:\users\nimesh\documents\github\contra\shootingentity.h
 	"EntityBase.h"
 	"Gun.h"
 	"Direction.h"
@@ -265,10 +266,29 @@
 1431810510 source:c:\users\nimesh\documents\github\contra\shootingentity.cpp
 	"ShootingEntity.h"
 
-1431917182 source:c:\users\nimesh\documents\github\contra\destructibleblock.cpp
+1431922626 source:c:\users\nimesh\documents\github\contra\destructibleblock.cpp
 	"DestructibleBlock.h"
+	<iostream>
 
-1431916735 c:\users\nimesh\documents\github\contra\destructibleblock.h
-	"EntityBase.h"
+1431922626 c:\users\nimesh\documents\github\contra\destructibleblock.h
+	"DynamicObject.h"
 	"AnimatedSprite.h"
+
+1431920553 c:\users\nimesh\documents\github\contra\dynamicobject.h
+	"SFML/System.hpp"
+	"SFML/Graphics.hpp"
+	"EntityBase.h"
+	"CollisionResponse.h"
+	"glm/glm.hpp"
+
+1431920828 c:\users\nimesh\documents\github\contra\collisionresponse.h
+
+1431921044 source:c:\users\nimesh\documents\github\contra\dynamicobject.cpp
+	"DynamicObject.h"
+
+1431922868 source:c:\users\nimesh\documents\github\contra\turretenemy.cpp
+	"TurretEnemy.h"
+	"GlobalConstants.h"
+	<cmath>
+	<iostream>
 

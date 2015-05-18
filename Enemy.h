@@ -14,7 +14,8 @@ class Enemy : public EntityBase {
 
         Enemy(const glm::vec2 &position, const Direction &initialDirection, const int initialHealth = 1);
 
-        virtual void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
+        virtual void updatePhysics(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
+        void updateRendering();
         void setInitialVelocity(const glm::vec2 &velocity);
 
     private:

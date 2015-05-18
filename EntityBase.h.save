@@ -27,6 +27,7 @@ class EntityBase {
         virtual void getHit(int damage = 1);
 
         const ObjectHitbox& getHitbox() const;
+        HitboxMovementController& getMovementController();
         const glm::vec2 getPosition() const;
 
     protected:

@@ -20,7 +20,6 @@ Player::Player(const PlayerKeys& keyConfiguration):
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(200)),
     controls(keyConfiguration),
-    lives(3),
     respawnInvinsibilityTimer(),
     respawnInvinsibilityDuration(sf::seconds(3))
     {
@@ -30,7 +29,7 @@ Player::Player(const PlayerKeys& keyConfiguration):
 
             exit(-1);
         }
-        
+
         entity.setSize(sf::Vector2f(50, 100));
 
         hitbox.insertHitbox(sf::FloatRect(0, 0, 50, 100));
@@ -111,25 +110,25 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
 
     CollisionResponse collisionResponseVertical = handleTileCollisionVertically(map);
 
-    standingOnTile = (collisionResponseHorizontal.handledVertical || collisionResponseVertical.handledVertical);
+    standingOnTile = (collisionResponseHorizontal.pushedToTop || collisionResponseVertical.pushedToTop);
     standingOnPassablePlatform = collisionResponseHorizontal.canFallThroughGround || collisionResponseVertical.canFallThroughGround;
 
     sf::FloatRect activeHitbox = hitbox.getActiveHitboxWorldSpace();
-    player.setPosition(activeHitbox.left, activeHitbox.top);
-    player.setSize(sf::Vector2f(activeHitbox.width, activeHitbox.height));
+    entity.setPosition(activeHitbox.left, activeHitbox.top);
+    entity.setSize(sf::Vector2f(activeHitbox.width, activeHitbox.height));
 
     gun->update(deltaTime, worldBounds, map);
 }
 
+bool Player::checkCanGetHit() {
+
+    return respawnInvinsibilityTimer.getElapsedTime() > respawnInvinsibilityDuration && checkIsAlive();
+}
+
 void Player::getHit(int damage) {
 
-    if(respawnInvinsibilityTimer.getElapsedTime() < respawnInvinsibilityDuration || !checkIsAlive()) {
-
-        return;
-    }
-
     ///later this should start a death animation and set lifestate to dying, and once the animation finishes the player should actually die
-    ///for now just make player die
+    ///for now just make player die since there are no animations yet
     die();
 }
 
@@ -140,7 +139,7 @@ bool Player::checkIsAlive() {
 
 bool Player::checkCanRespawn() {
 
-    return lifeState == DEAD && lives > 0;
+    return lifeState == DEAD && health > 0;
 }
 
 void Player::respawn(const sf::FloatRect &cameraBounds) {
@@ -149,7 +148,7 @@ void Player::respawn(const sf::FloatRect &cameraBounds) {
     glm::vec2 spawnPosition(cameraBounds.left + hitbox.getActiveHitboxObjectSpace().width, cameraBounds.top);
     hitbox.setOrigin(spawnPosition);
 
-    setLives(lives - 1);
+    setLives(health - 1);
 
     respawnInvinsibilityTimer.restart();
 }
@@ -209,11 +208,11 @@ bool Player::checkExtendJump() const {
 glm::vec2 Player::calculateGunfireOrigin() const {
 
     //default facing right so its at the right side of the player
-    glm::vec2 gunPosition(player.getGlobalBounds().width, player.getGlobalBounds().height / 2);
+    glm::vec2 gunPosition(entity.getGlobalBounds().width, entity.getGlobalBounds().height / 2);
 
     if(direction.isFacingCompletelyVertical && !checkIsCrouching()) {
 
-        gunPosition.x = player.getGlobalBounds().width / 2;
+        gunPosition.x = entity.getGlobalBounds().width / 2;
 
         if(direction.vertical == VerticalDirection::UP) {
 
@@ -221,7 +220,7 @@ glm::vec2 Player::calculateGunfireOrigin() const {
 
         } else {
 
-            gunPosition.y = player.getGlobalBounds().height;
+            gunPosition.y = entity.getGlobalBounds().height;
         }
 
         return gunPosition;
@@ -229,7 +228,7 @@ glm::vec2 Player::calculateGunfireOrigin() const {
 
     if(direction.horizontal == HorizontalDirection::RIGHT) {
 
-        gunPosition.x = player.getGlobalBounds().width;
+        gunPosition.x = entity.getGlobalBounds().width;
 
     } else {
 
@@ -242,16 +241,16 @@ glm::vec2 Player::calculateGunfireOrigin() const {
 
     } else if(direction.vertical == VerticalDirection::DOWN) {
 
-        gunPosition.y = player.getGlobalBounds().height;
+        gunPosition.y = entity.getGlobalBounds().height;
 
     } else {
 
-        gunPosition.y = player.getGlobalBounds().height / 2;
+        gunPosition.y = entity.getGlobalBounds().height / 2;
     }
 
     if(checkIsCrouching()) {
 
-        gunPosition.y = player.getGlobalBounds().height;
+        gunPosition.y = entity.getGlobalBounds().height;
     }
 
     return gunPosition;
@@ -268,9 +267,9 @@ CollisionResponse Player::handleTileCollision(TileMap& map, CollisionResponse(*c
 
         CollisionResponse response = collisionFunction(tiles[i], hitboxMovementController);
 
-        if(response.handledVertical) {
+        if(response.pushedToTop) {
 
-            collisionResponse.handledVertical = true;
+            collisionResponse.pushedToTop = true;
 
             //if player ever stands on a solid tile that prevents fall through then don't let him fall through floor
             //this makes it so player can only fall through ground if all checks allow him to fall through ground
@@ -285,7 +284,7 @@ CollisionResponse Player::handleTileCollision(TileMap& map, CollisionResponse(*c
     }
 
     //if vertical collision was never handled then don't let player call through ground
-    collisionResponse.canFallThroughGround = collisionResponse.canFallThroughGround && collisionResponse.handledVertical;
+    collisionResponse.canFallThroughGround = collisionResponse.canFallThroughGround && collisionResponse.pushedToTop;
 
     return collisionResponse;
 }

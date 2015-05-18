@@ -6,7 +6,7 @@ using std::vector;
 using std::shared_ptr;
 
 Enemy::Enemy(const glm::vec2 &positionWorldSpace, const Direction &initialDirection, const int initialHealth) :
-    EntityBase(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY / 5, 0), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), initialHealth),
+    EntityBase(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY / 5, 0), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), initialHealth)
     {
         entity.setSize(sf::Vector2f(64, 64));
         hitbox.setOrigin(positionWorldSpace);
@@ -44,7 +44,7 @@ void Enemy::update(const float &deltaTime, const sf::FloatRect &worldBounds, Til
 
     handleTileCollisionVertically(map);
 
-    enemy.setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
+    entity.setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
 }
 
 
@@ -61,12 +61,15 @@ CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*co
 
     for(unsigned i = 0; i < tiles.size(); ++i) {
 
-        CollisionResponse cur = collisionFunction(tiles[i], hitboxMovementController);
+        CollisionResponse currentResponse = collisionFunction(tiles[i], hitboxMovementController);
 
-        if(response.handledHorizontal) {
-            
+        if(currentResponse.handledHorizontal) {
+
+            response.handledHorizontal = true;
             hitboxMovementController.setVelocities(-hitboxMovementController.getVelocities().x, hitboxMovementController.getVelocities().y);
         }
+
+        response.pushedToTop = currentResponse.pushedToTop || response.pushedToTop;
     }
 
     return response;

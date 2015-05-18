@@ -23,7 +23,7 @@ Enemy::Enemy(const glm::vec2 &positionWorldSpace, const Direction &initialDirect
         }
     }
 
-void Enemy::update(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {
+void Enemy::updatePhysics(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {
 
     hitboxMovementController.updateVelocities(deltaTime);
 
@@ -43,10 +43,12 @@ void Enemy::update(const float &deltaTime, const sf::FloatRect &worldBounds, Til
     }
 
     handleTileCollisionVertically(map);
+}
+
+void Enemy::updateRendering() {
 
     entity.setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
 }
-
 
 void Enemy::setInitialVelocity(const glm::vec2 &velocity) {
 
@@ -69,7 +71,7 @@ CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*co
             hitboxMovementController.setVelocities(-hitboxMovementController.getVelocities().x, hitboxMovementController.getVelocities().y);
         }
 
-        response.handledVertical = currentResponse.handledVertical || response.handledVertical;
+        response.pushedToTop = currentResponse.pushedToTop || response.pushedToTop;
     }
 
     return response;

@@ -54,8 +54,8 @@ CollisionResponse handleCollisionHorizontal(shared_ptr<Tile>& tile, HitboxMoveme
         case TileType::UPWARD_LEFT_1_1:
         case TileType::UPWARD_RIGHT_1_1: {
 
-            response.handledVertical = handleUpSlopeTileCollision(tile, object);
-            response.canFallThroughGround = response.handledVertical; //object can fall through this tile if the collision was handled
+            response.pushedToTop = handleUpSlopeTileCollision(tile, object);
+            response.canFallThroughGround = response.pushedToTop; //object can fall through this tile if the collision was handled
             return response;
         }
 
@@ -76,13 +76,13 @@ CollisionResponse handleCollisionVertical(shared_ptr<Tile>& tile, HitboxMovement
 
         case TileType::ONE_WAY: {
 
-            response.handledVertical = handleSolidTileCollisionVertical(tile, object);
-            response.canFallThroughGround = response.handledVertical; //object can fall through this tile if the collision was handled
+            response.pushedToTop = handleSolidTileCollisionVertical(tile, object);
+            response.canFallThroughGround = response.pushedToTop; //object can fall through this tile if the collision was handled
             return response;
         }
         case TileType::SOLID: {
 
-            response.handledVertical = handleSolidTileCollisionVertical(tile, object);
+            response.pushedToTop = handleSolidTileCollisionVertical(tile, object);
             return response;
         }
 

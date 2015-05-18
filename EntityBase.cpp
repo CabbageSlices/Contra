@@ -33,9 +33,14 @@ void EntityBase::getHit(int damage) {
     health -= damage;
 }
 
-const ObjectHitbox &EntityBase::getHitbox() const {
+ObjectHitbox &EntityBase::getHitbox() {
 
     return hitbox;
+}
+
+HitboxMovementController& EntityBase::getMovementController() {
+
+    return hitboxMovementController;
 }
 
 const glm::vec2 EntityBase::getPosition() const {

@@ -20,8 +20,9 @@ class TurretEnemy : public ShootingEntity {
 
         void createHitboxes(const std::vector<sf::FloatRect> &hitboxes);
 
-        void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map, const std::vector<glm::vec2> &targetPositions);
-        virtual void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map) {
+        void updatePhysics(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map, const std::vector<glm::vec2> &targetPositions);
+        void updateRendering();
+        virtual void updatePhysics(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map) {
 
             //empty since turret enemies use the other update function
         }

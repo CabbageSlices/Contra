@@ -37,10 +37,12 @@
 		<Unit filename="Bullet.h" />
 		<Unit filename="Camera.cpp" />
 		<Unit filename="Camera.h" />
+		<Unit filename="CollisionResponse.h" />
 		<Unit filename="DestructibleBlock.cpp" />
 		<Unit filename="DestructibleBlock.h" />
 		<Unit filename="Direction.cpp" />
 		<Unit filename="Direction.h" />
+		<Unit filename="DynamicObject.cpp" />
 		<Unit filename="DynamicObject.h" />
 		<Unit filename="Enemy.cpp" />
 		<Unit filename="Enemy.h" />
@@ -68,7 +70,7 @@
 		<Unit filename="TileCollisionHandling.h" />
 		<Unit filename="TileMap.cpp" />
 		<Unit filename="TileMap.h" />
-		<Unit filename="TurretEnemey.cpp" />
+		<Unit filename="TurretEnemy.cpp" />
 		<Unit filename="TurretEnemy.h" />
 		<Extensions>
 			<code_completion />

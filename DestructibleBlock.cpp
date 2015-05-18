@@ -1,7 +1,12 @@
 #include "DestructibleBlock.h"
 
+#include <iostream>
+
+using std::cout;
+using std::endl;
+
 DestructibleBlock::DestructibleBlock(const glm::vec2 &position) :
-    EntityBase(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), 1),
+    DynamicObject(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), 1),
     sprite(sf::milliseconds(30))
     {
         setup();
@@ -11,13 +16,18 @@ DestructibleBlock::DestructibleBlock(const glm::vec2 &position) :
         sprite.getSprite().setPosition(sf::Vector2f(position.x, position.y));
     }
 
-void DestructibleBlock::update(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {
+void DestructibleBlock::updatePhysics(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {
 
     if(sprite.animate() && sprite.getAnimationState() == DESTRYOING) {
 
         sprite.setAnimationState(DESTROYED);
         health = 0;
     }
+}
+
+void DestructibleBlock::updateRendering() {
+
+    sprite.getSprite().setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
 }
 
 bool DestructibleBlock::checkCanGetHit() {
@@ -33,6 +43,39 @@ void DestructibleBlock::getHit(int damage) {
 void DestructibleBlock::draw(sf::RenderWindow &window) {
 
     sprite.draw(window);
+}
+
+CollisionResponse DestructibleBlock::handleCollision(EntityBase *collidingEntity) {
+
+    CollisionResponse response;
+
+    sf::FloatRect collidingRect = collidingEntity->getHitbox().getActiveHitboxWorldSpace();
+    sf::FloatRect rect = hitbox.getActiveHitboxWorldSpace();
+
+    if(!rect.intersects(collidingRect)) {
+
+        return response;
+    }
+
+    //intersection occured so first resolve intersection before other effects
+    glm::vec2 minimumTranslation = calculateCollisionResolutionTranslation(collidingRect, rect);
+
+    collidingEntity->getHitbox().move(minimumTranslation);
+
+    if(minimumTranslation.y < 0) {
+
+        response.pushedToTop = true;
+        collidingEntity->getMovementController().setVelocities(collidingEntity->getMovementController().getVelocities().x, 0);
+    }
+
+    collidingRect = collidingEntity->getHitbox().getActiveHitboxWorldSpace();
+
+    if(minimumTranslation.x != 0) {
+
+        response.handledHorizontal = true;
+    }
+
+    return response;
 }
 
 void DestructibleBlock::setup() {

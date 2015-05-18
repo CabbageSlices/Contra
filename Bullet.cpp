@@ -23,15 +23,17 @@ Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWo
         hitboxMovementController.setVelocities(MOVEMENT_VELOCITY);
     }
 
-void Bullet::update(const float &delta, const sf::FloatRect &worldBounds, TileMap& map) {
+void Bullet::updatePhysics(const float &delta, const sf::FloatRect &worldBounds, TileMap& map) {
 
     timeElapsed += delta;
 
     hitboxMovementController.move(delta);
     handleTileCollision(map);
+}
+
+void Bullet::updateRendering() {
 
     glm::vec2 position = hitbox.getOrigin();
-
     entity.setPosition(position.x, position.y);
 }
 

@@ -85,7 +85,7 @@ void Player::handleKeystate(sf::RenderWindow& window) {
     determineDirection();
 }
 
-void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map) {
+void Player::updatePhysics(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map) {
 
     //since player velocity only changes in the y direction you can prevent gravity from pulling player down
     //when player is holding jump button and trying ot extend his jump height dont let gravity pull player down
@@ -110,14 +110,19 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
 
     CollisionResponse collisionResponseVertical = handleTileCollisionVertically(map);
 
-    standingOnTile = (collisionResponseHorizontal.handledVertical || collisionResponseVertical.handledVertical);
+    standingOnTile = (collisionResponseHorizontal.pushedToTop || collisionResponseVertical.pushedToTop);
     standingOnPassablePlatform = collisionResponseHorizontal.canFallThroughGround || collisionResponseVertical.canFallThroughGround;
+
+    gun->updatePhysics(deltaTime, worldBounds, map);
+}
+
+void Player::updateRendering() {
 
     sf::FloatRect activeHitbox = hitbox.getActiveHitboxWorldSpace();
     entity.setPosition(activeHitbox.left, activeHitbox.top);
     entity.setSize(sf::Vector2f(activeHitbox.width, activeHitbox.height));
 
-    gun->update(deltaTime, worldBounds, map);
+    gun->updateRendering();
 }
 
 bool Player::checkCanGetHit() {
@@ -267,9 +272,9 @@ CollisionResponse Player::handleTileCollision(TileMap& map, CollisionResponse(*c
 
         CollisionResponse response = collisionFunction(tiles[i], hitboxMovementController);
 
-        if(response.handledVertical) {
+        if(response.pushedToTop) {
 
-            collisionResponse.handledVertical = true;
+            collisionResponse.pushedToTop = true;
 
             //if player ever stands on a solid tile that prevents fall through then don't let him fall through floor
             //this makes it so player can only fall through ground if all checks allow him to fall through ground
@@ -284,7 +289,7 @@ CollisionResponse Player::handleTileCollision(TileMap& map, CollisionResponse(*c
     }
 
     //if vertical collision was never handled then don't let player call through ground
-    collisionResponse.canFallThroughGround = collisionResponse.canFallThroughGround && collisionResponse.handledVertical;
+    collisionResponse.canFallThroughGround = collisionResponse.canFallThroughGround && collisionResponse.pushedToTop;
 
     return collisionResponse;
 }

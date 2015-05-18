@@ -57,7 +57,7 @@ void TileMap::resize(const unsigned &mapWidth, const unsigned &mapHeight) {
     areaCountHorizontal = glm::ceil(mapWidth / (float)areaSize);
     areaCountVertical = glm::ceil(mapHeight / (float)areaSize);
 
-    createRenderedAreas();
+    //createRenderedAreas();
 }
 
 void TileMap::setTile(const sf::Vector2f& position, const TileType& type) {
