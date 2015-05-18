@@ -25,7 +25,7 @@ void Camera::setupDefaultProperties(sf::RenderWindow &window) {
     //default view size is the size of the window
     sf::Vector2u windowSize = window.getSize();
 
-    defaultSize = glm::vec2(windowSize.x, windowSize.y) * 2.f;
+    defaultSize = glm::vec2(windowSize.x, windowSize.y) * 1.5f;
     resetZoom();
 }
 
@@ -240,7 +240,7 @@ glm::vec2 Camera::calculateSize(const vector<glm::vec2> &targets) {
 
 glm::vec2 Camera::calculateMaxSize() {
 
-    float maxScale = 2;
+    float maxScale = 1.5;
 
     return defaultSize * maxScale;
 }

@@ -14,7 +14,7 @@ TileMap::TileMap() :
     gridWidth(0),
     gridHeight(0),
     areas(),
-    areaSize(1024),
+    areaSize(glm::min(1024, (int)sf::Texture::getMaximumSize())),
     areaCountHorizontal(0),
     areaCountVertical(0)
     {
@@ -26,7 +26,7 @@ TileMap::TileMap(const unsigned &mapWidth, const unsigned &mapHeight):
     gridWidth(0),
     gridHeight(0),
     areas(),
-    areaSize(1024),
+    areaSize(glm::min(1024, (int)sf::Texture::getMaximumSize())),
     areaCountHorizontal(0),
     areaCountVertical(0)
     {
@@ -133,14 +133,11 @@ void TileMap::draw(sf::RenderWindow& window, const glm::vec2 &upperLeft, const g
         for(int x = areaUpperLeft.x; x <= areaLowerRight.x; ++x) {
 
             int index = y * areaCountHorizontal + x;
-            cout << index << " ";
             sf::Sprite& toDraw = areas[index]->sprite;
 
             window.draw(toDraw);
         }
     }
-
-    cout << endl;
 }
 
 void TileMap::drawTiles(sf::RenderTarget& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight) {

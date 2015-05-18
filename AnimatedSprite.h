@@ -28,6 +28,7 @@ class AnimatedSprite {
         void setAnimationState(const unsigned &animationState);
         void setFrame(const unsigned &currentFrame);
 
+        unsigned getAnimationState() const;
         sf::Sprite& getSprite();
 
     private:

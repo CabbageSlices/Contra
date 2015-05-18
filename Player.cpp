@@ -120,12 +120,12 @@ void Player::update(const float& deltaTime, const sf::FloatRect& worldBounds, Ti
     gun->update(deltaTime, worldBounds, map);
 }
 
+bool Player::checkCanGetHit() {
+
+    return respawnInvinsibilityTimer.getElapsedTime() > respawnInvinsibilityDuration && checkIsAlive();
+}
+
 void Player::getHit(int damage) {
-
-    if(respawnInvinsibilityTimer.getElapsedTime() < respawnInvinsibilityDuration || !checkIsAlive()) {
-
-        return;
-    }
 
     ///later this should start a death animation and set lifestate to dying, and once the animation finishes the player should actually die
     ///for now just make player die since there are no animations yet

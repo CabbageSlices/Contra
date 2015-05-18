@@ -9,6 +9,7 @@
 #include "EnemySpawners.h"
 #include "Bullet.h"
 #include "TurretEnemy.h"
+#include "DestructibleBlock.h"
 
 #include <vector>
 #include <memory>
@@ -44,6 +45,8 @@ int main() {
     bool slowed = false;
 
     TurretEnemy enem(glm::vec2(256, 768 * 2 - 256));
+
+    DestructibleBlock block(glm::vec2(256, 768 * 2 - 128));
 
     while(window.isOpen()) {
 
@@ -121,12 +124,17 @@ int main() {
         }
 
         enemy.update(deltaTime.asSeconds(), worldBounds, tileMap);
-
+        block.update(deltaTime.asSeconds(), worldBounds, tileMap);
         player.update(deltaTime.asSeconds(), worldBounds, tileMap);
 
         if(player.checkCanRespawn()) {
 
             player.respawn(camera.getCameraBounds());
+        }
+
+        if(player.getHitbox().getActiveHitboxWorldSpace().intersects(block.getHitbox().getActiveHitboxWorldSpace()) && block.checkCanGetHit()) {
+
+            block.getHit();
         }
 
         vector<shared_ptr<Bullet> > &playerBullets = player.getGun()->getBullets();
@@ -152,7 +160,7 @@ int main() {
             sf::FloatRect enemyHitbox = enemies[i]->getHitbox().getActiveHitboxWorldSpace();
             sf::FloatRect playerHitbox = player.getHitbox().getActiveHitboxWorldSpace();
 
-            if(enemyHitbox.intersects(playerHitbox)) {
+            if(enemyHitbox.intersects(playerHitbox) && player.checkCanGetHit()) {
 
                 player.getHit();
             }
@@ -189,7 +197,7 @@ int main() {
 
             enemies[i]->draw(window);
         }
-
+        block.draw(window);
         enem.draw(window);
 
         window.display();

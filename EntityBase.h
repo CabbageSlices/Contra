@@ -23,6 +23,7 @@ class EntityBase {
         virtual void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map) = 0;
         virtual void draw(sf::RenderWindow &window);
         virtual bool checkIsAlive();
+        virtual bool checkCanGetHit();
         virtual void getHit(int damage = 1);
 
         const ObjectHitbox& getHitbox() const;
@@ -36,7 +37,7 @@ class EntityBase {
         std::vector<std::shared_ptr<Tile> > getSurroundingTiles(const TileMap &map, const glm::vec2 &areaPadding);
 
         //leave this virtual since different objects have different collision handling
-        virtual CollisionResponse handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) = 0;
+        virtual CollisionResponse handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
         CollisionResponse handleTileCollisionHorizontally(TileMap& map);
         CollisionResponse handleTileCollisionVertically(TileMap& map);
 

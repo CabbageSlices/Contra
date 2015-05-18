@@ -37,8 +37,11 @@
 		<Unit filename="Bullet.h" />
 		<Unit filename="Camera.cpp" />
 		<Unit filename="Camera.h" />
+		<Unit filename="DestructibleBlock.cpp" />
+		<Unit filename="DestructibleBlock.h" />
 		<Unit filename="Direction.cpp" />
 		<Unit filename="Direction.h" />
+		<Unit filename="DynamicObject.h" />
 		<Unit filename="Enemy.cpp" />
 		<Unit filename="Enemy.h" />
 		<Unit filename="EnemySpawners.cpp" />

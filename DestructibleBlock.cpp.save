@@ -1,0 +1,43 @@
+#include "DestructibleBlock.h"
+
+DestructibleBlock::DestructibleBlock(const sf::Vector2f &position) :
+    EntityBase(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), 1),
+    sprite(sf::milliseconds(100))
+    {
+        setup();
+    }
+
+void DestructibleBlock::update(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {
+
+    //
+}
+
+bool DestructibleBlock::checkCanGetHit() {}
+
+bool DestructibleBlock::checkIsAlive() {
+
+    return sprite.getCurrentState
+}
+
+void DestructibleBlock::getHit()
+
+void DestructibleBlock::setup() {
+
+    //load the appropriate texture
+    sprite.loadTexture("BrickBreak.png");
+
+    createTextureRects();
+}
+
+void DestructibleBlock::createTextureRects() {
+
+    sprite.insertTextureRect(SOLID, sf::IntRect(0, 0, 64, 64));
+
+    for(int y = 0; y < 3; ++y) {
+
+        for(int x = 0; x < 3; ++x) {
+
+            sprite.insertTextureRect(DESTRYOING, sf::IntRect(x * 64, y * 64, 64, 64));
+        }
+    }
+}

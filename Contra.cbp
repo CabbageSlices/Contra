@@ -39,6 +39,7 @@
 		<Unit filename="Camera.h" />
 		<Unit filename="Direction.cpp" />
 		<Unit filename="Direction.h" />
+		<Unit filename="DynamicObject.h" />
 		<Unit filename="Enemy.cpp" />
 		<Unit filename="Enemy.h" />
 		<Unit filename="EnemySpawners.cpp" />

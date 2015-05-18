@@ -84,6 +84,7 @@ void AnimatedSprite::setAnimationState(const unsigned &animationState) {
     //only change states if the given state is valid
     if(currentStateTextureRects.count(animationState) != 0) {
 
+        resetAnimation();
         currentAnimationState = animationState;
     }
 }
@@ -104,8 +105,12 @@ void AnimatedSprite::setFrame(const unsigned &currentFrame) {
     frame = currentFrame;
 }
 
-sf::Sprite& AnimatedSprite::getSprite() {
+unsigned AnimatedSprite::getAnimationState() const {
 
+    return currentAnimationState;
+}
+
+sf::Sprite& AnimatedSprite::getSprite() {
 
     return sprite;
 }

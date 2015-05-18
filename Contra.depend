@@ -40,7 +40,7 @@
 
 1427852681 c:\users\nimesh\documents\github\contra\globalconstants.h
 
-1431891714 source:c:\users\nimesh\documents\github\contra\main.cpp
+1431917135 source:c:\users\nimesh\documents\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -52,6 +52,7 @@
 	"EnemySpawners.h"
 	"Bullet.h"
 	"TurretEnemy.h"
+	"DestructibleBlock.h"
 	<vector>
 	<memory>
 
@@ -109,7 +110,7 @@
 	"HitboxMovementController.h"
 	<memory>
 
-1431891925 source:c:\users\nimesh\documents\github\contra\tilemap.cpp
+1431908363 source:c:\users\nimesh\documents\github\contra\tilemap.cpp
 	"TileMap.h"
 	"glm/glm.hpp"
 	<iostream>
@@ -159,7 +160,7 @@
 	<memory>
 	"glm/glm.hpp"
 
-1431887844 source:c:\users\nimesh\documents\github\contra\camera.cpp
+1431905357 source:c:\users\nimesh\documents\github\contra\camera.cpp
 	"Camera.h"
 	"glm/gtx/compatibility.hpp"
 	<iostream>
@@ -229,21 +230,21 @@
 	<memory>
 	<vector>
 
-1431748224 source:c:\users\nimesh\documents\github\contra\animatedsprite.cpp
+1431917121 source:c:\users\nimesh\documents\github\contra\animatedsprite.cpp
 	"AnimatedSprite.h"
 	<utility>
 
-1431748204 c:\users\nimesh\documents\github\contra\animatedsprite.h
+1431914434 c:\users\nimesh\documents\github\contra\animatedsprite.h
 	<map>
 	<vector>
 	<string>
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
 
-1431806555 source:c:\users\nimesh\documents\github\contra\entitybase.cpp
+1431916842 source:c:\users\nimesh\documents\github\contra\entitybase.cpp
 	"EntityBase.h"
 
-1431811984 c:\users\nimesh\documents\github\contra\entitybase.h
+1431916841 c:\users\nimesh\documents\github\contra\entitybase.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"TileMap.h"
@@ -263,4 +264,11 @@
 
 1431810510 source:c:\users\nimesh\documents\github\contra\shootingentity.cpp
 	"ShootingEntity.h"
+
+1431917182 source:c:\users\nimesh\documents\github\contra\destructibleblock.cpp
+	"DestructibleBlock.h"
+
+1431916735 c:\users\nimesh\documents\github\contra\destructibleblock.h
+	"EntityBase.h"
+	"AnimatedSprite.h"
 

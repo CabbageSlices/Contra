@@ -18,6 +18,11 @@ void EntityBase::draw(sf::RenderWindow &window) {
     window.draw(entity);
 }
 
+bool EntityBase::checkCanGetHit() {
+
+    return checkIsAlive();
+}
+
 bool EntityBase::checkIsAlive() {
 
     return health > 0;
@@ -51,6 +56,8 @@ vector<shared_ptr<Tile> > EntityBase::getSurroundingTiles(const TileMap &map, co
 
     return tiles;
 }
+
+
 
 CollisionResponse EntityBase::handleTileCollisionHorizontally(TileMap &map) {
 

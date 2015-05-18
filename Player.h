@@ -36,6 +36,7 @@ class Player : public ShootingEntity{
         virtual void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
         virtual bool checkIsAlive();
         virtual void draw(sf::RenderWindow& window);
+        virtual bool checkCanGetHit();
         virtual void getHit(int damage = 1);//damage parameters is pretty much ignored, its only needed for inheritance purposes
 
         bool checkCanRespawn();
