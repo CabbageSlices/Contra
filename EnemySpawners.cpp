@@ -19,14 +19,15 @@ int findClosestSpawnPointOffscreen(InformationForSpawner &spawnInfo) {
         return -1;
     }
 
-    const float cameraHorizontalCenter = spawnInfo.currentCameraBounds.left + spawnInfo.currentCameraBounds.width / 2;
-
+    glm::vec2 camPos;
+    camPos.x = spawnInfo.currentCameraBounds.left + spawnInfo.currentCameraBounds.width / 2.f;
+    camPos.y = spawnInfo.currentCameraBounds.top + spawnInfo.currentCameraBounds.height / 2.f;
 
     for(unsigned i = 0; i < spawnPoints.size(); ++i) {
 
-        sf::Vector2f &position = spawnPoints[i]->spawnPosition;
+        glm::vec2 position = spawnPoints[i]->getSpawnPosition();
 
-        if(spawnInfo.currentCameraBounds.contains(position) || !spawnPoints[i]->checkCanSpawn()) {
+        if(spawnInfo.currentCameraBounds.contains(sf::Vector2f(position.x, position.y)) || !spawnPoints[i]->checkCanSpawn()) {
 
             continue;
         }
@@ -40,7 +41,10 @@ int findClosestSpawnPointOffscreen(InformationForSpawner &spawnInfo) {
 
         shared_ptr<SpawnPoint> &closestPoint = spawnPoints[closestPointId];
 
-        bool isCloser = glm::abs(position.x - cameraHorizontalCenter) < glm::abs(closestPoint->spawnPosition.x - cameraHorizontalCenter);
+        float distanceCamToClosest = glm::dot(closestPoint->getSpawnPosition() - camPos, closestPoint->getSpawnPosition() - camPos);
+        float distanceCamToCurrent = glm::dot(position - camPos, position - camPos);
+
+        bool isCloser = glm::abs(distanceCamToCurrent) < glm::abs(distanceCamToClosest);
 
         if(isCloser) {
 
@@ -66,7 +70,7 @@ bool spawnEnemyOffscreen(InformationForSpawner &spawnInfo) {
     Direction direction;
 
     //enemy spawned to the right of the players so look to left
-    if(closestPoint->spawnPosition.x > spawnInfo.currentCameraBounds.left) {
+    if(closestPoint->getSpawnPosition().x > spawnInfo.currentCameraBounds.left) {
 
         direction.horizontal = HorizontalDirection::LEFT;
 
@@ -75,7 +79,7 @@ bool spawnEnemyOffscreen(InformationForSpawner &spawnInfo) {
         direction.horizontal = HorizontalDirection::RIGHT;
     }
 
-    shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(closestPoint->spawnPosition.x, closestPoint->spawnPosition.y), direction);
+    shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(closestPoint->getSpawnPosition().x, closestPoint->getSpawnPosition().y), direction);
 
     if(!enemy) {
 
@@ -83,6 +87,7 @@ bool spawnEnemyOffscreen(InformationForSpawner &spawnInfo) {
     }
 
     closestPoint->resetSpawnTimer();
+    closestPoint->increaseSpawnCount();
     spawnInfo.enemies.push_back(enemy);
     return true;
 }

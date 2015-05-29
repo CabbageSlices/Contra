@@ -11,17 +11,29 @@ class Enemy;
 
 struct SpawnPoint {
 
-    SpawnPoint(const sf::Vector2f &position, const sf::Time &delay) :
-        spawnPosition(position),
+    SpawnPoint(const sf::Vector2f &position, const sf::Time &delay, const unsigned &maxSpawns = 3) :
+        spawnPosition(position.x, position.y),
         spawnTimer(),
-        spawnDelay(delay)
+        spawnDelay(delay),
+        enemiesSpawned(0),
+        maxSpawnCount(maxSpawns)
     {
 
     }
 
-    bool checkCanSpawn() {
+    SpawnPoint(const glm::vec2 &position, const sf::Time &delay, const unsigned &maxSpawns = 0) :
+        spawnPosition(position),
+        spawnTimer(),
+        spawnDelay(delay),
+        enemiesSpawned(0),
+        maxSpawnCount(maxSpawns)
+    {
 
-        return spawnTimer.getElapsedTime() > spawnDelay;
+    }
+
+    bool checkCanSpawn() const {
+
+        return spawnTimer.getElapsedTime() > spawnDelay && (enemiesSpawned < maxSpawnCount || maxSpawnCount == 0);
     }
 
     void resetSpawnTimer() {
@@ -29,9 +41,24 @@ struct SpawnPoint {
         spawnTimer.restart();
     }
 
-    sf::Vector2f spawnPosition;
-    sf::Clock spawnTimer;
-    sf::Time spawnDelay;
+    void increaseSpawnCount() {
+
+        enemiesSpawned++;
+    }
+
+    glm::vec2 getSpawnPosition() const {
+
+        return spawnPosition;
+    }
+
+    private:
+
+        unsigned enemiesSpawned;
+        unsigned maxSpawnCount;//if this is set to 0 then the spawner has no limit
+
+        glm::vec2 spawnPosition;
+        sf::Clock spawnTimer;
+        sf::Time spawnDelay;
 };
 
 //information that a spawner can use for spawning
