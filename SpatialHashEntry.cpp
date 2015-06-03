@@ -1,6 +1,7 @@
 #include "SpatialHashEntry.h"
 
 using std::shared_ptr;
+using std::weak_ptr;
 
 unsigned SpatialHashEntry::hashEntriesCreated = 0;
 
@@ -26,6 +27,11 @@ void SpatialHashEntry::updateBoundingBox() {
 bool SpatialHashEntry::checkObjectExists() {
 
     return bool(object.lock());
+}
+
+weak_ptr<Object> SpatialHashEntry::getObject() {
+
+    return object;
 }
 
 unsigned SpatialHashEntry::getId() const {

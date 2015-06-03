@@ -4,6 +4,8 @@
 #include "DynamicObject.h"
 #include "AnimatedSprite.h"
 
+#include <memory>
+
 class DestructibleBlock : public DynamicObject {
 
     public:
@@ -17,7 +19,7 @@ class DestructibleBlock : public DynamicObject {
         virtual void getHit(int damage = 1);
         virtual void draw(sf::RenderWindow &window);
 
-        virtual CollisionResponse handleCollision(EntityBase *collidingEntity);
+        virtual CollisionResponse handleCollision(std::shared_ptr<EntityBase> collidingEntity);
 
     private:
 

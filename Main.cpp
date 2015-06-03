@@ -151,7 +151,7 @@ int main() {
 
                 if(playerBullets[j]->getHitbox().getActiveHitboxWorldSpace().intersects(enemies[i]->getHitbox().getActiveHitboxWorldSpace()) && playerBullets[j]->checkIsAlive()) {
 
-                    playerBullets[j]->handleEntityCollision(enemies[i].get());
+                    playerBullets[j]->handleEntityCollision(enemies[i]);
                 }
             }
 

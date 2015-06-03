@@ -4,6 +4,7 @@
 
 using std::cout;
 using std::endl;
+using std::shared_ptr;
 
 DestructibleBlock::DestructibleBlock(const glm::vec2 &position) :
     DynamicObject(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), 1),
@@ -45,7 +46,7 @@ void DestructibleBlock::draw(sf::RenderWindow &window) {
     sprite.draw(window);
 }
 
-CollisionResponse DestructibleBlock::handleCollision(EntityBase *collidingEntity) {
+CollisionResponse DestructibleBlock::handleCollision(shared_ptr<EntityBase> collidingEntity) {
 
     CollisionResponse response;
 

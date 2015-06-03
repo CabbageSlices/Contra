@@ -9,6 +9,7 @@
 #include "ObjectHitbox.h"
 #include "EntityBase.h"
 #include <memory>
+#include <memory>
 
 class Enemy;
 
@@ -23,7 +24,7 @@ class Bullet : public EntityBase {
         virtual bool checkIsAlive();
 
         //take a raw pointer instead of shared pointer because shared pointers don't support polymorphism
-        void handleEntityCollision(EntityBase *collidingEntity);
+        void handleEntityCollision(std::shared_ptr<EntityBase> collidingEntity);
         void killBullet();
 
     private:

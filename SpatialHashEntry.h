@@ -21,6 +21,8 @@ class SpatialHashEntry {
 
         //checks if the object still exists, e.g the pointer is still valid
         bool checkObjectExists();
+
+        std::weak_ptr<Object> getObject();
         unsigned getId() const;
         sf::FloatRect getPreviousBoundingBox() const;
 
