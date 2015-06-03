@@ -197,8 +197,6 @@ bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, HitboxMovementController
         return false;
     }
 
-    glm::vec2 tileSize = glm::vec2(TILE_SIZE, TILE_SIZE);
-
     //if object is off the lower end of the slope, it could have walked off the slope
     bool snapToBottom = (tileSlope.y  / tileSlope.x > 0 && objPosInTile.x > rightEdgeTileSpace && previousPosition.x <= rightEdgeTileSpace) ||
                         (tileSlope.y  / tileSlope.x < 0 && objPosInTile.x < leftEdgeTileSpace && previousPosition.x >= leftEdgeTileSpace);

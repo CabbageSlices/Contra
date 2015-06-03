@@ -78,6 +78,29 @@ sf::FloatRect ObjectHitbox::getHitBoxWorldSpace(const unsigned &id) const {
     return hitbox;
 }
 
+sf::FloatRect ObjectHitbox::getTotalHitboxWorldSpace() const {
+
+    //find the minimum and maximum extents out of all the hitboxes and return the enclosed area
+    if(hitboxes.size() == 0) {
+
+        return sf::FloatRect(0, 0, 0, 0);
+    }
+
+    glm::vec2 topLeft(hitboxes[0].left, hitboxes[0].top);
+    glm::vec2 bottomRight(hitboxes[0].left + hitboxes[0].width, hitboxes[0].top + hitboxes[0].height);
+
+    for(unsigned i = 1; i < hitboxes.size(); ++i) {
+
+        topLeft.x = glm::min(topLeft.x, hitboxes[i].left);
+        topLeft.y = glm::min(topLeft.y, hitboxes[i].top);
+        bottomRight.x = glm::max(bottomRight.x, hitboxes[i].left + hitboxes[i].width);
+        bottomRight.y = glm::max(bottomRight.y, hitboxes[i].top + hitboxes[i].height);
+    }
+
+    sf::FloatRect totalBounds(topLeft.x + origin.x, topLeft.y + origin.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y);
+    return totalBounds;
+}
+
 sf::FloatRect ObjectHitbox::getActiveHitboxObjectSpace() const {
 
     return getHitBoxObjectSpace(idActiveHitbox);
