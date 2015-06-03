@@ -8,6 +8,7 @@
 #include "Tile.h"
 #include "TileCollisionHandling.h"
 #include "ObjectHitbox.h"
+#include "CollisionResponse.h"
 #include "HitboxMovementController.h"
 
 #include "glm/glm.hpp"
@@ -25,6 +26,11 @@ class EntityBase {
         virtual bool checkIsAlive();
         virtual bool checkCanGetHit();
         virtual void getHit(int damage = 1);
+        virtual CollisionResponse handleCollision(std::shared_ptr<EntityBase> collidingEntity) {
+
+            //empty
+            return CollisionResponse();
+        };
 
         ObjectHitbox& getHitbox();
         HitboxMovementController& getMovementController();

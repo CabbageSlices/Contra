@@ -19,8 +19,6 @@ class DynamicObject : public EntityBase {
             {
 
             }
-
-        virtual CollisionResponse handleCollision(std::shared_ptr<EntityBase> collidingEntity) = 0;
 };
 
 //calculates the minimum distance required for rectA to move in order to escape collision with rectB

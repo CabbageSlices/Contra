@@ -24,7 +24,7 @@ class Bullet : public EntityBase {
         virtual bool checkIsAlive();
 
         //take a raw pointer instead of shared pointer because shared pointers don't support polymorphism
-        void handleEntityCollision(std::shared_ptr<EntityBase> collidingEntity);
+        virtual CollisionResponse handleCollision(std::shared_ptr<EntityBase> collidingEntity);
         void killBullet();
 
     private:

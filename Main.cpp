@@ -24,7 +24,7 @@ int main() {
 
     sf::Event event;
 
-    Player player;
+    shared_ptr<Player> player = make_shared<Player>();
 
     sf::Clock timer;
 
@@ -111,10 +111,10 @@ int main() {
                 }
             }
 
-            player.handleInputEvents(event, window);
+            player->handleInputEvents(event, window);
         }
 
-        player.handleKeystate(window);
+        player->handleKeystate(window);
 
         sf::Time deltaTime = timer.restart();
 
@@ -125,17 +125,17 @@ int main() {
 
         enemy.updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
         block.updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
-        player.updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
+        player->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
 
-        if(player.checkCanRespawn()) {
+        if(player->checkCanRespawn()) {
 
-            player.respawn(camera.getCameraBounds());
+            player->respawn(camera.getCameraBounds());
         }
 
-        vector<shared_ptr<Bullet> > &playerBullets = player.getGun()->getBullets();
+        vector<shared_ptr<Bullet> > &playerBullets = player->getGun()->getBullets();
 
         if(block.checkIsAlive())
-        block.handleCollision(&player);
+        block.handleCollision(player);
 
         for(unsigned i = 0; i < enemies.size();) {
 
@@ -151,23 +151,23 @@ int main() {
 
                 if(playerBullets[j]->getHitbox().getActiveHitboxWorldSpace().intersects(enemies[i]->getHitbox().getActiveHitboxWorldSpace()) && playerBullets[j]->checkIsAlive()) {
 
-                    playerBullets[j]->handleEntityCollision(enemies[i]);
+                    playerBullets[j]->handleCollision(enemies[i]);
                 }
             }
 
             sf::FloatRect enemyHitbox = enemies[i]->getHitbox().getActiveHitboxWorldSpace();
-            sf::FloatRect playerHitbox = player.getHitbox().getActiveHitboxWorldSpace();
+            sf::FloatRect playerHitbox = player->getHitbox().getActiveHitboxWorldSpace();
 
-            if(enemyHitbox.intersects(playerHitbox) && player.checkCanGetHit()) {
+            if(enemyHitbox.intersects(playerHitbox) && player->checkCanGetHit()) {
 
-                player.getHit();
+                player->getHit();
             }
 
             ++i;
         }
 
         vector<glm::vec2> playerPositions;
-        playerPositions.push_back(player.getPosition());
+        playerPositions.push_back(player->getPosition());
         //playerPositions.push_back(glm::vec2(0, 1920));
 
         enem.updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap, playerPositions);
@@ -182,9 +182,9 @@ int main() {
         if(enemies.size() < 100)
         spawnEnemyOffscreen(spawnInfo);
 
-        sf::FloatRect collidingRect = player.getHitbox().getActiveHitboxWorldSpace();
+        sf::FloatRect collidingRect = player->getHitbox().getActiveHitboxWorldSpace();
 
-        player.updateRendering();
+        player->updateRendering();
         enem.updateRendering();
         for(unsigned i = 0; i < enemies.size(); ++i) {
 
@@ -200,7 +200,7 @@ int main() {
         glm::vec2 bottomRight(cameraBounds.left + cameraBounds.width, cameraBounds.top + cameraBounds.height);
 
         tileMap.draw(window, topLeft, bottomRight);
-        player.draw(window);
+        player->draw(window);
 
         for(unsigned i = 0; i < enemies.size(); ++i) {
 

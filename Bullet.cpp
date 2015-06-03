@@ -42,10 +42,12 @@ bool Bullet::checkIsAlive() {
     return timeElapsed < lifeTime.asSeconds();
 }
 
-void Bullet::handleEntityCollision(shared_ptr<EntityBase> collidingEntity) {
+CollisionResponse Bullet::handleCollision(shared_ptr<EntityBase> collidingEntity) {
 
     collidingEntity->getHit(1);
     killBullet();
+
+    return CollisionResponse();
 }
 
 void Bullet::killBullet() {

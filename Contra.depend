@@ -303,14 +303,14 @@
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
 
-1433305609 source:c:\users\nimesh\desktop\c++\github\contra\bullet.cpp
+1433307237 source:c:\users\nimesh\desktop\c++\github\contra\bullet.cpp
 	"Bullet.h"
 	"TileCollisionHandling.h"
 	"Enemy.h"
 	<vector>
 	<iostream>
 
-1433305796 c:\users\nimesh\desktop\c++\github\contra\bullet.h
+1433307145 c:\users\nimesh\desktop\c++\github\contra\bullet.h
 	"HitboxMovementController.h"
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
@@ -344,13 +344,14 @@
 	"glm/glm.hpp"
 	"HitboxMovementController.h"
 
-1432770771 c:\users\nimesh\desktop\c++\github\contra\entitybase.h
+1433307311 c:\users\nimesh\desktop\c++\github\contra\entitybase.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"TileMap.h"
 	"Tile.h"
 	"TileCollisionHandling.h"
 	"ObjectHitbox.h"
+	"CollisionResponse.h"
 	"HitboxMovementController.h"
 	"glm/glm.hpp"
 	<memory>
@@ -389,15 +390,16 @@
 
 1432770771 c:\users\nimesh\desktop\c++\github\contra\globalconstants.h
 
-1432770771 source:c:\users\nimesh\desktop\c++\github\contra\destructibleblock.cpp
+1433305837 source:c:\users\nimesh\desktop\c++\github\contra\destructibleblock.cpp
 	"DestructibleBlock.h"
 	<iostream>
 
-1432770771 c:\users\nimesh\desktop\c++\github\contra\destructibleblock.h
+1433305828 c:\users\nimesh\desktop\c++\github\contra\destructibleblock.h
 	"DynamicObject.h"
 	"AnimatedSprite.h"
+	<memory>
 
-1433305815 c:\users\nimesh\desktop\c++\github\contra\dynamicobject.h
+1433307228 c:\users\nimesh\desktop\c++\github\contra\dynamicobject.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"EntityBase.h"
@@ -421,7 +423,7 @@
 	"Enemy.h"
 	<iostream>
 
-1432858572 c:\users\nimesh\desktop\c++\github\contra\enemyspawners.h
+1433307295 c:\users\nimesh\desktop\c++\github\contra\enemyspawners.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
@@ -907,7 +909,7 @@
 1433304917 source:c:\users\nimesh\desktop\c++\github\contra\spatialhashentry.cpp
 	"SpatialHashEntry.h"
 
-1433305343 c:\users\nimesh\desktop\c++\github\contra\spatialhashentry.h
+1433307072 c:\users\nimesh\desktop\c++\github\contra\spatialhashentry.h
 	"EntityBase.h"
 	"glm/glm.hpp"
 	"SFML/Graphics.hpp"
