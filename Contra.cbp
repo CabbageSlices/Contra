@@ -77,6 +77,7 @@
 		<Unit filename="PlayerManager.h" />
 		<Unit filename="ShootingEntity.cpp" />
 		<Unit filename="ShootingEntity.h" />
+		<Unit filename="SpatialHash.cpp" />
 		<Unit filename="SpatialHash.h" />
 		<Unit filename="SpatialHashEntry.cpp" />
 		<Unit filename="SpatialHashEntry.h" />
