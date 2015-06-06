@@ -3,19 +3,13 @@
 
 #include "SFML/Graphics.hpp"
 #include "GlobalConstants.h"
-#include "ObjectHitbox.h"
-#include "HitboxMovementController.h"
 #include "TileCollisionHandling.h"
 #include "TileMap.h"
-#include "Direction.h"
 #include "ShootingEntity.h"
-#include <memory>
 #include <iostream>
 
 using std::cout;
 using std::endl;
-
-class Gun;
 
 struct PlayerKeys {
 
@@ -39,10 +33,13 @@ class Player : public ShootingEntity{
         void handleKeystate(sf::RenderWindow& window);
 
         //time should be in seconds
-        virtual void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
+        virtual void updatePhysics(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map);
+        void updateRendering();
         virtual bool checkIsAlive();
         virtual void draw(sf::RenderWindow& window);
+        virtual bool checkCanGetHit();
         virtual void getHit(int damage = 1);//damage parameters is pretty much ignored, its only needed for inheritance purposes
+        virtual void respondToCollision()
 
         bool checkCanRespawn();
         void respawn(const sf::FloatRect &cameraBounds);//spawns at top of camera

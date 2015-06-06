@@ -8,6 +8,7 @@
 #include "Tile.h"
 #include "TileCollisionHandling.h"
 #include "ObjectHitbox.h"
+#include "CollisionResponse.h"
 #include "HitboxMovementController.h"
 
 #include "glm/glm.hpp"
@@ -20,13 +21,24 @@ class EntityBase {
 
         EntityBase(const glm::vec2 &gravity, const glm::vec2 &movementVelocity, const glm::vec2 &terminalVelocity, const unsigned &initialHealth);
 
-        virtual void update(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map) = 0;
+        virtual void updatePhysics(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map) = 0;
         virtual void draw(sf::RenderWindow &window);
         virtual bool checkIsAlive();
         virtual bool checkCanGetHit();
         virtual void getHit(int damage = 1);
+        
+        //first handle collision is the function called by objects that affects other objects when they collide
+        //i.e a block will call this function because it will push all colliding objects away
+        virtual CollisionResponse handleCollision(std::shared_ptr<EntityBase> collidingEntity) {
 
-        const ObjectHitbox& getHitbox() const;
+            //empty
+            return CollisionResponse();
+        };
+        
+        //this one should be called 
+        virtual void handleCollision
+
+        ObjectHitbox& getHitbox();
         HitboxMovementController& getMovementController();
         const glm::vec2 getPosition() const;
 

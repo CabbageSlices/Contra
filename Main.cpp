@@ -147,7 +147,7 @@ int main() {
         vector<shared_ptr<Bullet> > &playerBullets = player->getGun()->getBullets();
 
         if(block.checkIsAlive())
-        block.handleCollision(player);
+        player->respondToCollision(block.handleCollision(player));
 
         for(unsigned i = 0; i < enemies.size();) {
 

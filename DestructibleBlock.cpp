@@ -63,6 +63,7 @@ CollisionResponse DestructibleBlock::handleCollision(shared_ptr<EntityBase> coll
 
     collidingEntity->getHitbox().move(minimumTranslation);
 
+    //check if object is now standing on top of the block
     if(minimumTranslation.y < 0) {
 
         response.pushedToTop = true;

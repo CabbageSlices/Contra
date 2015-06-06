@@ -137,6 +137,13 @@ void Player::getHit(int damage) {
     die();
 }
 
+void Player::respondToCollision(const CollisionResponse &collisionResponse) {
+
+    //check if player is able to jump now
+    standingOnSolid = collisionResponse.pushedToTop || standingOnSolid;
+    standingOnPassablePlatform = collisionResponse.canFallThroughGround || standingOnPassablePlatform;
+}
+
 bool Player::checkIsAlive() {
 
     return lifeState == ALIVE;
