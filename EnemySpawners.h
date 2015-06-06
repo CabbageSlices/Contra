@@ -6,6 +6,7 @@
 #include "glm/glm.hpp"
 #include <vector>
 #include <memory>
+#include "SpatialHashEntry.h"
 
 class Enemy;
 
@@ -64,7 +65,8 @@ struct SpawnPoint {
 //information that a spawner can use for spawning
 struct InformationForSpawner {
 
-    InformationForSpawner(std::vector<std::shared_ptr<Enemy> > &enemyContainer, std::vector<std::shared_ptr<SpawnPoint> > &spawnPointContainer, const sf::FloatRect &camBounds, const sf::FloatRect &levelBounds) :
+    typedef SpatialHashEntry<Enemy> EnemyHash;
+    InformationForSpawner(std::vector<std::shared_ptr<EnemyHash> > &enemyContainer, std::vector<std::shared_ptr<SpawnPoint> > &spawnPointContainer, const sf::FloatRect &camBounds, const sf::FloatRect &levelBounds) :
         enemies(enemyContainer),
         spawnPoints(spawnPointContainer),
         currentCameraBounds(camBounds),
@@ -73,7 +75,7 @@ struct InformationForSpawner {
 
         }
 
-    std::vector<std::shared_ptr<Enemy> > &enemies;
+    std::vector<std::shared_ptr<EnemyHash> > &enemies;
     std::vector<std::shared_ptr<SpawnPoint> > &spawnPoints;
     sf::FloatRect currentCameraBounds;
     sf::FloatRect worldBounds;

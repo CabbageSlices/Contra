@@ -20,7 +20,7 @@ class SpatialHashEntry {
         //checks if the object still exists, e.g the pointer is still valid
         bool checkObjectExists();
 
-        std::weak_ptr<Object> getObject();
+        std::shared_ptr<Object> getObject();
         unsigned getId() const;
         sf::FloatRect getPreviousBoundingBox() const;
 
@@ -36,6 +36,8 @@ class SpatialHashEntry {
         //id of each hash entry will just be the number of entries created at the moment the object was created
         static unsigned hashEntriesCreated;
 };
+
+template<class Object> unsigned SpatialHashEntry<Object>::hashEntriesCreated = 0;
 
 template<class Object> SpatialHashEntry<Object>::SpatialHashEntry(std::shared_ptr<Object> &hashEntry) :
     object(hashEntry),
@@ -61,7 +63,7 @@ template<class Object> bool SpatialHashEntry<Object>::checkObjectExists() {
     return bool(object.lock());
 }
 
-template<class Object> std::weak_ptr<Object> SpatialHashEntry<Object>::getObject() {
+template<class Object> std::shared_ptr<Object> SpatialHashEntry<Object>::getObject() {
 
     return object;
 }

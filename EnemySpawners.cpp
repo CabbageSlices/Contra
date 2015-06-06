@@ -88,6 +88,8 @@ bool spawnEnemyOffscreen(InformationForSpawner &spawnInfo) {
 
     closestPoint->resetSpawnTimer();
     closestPoint->increaseSpawnCount();
-    spawnInfo.enemies.push_back(enemy);
+
+    shared_ptr<SpatialHashEntry<Enemy> > hashEntry = make_shared<SpatialHashEntry<Enemy> >(enemy);
+    spawnInfo.enemies.push_back(hashEntry);
     return true;
 }
