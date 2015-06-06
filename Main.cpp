@@ -21,12 +21,6 @@ using std::vector;
 
 int main() {
 
-    int x = 0;
-    int x1 = 0;
-    int *y = &x;
-    int *z = &x1;
-    cout << bool(y == z) << endl;
-
     sf::RenderWindow window(sf::VideoMode(1024, 768), "Contra");
 
     sf::Event event;
