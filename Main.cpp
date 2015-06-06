@@ -10,6 +10,7 @@
 #include "Bullet.h"
 #include "TurretEnemy.h"
 #include "DestructibleBlock.h"
+#include "SpatialHash.h"
 
 #include <vector>
 #include <memory>
@@ -19,6 +20,12 @@ using std::make_shared;
 using std::vector;
 
 int main() {
+
+    int x = 0;
+    int x1 = 0;
+    int *y = &x;
+    int *z = &x1;
+    cout << bool(y == z) << endl;
 
     sf::RenderWindow window(sf::VideoMode(1024, 768), "Contra");
 
@@ -96,7 +103,10 @@ int main() {
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
                         shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6));
-                        spawnPoints.push_back(point);
+                        ///spawnPoints.push_back(point);
+
+                        shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(mousePosition.x, mousePosition.y), Direction());
+                        enemies.push_back(enemy);
 
                     } else {
 
@@ -139,7 +149,7 @@ int main() {
 
         for(unsigned i = 0; i < enemies.size();) {
 
-            enemies[i]->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
+            ///enemies[i]->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
 
             if(!enemies[i]->checkIsAlive()) {
 

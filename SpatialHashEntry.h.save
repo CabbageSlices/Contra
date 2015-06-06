@@ -37,7 +37,7 @@ class SpatialHashEntry {
         static unsigned hashEntriesCreated;
 };
 
-template<class Object> SpatialHashEntry<Object>::SpatialHashEntry(std::shared_ptr<Object> &hashEntry) :
+SpatialHashEntry::SpatialHashEntry(shared_ptr<Object> &hashEntry) :
     object(hashEntry),
     previousBoundingBox(0, 0, 0, 0),
     id(hashEntriesCreated)
@@ -46,7 +46,7 @@ template<class Object> SpatialHashEntry<Object>::SpatialHashEntry(std::shared_pt
         hashEntriesCreated += 1;
     }
 
-template<class Object> void SpatialHashEntry<Object>::updateBoundingBox() {
+void SpatialHashEntry::updateBoundingBox() {
 
     if(!checkObjectExists()) {
 
@@ -56,22 +56,22 @@ template<class Object> void SpatialHashEntry<Object>::updateBoundingBox() {
     previousBoundingBox = object.lock()->getHitbox().getTotalHitboxWorldSpace();
 }
 
-template<class Object> bool SpatialHashEntry<Object>::checkObjectExists() {
+bool SpatialHashEntry::checkObjectExists() {
 
     return bool(object.lock());
 }
 
-template<class Object> std::weak_ptr<Object> SpatialHashEntry<Object>::getObject() {
+weak_ptr<Object> SpatialHashEntry::getObject() {
 
     return object;
 }
 
-template<class Object> unsigned SpatialHashEntry<Object>::getId() const {
+unsigned SpatialHashEntry::getId() const {
 
     return id;
 }
 
-template<class Object> sf::FloatRect SpatialHashEntry<Object>::getPreviousBoundingBox() const {
+sf::FloatRect SpatialHashEntry::getPreviousBoundingBox() const {
 
     return previousBoundingBox;
 }
