@@ -35,15 +35,38 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-DSFML_STATIC" />
+					<Add directory="SFML-2.3/include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add library="sfml-graphics-s" />
+					<Add library="sfml-window-s" />
+					<Add library="sfml-system-s" />
+					<Add library="winmm" />
+					<Add library="opengl32" />
+					<Add library="gdi32" />
+					<Add library="freetype" />
+					<Add library="jpeg" />
+					<Add directory="SFML-2.3/lib" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add directory="SFML-2.3/include" />
 		</Compiler>
+		<Linker>
+			<Add library="sfml-graphics-s" />
+			<Add library="sfml-window-s" />
+			<Add library="sfml-system-s" />
+			<Add library="winmm" />
+			<Add library="opengl32" />
+			<Add library="gdi32" />
+			<Add library="freetype" />
+			<Add library="jpeg" />
+			<Add directory="SFML-2.3/lib" />
+		</Linker>
 		<Unit filename="AnimatedSprite.cpp" />
 		<Unit filename="AnimatedSprite.h" />
 		<Unit filename="Bullet.cpp" />
@@ -77,9 +100,7 @@
 		<Unit filename="PlayerManager.h" />
 		<Unit filename="ShootingEntity.cpp" />
 		<Unit filename="ShootingEntity.h" />
-		<Unit filename="SpatialHash.cpp" />
 		<Unit filename="SpatialHash.h" />
-		<Unit filename="SpatialHashEntry.cpp" />
 		<Unit filename="SpatialHashEntry.h" />
 		<Unit filename="Tile.cpp" />
 		<Unit filename="Tile.h" />
