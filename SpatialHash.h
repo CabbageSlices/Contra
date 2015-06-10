@@ -43,7 +43,7 @@ class SpatialHash {
         void remove(std::shared_ptr<HashEntry> &entry);
         void updateLocation(std::shared_ptr<HashEntry> &entry);
 
-        std::set<std::shared_ptr<HashEntry> > getSurroundingEntites(const sf::FloatRect boundingBox);
+        EntryContainer getSurroundingEntites(const sf::FloatRect boundingBox);
 
     private:
 
@@ -120,9 +120,9 @@ template<class Object> void SpatialHash<Object>::updateLocation(std::shared_ptr<
     insert(entry, currentGridBounds);
 }
 
-template<class Object> std::set<std::shared_ptr<SpatialHashEntry<Object> > > SpatialHash<Object>::getSurroundingEntites(const sf::FloatRect boundingBox) {
+template<class Object> typename SpatialHash<Object>::EntryContainer SpatialHash<Object>::getSurroundingEntites(const sf::FloatRect boundingBox) {
 
-    std::set<std::shared_ptr<HashEntry> > container;
+    EntryContainer container;
 
     sf::IntRect enclosedGrid = calculateEnclosedGrid(boundingBox);
 
@@ -133,7 +133,7 @@ template<class Object> std::set<std::shared_ptr<SpatialHashEntry<Object> > > Spa
             glm::ivec2 gridPosition(x, y);
             EntryContainer &currentContainer = hash[gridPosition];
 
-            container.insert(currentContainer.begin(), currentContainer.end());
+            container.insert(container.end(), currentContainer.begin(), currentContainer.end());
         }
     }
 

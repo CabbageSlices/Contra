@@ -12,11 +12,9 @@
 #include "DestructibleBlock.h"
 #include "SpatialHash.h"
 
-#include <set>
 #include <vector>
 #include <memory>
 
-using std::set;
 using std::shared_ptr;
 using std::make_shared;
 using std::vector;
@@ -106,7 +104,7 @@ int main() {
 
                         for(int i = 1; i <= 100; ++i) {
 
-                            shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(mousePosition.x + i * 512, mousePosition.y), Direction());
+                            shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(mousePosition.x + i * 128, mousePosition.y), Direction());
                             shared_ptr<EnemyHash> entry= make_shared<EnemyHash>(enemy);
                             enemies.push_back(entry);
 
@@ -183,14 +181,12 @@ int main() {
 //            }
 
             sf::FloatRect enemyHitbox = enemies[i]->getObject()->getHitbox().getActiveHitboxWorldSpace();
-            set<shared_ptr<EnemyHash> > hashedEnemies = hash.getSurroundingEntites(enemyHitbox);
+            vector<shared_ptr<EnemyHash> > hashedEnemies = hash.getSurroundingEntites(enemyHitbox);
 
-            cout << "xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" << endl;
             int endRange = glm::min(hashedEnemies.size(), enemies.size());
-            for(set<shared_ptr<EnemyHash> >::iterator it = hashedEnemies.begin(); it != hashedEnemies.end(); ++it) {
+            for(unsigned j = 0; j < endRange; ++j) {
 
-                cout << (*it)->getId() << endl;
-                sf::FloatRect enemyHitbox2 = (*it)->getObject()->getHitbox().getActiveHitboxWorldSpace();
+                sf::FloatRect enemyHitbox2 = hashedEnemies[j]->getObject()->getHitbox().getActiveHitboxWorldSpace();
 
                 if(enemyHitbox.intersects(enemyHitbox2)) {
 
@@ -200,8 +196,6 @@ int main() {
 
             ++i;
         }
-
-        cout << "********************************" << endl;
 
         vector<glm::vec2> playerPositions;
         playerPositions.push_back(player->getPosition());
