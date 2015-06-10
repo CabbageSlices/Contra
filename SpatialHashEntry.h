@@ -5,6 +5,7 @@
 #include "glm/glm.hpp"
 #include "SFML/Graphics.hpp"
 #include <memory>
+#include <iostream>
 
 //spatial hash is defind as a map of <vec2i point, map<id, hashentry> > that way once you determine the location of the object in the hash using its position,
 //you can use the objects id to quickly grab the object from the grid without having to do a linear search
@@ -44,7 +45,6 @@ template<class Object> SpatialHashEntry<Object>::SpatialHashEntry(std::shared_pt
     previousBoundingBox(0, 0, 0, 0),
     id(hashEntriesCreated)
     {
-
         hashEntriesCreated += 1;
     }
 

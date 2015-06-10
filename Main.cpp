@@ -102,11 +102,15 @@ int main() {
                         shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6));
                         ///spawnPoints.push_back(point);
 
-                        shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(mousePosition.x, mousePosition.y), Direction());
-                        shared_ptr<EnemyHash> entry= make_shared<EnemyHash>(enemy);
-                        enemies.push_back(entry);
+                        for(int i = 1; i <= 100; ++i) {
 
-                        hash.insert(entry);
+                            shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(mousePosition.x + i * 128, mousePosition.y), Direction());
+                            shared_ptr<EnemyHash> entry= make_shared<EnemyHash>(enemy);
+                            enemies.push_back(entry);
+
+                            hash.insert(entry);
+                        }
+
 
                     } else {
 
@@ -149,28 +153,45 @@ int main() {
 
         for(unsigned i = 0; i < enemies.size();) {
 
-            ///enemies[i]->getObject()->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
+            enemies[i]->getObject()->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
 
             if(!enemies[i]->getObject()->checkIsAlive()) {
 
+                hash.remove(enemies[i]);
                 enemies.erase(enemies.begin() + i);
                 continue;
             }
 
-            for(unsigned j = 0; j < playerBullets.size(); ++j) {
+            hash.updateLocation(enemies[i]);
 
-                if(playerBullets[j]->getHitbox().getActiveHitboxWorldSpace().intersects(enemies[i]->getObject()->getHitbox().getActiveHitboxWorldSpace()) && playerBullets[j]->checkIsAlive()) {
-
-                    playerBullets[j]->handleCollision(enemies[i]->getObject());
-                }
-            }
+//            for(unsigned j = 0; j < playerBullets.size(); ++j) {
+//
+//                if(playerBullets[j]->getHitbox().getActiveHitboxWorldSpace().intersects(enemies[i]->getObject()->getHitbox().getActiveHitboxWorldSpace()) && playerBullets[j]->checkIsAlive()) {
+//
+//                    playerBullets[j]->handleCollision(enemies[i]->getObject());
+//                }
+//            }
+//
+//            sf::FloatRect enemyHitbox = enemies[i]->getObject()->getHitbox().getActiveHitboxWorldSpace();
+//            sf::FloatRect playerHitbox = player->getHitbox().getActiveHitboxWorldSpace();
+//
+//            if(enemyHitbox.intersects(playerHitbox) && player->checkCanGetHit()) {
+//
+//                player->getHit();
+//            }
 
             sf::FloatRect enemyHitbox = enemies[i]->getObject()->getHitbox().getActiveHitboxWorldSpace();
-            sf::FloatRect playerHitbox = player->getHitbox().getActiveHitboxWorldSpace();
+            vector<shared_ptr<EnemyHash> > hashedEnemies = hash.getSurroundingEntites(enemyHitbox);
 
-            if(enemyHitbox.intersects(playerHitbox) && player->checkCanGetHit()) {
+            int endRange = glm::min(hashedEnemies.size(), enemies.size());
+            for(unsigned j = 0; j < endRange; ++j) {
 
-                player->getHit();
+                sf::FloatRect enemyHitbox2 = hashedEnemies[j]->getObject()->getHitbox().getActiveHitboxWorldSpace();
+
+                if(enemyHitbox.intersects(enemyHitbox2)) {
+
+
+                }
             }
 
             ++i;

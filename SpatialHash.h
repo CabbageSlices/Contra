@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <memory>
 #include <boost/functional/hash.hpp>
+#include <set>
 
 
 //the key-value pair for spatial hash should be <ivec2, map<unsigned, hashentry> >
@@ -149,8 +150,6 @@ template<class Object> void SpatialHash<Object>::insert(std::shared_ptr<HashEntr
             glm::ivec2 gridPosition(x, y);
             EntryContainer &currentContainer = hash[gridPosition];
 
-            cout << x << "  " << y << endl;
-
             currentContainer.push_back(entry);
         }
     }
@@ -168,9 +167,9 @@ template<class Object> void SpatialHash<Object>::remove(std::shared_ptr<HashEntr
 
             //find entity in the container and remove
             typename EntryContainer::iterator it = remove_if(currentContainer.begin(), currentContainer.end(),
-                                                [&](std::shared_ptr<HashEntry> val)->bool{return
+                                                [&](std::shared_ptr<HashEntry> val)->bool{
 
-                                                    val->getId() == entry->getId();
+                                                    return val->getId() == entry->getId();
                                                 } );
 
             currentContainer.erase(it, currentContainer.end());
