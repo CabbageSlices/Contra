@@ -38,6 +38,13 @@ class SpatialHashEntry {
         static unsigned hashEntriesCreated;
 };
 
+//define comparison operators that way hash can use them when using algorithms
+template<class Object>
+bool operator<(SpatialHashEntry<Object> &lhs, SpatialHashEntry<Object> &rhs) {
+
+    return lhs->getId() < rhs->getId();
+}
+
 template<class Object> unsigned SpatialHashEntry<Object>::hashEntriesCreated = 0;
 
 template<class Object> SpatialHashEntry<Object>::SpatialHashEntry(std::shared_ptr<Object> &hashEntry) :
