@@ -42,6 +42,8 @@ int main() {
     vector<shared_ptr<EnemyHash> > enemies;
     vector<shared_ptr<SpawnPoint> > spawnPoints;
 
+    SpatialHash<Enemy> hash(256, 256);
+
     InformationForSpawner spawnInfo(enemies, spawnPoints, camera.getCameraBounds(), worldBounds);
 
     bool slowed = false;
@@ -104,6 +106,8 @@ int main() {
                         shared_ptr<EnemyHash> entry= make_shared<EnemyHash>(enemy);
                         enemies.push_back(entry);
 
+                        hash.insert(entry);
+
                     } else {
 
                         tileMap.setTile(mousePosition, TileType::SOLID);
@@ -145,7 +149,7 @@ int main() {
 
         for(unsigned i = 0; i < enemies.size();) {
 
-            enemies[i]->getObject()->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
+            ///enemies[i]->getObject()->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
 
             if(!enemies[i]->getObject()->checkIsAlive()) {
 

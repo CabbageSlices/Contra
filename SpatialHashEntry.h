@@ -55,12 +55,12 @@ template<class Object> void SpatialHashEntry<Object>::updateBoundingBox() {
         return;
     }
 
-    previousBoundingBox = object.lock()->getHitbox().getTotalHitboxWorldSpace();
+    previousBoundingBox = object->getHitbox().getTotalHitboxWorldSpace();
 }
 
 template<class Object> bool SpatialHashEntry<Object>::checkObjectExists() {
 
-    return bool(object.lock());
+    return bool(object);
 }
 
 template<class Object> std::shared_ptr<Object> SpatialHashEntry<Object>::getObject() {
