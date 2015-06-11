@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <memory>
 #include <boost/functional/hash.hpp>
-#include <set>
+#include <unordered_set>
 
 
 //the key-value pair for spatial hash should be <ivec2, map<unsigned, hashentry> >
@@ -23,6 +23,16 @@ struct Hasher {
         boost::hash_combine(seed, point.y);
 
         return seed;
+    }
+};
+
+template<class T>
+struct SetHasher {
+
+    size_t operator()(const std::shared_ptr<SpatialHashEntry<T> > &entry) const {
+
+        boost::hash<unsigned> hasher;
+        return hasher(entry->getId());
     }
 };
 
@@ -43,7 +53,7 @@ class SpatialHash {
         void remove(std::shared_ptr<HashEntry> &entry);
         void updateLocation(std::shared_ptr<HashEntry> &entry);
 
-        std::set<std::shared_ptr<HashEntry> > getSurroundingEntites(const sf::FloatRect boundingBox);
+        std::unordered_set<std::shared_ptr<HashEntry>, SetHasher<Object> > getSurroundingEntites(const sf::FloatRect boundingBox);
 
     private:
 
@@ -120,9 +130,9 @@ template<class Object> void SpatialHash<Object>::updateLocation(std::shared_ptr<
     insert(entry, currentGridBounds);
 }
 
-template<class Object> std::set<std::shared_ptr<SpatialHashEntry<Object> > > SpatialHash<Object>::getSurroundingEntites(const sf::FloatRect boundingBox) {
+template<class Object> std::unordered_set<std::shared_ptr<SpatialHashEntry<Object>>, SetHasher<Object> > SpatialHash<Object>::getSurroundingEntites(const sf::FloatRect boundingBox) {
 
-    std::set<std::shared_ptr<HashEntry> > container;
+    std::unordered_set<std::shared_ptr<HashEntry>, SetHasher<Object> > container;
 
     sf::IntRect enclosedGrid = calculateEnclosedGrid(boundingBox);
 

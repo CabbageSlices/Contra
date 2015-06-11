@@ -104,9 +104,9 @@ int main() {
                         shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6));
                         ///spawnPoints.push_back(point);
 
-                        for(int i = 1; i <= 100; ++i) {
+                        for(int i = 1; i <= 25; ++i) {
 
-                            shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(mousePosition.x + i * 512, mousePosition.y), Direction());
+                            shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(mousePosition.x + i * 256, mousePosition.y), Direction());
                             shared_ptr<EnemyHash> entry= make_shared<EnemyHash>(enemy);
                             enemies.push_back(entry);
 
@@ -183,14 +183,12 @@ int main() {
 //            }
 
             sf::FloatRect enemyHitbox = enemies[i]->getObject()->getHitbox().getActiveHitboxWorldSpace();
-            set<shared_ptr<EnemyHash> > hashedEnemies = hash.getSurroundingEntites(enemyHitbox);
+            std::unordered_set<shared_ptr<EnemyHash>, SetHasher<Enemy> > hashedEnemies = hash.getSurroundingEntites(enemyHitbox);
 
-            cout << "xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" << endl;
-            int endRange = glm::min(hashedEnemies.size(), enemies.size());
-            for(set<shared_ptr<EnemyHash> >::iterator it = hashedEnemies.begin(); it != hashedEnemies.end(); ++it) {
+            //cout << hashedEnemies.size() << endl;
+            for(int j = 0; j < enemies.size(); ++j) {
 
-                cout << (*it)->getId() << endl;
-                sf::FloatRect enemyHitbox2 = (*it)->getObject()->getHitbox().getActiveHitboxWorldSpace();
+                sf::FloatRect enemyHitbox2 = (enemies[j])->getObject()->getHitbox().getActiveHitboxWorldSpace();
 
                 if(enemyHitbox.intersects(enemyHitbox2)) {
 
@@ -200,8 +198,6 @@ int main() {
 
             ++i;
         }
-
-        cout << "********************************" << endl;
 
         vector<glm::vec2> playerPositions;
         playerPositions.push_back(player->getPosition());
