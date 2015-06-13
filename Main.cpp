@@ -180,10 +180,20 @@ int main() {
             ++i;
         }
 
-        for(unsigned i = 0; i < destructibleBlocks.size(); ++i) {
+        for(unsigned i = 0; i < destructibleBlocks.size();) {
 
             destructibleBlocks[i]->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
             destructibleBlocks[i]->updateRendering();
+
+            if(!destructibleBlocks[i]->checkIsAlive()) {
+
+                blockHash.remove(destructibleBlocks[i]);
+                destructibleBlocks.erase(destructibleBlocks.begin() + i);
+
+            } else {
+
+                ++i;
+            }
         }
 
         vector<glm::vec2> playerPositions;
