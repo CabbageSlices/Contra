@@ -38,11 +38,11 @@ class ObjectHitbox {
 
         //returns a hitbox of size 0 if there are no hitboxes
         sf::FloatRect getActiveHitboxWorldSpace() const;
-        sf::FloatRect getHitBoxWorldSpace(const unsigned &id) const;
+        sf::FloatRect getHitboxWorldSpace(const unsigned &id) const;
         sf::FloatRect getTotalHitboxWorldSpace() const;
 
         sf::FloatRect getActiveHitboxObjectSpace() const;
-        sf::FloatRect getHitBoxObjectSpace(const unsigned &id) const;
+        sf::FloatRect getHitboxObjectSpace(const unsigned &id) const;
 
     private:
 
