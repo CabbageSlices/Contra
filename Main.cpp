@@ -42,6 +42,7 @@ int main() {
 
     vector<shared_ptr<Enemy> > enemies;
     vector<shared_ptr<SpawnPoint> > spawnPoints;
+    InformationForSpawner<Enemy> spawnInfo(enemies, spawnPoints, camera.getCameraBounds(), worldBounds);
 
     SpatialHash<Enemy> hash(400, 400);
 
@@ -220,6 +221,8 @@ int main() {
         camera.update(deltaTime.asSeconds(), worldBounds);
 
         camera.applyCamera(window);
+
+        spawnInfo.currentCameraBounds = camera.getCameraBounds();
 
         sf::FloatRect collidingRect = player->getHitbox().getActiveHitboxWorldSpace();
 
