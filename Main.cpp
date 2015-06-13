@@ -102,7 +102,7 @@ int main() {
                         shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6));
                         ///spawnPoints.push_back(point);
 
-                        for(int i = 1; i <= 100; ++i) {
+                        for(int i = 1; i <= 50; ++i) {
 
                             shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(mousePosition.x + i * 128, mousePosition.y), Direction());
                             shared_ptr<EnemyHash> entry= make_shared<EnemyHash>(enemy);
@@ -184,9 +184,9 @@ int main() {
             vector<shared_ptr<EnemyHash> > hashedEnemies = hash.getSurroundingEntites(enemyHitbox);
 
             int endRange = glm::min(hashedEnemies.size(), enemies.size());
-            for(unsigned j = 0; j < endRange; ++j) {
+            for(unsigned j = 0; j < enemies.size(); ++j) {
 
-                sf::FloatRect enemyHitbox2 = hashedEnemies[j]->getObject()->getHitbox().getActiveHitboxWorldSpace();
+                sf::FloatRect enemyHitbox2 = enemies[j]->getObject()->getHitbox().getActiveHitboxWorldSpace();
 
                 if(enemyHitbox.intersects(enemyHitbox2)) {
 
