@@ -44,7 +44,7 @@ int main() {
     vector<shared_ptr<SpawnPoint> > spawnPoints;
     InformationForSpawner<Enemy> spawnInfo(enemies, spawnPoints, camera.getCameraBounds(), worldBounds);
 
-    SpatialHash<Enemy> hash(400, 400);
+    SpatialHash<Enemy> hash(256, 256);
 
     bool slowed = false;
 
@@ -102,22 +102,13 @@ int main() {
                         shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6));
                         ///spawnPoints.push_back(point);
 
-                        for(int i = 1; i <= 50; ++i) {
+                        for(int i = 1; i <= 25; ++i) {
 
-                            shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(mousePosition.x + i * 128, mousePosition.y), Direction());
+                            shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(mousePosition.x + i * 256, mousePosition.y), Direction());
                             enemies.push_back(enemy);
 
                             hash.insert(enemy);
                         }
-
-                        for(int i = 1; i <= 50; ++i) {
-
-                            shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(mousePosition.x + i * 128, mousePosition.y), Direction());
-                            enemies.push_back(enemy);
-
-                            hash.insert(enemy);
-                        }
-
 
                     } else {
 
@@ -195,7 +186,7 @@ int main() {
 //                player->getHit();
 //            }
 
-            sf::FloatRect hitbox = enemies[i]->getHitbox().getActiveHitboxWorldSpace();
+            sf::FloatRect hitbox = enemies[0]->getHitbox().getActiveHitboxWorldSpace();
             std::unordered_set<shared_ptr<Enemy> > colliding = hash.getSurroundingEntites(hitbox);
 
             for(auto it = colliding.begin(); it != colliding.end(); ++it) {
@@ -244,9 +235,13 @@ int main() {
         tileMap.draw(window, topLeft, bottomRight);
         player->draw(window);
 
-        for(unsigned i = 0; i < enemies.size(); ++i) {
+        sf::FloatRect playerHitbox = player->getHitbox().getActiveHitboxWorldSpace();
 
-            enemies[i]->draw(window);
+        //std::unordered_set<shared_ptr<Enemy> > toDraw = hash.getSurroundingEntites(playerHitbox);
+
+        for(auto it = enemies.begin(); it != enemies.end(); ++it) {
+
+            (*it)->draw(window);
         }
 
         block.draw(window);

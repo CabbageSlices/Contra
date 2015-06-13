@@ -116,7 +116,7 @@ template<class T> std::unordered_set<std::shared_ptr<T> > SpatialHash<T>::getSur
 
             for(auto it = objects.first; it != objects.second; ++it) {
 
-                if(container.find(it->second) != container.end())
+                if(container.find(it->second) == container.end())
                 container.insert(it->second);
             }
         }
