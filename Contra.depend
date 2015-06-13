@@ -326,7 +326,7 @@
 	"glm/glm.hpp"
 	"ObjectHitbox.h"
 
-1433303787 c:\users\nimesh\desktop\c++\github\contra\objecthitbox.h
+1434223260 c:\users\nimesh\desktop\c++\github\contra\objecthitbox.h
 	<SFML/Graphics.hpp>
 	"glm/glm.hpp"
 	<vector>
@@ -376,7 +376,7 @@
 1432770771 c:\users\nimesh\desktop\c++\github\contra\direction.h
 	"glm/glm.hpp"
 
-1432770771 source:c:\users\nimesh\desktop\c++\github\contra\camera.cpp
+1434223260 source:c:\users\nimesh\desktop\c++\github\contra\camera.cpp
 	"Camera.h"
 	"glm/gtx/compatibility.hpp"
 	<iostream>
@@ -423,13 +423,14 @@
 	"Enemy.h"
 	<iostream>
 
-1433566482 c:\users\nimesh\desktop\c++\github\contra\enemyspawners.h
+1434221245 c:\users\nimesh\desktop\c++\github\contra\enemyspawners.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
 	<vector>
 	<memory>
 	"SpatialHashEntry.h"
+	"Direction.h"
 
 1432770771 source:c:\users\nimesh\desktop\c++\github\contra\entitybase.cpp
 	"EntityBase.h"
@@ -457,7 +458,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1433914869 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1434220976 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -495,7 +496,7 @@
 	<memory>
 	<vector>
 
-1433303215 source:c:\users\nimesh\desktop\c++\github\contra\objecthitbox.cpp
+1434223260 source:c:\users\nimesh\desktop\c++\github\contra\objecthitbox.cpp
 	"ObjectHitbox.h"
 	<iostream>
 
@@ -911,7 +912,7 @@
 1433304917 source:c:\users\nimesh\desktop\c++\github\contra\spatialhashentry.cpp
 	"SpatialHashEntry.h"
 
-1433913688 c:\users\nimesh\desktop\c++\github\contra\spatialhashentry.h
+1434220976 c:\users\nimesh\desktop\c++\github\contra\spatialhashentry.h
 	"EntityBase.h"
 	"glm/glm.hpp"
 	"SFML/Graphics.hpp"
@@ -923,12 +924,13 @@
 	<algorithm>
 	<iterator>
 
-1433914880 c:\users\nimesh\desktop\c++\github\contra\spatialhash.h
+1434220976 c:\users\nimesh\desktop\c++\github\contra\spatialhash.h
 	"SpatialHashEntry.h"
 	"glm/glm.hpp"
 	<vector>
 	<unordered_map>
 	<memory>
 	<boost/functional/hash.hpp>
-	<set>
+	<unordered_set>
+	"Enemy.h"
 

@@ -61,12 +61,12 @@ unsigned ObjectHitbox::getHitboxCount() const {
 
 sf::FloatRect ObjectHitbox::getActiveHitboxWorldSpace() const {
 
-    return getHitBoxWorldSpace(idActiveHitbox);
+    return getHitboxWorldSpace(idActiveHitbox);
 }
 
-sf::FloatRect ObjectHitbox::getHitBoxWorldSpace(const unsigned &id) const {
+sf::FloatRect ObjectHitbox::getHitboxWorldSpace(const unsigned &id) const {
 
-    sf::FloatRect hitbox = getHitBoxObjectSpace(id);
+    sf::FloatRect hitbox = getHitboxObjectSpace(id);
 
     //check if hitbox is valid
     if(hitbox.width != 0) {
@@ -103,10 +103,10 @@ sf::FloatRect ObjectHitbox::getTotalHitboxWorldSpace() const {
 
 sf::FloatRect ObjectHitbox::getActiveHitboxObjectSpace() const {
 
-    return getHitBoxObjectSpace(idActiveHitbox);
+    return getHitboxObjectSpace(idActiveHitbox);
 }
 
-sf::FloatRect ObjectHitbox::getHitBoxObjectSpace(const unsigned &id) const {
+sf::FloatRect ObjectHitbox::getHitboxObjectSpace(const unsigned &id) const {
 
     if(checkIdValid(id)) {
 

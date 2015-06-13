@@ -29,7 +29,7 @@ int main() {
 
     sf::Clock timer;
 
-    sf::FloatRect worldBounds(0, 0, 1024 * 5, 768 * 2);
+    sf::FloatRect worldBounds(0, 0, 1024 * 10, 768 * 2);
 
     TileMap tileMap(worldBounds.width, worldBounds.height);
 
@@ -38,13 +38,11 @@ int main() {
     Enemy enemy(glm::vec2(0, 0), Direction());
     enemy.setInitialVelocity(glm::vec2(-TERMINAL_VELOCITY / 5, 0));
 
-    typedef SpatialHashEntry<Enemy> EnemyHash;
-    vector<shared_ptr<EnemyHash> > enemies;
+    vector<shared_ptr<Enemy> > enemies;
     vector<shared_ptr<SpawnPoint> > spawnPoints;
+    InformationForSpawner<Enemy> spawnInfo(enemies, spawnPoints, camera.getCameraBounds(), worldBounds);
 
-    SpatialHash<Enemy> hash(256, 256);
-
-    InformationForSpawner spawnInfo(enemies, spawnPoints, camera.getCameraBounds(), worldBounds);
+    SpatialHash<Enemy> hash(400, 400);
 
     bool slowed = false;
 
@@ -102,13 +100,20 @@ int main() {
                         shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6));
                         ///spawnPoints.push_back(point);
 
-                        for(int i = 1; i <= 100; ++i) {
+                        for(int i = 1; i <= 50; ++i) {
 
                             shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(mousePosition.x + i * 128, mousePosition.y), Direction());
-                            shared_ptr<EnemyHash> entry= make_shared<EnemyHash>(enemy);
-                            enemies.push_back(entry);
+                            enemies.push_back(enemy);
 
-                            hash.insert(entry);
+                            hash.insert(enemy);
+                        }
+
+                        for(int i = 1; i <= 50; ++i) {
+
+                            shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(mousePosition.x + i * 128, mousePosition.y), Direction());
+                            enemies.push_back(enemy);
+
+                            hash.insert(enemy);
                         }
 
 
@@ -153,16 +158,24 @@ int main() {
 
         for(unsigned i = 0; i < enemies.size();) {
 
-            enemies[i]->getObject()->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
+            sf::FloatRect previousBounds = enemies[i]->getHitbox().getActiveHitboxWorldSpace();
+            enemies[i]->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
 
-            if(!enemies[i]->getObject()->checkIsAlive()) {
+            if(!enemies[i]->checkIsAlive()) {
 
                 hash.remove(enemies[i]);
                 enemies.erase(enemies.begin() + i);
                 continue;
             }
 
-            hash.updateLocation(enemies[i]);
+            sf::FloatRect currentBounds = enemies[i]->getHitbox().getActiveHitboxWorldSpace();
+
+            if(hash.checkShouldUpdateHashLocation(previousBounds, currentBounds)) {
+
+                hash.remove(enemies[i], previousBounds);
+                hash.insert(enemies[i]);
+            }
+
 
 //            for(unsigned j = 0; j < playerBullets.size(); ++j) {
 //
@@ -180,15 +193,14 @@ int main() {
 //                player->getHit();
 //            }
 
-            sf::FloatRect enemyHitbox = enemies[i]->getObject()->getHitbox().getActiveHitboxWorldSpace();
-            vector<shared_ptr<EnemyHash> > hashedEnemies = hash.getSurroundingEntites(enemyHitbox);
+            sf::FloatRect hitbox = enemies[i]->getHitbox().getActiveHitboxWorldSpace();
+            std::unordered_set<shared_ptr<Enemy> > colliding = hash.getSurroundingEntites(hitbox);
 
-            int endRange = glm::min(hashedEnemies.size(), enemies.size());
-            for(unsigned j = 0; j < endRange; ++j) {
+            for(auto it = colliding.begin(); it != colliding.end(); ++it) {
 
-                sf::FloatRect enemyHitbox2 = hashedEnemies[j]->getObject()->getHitbox().getActiveHitboxWorldSpace();
+                sf::FloatRect rect = (*it)->getHitbox().getActiveHitboxWorldSpace();
 
-                if(enemyHitbox.intersects(enemyHitbox2)) {
+                if(hitbox.intersects(rect)) {
 
 
                 }
@@ -210,16 +222,13 @@ int main() {
 
         spawnInfo.currentCameraBounds = camera.getCameraBounds();
 
-        if(enemies.size() < 100)
-        spawnEnemyOffscreen(spawnInfo);
-
         sf::FloatRect collidingRect = player->getHitbox().getActiveHitboxWorldSpace();
 
         player->updateRendering();
         enem.updateRendering();
         for(unsigned i = 0; i < enemies.size(); ++i) {
 
-            enemies[i]->getObject()->updateRendering();
+            enemies[i]->updateRendering();
         }
 
         block.updateRendering();
@@ -235,7 +244,7 @@ int main() {
 
         for(unsigned i = 0; i < enemies.size(); ++i) {
 
-            enemies[i]->getObject()->draw(window);
+            enemies[i]->draw(window);
         }
 
         block.draw(window);
