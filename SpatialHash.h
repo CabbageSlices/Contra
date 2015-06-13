@@ -27,6 +27,7 @@ struct Hasher {
     }
 };
 
+template<class T>
 class SpatialHash {
 
     public:
@@ -36,31 +37,34 @@ class SpatialHash {
         //if its known that an objects arealdy been inserted into the hash its better to call updatePosition
         //instead of using insert
         //insert assumes object isn't inside the grid
-        void insert(std::shared_ptr<Enemy> &entry);
-        void remove(std::shared_ptr<Enemy> &entry);
+        void insert(std::shared_ptr<T> &entry);
+        void remove(std::shared_ptr<T> &entry);
+        void remove(std::shared_ptr<T> &entry, const sf::FloatRect &boundingBox); //remove the entity from the grid given its bounding box
 
-        std::unordered_set<std::shared_ptr<Enemy> > getSurroundingEntites(const sf::FloatRect boundingBox);
+        std::unordered_set<std::shared_ptr<T> > getSurroundingEntites(const sf::FloatRect boundingBox);
+
+        bool checkShouldUpdateHashLocation(const sf::FloatRect &previousBoundingBox, const sf::FloatRect &currentBoundingBox) const;
 
     private:
 
         //insert the entry from its given bounding box
-        void insert(std::shared_ptr<Enemy> &entry, const sf::IntRect &enclosedGrid);
+        void insert(std::shared_ptr<T> &entry, const sf::IntRect &enclosedGrid);
 
         //remove an entry from the given bounding box
-        void remove(std::shared_ptr<Enemy> &entry, const sf::IntRect &enclosedGrid);
+        void remove(std::shared_ptr<T> &entry, const sf::IntRect &enclosedGrid);
 
         //returns the extens of the grid enclosed by the object
         //width and height refer to the right edge of the grid, and not the actual widht and height
         //i.e width and height refer to left + width, top + height respectively
-        sf::IntRect calculateEnclosedGrid(const sf::FloatRect &entryBoundingBox);
+        sf::IntRect calculateEnclosedGrid(const sf::FloatRect &entryBoundingBox) const;
 
-        std::unordered_multimap<glm::ivec2, std::shared_ptr<Enemy>, Hasher> hash;
+        std::unordered_multimap<glm::ivec2, std::shared_ptr<T>, Hasher> hash;
 
         unsigned cellWidth;
         unsigned cellHeight;
 };
 
-SpatialHash::SpatialHash(const unsigned &hashCellWidth, const unsigned &hashCellHeight) :
+template<class T> SpatialHash<T>::SpatialHash(const unsigned &hashCellWidth, const unsigned &hashCellHeight) :
     hash(),
     cellWidth(hashCellWidth),
     cellHeight(hashCellHeight)
@@ -68,7 +72,7 @@ SpatialHash::SpatialHash(const unsigned &hashCellWidth, const unsigned &hashCell
 
     }
 
-void SpatialHash::insert(std::shared_ptr<Enemy> &entry) {
+template<class T> void SpatialHash<T>::insert(std::shared_ptr<T> &entry) {
 
     //get current bounding box to determine which cells the entry occupies
     sf::FloatRect boundingBox = entry->getHitbox().getActiveHitboxWorldSpace();
@@ -78,7 +82,7 @@ void SpatialHash::insert(std::shared_ptr<Enemy> &entry) {
     insert(entry, gridBounds);
 }
 
-void SpatialHash::remove(std::shared_ptr<Enemy> &entry) {
+template<class T> void SpatialHash<T>::remove(std::shared_ptr<T> &entry) {
 
     //don't use the latest hitbox since objects position in the hash is determined by his previous hitbox, not current one
     sf::FloatRect boundingBox = entry->getHitbox().getActiveHitboxWorldSpace();
@@ -89,9 +93,17 @@ void SpatialHash::remove(std::shared_ptr<Enemy> &entry) {
     remove(entry, gridBounds);
 }
 
-std::unordered_set<std::shared_ptr<Enemy> > SpatialHash::getSurroundingEntites(const sf::FloatRect boundingBox) {
+template<class T> void SpatialHash<T>::remove(std::shared_ptr<T> &entry, const sf::FloatRect &boundingBox) {
 
-    std::unordered_set<std::shared_ptr<Enemy> > container;
+    //find what grids object occupied and remove it from those places
+    sf::IntRect gridBounds = calculateEnclosedGrid(boundingBox);
+
+    remove(entry, gridBounds);
+}
+
+template<class T> std::unordered_set<std::shared_ptr<T> > SpatialHash<T>::getSurroundingEntites(const sf::FloatRect boundingBox) {
+
+    std::unordered_set<std::shared_ptr<T> > container;
 
     sf::IntRect enclosedGrid = calculateEnclosedGrid(boundingBox);
 
@@ -113,8 +125,15 @@ std::unordered_set<std::shared_ptr<Enemy> > SpatialHash::getSurroundingEntites(c
     return container;
 }
 
+template<class T> bool SpatialHash<T>::checkShouldUpdateHashLocation(const sf::FloatRect &previousBoundingBox, const sf::FloatRect &currentBoundingBox) const {
 
-void SpatialHash::insert(std::shared_ptr<Enemy> &entry, const sf::IntRect &enclosedGrid) {
+    sf::IntRect previousGridBounds = calculateEnclosedGrid(previousBoundingBox);
+    sf::IntRect currentGridBounds = calculateEnclosedGrid(currentBoundingBox);
+
+    return (previousGridBounds != currentGridBounds);
+}
+
+template<class T> void SpatialHash<T>::insert(std::shared_ptr<T> &entry, const sf::IntRect &enclosedGrid) {
 
     for(int y = enclosedGrid.top; y <= enclosedGrid.height; ++y) {
 
@@ -127,7 +146,7 @@ void SpatialHash::insert(std::shared_ptr<Enemy> &entry, const sf::IntRect &enclo
 }
 
 
-void SpatialHash::remove(std::shared_ptr<Enemy> &entry, const sf::IntRect &enclosedGrid) {
+template<class T> void SpatialHash<T>::remove(std::shared_ptr<T> &entry, const sf::IntRect &enclosedGrid) {
 
     for(int y = enclosedGrid.top; y <= enclosedGrid.height; ++y) {
 
@@ -149,7 +168,7 @@ void SpatialHash::remove(std::shared_ptr<Enemy> &entry, const sf::IntRect &enclo
     }
 }
 
-sf::IntRect SpatialHash::calculateEnclosedGrid(const sf::FloatRect &entryBoundingBox) {
+template<class T> sf::IntRect SpatialHash<T>::calculateEnclosedGrid(const sf::FloatRect &entryBoundingBox) const {
 
     sf::IntRect enclosedGrid;
 

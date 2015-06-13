@@ -43,7 +43,7 @@ int main() {
     vector<shared_ptr<Enemy> > enemies;
     vector<shared_ptr<SpawnPoint> > spawnPoints;
 
-    SpatialHash hash(256, 256);
+    SpatialHash<Enemy> hash(400, 400);
 
     bool slowed = false;
 
@@ -109,6 +109,14 @@ int main() {
                             hash.insert(enemy);
                         }
 
+                        for(int i = 1; i <= 50; ++i) {
+
+                            shared_ptr<Enemy> enemy = make_shared<Enemy>(glm::vec2(mousePosition.x + i * 128, mousePosition.y), Direction());
+                            enemies.push_back(enemy);
+
+                            hash.insert(enemy);
+                        }
+
 
                     } else {
 
@@ -151,16 +159,24 @@ int main() {
 
         for(unsigned i = 0; i < enemies.size();) {
 
-            hash.remove(enemies[i]);
+            sf::FloatRect previousBounds = enemies[i]->getHitbox().getActiveHitboxWorldSpace();
             enemies[i]->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
 
             if(!enemies[i]->checkIsAlive()) {
 
+                hash.remove(enemies[i]);
                 enemies.erase(enemies.begin() + i);
                 continue;
             }
 
-            hash.insert(enemies[i]);
+            sf::FloatRect currentBounds = enemies[i]->getHitbox().getActiveHitboxWorldSpace();
+
+            if(hash.checkShouldUpdateHashLocation(previousBounds, currentBounds)) {
+
+                hash.remove(enemies[i], previousBounds);
+                hash.insert(enemies[i]);
+            }
+
 
 //            for(unsigned j = 0; j < playerBullets.size(); ++j) {
 //
