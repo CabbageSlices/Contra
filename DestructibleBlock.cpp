@@ -15,6 +15,7 @@ DestructibleBlock::DestructibleBlock(const glm::vec2 &position) :
         hitbox.insertHitbox(sf::FloatRect(0, 0, 64, 64));
         hitbox.setActiveHitbox(0);
         sprite.getSprite().setPosition(sf::Vector2f(position.x, position.y));
+        updateRendering();
     }
 
 void DestructibleBlock::updatePhysics(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {

@@ -18,6 +18,8 @@ class Enemy : public EntityBase {
         void updateRendering();
         void setInitialVelocity(const glm::vec2 &velocity);
 
+        virtual CollisionResponse handleCollision(std::shared_ptr<EntityBase> collidingEntity);
+
     private:
 
         virtual CollisionResponse handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));

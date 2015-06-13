@@ -55,6 +55,13 @@ void Enemy::setInitialVelocity(const glm::vec2 &velocity) {
     hitboxMovementController.setVelocities(velocity);
 }
 
+CollisionResponse Enemy::handleCollision(shared_ptr<EntityBase> collidingEntity) {
+
+    collidingEntity->getHit(1);
+
+    return CollisionResponse();
+}
+
 CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
 
     vector<shared_ptr<Tile> > tiles = getSurroundingTiles(map, glm::vec2(TILE_SIZE, TILE_SIZE));
