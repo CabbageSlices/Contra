@@ -137,6 +137,17 @@ int main() {
 
         vector<shared_ptr<Bullet> > &playerBullets = player->getGun()->getBullets();
 
+        std::unordered_set<shared_ptr<DestructibleBlock> > collidingWithPlayer = blockHash.getSurroundingEntites(player->getHitbox().getActiveHitboxWorldSpace());
+
+        for(auto it = collidingWithPlayer.begin(); it != collidingWithPlayer.end(); ++it) {
+
+            if((*it)->getHitbox().getActiveHitboxWorldSpace().intersects(player->getHitbox().getActiveHitboxWorldSpace() )) {
+
+                CollisionResponse blockResponse = (*it)->handleCollision(player);
+                player->respondToCollision(blockResponse);
+            }
+        }
+
         for(unsigned i = 0; i < enemies.size();) {
 
             sf::FloatRect previousBounds = enemies[i]->getHitbox().getActiveHitboxWorldSpace();
