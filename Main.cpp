@@ -167,7 +167,6 @@ int main() {
 
         for(unsigned i = 0; i < enemies.size();) {
 
-            sf::FloatRect previousBounds = enemies[i]->getHitbox().getActiveHitboxWorldSpace();
             enemies[i]->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
 
             if(!enemies[i]->checkIsAlive()) {
@@ -176,7 +175,6 @@ int main() {
                 continue;
             }
 
-            sf::FloatRect currentBounds = enemies[i]->getHitbox().getActiveHitboxWorldSpace();
 
             for(unsigned j = 0; j < playerBullets.size(); ++j) {
 
