@@ -19,10 +19,13 @@ class Enemy : public EntityBase {
         void setInitialVelocity(const glm::vec2 &velocity);
 
         virtual CollisionResponse handleCollision(std::shared_ptr<EntityBase> collidingEntity);
+        virtual void respondToCollision(const CollisionResponse &response);
 
     private:
 
         virtual CollisionResponse handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
+
+        void changeDirectionHorizontally();
 };
 
 #endif // ENEMY_H_INCLUDED

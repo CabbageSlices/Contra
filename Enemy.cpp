@@ -29,10 +29,7 @@ void Enemy::updatePhysics(const float &deltaTime, const sf::FloatRect &worldBoun
 
     if(hitboxMovementController.moveAlongXAxis(deltaTime, worldBounds)) {
 
-        //change directions
-        glm::vec2 currentVelocity = hitboxMovementController.getVelocities();
-        currentVelocity.x *= -1;
-        hitboxMovementController.setVelocities(currentVelocity);
+        changeDirectionHorizontally();
     }
 
     handleTileCollisionHorizontally(map);
@@ -62,6 +59,14 @@ CollisionResponse Enemy::handleCollision(shared_ptr<EntityBase> collidingEntity)
     return CollisionResponse();
 }
 
+void Enemy::respondToCollision(const CollisionResponse &response) {
+
+    if(response.handledHorizontal) {
+
+        changeDirectionHorizontally();
+    }
+}
+
 CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
 
     vector<shared_ptr<Tile> > tiles = getSurroundingTiles(map, glm::vec2(TILE_SIZE, TILE_SIZE));
@@ -82,4 +87,12 @@ CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*co
     }
 
     return response;
+}
+
+void Enemy::changeDirectionHorizontally() {
+
+    //change directions
+    glm::vec2 currentVelocity = hitboxMovementController.getVelocities();
+    currentVelocity.x *= -1;
+    hitboxMovementController.setVelocities(currentVelocity);
 }
