@@ -141,17 +141,34 @@ int main() {
 
         for(auto it = collidingWithPlayer.begin(); it != collidingWithPlayer.end(); ++it) {
 
-            if((*it)->getHitbox().getActiveHitboxWorldSpace().intersects(player->getHitbox().getActiveHitboxWorldSpace() )) {
+            if((*it)->getHitbox().getActiveHitboxWorldSpace().intersects(player->getHitbox().getActiveHitboxWorldSpace() ) && (*it)->checkCanGetHit()) {
 
                 CollisionResponse blockResponse = (*it)->handleCollision(player);
                 player->respondToCollision(blockResponse);
             }
         }
 
+        for(unsigned i = 0; i < playerBullets.size();) {
+
+            sf::FloatRect bulletHitbox = playerBullets[i]->getHitbox().getActiveHitboxWorldSpace();
+            std::unordered_set<shared_ptr<DestructibleBlock> > collidingWithBullet = blockHash.getSurroundingEntites(bulletHitbox);
+
+            for(auto it = collidingWithBullet.begin(); it != collidingWithBullet.end(); ++it) {
+
+                if((*it)->getHitbox().getActiveHitboxWorldSpace().intersects(bulletHitbox) && (*it)->checkCanGetHit()) {
+
+                    playerBullets[i]->handleCollision(*it);
+                    break;
+                }
+            }
+
+            ++i;
+        }
+
         for(unsigned i = 0; i < enemies.size();) {
 
             sf::FloatRect previousBounds = enemies[i]->getHitbox().getActiveHitboxWorldSpace();
-            ///enemies[i]->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
+            enemies[i]->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
 
             if(!enemies[i]->checkIsAlive()) {
 
@@ -163,7 +180,7 @@ int main() {
 
             for(unsigned j = 0; j < playerBullets.size(); ++j) {
 
-                if(playerBullets[j]->getHitbox().getActiveHitboxWorldSpace().intersects(enemies[i]->getHitbox().getActiveHitboxWorldSpace()) && playerBullets[j]->checkIsAlive()) {
+                if(playerBullets[j]->getHitbox().getActiveHitboxWorldSpace().intersects(enemies[i]->getHitbox().getActiveHitboxWorldSpace()) && playerBullets[j]->checkIsAlive() && enemies[i]->checkCanGetHit()) {
 
                     playerBullets[j]->handleCollision(enemies[i]);
                 }
@@ -175,6 +192,17 @@ int main() {
             if(enemyHitbox.intersects(playerHitbox) && player->checkCanGetHit()) {
 
                 enemies[i]->handleCollision(player);
+            }
+
+            std::unordered_set<shared_ptr<DestructibleBlock> > collidingWithEnemies = blockHash.getSurroundingEntites(enemyHitbox);
+
+            for(auto it = collidingWithEnemies.begin(); it != collidingWithEnemies.end(); ++it) {
+
+                if((*it)->getHitbox().getActiveHitboxWorldSpace().intersects(enemyHitbox) && (*it)->checkCanGetHit() && enemies[i]->checkCanGetHit()) {
+
+                    CollisionResponse response = (*it)->handleCollision(enemies[i]);
+                    enemies[i]->respondToCollision(response);
+                }
             }
 
             ++i;
@@ -205,6 +233,8 @@ int main() {
         camera.applyCamera(window);
 
         spawnInfo.currentCameraBounds = camera.getCameraBounds();
+
+        spawnEnemyOffscreen(spawnInfo);
 
         player->updateRendering();
         for(unsigned i = 0; i < enemies.size(); ++i) {
