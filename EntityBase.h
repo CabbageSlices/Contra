@@ -45,6 +45,8 @@ class EntityBase {
         HitboxMovementController& getMovementController();
         const glm::vec2 getPosition() const;
 
+        void setHealth(const unsigned &newVal);
+
     protected:
 
         //get all tiles that are covered by the surface area of this object

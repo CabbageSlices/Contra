@@ -10,7 +10,23 @@ using std::shared_ptr;
 using std::make_shared;
 
 TurretEnemy::TurretEnemy(const glm::vec2 &position, const int initialHealth) :
-    ShootingEntity(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), initialHealth)
+    ShootingEntity(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), initialHealth),
+    stateDurationTimer(),
+    stateDuration(sf::seconds(0)),
+    STATE_HIDING(0),
+    STATE_COMING_OUT_OF_HIDING(0),
+    STATE_GOING_INTO_HIDING(0),
+    STATE_SHOOTING(0),
+    currentState(0),
+    DOWN(0),
+    DOWN_LEFT(0),
+    LEFT(0),
+    UP_LEFT(0),
+    UP(0),
+    UP_RIGHT(0),
+    RIGHT(0),
+    DOWN_RIGHT(0),
+    sprite(sf::milliseconds(90)),
     {
         entity.setSize(sf::Vector2f(128, 128));
         hitbox.setOrigin(position);
@@ -25,6 +41,13 @@ void TurretEnemy::updatePhysics(const float& deltaTime, const sf::FloatRect& wor
 
     //update previous bullets
     gun->updatePhysics(deltaTime, worldBounds, map);
+
+    if(currentState != STATE_SHOOTING) {
+
+        //enemy isn't shooting so no need to fire new bullets
+        //the gun needs to update though so keep this after the gun physics update
+        return;
+    }
 
     //start shooting at the closest player
     unsigned idClosestTarget = getIdOfClosestTarget(targetPositions);
@@ -42,6 +65,37 @@ void TurretEnemy::updatePhysics(const float& deltaTime, const sf::FloatRect& wor
 void TurretEnemy::updateRendering() {
 
     gun->updateRendering();
+
+    if(sprite.animate()) {
+
+        //animation finished so if its the transition animation then complete transitions
+        if(currentState == STATE_COMING_OUT_OF_HIDING) {
+
+            setState(STATE_SHOOTING);
+
+        } else if(currentState == STATE_GOING_INTO_HIDING) {
+
+            setState(STATE_HIDING);
+        }
+    }
+
+    //turret only really from hiding or shooting
+    //determine if turret needs to start a transition animation
+    //and if so which animation
+    if(stateDurationTimer.getElapsedTime() > stateDuration && (currentState == STATE_HIDING || currentState == STATE_SHOOTING)) {
+
+        //time to change to an animated state
+        if(currentState == STATE_HIDING) {
+
+            setState(STATE_COMING_OUT_OF_HIDING);
+
+        } else if(currentState == STATE_SHOOTING){
+
+            setState(STATE_GOING_INTO_HIDING);
+        }
+
+        stateDurationTimer.restart();
+    }
 }
 
 void TurretEnemy::createHitboxes(const vector<sf::FloatRect> &hitboxes) {
@@ -123,4 +177,12 @@ void TurretEnemy::determineDirection(const glm::vec2 &targetPosition) {
 
         direction.vertical = VerticalDirection::STRAIGHT;
     }
+}
+
+void TurretEnemy::setState(const unsigned &newState) {
+
+    currentState = newState;
+    sprite.setAnimationState(newState);
+
+    stateDurationTimer.restart();
 }

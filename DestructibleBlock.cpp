@@ -19,16 +19,13 @@ DestructibleBlock::DestructibleBlock(const glm::vec2 &position) :
         updateRendering();
     }
 
-void DestructibleBlock::updatePhysics(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {
+void DestructibleBlock::updateRendering() {
 
     if(sprite.animate() && sprite.getAnimationState() == DESTRYOING) {
 
         sprite.setAnimationState(DESTROYED);
         health = 0;
     }
-}
-
-void DestructibleBlock::updateRendering() {
 
     sprite.getSprite().setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
 }

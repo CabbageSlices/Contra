@@ -25,6 +25,7 @@ class AnimatedSprite {
         bool animate();
         void draw(sf::RenderWindow &window);
 
+        void setNextFrameTime(const sf::Time &nextFrameTime);
         void setAnimationState(const unsigned &animationState);
         void setFrame(const unsigned &currentFrame);
 

@@ -48,6 +48,11 @@ const glm::vec2 EntityBase::getPosition() const {
     return hitbox.getOrigin();
 }
 
+void EntityBase::setHealth(const unsigned &newVal) {
+
+    health = newVal;
+}
+
 vector<shared_ptr<Tile> > EntityBase::getSurroundingTiles(const TileMap &map, const glm::vec2 &areaPadding) {
 
     sf::FloatRect bounding = hitbox.getActiveHitboxWorldSpace();

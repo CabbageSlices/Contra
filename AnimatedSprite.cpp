@@ -27,7 +27,7 @@ unsigned AnimatedSprite::insertTextureRect(const unsigned &animationState, const
     //create textureRects for the given animation state if nothing has been created yet
     if(currentStateTextureRects.count(animationState) == 0) {
 
-        pair<unsigned, TextureRectContainer> stateTextureRect = make_pair(10, TextureRectContainer());
+        pair<unsigned, TextureRectContainer> stateTextureRect = make_pair(animationState, TextureRectContainer());
         currentStateTextureRects.insert(stateTextureRect);
     }
 
@@ -77,6 +77,12 @@ void AnimatedSprite::draw(sf::RenderWindow &window) {
     }
 
     window.draw(sprite);
+}
+
+void AnimatedSprite::setNextFrameTime(const sf::Time &nextFrameTime) {
+
+    timeToNextFrame = nextFrameTime;
+    resetAnimation();
 }
 
 void AnimatedSprite::setAnimationState(const unsigned &animationState) {
