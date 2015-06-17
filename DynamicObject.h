@@ -19,6 +19,10 @@ class DynamicObject : public EntityBase {
             {
 
             }
+
+        virtual ~DynamicObject() {
+
+        }
 };
 
 //calculates the minimum distance required for rectA to move in order to escape collision with rectB

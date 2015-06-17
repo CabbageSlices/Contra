@@ -13,6 +13,10 @@ class ShootingEntity : public EntityBase {
 
         ShootingEntity(const glm::vec2 &gravity, const glm::vec2 &movementVelocity, const glm::vec2 &terminalVelocity, const unsigned &initialHealth);
 
+        virtual ~ShootingEntity() {
+
+        }
+
         virtual void updatePhysics(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map) = 0;
         virtual void draw(sf::RenderWindow &window);
 

@@ -19,6 +19,10 @@ class Bullet : public EntityBase {
 
         Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, const float &bulletVel = 11.f);
 
+        virtual ~Bullet() {
+
+        }
+
         virtual void updatePhysics(const float &delta, const sf::FloatRect &worldBounds, TileMap& map);
         void updateRendering();
         virtual bool checkIsAlive();

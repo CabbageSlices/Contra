@@ -21,6 +21,10 @@ class EntityBase {
 
         EntityBase(const glm::vec2 &gravity, const glm::vec2 &movementVelocity, const glm::vec2 &terminalVelocity, const unsigned &initialHealth);
 
+        virtual ~EntityBase() {
+
+        }
+
         virtual void updatePhysics(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map) = 0;
         virtual void draw(sf::RenderWindow &window);
         virtual bool checkIsAlive();

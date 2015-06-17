@@ -21,6 +21,10 @@ class TurretEnemy : public ShootingEntity {
 
         TurretEnemy(const glm::vec2 &position, const int initialHealth = 5);
 
+        virtual ~TurretEnemy() {
+
+        }
+
         void createHitboxes(const std::vector<sf::FloatRect> &hitboxes);
 
         void updatePhysics(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map, const std::vector<glm::vec2> &targetPositions);

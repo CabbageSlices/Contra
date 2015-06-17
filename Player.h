@@ -29,6 +29,10 @@ class Player : public ShootingEntity{
 
         Player(const PlayerKeys& keyConfiguration = PlayerKeys());
 
+        virtual ~Player() {
+
+        }
+
         void handleInputEvents(sf::Event& event, sf::RenderWindow& window);
         void handleKeystate(sf::RenderWindow& window);
 
