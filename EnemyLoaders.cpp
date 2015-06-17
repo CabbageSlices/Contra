@@ -1,4 +1,5 @@
 #include "EnemyLoaders.h"
+#include "TurretEnemy.h"
 
 bool loadEnemy(TurretEnemy &enemy, const std::string &dataFileName) {
 
@@ -44,5 +45,4 @@ bool loadEnemy(TurretEnemy &enemy, const std::string &dataFileName) {
 
     //create hitboxes
     enemy.hitbox.insertHitbox(sf::FloatRect(91, 88, 27, 12));
-    enemy.hitbox.insertHitbox()
 }

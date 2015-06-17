@@ -4,7 +4,10 @@
 #include <SFML/Graphics.hpp>
 #include "glm/glm.hpp"
 
+#include <map>
 #include <vector>
+
+const int DEFAULT_STATE = 0;
 
 //keeps track of an object's hitboxes, saves multiple hitboxes but only allows one hitbox to be active at a given time
 //all hitboxes are positioned relative to the given origin
@@ -19,10 +22,10 @@ class ObjectHitbox {
         ObjectHitbox();
 
         //given hitbox's position should be relative to the origin of the object
-        void insertHitbox(const sf::FloatRect &hitboxObjectSpace);
+        void insertHitbox(const sf::FloatRect &hitboxObjectSpace, const unsigned &state = DEFAULT_STATE);
 
         //after removal the active hitbox isn't guaranteed to be correct, so you must set the hitbox again
-        void removeHitbox(const unsigned &id);
+        void removeHitbox(const unsigned &id, const unsigned &state = DEFAULT_STATE);
 
         void clearHitboxes();
 
@@ -31,27 +34,32 @@ class ObjectHitbox {
 
         //all in pixels
         void setOrigin(const glm::vec2& position);
-        void setActiveHitbox(const unsigned &id); //does nothing if id is invalid
+        void setActiveHitbox(const unsigned &id, const unsigned &state = DEFAULT_STATE); //does nothing if id is invalid
 
         glm::vec2 getOrigin() const;
-        unsigned getHitboxCount() const;
+        unsigned getHitboxCount(const unsigned &state = DEFAULT_STATE) const;
 
         //returns a hitbox of size 0 if there are no hitboxes
         sf::FloatRect getActiveHitboxWorldSpace() const;
-        sf::FloatRect getHitboxWorldSpace(const unsigned &id) const;
-        sf::FloatRect getTotalHitboxWorldSpace() const;
+        sf::FloatRect getHitboxWorldSpace(const unsigned &id, const unsigned &state = DEFAULT_STATE) const;
+        sf::FloatRect getTotalHitboxWorldSpace(const unsigned &state = DEFAULT_STATE) const;//returns a hitbox that encompasses all of the objects hitboxes for the given state
+        sf::FloatRect getTotalHitboxWorldSpace() const;//returns the encompassing hitbox for the current state
 
         sf::FloatRect getActiveHitboxObjectSpace() const;
-        sf::FloatRect getHitboxObjectSpace(const unsigned &id) const;
+        sf::FloatRect getHitboxObjectSpace(const unsigned &id, const unsigned &state = DEFAULT_STATE) const;
 
     private:
 
-        bool checkIdValid(const unsigned &id) const;
+        bool checkIdValid(const unsigned &id, const unsigned &state = DEFAULT_STATE) const;
 
         glm::vec2 origin;
 
         //keep track of hitboxes, in object space
-        std::vector<sf::FloatRect> hitboxes;
+        //keep a set of hitboxes for each state the object can be in
+        //make this mutable because you can't use this through  const functions
+        mutable std::map<unsigned, std::vector<sf::FloatRect> > hitboxes;
+
+        unsigned currentState;
         unsigned idActiveHitbox;
 };
 

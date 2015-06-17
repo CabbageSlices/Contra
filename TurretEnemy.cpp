@@ -26,7 +26,7 @@ TurretEnemy::TurretEnemy(const glm::vec2 &position, const int initialHealth) :
     UP_RIGHT(0),
     RIGHT(0),
     DOWN_RIGHT(0),
-    sprite(sf::milliseconds(90)),
+    sprite(sf::milliseconds(90))
     {
         entity.setSize(sf::Vector2f(128, 128));
         hitbox.setOrigin(position);
@@ -154,11 +154,11 @@ void TurretEnemy::determineDirection(const glm::vec2 &targetPosition) {
 
     if(angleDegrees <= 60 && angleDegrees >= -60) {
 
-        direction.horizontal = RIGHT;
+        direction.horizontal = HorizontalDirection::RIGHT;
 
     } else if(angleDegrees >= 120 || angleDegrees <= -120) {
 
-        direction.horizontal = LEFT;
+        direction.horizontal = HorizontalDirection::LEFT;
 
     } else {
 

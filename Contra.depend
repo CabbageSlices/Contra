@@ -292,11 +292,11 @@
 	<cmath>
 	<iostream>
 
-1432770771 source:c:\users\nimesh\desktop\c++\github\contra\animatedsprite.cpp
+1434413353 source:c:\users\nimesh\desktop\c++\github\contra\animatedsprite.cpp
 	"AnimatedSprite.h"
 	<utility>
 
-1432770771 c:\users\nimesh\desktop\c++\github\contra\animatedsprite.h
+1434346291 c:\users\nimesh\desktop\c++\github\contra\animatedsprite.h
 	<map>
 	<vector>
 	<string>
@@ -326,9 +326,10 @@
 	"glm/glm.hpp"
 	"ObjectHitbox.h"
 
-1434223260 c:\users\nimesh\desktop\c++\github\contra\objecthitbox.h
+1434508089 c:\users\nimesh\desktop\c++\github\contra\objecthitbox.h
 	<SFML/Graphics.hpp>
 	"glm/glm.hpp"
+	<map>
 	<vector>
 
 1432770771 c:\users\nimesh\desktop\c++\github\contra\tilemap.h
@@ -344,7 +345,7 @@
 	"glm/glm.hpp"
 	"HitboxMovementController.h"
 
-1433568557 c:\users\nimesh\desktop\c++\github\contra\entitybase.h
+1434415117 c:\users\nimesh\desktop\c++\github\contra\entitybase.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"TileMap.h"
@@ -390,11 +391,11 @@
 
 1432770771 c:\users\nimesh\desktop\c++\github\contra\globalconstants.h
 
-1434250886 source:c:\users\nimesh\desktop\c++\github\contra\destructibleblock.cpp
+1434412487 source:c:\users\nimesh\desktop\c++\github\contra\destructibleblock.cpp
 	"DestructibleBlock.h"
 	<iostream>
 
-1433305828 c:\users\nimesh\desktop\c++\github\contra\destructibleblock.h
+1434508368 c:\users\nimesh\desktop\c++\github\contra\destructibleblock.h
 	"DynamicObject.h"
 	"AnimatedSprite.h"
 	<memory>
@@ -432,7 +433,7 @@
 	"SpatialHashEntry.h"
 	"Direction.h"
 
-1432770771 source:c:\users\nimesh\desktop\c++\github\contra\entitybase.cpp
+1434413521 source:c:\users\nimesh\desktop\c++\github\contra\entitybase.cpp
 	"EntityBase.h"
 
 1432770771 source:c:\users\nimesh\desktop\c++\github\contra\globalconstants.cpp
@@ -458,7 +459,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1434251337 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1434412508 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -489,14 +490,17 @@
 	"Direction.h"
 	<memory>
 
-1432770771 c:\users\nimesh\desktop\c++\github\contra\turretenemy.h
+1434499274 c:\users\nimesh\desktop\c++\github\contra\turretenemy.h
 	"ShootingEntity.h"
 	"Direction.h"
 	"ShootingEntity.h"
+	"AnimatedSprite.h"
 	<memory>
 	<vector>
+	<string>
+	"EnemyLoaders.h"
 
-1434223260 source:c:\users\nimesh\desktop\c++\github\contra\objecthitbox.cpp
+1434508089 source:c:\users\nimesh\desktop\c++\github\contra\objecthitbox.cpp
 	"ObjectHitbox.h"
 	<iostream>
 
@@ -525,7 +529,7 @@
 	"glm/glm.hpp"
 	<iostream>
 
-1432770771 source:c:\users\nimesh\desktop\c++\github\contra\turretenemy.cpp
+1434508225 source:c:\users\nimesh\desktop\c++\github\contra\turretenemy.cpp
 	"TurretEnemy.h"
 	"GlobalConstants.h"
 	<cmath>
@@ -933,4 +937,11 @@
 	<boost/functional/hash.hpp>
 	<unordered_set>
 	"Enemy.h"
+
+1434501201 source:c:\users\nimesh\desktop\c++\github\contra\enemyloaders.cpp
+	"EnemyLoaders.h"
+	"TurretEnemy.h"
+
+1434499274 c:\users\nimesh\desktop\c++\github\contra\enemyloaders.h
+	<string>
 

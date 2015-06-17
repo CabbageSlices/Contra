@@ -12,7 +12,11 @@ class DestructibleBlock : public DynamicObject {
 
         DestructibleBlock(const glm::vec2 &position);
 
-        virtual void updatePhysics(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map);
+        virtual void updatePhysics(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {
+
+            //empty, only here so vtable is created
+        }
+
         void updateRendering();
 
         virtual bool checkCanGetHit();

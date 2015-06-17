@@ -87,6 +87,8 @@
 		<Unit filename="DynamicObject.h" />
 		<Unit filename="Enemy.cpp" />
 		<Unit filename="Enemy.h" />
+		<Unit filename="EnemyLoaders.cpp" />
+		<Unit filename="EnemyLoaders.h" />
 		<Unit filename="EnemySpawners.h" />
 		<Unit filename="EntityBase.cpp" />
 		<Unit filename="EntityBase.h" />
