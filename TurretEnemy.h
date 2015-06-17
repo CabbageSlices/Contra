@@ -34,6 +34,8 @@ class TurretEnemy : public ShootingEntity {
             //empty since turret enemies use the other update function
         }
 
+        virtual void draw(sf::RenderWindow &window);
+
         friend bool loadEnemy(TurretEnemy &enemy, const std::string &dataFileName);
 
     private:

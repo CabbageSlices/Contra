@@ -11,6 +11,7 @@
 #include "TurretEnemy.h"
 #include "DestructibleBlock.h"
 #include "SpatialHash.h"
+#include "EnemyLoaders.h"
 
 #include <vector>
 #include <memory>
@@ -29,7 +30,7 @@ int main() {
 
     sf::Clock timer;
 
-    sf::FloatRect worldBounds(0, 0, 1024 * 10, 768 * 2);
+    sf::FloatRect worldBounds(0, 0, 1024, 768);
 
     TileMap tileMap(worldBounds.width, worldBounds.height);
 
@@ -43,6 +44,9 @@ int main() {
     SpatialHash<DestructibleBlock> blockHash(TILE_SIZE, TILE_SIZE);
 
     bool slowed = false;
+
+    TurretEnemy enem(glm::vec2(100, 500), 8);
+    loadEnemy(enem, "asdf");
 
     while(window.isOpen()) {
 
@@ -239,6 +243,8 @@ int main() {
             enemies[i]->updateRendering();
         }
 
+        enem.updateRendering();
+
         window.clear();
 
         sf::FloatRect cameraBounds = camera.getCameraBounds();
@@ -247,6 +253,8 @@ int main() {
 
         tileMap.draw(window, topLeft, bottomRight);
         player->draw(window);
+
+        enem.draw(window);
 
         for(unsigned i = 0; i < enemies.size(); ++i) {
 

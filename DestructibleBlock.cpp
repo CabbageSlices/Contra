@@ -52,7 +52,7 @@ CollisionResponse DestructibleBlock::handleCollision(shared_ptr<EntityBase> coll
     sf::FloatRect collidingRect = collidingEntity->getHitbox().getActiveHitboxWorldSpace();
     sf::FloatRect rect = hitbox.getActiveHitboxWorldSpace();
 
-    if(!rect.intersects(collidingRect) || checkCanGetHit()) {
+    if(!rect.intersects(collidingRect) || !checkCanGetHit()) {
 
         return response;
     }

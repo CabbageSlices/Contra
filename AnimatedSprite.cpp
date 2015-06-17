@@ -1,7 +1,10 @@
 #include "AnimatedSprite.h"
 
 #include <utility>
+#include <iostream>
 
+using std::cout;
+using std::endl;
 using std::pair;
 using std::make_pair;
 
@@ -114,6 +117,11 @@ void AnimatedSprite::setFrame(const unsigned &currentFrame) {
 unsigned AnimatedSprite::getAnimationState() const {
 
     return currentAnimationState;
+}
+
+unsigned AnimatedSprite::getFrame() const {
+
+    return frame;
 }
 
 sf::Sprite& AnimatedSprite::getSprite() {

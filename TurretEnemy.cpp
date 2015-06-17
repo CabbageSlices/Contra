@@ -26,7 +26,7 @@ TurretEnemy::TurretEnemy(const glm::vec2 &position, const int initialHealth) :
     UP_RIGHT(0),
     RIGHT(0),
     DOWN_RIGHT(0),
-    sprite(sf::milliseconds(90))
+    sprite(sf::milliseconds(250))
     {
         entity.setSize(sf::Vector2f(128, 128));
         hitbox.setOrigin(position);
@@ -42,12 +42,19 @@ void TurretEnemy::updatePhysics(const float& deltaTime, const sf::FloatRect& wor
     //update previous bullets
     gun->updatePhysics(deltaTime, worldBounds, map);
 
+    unsigned frame = sprite.getFrame();
+
     if(currentState != STATE_SHOOTING) {
 
         //enemy isn't shooting so no need to fire new bullets
         //the gun needs to update though so keep this after the gun physics update
+        //when not shooting the animation frame adn the hitbox match up
+        hitbox.setActiveHitbox(frame, currentState);
         return;
     }
+
+    //when shooting there is only one hitbox
+    hitbox.setActiveHitbox(0, currentState);
 
     //start shooting at the closest player
     unsigned idClosestTarget = getIdOfClosestTarget(targetPositions);
@@ -96,6 +103,14 @@ void TurretEnemy::updateRendering() {
 
         stateDurationTimer.restart();
     }
+
+    glm::vec2 position = hitbox.getOrigin();
+    sprite.getSprite().setPosition(position.x, position.y);
+}
+
+void TurretEnemy::draw(sf::RenderWindow &window) {
+
+    sprite.draw(window);
 }
 
 void TurretEnemy::createHitboxes(const vector<sf::FloatRect> &hitboxes) {
@@ -183,6 +198,7 @@ void TurretEnemy::setState(const unsigned &newState) {
 
     currentState = newState;
     sprite.setAnimationState(newState);
+    hitbox.setActiveHitbox(0, newState);
 
     stateDurationTimer.restart();
 }

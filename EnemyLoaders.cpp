@@ -24,7 +24,7 @@ bool loadEnemy(TurretEnemy &enemy, const std::string &dataFileName) {
     enemy.sprite.insertTextureRect(enemy.STATE_COMING_OUT_OF_HIDING, sf::IntRect(162, 0, 38, 100));
     enemy.sprite.insertTextureRect(enemy.STATE_COMING_OUT_OF_HIDING, sf::IntRect(243, 0, 35, 100));
     enemy.sprite.insertTextureRect(enemy.STATE_COMING_OUT_OF_HIDING, sf::IntRect(328, 0, 31, 100));
-    enemy.sprite.insertTextureRect(enemy.STATE_COMING_OUT_OF_HIDING, sf::IntRect(426, 0, 32, 10));
+    enemy.sprite.insertTextureRect(enemy.STATE_COMING_OUT_OF_HIDING, sf::IntRect(426, 0, 32, 100));
 
     enemy.sprite.insertTextureRect(enemy.STATE_GOING_INTO_HIDING, sf::IntRect(426, 0, 32, 100));
     enemy.sprite.insertTextureRect(enemy.STATE_GOING_INTO_HIDING, sf::IntRect(328, 0, 31, 100));
@@ -41,8 +41,23 @@ bool loadEnemy(TurretEnemy &enemy, const std::string &dataFileName) {
     enemy.RIGHT= enemy.sprite.insertTextureRect(enemy.STATE_SHOOTING, sf::IntRect(71, 200, 33, 100));
     enemy.DOWN_RIGHT = enemy.sprite.insertTextureRect(enemy.STATE_SHOOTING, sf::IntRect(161, 200, 44, 100));
 
-    enemy.setState(enemy.STATE_HIDING);
+    //create hitboxes for each state and frame of animation
+    ///hitbox positions are relative to origin of the enemy
+    enemy.hitbox.insertHitbox(sf::FloatRect(1, 1, 1, 1), enemy.STATE_HIDING);
 
-    //create hitboxes
-    enemy.hitbox.insertHitbox(sf::FloatRect(91, 88, 27, 12));
+    enemy.hitbox.insertHitbox(sf::FloatRect(0, 88, 28, 12), enemy.STATE_COMING_OUT_OF_HIDING);
+    enemy.hitbox.insertHitbox(sf::FloatRect(0, 75, 38, 25), enemy.STATE_COMING_OUT_OF_HIDING);
+    enemy.hitbox.insertHitbox(sf::FloatRect(0, 58, 35, 44), enemy.STATE_COMING_OUT_OF_HIDING);
+    enemy.hitbox.insertHitbox(sf::FloatRect(0, 35, 31, 62), enemy.STATE_COMING_OUT_OF_HIDING);
+    enemy.hitbox.insertHitbox(sf::FloatRect(0, 15, 32, 87), enemy.STATE_COMING_OUT_OF_HIDING);
+
+    enemy.hitbox.insertHitbox(sf::FloatRect(0, 15, 32, 87), enemy.STATE_GOING_INTO_HIDING);
+    enemy.hitbox.insertHitbox(sf::FloatRect(0, 35, 31, 62), enemy.STATE_GOING_INTO_HIDING);
+    enemy.hitbox.insertHitbox(sf::FloatRect(0, 58, 35, 44), enemy.STATE_GOING_INTO_HIDING);
+    enemy.hitbox.insertHitbox(sf::FloatRect(0, 75, 38, 25), enemy.STATE_GOING_INTO_HIDING);
+    enemy.hitbox.insertHitbox(sf::FloatRect(0, 88, 28, 12), enemy.STATE_GOING_INTO_HIDING);
+
+    enemy.hitbox.insertHitbox(sf::FloatRect(0, 2, 46, 100), enemy.STATE_SHOOTING);
+
+    enemy.setState(enemy.STATE_HIDING);
 }
