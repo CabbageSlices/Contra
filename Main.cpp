@@ -45,8 +45,8 @@ int main() {
 
     bool slowed = false;
 
-    TurretEnemy enem(glm::vec2(100, 500), 8);
-    loadEnemy(enem, "asdf");
+    shared_ptr<TurretEnemy> enem = make_shared<TurretEnemy>(glm::vec2(100, 500), 8);
+    loadEnemy(*enem, "asdf");
 
     while(window.isOpen()) {
 
@@ -152,6 +152,14 @@ int main() {
             }
         }
 
+        for(unsigned i = 0; i < playerBullets.size(); ++i) {
+
+            if(playerBullets[i]->getHitbox().getActiveHitboxWorldSpace().intersects(enem->getHitbox().getActiveHitboxWorldSpace()) && playerBullets[i]->checkCanGetHit() && enem->checkCanGetHit()) {
+
+                playerBullets[i]->handleCollision(enem);
+            }
+        }
+
         for(unsigned i = 0; i < playerBullets.size();) {
 
             sf::FloatRect bulletHitbox = playerBullets[i]->getHitbox().getActiveHitboxWorldSpace();
@@ -228,6 +236,8 @@ int main() {
         vector<glm::vec2> playerPositions;
         playerPositions.push_back(player->getPosition());
 
+        enem->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap, playerPositions);
+
         camera.calculateProperties(playerPositions);
         camera.update(deltaTime.asSeconds(), worldBounds);
 
@@ -243,7 +253,7 @@ int main() {
             enemies[i]->updateRendering();
         }
 
-        enem.updateRendering();
+        enem->updateRendering();
 
         window.clear();
 
@@ -254,7 +264,7 @@ int main() {
         tileMap.draw(window, topLeft, bottomRight);
         player->draw(window);
 
-        enem.draw(window);
+        enem->draw(window);
 
         for(unsigned i = 0; i < enemies.size(); ++i) {
 

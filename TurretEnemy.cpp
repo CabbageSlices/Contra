@@ -26,7 +26,7 @@ TurretEnemy::TurretEnemy(const glm::vec2 &position, const int initialHealth) :
     UP_RIGHT(0),
     RIGHT(0),
     DOWN_RIGHT(0),
-    sprite(sf::milliseconds(250))
+    sprite(sf::milliseconds(75))
     {
         entity.setSize(sf::Vector2f(128, 128));
         hitbox.setOrigin(position);
@@ -73,7 +73,9 @@ void TurretEnemy::updateRendering() {
 
     gun->updateRendering();
 
-    if(sprite.animate()) {
+    //don't animate when entity is shooting because the shooting frames aren't animated
+    //use the sprites animation state instead of the enemies because if the enemy state changes but the sprite doesn't then the sprite won't draw the correct state
+    if(sprite.getAnimationState() != STATE_SHOOTING && sprite.animate()) {
 
         //animation finished so if its the transition animation then complete transitions
         if(currentState == STATE_COMING_OUT_OF_HIDING) {
@@ -104,12 +106,61 @@ void TurretEnemy::updateRendering() {
         stateDurationTimer.restart();
     }
 
+    if(currentState == STATE_SHOOTING) {
+
+        if(direction.vertical == VerticalDirection::STRAIGHT) {
+
+            if(direction.horizontal == HorizontalDirection::LEFT) {
+
+                sprite.setFrame(LEFT);
+
+            }  else {
+
+                sprite.setFrame(RIGHT);
+            }
+
+        } else if(direction.vertical == VerticalDirection::UP) {
+
+            if(direction.isFacingCompletelyVertical) {
+
+                sprite.setFrame(UP);
+
+            } else if(direction.horizontal == HorizontalDirection::LEFT) {
+
+                sprite.setFrame(UP_LEFT);
+
+            } else {
+
+                sprite.setFrame(UP_RIGHT);
+            }
+        } else if(direction.vertical == VerticalDirection::DOWN) {
+
+            if(direction.isFacingCompletelyVertical) {
+
+                sprite.setFrame(DOWN);
+            } else if(direction.horizontal == HorizontalDirection::LEFT) {
+
+                sprite.setFrame(DOWN_LEFT);
+
+            } else {
+
+                sprite.setFrame(DOWN_RIGHT);
+            }
+        }
+    }
+
     glm::vec2 position = hitbox.getOrigin();
     sprite.getSprite().setPosition(position.x, position.y);
 }
 
+bool TurretEnemy::checkCanGetHit() {
+
+    return checkIsAlive() && currentState != STATE_HIDING;
+}
+
 void TurretEnemy::draw(sf::RenderWindow &window) {
 
+    gun->draw(window);
     sprite.draw(window);
 }
 

@@ -11,7 +11,7 @@ bool loadEnemy(TurretEnemy &enemy, const std::string &dataFileName) {
     enemy.STATE_SHOOTING = 3;
 
     //load the animation properties
-    enemy.stateDuration = sf::seconds(2.0);
+    enemy.stateDuration = sf::seconds(3.0);
     enemy.setHealth(8);
 
     //load the sprite

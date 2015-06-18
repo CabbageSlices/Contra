@@ -112,6 +112,7 @@ void AnimatedSprite::setFrame(const unsigned &currentFrame) {
     }
 
     frame = currentFrame;
+    applyActiveTextureRect(); //new frame
 }
 
 unsigned AnimatedSprite::getAnimationState() const {
