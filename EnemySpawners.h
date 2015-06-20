@@ -67,9 +67,9 @@ struct SpawnPoint {
 template<class T>
 struct InformationForSpawner {
 
-    InformationForSpawner(std::vector<std::shared_ptr<T> > &enemyContainer, std::vector<std::shared_ptr<SpawnPoint> > &spawnPointContainer, const sf::FloatRect &camBounds, const sf::FloatRect &levelBounds) :
+    InformationForSpawner(std::vector<std::shared_ptr<T> > &enemyContainer, const sf::FloatRect &camBounds, const sf::FloatRect &levelBounds) :
         enemies(enemyContainer),
-        spawnPoints(spawnPointContainer),
+        spawnPoints(),
         currentCameraBounds(camBounds),
         worldBounds(levelBounds)
         {
@@ -77,7 +77,7 @@ struct InformationForSpawner {
         }
 
     std::vector<std::shared_ptr<T> > &enemies;
-    std::vector<std::shared_ptr<SpawnPoint> > &spawnPoints;
+    std::vector<std::shared_ptr<SpawnPoint> > spawnPoints;
     sf::FloatRect currentCameraBounds;
     sf::FloatRect worldBounds;
 };

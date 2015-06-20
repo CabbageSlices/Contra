@@ -1,0 +1,453 @@
+#include <vector>
+#include <memory>
+#include <algorithm>
+#include <unordered_set>
+
+using std::unordered_set;
+using std::remove_if;
+using std::vector;
+using std::shared_ptr;
+
+struct GameWorld {
+
+	GameWorld(sf::RenderWindow &window) :
+		players(),
+		enemies(),
+		turrets(),
+		tileMap(),
+		destructibleBlocks(),
+		worldBounds(0, 0, 0, 0),
+		camera(window),
+		enemySpawnPoints(),
+		turretSpawnPoints(),
+		enemySpawnInfo(enemies, worldBounds, worldBounds),
+		turretSpawnInfo(turrets, worldBounds, worldBounds),
+		destructibleBlockHash(256, 256),
+		updateTimer()
+		{
+
+		}
+
+	//entities
+	vector<shared_ptr<Player> > players;
+	vector<shared_ptr<Enemy> > enemies;
+	vector<shared_ptr<TurretEnemy> > turrets;
+
+	//environment
+	TileMap tileMap;
+	vector<shared_ptr<DestructibleBlock> > destructibleBlocks;
+
+	//world properties
+	sf::FloatRect worldBounds;
+	Camera camera;
+
+	//spawner properties
+	vector<shared_ptr<SpawnPoint> > enemySpawnPoints;
+	vector<shared_ptr<SpawnPoint> > turretSpawnPoints;
+	InformationForSpawner<Enemy> enemySpawnInfo;
+	InformationForSpawner<TurretEnemy> turretSpawnInfo;
+
+	//other stuff
+	SpatialHash<DestructibleBlock> destructibleBlockHash;
+	sf::Clock updateTimer;
+};
+
+void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world);
+void handleObjectEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world);
+void handleObjectKeystate(sf::RenderWindow &window, GameWorld &world);
+void updateWorld(sf::RenderWindow &window, GameWorld &world);
+void drawWorld(sf::RenderWindow &window, GameWorld &world);
+void updateEnemySpawners(GameWorld &world);
+void updateWorldPhyics(GameWorld &world, const float &deltaTime);
+void updateWorldRendering(sf::RenderWindow &window, GameWorld &world);
+void handleEntityCollisions(GameWorld &world);
+void playerWorldCollision(GameWorld &world);
+void enemyWorldCollision(GameWorld &world);
+void turretWorldCollision(GameWorld &world);
+void collideBulletEntities(shared_ptr<Bullet> bullet, vector<shared_ptr<EntityBase> > &entities);
+void collideEntityPair(shared_ptr<EntityBase> collisionHandler, shared_ptr<EntityBase> responder);
+void drawTiles(sf::RenderWindow &window, GameWorld &world);
+
+template<class Entity>
+void collidePlayerEntities(shared_ptr<Player> player, vector<shared_ptr<Entity> > &entities);
+
+template<class ShootingEntity>
+void collidePlayerShootingEntities(shared_ptr<Player> player, vector<shared_ptr<ShootingEntity> > &entities);
+
+template<class DynamicObject>
+void collideEntityDynamicObjectHash(shared_ptr<EntityBase> entity, SpatialHash<DynamicObject> &hash);
+
+template<class DynamicObject>
+void collideShootingEntityDynamicObjectHash(shared_ptr<ShootingEntity> shooter, SpatialHash<DynamicObject> &hash);
+
+template<class T>
+void removeDeadEntities(vector<shared_ptr<T> > &entities);
+
+template<class T>
+void removeDeadHashEntries(vector<shared_ptr<T> > &entities, SpatialHash<T> &hash);
+
+template<class T>
+typename vector<shared_ptr<T> >::iterator placeDeadEntitiesAtEnd(vector<shared_ptr<T> > &entities);
+
+template<class DynamicObject>
+void collideEntityDynamicObjects(shared_ptr<EntityBase> entity, unordered_set<shared_ptr<DynamicObject> > &objects);
+
+template<class DynamicObject>
+void collideBulletDynamicObjects(shared_ptr<Bullet> bullet, unordered_set<shared_ptr<DynamicObject> > &objects);
+
+template<class T>
+void updateObjectRendering(vector<shared_ptr<T> > &entities);
+
+template<class T>
+void drawEntities(sf::RenderWindow &window, vector<shared_ptr<T> > entities);
+
+
+
+void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world) {
+
+	if(event.type == sf::Event::Closed) {
+
+		window.close();
+	}
+
+	if(event.type == sf::Event::KeyPressed) {
+
+		if(event.key.code == sf::Keyboard::Escape) {
+
+			window.close();
+		}
+	}
+
+	if(event.type == sf::Event::Resized) {
+
+		world.camera.setupDefaultProperties(window);
+	}
+}
+
+void handleObjectEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world) {
+
+	for(unsigned i = 0; i < world.players.size(); ++i) {
+
+		world.players[i]->handleInputEvents(event, window);
+	}
+}
+
+void handleObjectKeystate(sf::RenderWindow &window, GameWorld &world) {
+
+	for(unsigned i = 0; i < world.players.size(); ++i) {
+
+		world.players[i]->handleKeystate(window);
+	}
+}
+
+void updateWorld(sf::RenderWindow &window, GameWorld &world) {
+
+	float deltaTime = world.updateTimer.restart().asSeconds();
+
+	updateWorldPhyics(world, deltaTime);
+	handleEntityCollisions(world);
+	updateWorldRendering(window, world);
+
+	updateEnemySpawners();
+}
+
+void drawWorld(sf::RenderWindow &window, GameWorld &world) {
+
+	drawTiles(window, world);
+	drawEntities(window, world.players);
+	drawEntities(window, world.enemies);
+	drawEntities(window, world.turrets);
+	drawEntities(window, world.destructibleBlocks);
+}
+
+void updateEnemySpawners(GameWorld &world) {
+
+	world.enemySpawnInfo.currentCameraBounds = camera.getCameraBounds();
+	world.turretSpawnInfo.currentCameraBounds = camera.getCameraBounds();
+
+	spawnEnemyOffscreen(world.enemySpawnInfo);
+}
+
+void updateWorldPhyics(GameWorld &world, const float &deltaTime) {
+
+	vector<glm::vec2> playerPositions;
+
+	for(auto it = world.players.begin() : world.players.end()) {
+
+		(*it)->updatePhysics(deltaTime, world.worldBounds, world.tileMap);
+
+		if((*it)->checkCanRespawn()) {
+
+			(*it)->respawn(world.camera.getCameraBounds());
+		}
+
+		playerPositions.push_back((*it)->getPosition());
+	}
+
+	world.camera.calculateProperties(playerPositions);
+	world.camera.update(deltaTime, world.worldBounds);
+
+	for(unsigned i = 0; i < world.enemies.size(); ++i) {
+
+		world.enemies[i]->updatePhysics(deltaTime, world.worldBounds, world.tileMap);
+	}
+
+	for(unsigned i = 0; i < world.enemies.size(); ++i) {
+
+		world.turrets[i]->updatePhysics(deltaTime, world.worldBounds, world.tileMap, playerPositions);
+	}
+
+	removeDeadEntities(world.enemies);
+	removeDeadEntities(world.turrets);
+}
+
+void updateWorldRendering(sf::RenderWindow &window, GameWorld &world) {
+
+	updateObjectRendering(world.players);
+	updateObjectRendering(world.enemies);
+	updateObjectRendering(world.turrets);
+	world.camera.applyCamera(window);
+}
+
+void handleEntityCollisions(GameWorld &world) {
+
+	playerWorldCollision(world);
+	enemyWorldCollision(world);
+	turretWorldCollision(world);
+}
+
+void playerWorldCollision(GameWorld &world) {
+
+	//collision with players against rest of world
+	for(auto it = world.players.begin() : world.players.end()) {
+
+		collideShootingEntityDynamicObjectHash(*it, world.destructibleBlockHash);
+		collidePlayerEntities(*it, world.enemies);
+		collidePlayerShootingEntities(*it, world.turrets);
+	}
+}
+
+template<class Entity>
+void collidePlayerEntities(shared_ptr<Player> player, vector<shared_ptr<Entity> > &entities) {
+
+	for(unsigned i = 0; i < entities.size();) {
+
+		if(!entities[i]->checkIsAlive()) {
+
+			continue;
+		}
+
+		collideEntityPair(entities[i], player);
+
+		++i;
+	}
+}
+
+template<class ShootingEntity>
+void collidePlayerShootingEntities(shared_ptr<Player> player, vector<shared_ptr<ShootingEntity> > &entities) {
+
+	for(unsigned i = 0; i < entities.size();) {
+
+		if(!entities[i]->checkIsAlive()) {
+
+			continue;
+		}
+
+		collideEntityPair(entities[i], player);
+
+		auto bullets = entities[i]->getGun()->getBullets();
+
+		for(auto &it : bullets) {
+
+			collideEntityPair(*it, player);
+		}
+
+		++i;
+	}
+}
+
+void enemyWorldCollision(GameWorld &world) {
+
+	for(auto &it : world.players) {
+
+		collideEntityDynamicObjectHash(*it, world.destructibleBlockHash);
+	}
+}
+
+void turretWorldCollision(GameWorld &world) {
+
+	for(auto &it : world.turrets) {
+
+		collideShootingEntityDynamicObjectHash(*it, world.destructibleBlockHash);
+	}
+}
+
+template<class DynamicObject>
+void collideEntityDynamicObjectHash(shared_ptr<EntityBase> entity, SpatialHash<DynamicObject> &hash) {
+
+	sf::FloatRect hitbox = entity->getHitbox().getActiveHitboxWorldSpace();
+	auto blocks = hash.getSurroundingEntities(hitbox);
+
+	collideEntityDynamicObjects(entity, blocks);
+}
+
+template<class DynamicObject>
+void collideShootingEntityDynamicObjectHash(shared_ptr<ShootingEntity> shooter, SpatialHash<DynamicObject> &hash) {
+
+	collideEntityDynamicObjectHash(shooter, hash);
+
+	auto bullets = shooter->getGun()->getBullets();
+
+	for(auto &it : bullets) {
+
+		sf::FloatRect bulletHitbox = (*it)->getHitbox().getActiveHitboxWorldSpace();
+		auto collidingWithBullet = hash.getSurroundingEntites(bulletHitbox);
+
+		collideBulletDynamicObjects(*it, collidingWithBullet);
+	}
+}
+
+template<class T>
+void removeDeadEntities(vector<shared_ptr<T> > &entities) {
+
+	auto iter = placeDeadEntitiesAtEnd(entities);
+
+	entities.erase(iter, entities.end());
+}
+
+template<class T> 
+void removeDeadHashEntries(vector<shared_ptr<T> > &entities, SpatialHash<T> &hash) {
+
+	auto iter = placeDeadEntitiesAtEnd(entities);
+
+	while(iter != entities.end()) {
+
+		hash.remove(*iter);
+		iter = entities.erase(iter);
+	}
+}
+
+template<class T> 
+typename vector<shared_ptr<T> >::iterator placeDeadEntitiesAtEnd(vector<shared_ptr<T> > &entities) {
+
+	return remove_if(entities.begin(), entities.end(), 
+		[](shared_ptr<T> &entity) {
+
+			return !entity->checkIsAlive();
+		});
+}
+
+template<class DynamicObject>
+void collideEntityDynamicObjects(shared_ptr<EntityBase> entity, unordered_set<shared_ptr<DynamicObject> > &objects) {
+
+	for(auto &it : objects) {
+
+		collideEntityPair(*it, entity);
+	}
+}
+
+template<class DynamicObject>
+void collideBulletDynamicObjects(shared_ptr<Bullet> bullet, unordered_set<shared_ptr<DynamicObject> > &objects) {
+
+	for(auto &it : objects) {
+
+		collideEntityPair(bullet, *it);
+	}
+}
+
+void collideBulletEntities(shared_ptr<Bullet> bullet, vector<shared_ptr<EntityBase> > &entities) {
+
+	for(auto &it : entities) {
+
+		collideEntityPair(bullet, *it);
+	}
+}
+
+void collideEntityPair(shared_ptr<EntityBase> collisionHandler, shared_ptr<EntityBase> responder) {
+
+	if(!collisionHandler->checkCanGetHit() || !responder->checkCanGetHit()) {
+
+		return;
+	}
+
+	sf::FloatRect handlerHitbox = collisionHandler->getHitbox().getActiveHitboxWorldSpace();
+	sf::FloatRect responderHitbox = responder->getHitbox().getActiveHitboxWorldSpace();
+
+	if(handlerHitbox.intersects(responderHitbox)) {
+
+		CollisionResponse collisionResponse = collisionHandler->handleCollision(responder);
+		responder->respondToCollision(collisionResponse);
+	}
+}
+
+template<class T>
+void updateObjectRendering(vector<shared_ptr<T> > &entities) {
+
+	for(unsigned i = 0; i < entities.size(); ++i) {
+
+		entities[i]->updateRendering();
+	}
+}
+
+void drawTiles(sf::RenderWindow &window, GameWorld &world) {
+
+	sf::FloatRect cameraBounds = world.camera.getCameraBounds();
+
+	glm::vec2 topLeft(cameraBounds.left, cameraBounds.top);
+	glm::vec2 bottomRight(cameraBounds.left + cameraBounds.width, cameraBounds.top + cameraBounds.height);
+
+	world.tileMap.draw(window, topLeft, bottomRight);
+}
+
+template<class T>
+void drawEntities(sf::RenderWindow &window, vector<shared_ptr<T> > entities) {
+
+	for(unsigned i = 0; i < entities.size(); ++i) {
+
+		entities[i]->draw(window);
+	}
+}
+
+int main() {
+
+	//create appropriate number of players
+	//load level
+	//create appropriate spatial hashes for required objects
+
+	gameloop {
+
+
+		handleEvents() {
+
+			//window events
+
+			//click events
+
+			//loop through objects and handle their events
+		}
+
+		//handle keystate events for all objects
+
+		//update player physics
+		//handle player collision with environment
+		//update camera
+
+		//loop through all enemies and update physics
+			//remove dead enemies
+			//handle collision player and environement
+
+		//update environment physics
+
+		//update player rendering
+		//update enemy rendering
+		//update environment rendering
+
+		//loop through spawners and use if necessary
+
+		//draw background
+		//draw tiles
+		//draw player
+		//draw enemies
+		//draw environment
+	}
+}
