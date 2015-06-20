@@ -36,8 +36,6 @@ struct GameWorld {
 		destructibleBlocks(),
 		worldBounds(0, 0, 0, 0),
 		camera(window),
-		enemySpawnPoints(),
-		turretSpawnPoints(),
 		enemySpawnInfo(enemies, worldBounds, worldBounds),
 		turretSpawnInfo(turrets, worldBounds, worldBounds),
 		destructibleBlockHash(256, 256),
@@ -60,8 +58,6 @@ struct GameWorld {
 	Camera camera;
 
 	//spawner properties
-	vector<shared_ptr<SpawnPoint> > enemySpawnPoints;
-	vector<shared_ptr<SpawnPoint> > turretSpawnPoints;
 	InformationForSpawner<Enemy> enemySpawnInfo;
 	InformationForSpawner<TurretEnemy> turretSpawnInfo;
 
@@ -102,9 +98,6 @@ void removeDeadEntities(vector<shared_ptr<T> > &entities);
 
 template<class T>
 void removeDeadHashEntries(vector<shared_ptr<T> > &entities, SpatialHash<T> &hash);
-
-template<class T>
-typename vector<shared_ptr<T> >::iterator placeDeadEntitiesAtEnd(vector<shared_ptr<T> > &entities);
 
 template<class B, class T>
 void collideBulletsEntities(vector<shared_ptr<B> > &bullets, vector<shared_ptr<T> > &entities);
@@ -186,6 +179,9 @@ void updateEnemySpawners(GameWorld &world) {
 	world.enemySpawnInfo.currentCameraBounds = world.camera.getCameraBounds();
 	world.turretSpawnInfo.currentCameraBounds = world.camera.getCameraBounds();
 
+	world.enemySpawnInfo.worldBounds = world.worldBounds;
+	world.turretSpawnInfo.worldBounds = world.worldBounds;
+
 	spawnEnemyOffscreen(world.enemySpawnInfo);
 }
 
@@ -213,7 +209,7 @@ void updateWorldPhyics(GameWorld &world, const float &deltaTime) {
 		world.enemies[i]->updatePhysics(deltaTime, world.worldBounds, world.tileMap);
 	}
 
-	for(unsigned i = 0; i < world.enemies.size(); ++i) {
+	for(unsigned i = 0; i < world.turrets.size(); ++i) {
 
 		world.turrets[i]->updatePhysics(deltaTime, world.worldBounds, world.tileMap, playerPositions);
 	}
@@ -296,7 +292,7 @@ void collidePlayerShootingEntities(shared_ptr<Player> player, vector<shared_ptr<
 
 void enemyWorldCollision(GameWorld &world) {
 
-	for(auto &it : world.players) {
+	for(auto &it : world.enemies) {
 
 		collideEntityDynamicObjectHash(it, world.destructibleBlockHash);
 	}
@@ -338,31 +334,32 @@ void collideShootingEntityDynamicObjectHash(shared_ptr<ShootingEntity> shooter, 
 template<class T>
 void removeDeadEntities(vector<shared_ptr<T> > &entities) {
 
-	auto iter = placeDeadEntitiesAtEnd<T>(entities);
+	for(unsigned i = 0; i < entities.size();) {
 
-	entities.erase(iter, entities.end());
+        if(!entities[i]->checkIsAlive()) {
+
+            entities.erase(entities.begin() + i);
+            continue;
+        }
+
+        ++i;
+	}
 }
 
 template<class T>
 void removeDeadHashEntries(vector<shared_ptr<T> > &entities, SpatialHash<T> &hash) {
 
-	auto iter = placeDeadEntitiesAtEnd(entities);
+	for(unsigned i = 0; i < entities.size();) {
 
-	while(iter != entities.end()) {
+        if(!entities[i]->checkIsAlive()) {
 
-		hash.remove(*iter);
-		iter = entities.erase(iter);
+            hash.remove(entities[i]);
+            entities.erase(entities.begin() + i);
+            continue;
+        }
+
+        ++i;
 	}
-}
-
-template<class T>
-typename vector<shared_ptr<T> >::iterator placeDeadEntitiesAtEnd(vector<shared_ptr<T> > &entities) {
-
-	return remove_if(entities.begin(), entities.end(),
-		[](shared_ptr<T> &entity) {
-
-			return !entity->checkIsAlive();
-		});
 }
 
 template<class B, class T>
@@ -486,53 +483,19 @@ int main() {
 
     sf::Event event;
 
-    shared_ptr<Player> player = make_shared<Player>();
-
-    sf::Clock timer;
-
-    sf::FloatRect worldBounds(0, 0, 1024 + 64, 768);
-
-    TileMap tileMap(worldBounds.width, worldBounds.height);
-
-    Camera camera(window);
-
-    vector<shared_ptr<Enemy> > enemies;
-    InformationForSpawner<Enemy> spawnInfo(enemies, camera.getCameraBounds(), worldBounds);
-
-    vector<shared_ptr<DestructibleBlock> > destructibleBlocks;
-    SpatialHash<DestructibleBlock> blockHash(TILE_SIZE, TILE_SIZE);
-
-    bool slowed = false;
-
-    shared_ptr<TurretEnemy> enem = make_shared<TurretEnemy>(glm::vec2(100, 500), 8);
-    loadEnemy(*enem, "asdf");
+    GameWorld world(window);
+    world.worldBounds = sf::FloatRect(0, 0, 1024 + 64, 768);
+    world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
+    world.players.push_back(make_shared<Player>());
+    world.turrets.push_back(make_shared<TurretEnemy>(glm::vec2(512, 768 - 128)));
+    loadEnemy(*world.turrets[0], "asdf.txt");
 
     while(window.isOpen()) {
 
         while(window.pollEvent(event)) {
 
-            if(event.type == sf::Event::Closed) {
-
-                window.close();
-            }
-
-            if(event.type == sf::Event::KeyPressed) {
-
-                if(event.key.code == sf::Keyboard::Escape) {
-
-                    window.close();
-                }
-
-                if(event.key.code == sf::Keyboard::Z) {
-
-                    slowed = !slowed;
-                }
-            }
-
-            if(event.type == sf::Event::Resized) {
-
-                camera.setupDefaultProperties(window);
-            }
+            handleWindowEvents(window, event, world);
+            handleObjectEvents(window, event, world);
 
             if(event.type == sf::Event::MouseButtonPressed) {
 
@@ -542,20 +505,20 @@ int main() {
 
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
 
-                        tileMap.setTile(mousePosition, TileType::UPWARD_RIGHT_1_1);
+                        world.tileMap.setTile(mousePosition, TileType::UPWARD_RIGHT_1_1);
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
 
-                        tileMap.setTile(mousePosition, TileType::UPWARD_LEFT_1_1);
+                        world.tileMap.setTile(mousePosition, TileType::UPWARD_LEFT_1_1);
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
 
-                        tileMap.setTile(mousePosition, TileType::ONE_WAY);
+                        world.tileMap.setTile(mousePosition, TileType::ONE_WAY);
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
                         shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6));
-                        spawnInfo.spawnPoints.push_back(point);
+                        world.enemySpawnInfo.spawnPoints.push_back(point);
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) {
 
@@ -568,112 +531,34 @@ int main() {
                         position *= static_cast<float>(TILE_SIZE);
 
                         shared_ptr<DestructibleBlock> block = make_shared<DestructibleBlock>(position);
-                        destructibleBlocks.push_back(block);
-                        blockHash.insert(block);
+                        world.destructibleBlocks.push_back(block);
+                        world.destructibleBlockHash.insert(block);
 
                     } else {
 
-                        tileMap.setTile(mousePosition, TileType::SOLID);
+                        world.tileMap.setTile(mousePosition, TileType::SOLID);
                     }
 
                 }
 
                 if(event.mouseButton.button == sf::Mouse::Right) {
 
-                    tileMap.setTile(mousePosition, TileType::EMPTY);
+                    world.tileMap.setTile(mousePosition, TileType::EMPTY);
                 }
             }
 
-            player->handleInputEvents(event, window);
         }
 
-        player->handleKeystate(window);
+        handleObjectKeystate(window, world);
 
-        sf::Time deltaTime = timer.restart();
-
-        player->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
-
-        if(player->checkCanRespawn()) {
-
-            player->respawn(camera.getCameraBounds());
-        }
-
-        vector<shared_ptr<Bullet> > &playerBullets = player->getGun()->getBullets();
-
-        collideEntityDynamicObjectHash(player, blockHash);
-        collidePlayerEntities(player, enemies);
-        collideBulletsEntities(playerBullets, enemies);
-
-        for(unsigned i = 0; i < enemies.size();) {
-
-            enemies[i]->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap);
-
-            if(!enemies[i]->checkIsAlive()) {
-
-                enemies.erase(enemies.begin() + i);
-                continue;
-            }
-
-
-            collideEntityDynamicObjectHash(enemies[i], blockHash);
-
-            ++i;
-        }
-
-        for(unsigned i = 0; i < destructibleBlocks.size();) {
-
-            destructibleBlocks[i]->updateRendering();
-
-            ++i;
-        }
-
-        removeDeadHashEntries(destructibleBlocks, blockHash);
-
-        vector<glm::vec2> playerPositions;
-        playerPositions.push_back(player->getPosition());
-
-        ///enem->updatePhysics(deltaTime.asSeconds(), worldBounds, tileMap, playerPositions);
-
-        camera.calculateProperties(playerPositions);
-        camera.update(deltaTime.asSeconds(), worldBounds);
-
-        camera.applyCamera(window);
-
-        spawnInfo.currentCameraBounds = camera.getCameraBounds();
-
-        spawnEnemyOffscreen(spawnInfo);
-
-        player->updateRendering();
-        for(unsigned i = 0; i < enemies.size(); ++i) {
-
-            enemies[i]->updateRendering();
-        }
-
-        ///enem->updateRendering();
+        updateWorld(window, world);
 
         window.clear();
 
-        sf::FloatRect cameraBounds = camera.getCameraBounds();
-        glm::vec2 topLeft(cameraBounds.left, cameraBounds.top);
-        glm::vec2 bottomRight(cameraBounds.left + cameraBounds.width, cameraBounds.top + cameraBounds.height);
-
-        tileMap.draw(window, topLeft, bottomRight);
-
-        player->draw(window);
-
-        enem->draw(window);
-
-        for(unsigned i = 0; i < enemies.size(); ++i) {
-
-            enemies[i]->draw(window);
-        }
-
-        for(unsigned i = 0; i < destructibleBlocks.size(); ++i) {
-
-            destructibleBlocks[i]->draw(window);
-        }
+        drawWorld(window, world);
 
         window.display();
+
     }
     return 0;
 }
