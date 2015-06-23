@@ -25,7 +25,6 @@ class DynamicObject : public EntityBase {
         }
 };
 
-//calculates the minimum distance required for rectA to move in order to escape collision with rectB
-glm::vec2 calculateCollisionResolutionTranslation(sf::FloatRect rectA, sf::FloatRect rectB);
+
 
 #endif // DYNAMICOBJECT_H_INCLUDED

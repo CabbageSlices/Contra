@@ -12,6 +12,8 @@
 #include "DestructibleBlock.h"
 #include "SpatialHash.h"
 #include "EnemyLoaders.h"
+#include "CollisionResolution.h"
+#include <functional>
 
 #include <vector>
 #include <memory>
@@ -19,6 +21,7 @@
 #include <algorithm>
 #include <unordered_set>
 
+using std::function;
 using std::unordered_set;
 using std::remove_if;
 using std::forward_iterator_tag;
@@ -78,44 +81,58 @@ void handleEntityCollisions(GameWorld &world);
 void playerWorldCollision(GameWorld &world);
 void enemyWorldCollision(GameWorld &world);
 void turretWorldCollision(GameWorld &world);
-void collideEntityPair(shared_ptr<EntityBase> collisionHandler, shared_ptr<EntityBase> responder);
 void drawTiles(sf::RenderWindow &window, GameWorld &world);
 
 template<class Entity>
-void collidePlayerEntities(shared_ptr<Player> player, vector<shared_ptr<Entity> > &entities);
+void collidePlayerEntities(shared_ptr<Player> player, vector<shared_ptr<Entity> > &entities,
+                                 function<void(shared_ptr<Player>, shared_ptr<Entity>)> collisionFunction);
 
 template<class ShootingEntity>
-void collidePlayerShootingEntities(shared_ptr<Player> player, vector<shared_ptr<ShootingEntity> > &entities);
+void collidePlayerShootingEntities(shared_ptr<Player> player, vector<shared_ptr<ShootingEntity> > &entities,
+                                 function<void(shared_ptr<Player>, shared_ptr<ShootingEntity>)> collisionFunction);
 
 template<class DynamicObject>
-void collideEntityDynamicObjectHash(shared_ptr<EntityBase> entity, SpatialHash<DynamicObject> &hash);
+void collideEntityDynamicObjectHash(shared_ptr<EntityBase> entity, SpatialHash<DynamicObject> &hash,
+                                 function<void(shared_ptr<DynamicObject>, shared_ptr<EntityBase>)> collisionFunction);
 
 template<class DynamicObject>
-void collideShootingEntityDynamicObjectHash(shared_ptr<ShootingEntity> shooter, SpatialHash<DynamicObject> &hash);
+void collideShootingEntityDynamicObjectHash(shared_ptr<ShootingEntity> shooter, SpatialHash<DynamicObject> &hash,
+                                 function<void(shared_ptr<DynamicObject>, shared_ptr<EntityBase>)> dynamicObjectEntityCollision,
+                                 function<void(shared_ptr<Bullet>, shared_ptr<DynamicObject>)> bulletDynamicObjectCollision);
 
+template<class B, class T>
+void collideBulletsEntities(vector<shared_ptr<B> > &bullets, vector<shared_ptr<T> > &entities,
+                                 function<void(shared_ptr<Bullet>, shared_ptr<T>)> collisionFunction);
+
+template<class T>
+void collideBulletEntities(shared_ptr<Bullet> bullet, vector<shared_ptr<T> > &entities,
+                                 function<void(shared_ptr<Bullet>, shared_ptr<T>)> collisionFunction);
+
+template<class DynamicObject>
+void collideEntityDynamicObjects(shared_ptr<EntityBase> entity, unordered_set<shared_ptr<DynamicObject> > &objects,
+                                 function<void(shared_ptr<DynamicObject>, shared_ptr<EntityBase>)> collisionFunction);
+
+template<class DynamicObject>
+void collideBulletDynamicObjects(shared_ptr<Bullet> bullet, unordered_set<shared_ptr<DynamicObject> > &objects,
+                                 function<void(shared_ptr<Bullet>, shared_ptr<DynamicObject>)> collisionFunction);
 template<class T>
 void removeDeadEntities(vector<shared_ptr<T> > &entities);
 
 template<class T>
 void removeDeadHashEntries(vector<shared_ptr<T> > &entities, SpatialHash<T> &hash);
 
-template<class B, class T>
-void collideBulletsEntities(vector<shared_ptr<B> > &bullets, vector<shared_ptr<T> > &entities);
-
-template<class DynamicObject>
-void collideEntityDynamicObjects(shared_ptr<EntityBase> entity, unordered_set<shared_ptr<DynamicObject> > &objects);
-
-template<class DynamicObject>
-void collideBulletDynamicObjects(shared_ptr<Bullet> bullet, unordered_set<shared_ptr<DynamicObject> > &objects);
-
-template<class T>
-void collideBulletEntities(shared_ptr<Bullet> bullet, vector<shared_ptr<T> > &entities);
-
 template<class T>
 void updateObjectRendering(vector<shared_ptr<T> > &entities);
 
 template<class T>
 void drawEntities(sf::RenderWindow &window, vector<shared_ptr<T> > &entities);
+
+function<void(shared_ptr<Bullet>, shared_ptr<DestructibleBlock>)> bulletBlockCollisionFunction = bulletNonDeflectingEntityCollision;
+function<void(shared_ptr<Bullet>, shared_ptr<Enemy>)> bulletEnemyCollisionFunction= bulletNonDeflectingEntityCollision;
+function<void(shared_ptr<Bullet>, shared_ptr<TurretEnemy>)> bulletTurretCollisionFunction= bulletNonDeflectingEntityCollision;
+function<void(shared_ptr<Player>, shared_ptr<Enemy>)> playerEnemyCollisionFunction = playerEnemyEntityCollision;
+function<void(shared_ptr<Player>, shared_ptr<TurretEnemy>)> playerTurretCollisionFunction = playerEnemyEntityCollision;
+function<void(shared_ptr<DestructibleBlock>, shared_ptr<EntityBase>)> destructibleBlockEntityCollisionFunction = destructibleBlockEntityCollision;
 
 void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world) {
 
@@ -241,34 +258,32 @@ void playerWorldCollision(GameWorld &world) {
 	//collision with players against rest of world
 	for(auto &it : world.players) {
 
-		collideShootingEntityDynamicObjectHash(it, world.destructibleBlockHash);
-		collidePlayerEntities(it, world.enemies);
-		collidePlayerShootingEntities(it, world.turrets);
+		collideShootingEntityDynamicObjectHash(it, world.destructibleBlockHash, destructibleBlockEntityCollisionFunction, bulletBlockCollisionFunction);
+
+		collidePlayerEntities(it, world.enemies, playerEnemyCollisionFunction);
+		collidePlayerShootingEntities(it, world.turrets, playerTurretCollisionFunction);
 
 		//handle collision with player's bullets and enemies
-		collideBulletsEntities(it->getGun()->getBullets(), world.enemies);
-		collideBulletsEntities(it->getGun()->getBullets(), world.turrets);
+		collideBulletsEntities(it->getGun()->getBullets(), world.enemies, bulletEnemyCollisionFunction);
+		collideBulletsEntities(it->getGun()->getBullets(), world.turrets, bulletTurretCollisionFunction);
 	}
 }
 
 template<class Entity>
-void collidePlayerEntities(shared_ptr<Player> player, vector<shared_ptr<Entity> > &entities) {
+void collidePlayerEntities(shared_ptr<Player> player, vector<shared_ptr<Entity> > &entities,
+                                 function<void(shared_ptr<Player>, shared_ptr<Entity>)> collisionFunction) {
 
 	for(unsigned i = 0; i < entities.size();) {
 
-		if(!entities[i]->checkIsAlive()) {
-
-			continue;
-		}
-
-		collideEntityPairCheckBoth(entities[i], player);
+		collisionFunction(player, entities[i]);
 
 		++i;
 	}
 }
 
 template<class ShootingEntity>
-void collidePlayerShootingEntities(shared_ptr<Player> player, vector<shared_ptr<ShootingEntity> > &entities) {
+void collidePlayerShootingEntities(shared_ptr<Player> player, vector<shared_ptr<ShootingEntity> > &entities,
+                                 function<void(shared_ptr<Player>, shared_ptr<ShootingEntity>)> collisionFunction) {
 
 	for(unsigned i = 0; i < entities.size();) {
 
@@ -277,13 +292,13 @@ void collidePlayerShootingEntities(shared_ptr<Player> player, vector<shared_ptr<
 			continue;
 		}
 
-		collideEntityPairCheckBoth(entities[i], player);
+		collisionFunction(player, entities[i]);
 
 		auto bullets = entities[i]->getGun()->getBullets();
 
 		for(auto &it : bullets) {
 
-			collideEntityPairCheckBoth(it, player);
+			bulletNonDeflectingEntityCollision(it, player);
 		}
 
 		++i;
@@ -294,7 +309,7 @@ void enemyWorldCollision(GameWorld &world) {
 
 	for(auto &it : world.enemies) {
 
-		collideEntityDynamicObjectHash(it, world.destructibleBlockHash);
+		collideEntityDynamicObjectHash(it, world.destructibleBlockHash, destructibleBlockEntityCollisionFunction);
 	}
 }
 
@@ -302,23 +317,26 @@ void turretWorldCollision(GameWorld &world) {
 
 	for(auto &it : world.turrets) {
 
-		collideShootingEntityDynamicObjectHash(it, world.destructibleBlockHash);
+		collideShootingEntityDynamicObjectHash(it, world.destructibleBlockHash, destructibleBlockEntityCollisionFunction, bulletBlockCollisionFunction);
 	}
 }
 
 template<class DynamicObject>
-void collideEntityDynamicObjectHash(shared_ptr<EntityBase> entity, SpatialHash<DynamicObject> &hash) {
+void collideEntityDynamicObjectHash(shared_ptr<EntityBase> entity, SpatialHash<DynamicObject> &hash,
+                                 function<void(shared_ptr<DynamicObject>, shared_ptr<EntityBase>)> collisionFunction) {
 
 	sf::FloatRect hitbox = entity->getHitbox().getActiveHitboxWorldSpace();
 	auto blocks = hash.getSurroundingEntites(hitbox);
 
-	collideEntityDynamicObjects(entity, blocks);
+	collideEntityDynamicObjects(entity, blocks, collisionFunction);
 }
 
 template<class DynamicObject>
-void collideShootingEntityDynamicObjectHash(shared_ptr<ShootingEntity> shooter, SpatialHash<DynamicObject> &hash) {
+void collideShootingEntityDynamicObjectHash(shared_ptr<ShootingEntity> shooter, SpatialHash<DynamicObject> &hash,
+                                 function<void(shared_ptr<DynamicObject>, shared_ptr<EntityBase>)> dynamicObjectEntityCollision,
+                                 function<void(shared_ptr<Bullet>, shared_ptr<DynamicObject>)> bulletDynamicObjectCollision) {
 
-	collideEntityDynamicObjectHash(shooter, hash);
+	collideEntityDynamicObjectHash(shooter, hash, dynamicObjectEntityCollision);
 
 	auto bullets = shooter->getGun()->getBullets();
 
@@ -327,7 +345,47 @@ void collideShootingEntityDynamicObjectHash(shared_ptr<ShootingEntity> shooter, 
 		sf::FloatRect bulletHitbox = it->getHitbox().getActiveHitboxWorldSpace();
 		auto collidingWithBullet = hash.getSurroundingEntites(bulletHitbox);
 
-		collideBulletDynamicObjects(it, collidingWithBullet);
+		collideBulletDynamicObjects(it, collidingWithBullet, bulletDynamicObjectCollision);
+	}
+}
+
+template<class B, class T>
+void collideBulletsEntities(vector<shared_ptr<B> > &bullets, vector<shared_ptr<T> > &entities,
+                                 function<void(shared_ptr<Bullet>, shared_ptr<T>)> collisionFunction) {
+
+    for(auto &bullet : bullets) {
+
+        collideBulletEntities(bullet, entities, collisionFunction);
+    }
+}
+
+template<class T>
+void collideBulletEntities(shared_ptr<Bullet> bullet, vector<shared_ptr<T> > &entities,
+                                 function<void(shared_ptr<Bullet>, shared_ptr<T>)> collisionFunction) {
+
+	for(auto &it : entities) {
+
+		collisionFunction(bullet, it);
+	}
+}
+
+template<class DynamicObject>
+void collideEntityDynamicObjects(shared_ptr<EntityBase> entity, unordered_set<shared_ptr<DynamicObject> > &objects,
+                                 function<void(shared_ptr<DynamicObject>, shared_ptr<EntityBase>)> collisionFunction) {
+
+	for(auto &it : objects) {
+
+		collisionFunction(it, entity);
+	}
+}
+
+template<class DynamicObject>
+void collideBulletDynamicObjects(shared_ptr<Bullet> bullet, unordered_set<shared_ptr<DynamicObject> > &objects,
+                                 function<void(shared_ptr<Bullet>, shared_ptr<DynamicObject>)> collisionFunction) {
+
+	for(auto &it : objects) {
+
+		collisionFunction(bullet, it);
 	}
 }
 
@@ -360,93 +418,6 @@ void removeDeadHashEntries(vector<shared_ptr<T> > &entities, SpatialHash<T> &has
 
         ++i;
 	}
-}
-
-template<class B, class T>
-void collideBulletsEntities(vector<shared_ptr<B> > &bullets, vector<shared_ptr<T> > &entities) {
-
-    for(auto &bullet : bullets) {
-
-        collideBulletEntities(bullet, entities);
-    }
-}
-
-template<class B, class DynamicObject>
-void collideBulletsDynamicObjects(vector<shared_ptr<B> > &bullets, unordered_set<shared_ptr<DynamicObject> > &objects) {
-
-    for(auto &bullet : bullets) {
-
-        collideBulletDynamicObjects(bullet, objects);
-    }
-}
-
-template<class DynamicObject>
-void collideEntityDynamicObjects(shared_ptr<EntityBase> entity, unordered_set<shared_ptr<DynamicObject> > &objects) {
-
-	for(auto &it : objects) {
-
-		collideEntityPairCheckHandler(it, entity);
-	}
-}
-
-template<class DynamicObject>
-void collideBulletDynamicObjects(shared_ptr<Bullet> bullet, unordered_set<shared_ptr<DynamicObject> > &objects) {
-
-	for(auto &it : objects) {
-
-		collideEntityPairCheckBoth(bullet, it);
-	}
-}
-
-template<class T>
-void collideBulletEntities(shared_ptr<Bullet> bullet, vector<shared_ptr<T> > &entities) {
-
-	for(auto &it : entities) {
-
-		collideEntityPairCheckBoth(bullet, it);
-	}
-}
-
-void collideEntityPair(shared_ptr<EntityBase> collisionHandler, shared_ptr<EntityBase> responder) {
-
-	sf::FloatRect handlerHitbox = collisionHandler->getHitbox().getActiveHitboxWorldSpace();
-	sf::FloatRect responderHitbox = responder->getHitbox().getActiveHitboxWorldSpace();
-
-	if(handlerHitbox.intersects(responderHitbox)) {
-
-		CollisionResponse collisionResponse = collisionHandler->handleCollision(responder);
-		responder->respondToCollision(collisionResponse);
-	}
-}
-
-void collideEntityPairCheckHandler(shared_ptr<EntityBase> collisionHandler, shared_ptr<EntityBase> responder) {
-
-	if(!collisionHandler->checkCanGetHit()) {
-
-		return;
-	}
-
-	collideEntityPair(collisionHandler, responder);
-}
-
-void collideEntityPairCheckResponder(shared_ptr<EntityBase> collisionHandler, shared_ptr<EntityBase> responder) {
-
-	if(!responder->checkCanGetHit()) {
-
-		return;
-	}
-
-	collideEntityPair(collisionHandler, responder);
-}
-
-void collideEntityPairCheckBoth(shared_ptr<EntityBase> collisionHandler, shared_ptr<EntityBase> responder) {
-
-	if(!collisionHandler->checkCanGetHit() || !responder->checkCanGetHit()) {
-
-		return;
-	}
-
-	collideEntityPair(collisionHandler, responder);
 }
 
 template<class T>

@@ -1,4 +1,5 @@
 #include "DestructibleBlock.h"
+#include "CollisionResolution.h"
 
 #include <iostream>
 
@@ -43,52 +44,6 @@ void DestructibleBlock::getHit(int damage) {
 void DestructibleBlock::draw(sf::RenderWindow &window) {
 
     sprite.draw(window);
-}
-
-CollisionResponse DestructibleBlock::handleCollision(shared_ptr<EntityBase> collidingEntity) {
-
-    CollisionResponse response;
-
-    sf::FloatRect collidingRect = collidingEntity->getHitbox().getActiveHitboxWorldSpace();
-    sf::FloatRect rect = hitbox.getActiveHitboxWorldSpace();
-
-    if(!rect.intersects(collidingRect) || !checkCanGetHit()) {
-
-        return response;
-    }
-
-    //intersection occured so first resolve intersection before other effects
-    glm::vec2 minimumTranslation = calculateCollisionResolutionTranslation(collidingRect, rect);
-
-    collidingEntity->getHitbox().move(minimumTranslation);
-
-    //check if object is now standing on top of the block
-    if(minimumTranslation.y < 0) {
-
-        response.pushedToTop = true;
-
-        //if object is falling ontop of the block, negate velocity
-        if(collidingEntity->getMovementController().getVelocities().y > 0) {
-
-          collidingEntity->getMovementController().setVelocities(collidingEntity->getMovementController().getVelocities().x, 0);
-        }
-    }
-
-    collidingRect = collidingEntity->getHitbox().getActiveHitboxWorldSpace();
-
-    if(minimumTranslation.x != 0) {
-
-        response.handledHorizontal = true;
-    }
-
-    //if this was hit from the bottom then destory itself, only do it if object is jumping
-    if(minimumTranslation.y > 0 && checkCanGetHit() && collidingEntity->getMovementController().getVelocities().y < 0) {
-
-        getHit(1);
-        collidingEntity->getMovementController().setVelocities(collidingEntity->getMovementController().getVelocities().x, 0);
-    }
-
-    return response;
 }
 
 void DestructibleBlock::setup() {

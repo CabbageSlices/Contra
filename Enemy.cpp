@@ -52,13 +52,6 @@ void Enemy::setInitialVelocity(const glm::vec2 &velocity) {
     hitboxMovementController.setVelocities(velocity);
 }
 
-CollisionResponse Enemy::handleCollision(shared_ptr<EntityBase> collidingEntity) {
-
-    collidingEntity->getHit(1);
-
-    return CollisionResponse();
-}
-
 void Enemy::respondToCollision(const CollisionResponse &response) {
 
     if(response.handledHorizontal) {

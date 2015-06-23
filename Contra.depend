@@ -311,7 +311,7 @@
 	<vector>
 	<iostream>
 
-1434509271 c:\users\nimesh\desktop\c++\github\contra\bullet.h
+1435095364 c:\users\nimesh\desktop\c++\github\contra\bullet.h
 	"HitboxMovementController.h"
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
@@ -346,7 +346,7 @@
 	"glm/glm.hpp"
 	"HitboxMovementController.h"
 
-1434509272 c:\users\nimesh\desktop\c++\github\contra\entitybase.h
+1435095364 c:\users\nimesh\desktop\c++\github\contra\entitybase.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"TileMap.h"
@@ -367,7 +367,7 @@
 
 1432770771 c:\users\nimesh\desktop\c++\github\contra\collisionresponse.h
 
-1434509272 c:\users\nimesh\desktop\c++\github\contra\enemy.h
+1435095364 c:\users\nimesh\desktop\c++\github\contra\enemy.h
 	"SFML/Graphics.hpp"
 	"ObjectHitbox.h"
 	"TileCollisionHandling.h"
@@ -392,16 +392,17 @@
 
 1432770771 c:\users\nimesh\desktop\c++\github\contra\globalconstants.h
 
-1434517363 source:c:\users\nimesh\desktop\c++\github\contra\destructibleblock.cpp
+1435085640 source:c:\users\nimesh\desktop\c++\github\contra\destructibleblock.cpp
 	"DestructibleBlock.h"
+	"CollisionResolution.h"
 	<iostream>
 
-1434509271 c:\users\nimesh\desktop\c++\github\contra\destructibleblock.h
+1435095364 c:\users\nimesh\desktop\c++\github\contra\destructibleblock.h
 	"DynamicObject.h"
 	"AnimatedSprite.h"
 	<memory>
 
-1434517013 c:\users\nimesh\desktop\c++\github\contra\dynamicobject.h
+1435085640 c:\users\nimesh\desktop\c++\github\contra\dynamicobject.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"EntityBase.h"
@@ -412,7 +413,7 @@
 1432770771 source:c:\users\nimesh\desktop\c++\github\contra\direction.cpp
 	"Direction.h"
 
-1432770771 source:c:\users\nimesh\desktop\c++\github\contra\dynamicobject.cpp
+1435085640 source:c:\users\nimesh\desktop\c++\github\contra\dynamicobject.cpp
 	"DynamicObject.h"
 
 1434249642 source:c:\users\nimesh\desktop\c++\github\contra\enemy.cpp
@@ -460,7 +461,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1434830873 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1435095142 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -475,6 +476,8 @@
 	"DestructibleBlock.h"
 	"SpatialHash.h"
 	"EnemyLoaders.h"
+	"CollisionResolution.h"
+	<functional>
 	<vector>
 	<memory>
 	<iterator>
@@ -949,4 +952,17 @@
 
 1434499274 c:\users\nimesh\desktop\c++\github\contra\enemyloaders.h
 	<string>
+
+1435094546 source:c:\users\nimesh\desktop\c++\github\contra\collisionresolution.cpp
+	"CollisionResolution.h"
+	"EntityBase.h"
+	"Player.h"
+	"Bullet.h"
+	"DestructibleBlock.h"
+
+1435087600 c:\users\nimesh\desktop\c++\github\contra\collisionresolution.h
+	<memory>
+	"SFML/Graphics.hpp"
+	"glm/glm.hpp"
+	<functional>
 

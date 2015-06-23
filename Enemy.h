@@ -22,7 +22,6 @@ class Enemy : public EntityBase {
         void updateRendering();
         void setInitialVelocity(const glm::vec2 &velocity);
 
-        virtual CollisionResponse handleCollision(std::shared_ptr<EntityBase> collidingEntity);
         virtual void respondToCollision(const CollisionResponse &response);
 
     private:

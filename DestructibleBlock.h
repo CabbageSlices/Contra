@@ -27,8 +27,6 @@ class DestructibleBlock : public DynamicObject {
         virtual void getHit(int damage = 1);
         virtual void draw(sf::RenderWindow &window);
 
-        virtual CollisionResponse handleCollision(std::shared_ptr<EntityBase> collidingEntity);
-
     private:
 
         enum AnimationStates {

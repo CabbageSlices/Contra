@@ -31,14 +31,6 @@ class EntityBase {
         virtual bool checkCanGetHit();
         virtual void getHit(int damage = 1);
 
-        //first handle collision is the function called by objects that affects other objects when they collide
-        //i.e a block will call this function because it will push all colliding objects away
-        virtual CollisionResponse handleCollision(std::shared_ptr<EntityBase> collidingEntity) {
-
-            //empty
-            return CollisionResponse();
-        };
-
         //this one should be called
         virtual void respondToCollision(const CollisionResponse &collisionResponse) {
 
