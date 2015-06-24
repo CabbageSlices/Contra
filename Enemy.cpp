@@ -8,6 +8,8 @@ using std::endl;
 using std::vector;
 using std::shared_ptr;
 
+PreloadedEnemyData goombaData;
+
 Enemy::Enemy(const glm::vec2 &positionWorldSpace, const Direction &initialDirection, const int initialHealth) :
     EntityBase(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY / 5, 0), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), initialHealth),
     STATE_WALKING_LEFT(0),
@@ -56,7 +58,6 @@ void Enemy::updateRendering() {
     determineAnimationState();
     sprite.animate();
 
-    entity.setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
     sprite.getSprite().setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
 }
 
@@ -98,6 +99,35 @@ CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*co
 void Enemy::draw(sf::RenderWindow &window) {
 
     sprite.draw(window);
+}
+
+void Enemy::load(PreloadedEnemyData &data) {
+
+    STATE_WALKING_LEFT = data.STATE_WALKING_LEFT;
+    STATE_WALKING_RIGHT = data.STATE_WALKING_RIGHT;
+    STATE_FALLING_LEFT = data.STATE_FALLING_LEFT;
+    STATE_FALLING_RIGHT = data.STATE_FALLING_RIGHT;
+
+    setHealth(data.health);
+
+    sprite.loadTexture(data.textureFileName);
+    sprite.setNextFrameTime(data.animationNextFrameTime);
+
+    for(auto it = data.animationTextureRects.begin(); it != data.animationTextureRects.end(); ++it) {
+
+        for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
+
+            sprite.insertTextureRect(it->first, *vt);
+        }
+    }
+
+    for(auto it = data.hitboxes.begin(); it != data.hitboxes.end(); ++it) {
+
+        for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
+
+            hitbox.insertHitbox(*vt, it->first);
+        }
+    }
 }
 
 void Enemy::setState(const unsigned &newState) {

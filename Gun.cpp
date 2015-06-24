@@ -72,6 +72,11 @@ vector<shared_ptr<Bullet> > &Gun::getBullets() {
     return bullets;
 }
 
+void Gun::setFireDelay(const sf::Time &delay) {
+
+    fireDelay = delay;
+}
+
 void Gun::createBullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace) {
 
     shared_ptr<Bullet> bullet = make_shared<Bullet>(positionWorldSpace, directionWorldSpace);

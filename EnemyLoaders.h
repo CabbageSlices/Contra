@@ -3,10 +3,10 @@
 
 #include <string>
 
-class TurretEnemy;
-class Enemy;
+class PreloadedTurretData;
+class PreloadedEnemyData;
 
-bool loadEnemy(TurretEnemy &enemy, const std::string &dataFileName);
-bool loadEnemy(Enemy &enemy, const std::string &dataFileName);
+bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName);
+bool loadEnemyData(PreloadedEnemyData &daa, const std::string &dataFileName);
 
 #endif // ENEMYLOADERS_H_INCLUDED

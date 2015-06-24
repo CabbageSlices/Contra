@@ -459,8 +459,14 @@ int main() {
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
     world.players.push_back(make_shared<Player>());
 
+    loadEnemyData(goombaData, "asdf");
+    loadTurretData(piranhaData, "asdf");
+
     world.enemies.push_back(make_shared<Enemy>(glm::vec2(0, 0), Direction()));
-    loadEnemy(*world.enemies[0], "asdf");
+    world.enemies[0]->load(goombaData);
+
+    world.turrets.push_back(make_shared<TurretEnemy>(glm::vec2(512, 512), 1));
+    world.turrets[0]->load(piranhaData);
 
     while(window.isOpen()) {
 

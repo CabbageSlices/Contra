@@ -311,7 +311,7 @@
 	<vector>
 	<iostream>
 
-1435095364 c:\users\nimesh\desktop\c++\github\contra\bullet.h
+1435121013 c:\users\nimesh\desktop\c++\github\contra\bullet.h
 	"HitboxMovementController.h"
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
@@ -367,7 +367,7 @@
 
 1432770771 c:\users\nimesh\desktop\c++\github\contra\collisionresponse.h
 
-1435107236 c:\users\nimesh\desktop\c++\github\contra\enemy.h
+1435117492 c:\users\nimesh\desktop\c++\github\contra\enemy.h
 	"SFML/Graphics.hpp"
 	"ObjectHitbox.h"
 	"TileCollisionHandling.h"
@@ -376,6 +376,9 @@
 	"EntityBase.h"
 	"EnemyLoaders.h"
 	"AnimatedSprite.h"
+	<string>
+	<vector>
+	<map>
 
 1432770771 c:\users\nimesh\desktop\c++\github\contra\direction.h
 	"glm/glm.hpp"
@@ -418,7 +421,7 @@
 1435085640 source:c:\users\nimesh\desktop\c++\github\contra\dynamicobject.cpp
 	"DynamicObject.h"
 
-1435111788 source:c:\users\nimesh\desktop\c++\github\contra\enemy.cpp
+1435117492 source:c:\users\nimesh\desktop\c++\github\contra\enemy.cpp
 	"Enemy.h"
 	"GlobalConstants.h"
 	<vector>
@@ -444,12 +447,12 @@
 1432770771 source:c:\users\nimesh\desktop\c++\github\contra\globalconstants.cpp
 	"GlobalConstants.h"
 
-1432770771 source:c:\users\nimesh\desktop\c++\github\contra\gun.cpp
+1435119886 source:c:\users\nimesh\desktop\c++\github\contra\gun.cpp
 	"Gun.h"
 	"Bullet.h"
 	<iostream>
 
-1432770771 c:\users\nimesh\desktop\c++\github\contra\gun.h
+1435119886 c:\users\nimesh\desktop\c++\github\contra\gun.h
 	<SFML/Graphics.hpp>
 	<SFML/Window.hpp>
 	"ObjectHitbox.h"
@@ -464,7 +467,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1435111812 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1435119677 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -501,7 +504,7 @@
 	"Direction.h"
 	<memory>
 
-1434586972 c:\users\nimesh\desktop\c++\github\contra\turretenemy.h
+1435120711 c:\users\nimesh\desktop\c++\github\contra\turretenemy.h
 	"ShootingEntity.h"
 	"Direction.h"
 	"ShootingEntity.h"
@@ -540,7 +543,7 @@
 	"glm/glm.hpp"
 	<iostream>
 
-1434589307 source:c:\users\nimesh\desktop\c++\github\contra\turretenemy.cpp
+1435120810 source:c:\users\nimesh\desktop\c++\github\contra\turretenemy.cpp
 	"TurretEnemy.h"
 	"GlobalConstants.h"
 	<cmath>
@@ -949,12 +952,12 @@
 	<unordered_set>
 	"Enemy.h"
 
-1435111447 source:c:\users\nimesh\desktop\c++\github\contra\enemyloaders.cpp
+1435120921 source:c:\users\nimesh\desktop\c++\github\contra\enemyloaders.cpp
 	"EnemyLoaders.h"
 	"TurretEnemy.h"
 	"Enemy.h"
 
-1435107229 c:\users\nimesh\desktop\c++\github\contra\enemyloaders.h
+1435119031 c:\users\nimesh\desktop\c++\github\contra\enemyloaders.h
 	<string>
 
 1435094546 source:c:\users\nimesh\desktop\c++\github\contra\collisionresolution.cpp

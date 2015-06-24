@@ -9,10 +9,14 @@ using std::vector;
 using std::shared_ptr;
 using std::make_shared;
 
+PreloadedTurretData piranhaData;
+
 TurretEnemy::TurretEnemy(const glm::vec2 &position, const int initialHealth) :
     ShootingEntity(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), initialHealth),
-    stateDurationTimer(),
-    stateDuration(sf::seconds(0)),
+    hiddenStateTimer(),
+    hiddenStateDuration(),
+    exposedStateTimer(),
+    exposedStateDuration(),
     STATE_HIDING(0),
     STATE_COMING_OUT_OF_HIDING(0),
     STATE_GOING_INTO_HIDING(0),
@@ -91,19 +95,14 @@ void TurretEnemy::updateRendering() {
     //turret only really from hiding or shooting
     //determine if turret needs to start a transition animation
     //and if so which animation
-    if(stateDurationTimer.getElapsedTime() > stateDuration && (currentState == STATE_HIDING || currentState == STATE_SHOOTING)) {
+    if(currentState == STATE_HIDING && hiddenStateTimer.getElapsedTime() > hiddenStateDuration) {
 
-        //time to change to an animated state
-        if(currentState == STATE_HIDING) {
+        setState(STATE_COMING_OUT_OF_HIDING);
+    }
 
-            setState(STATE_COMING_OUT_OF_HIDING);
+    if(currentState == STATE_SHOOTING && exposedStateTimer.getElapsedTime() > exposedStateDuration) {
 
-        } else if(currentState == STATE_SHOOTING){
-
-            setState(STATE_GOING_INTO_HIDING);
-        }
-
-        stateDurationTimer.restart();
+        setState(STATE_GOING_INTO_HIDING);
     }
 
     if(currentState == STATE_SHOOTING) {
@@ -162,6 +161,50 @@ void TurretEnemy::draw(sf::RenderWindow &window) {
 
     gun->draw(window);
     sprite.draw(window);
+}
+
+void TurretEnemy::load(PreloadedTurretData &data) {
+
+    STATE_HIDING = data.STATE_HIDING;
+    STATE_COMING_OUT_OF_HIDING = data.STATE_COMING_OUT_OF_HIDING;
+    STATE_GOING_INTO_HIDING = data.STATE_GOING_INTO_HIDING;
+    STATE_SHOOTING = data.STATE_SHOOTING;
+
+    DOWN = data.DOWN;
+    DOWN_LEFT = data.DOWN_LEFT;
+    LEFT = data.LEFT;
+    UP_LEFT = data.UP_LEFT;
+    UP = data.UP;
+    UP_RIGHT = data.UP_RIGHT;
+    RIGHT = data.RIGHT;
+    DOWN_RIGHT = data.DOWN_RIGHT;
+
+    gun->setFireDelay(data.gunfireDelay);
+
+    hiddenStateDuration = data.hiddenStateDuration;
+    exposedStateDuration = data.exposedStateDuration;
+    setHealth(data.health);
+
+    sprite.loadTexture(data.textureFileName);
+    sprite.setNextFrameTime(data.animationNextFrameTime);
+
+    for(auto it = data.animationTextureRects.begin(); it != data.animationTextureRects.end(); ++it) {
+
+        for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
+
+            sprite.insertTextureRect(it->first, *vt);
+        }
+    }
+
+    for(auto it = data.hitboxes.begin(); it != data.hitboxes.end(); ++it) {
+
+        for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
+
+            hitbox.insertHitbox(*vt, it->first);
+        }
+    }
+
+    setState(STATE_HIDING);
 }
 
 void TurretEnemy::createHitboxes(const vector<sf::FloatRect> &hitboxes) {
@@ -247,9 +290,20 @@ void TurretEnemy::determineDirection(const glm::vec2 &targetPosition) {
 
 void TurretEnemy::setState(const unsigned &newState) {
 
+    if(currentState == newState) {
+
+        return;
+    }
+
     currentState = newState;
     sprite.setAnimationState(newState);
     hitbox.setActiveHitbox(0, newState);
 
-    stateDurationTimer.restart();
+    restartStateDurationTimers();
+}
+
+void TurretEnemy::restartStateDurationTimers() {
+
+    hiddenStateTimer.restart();
+    exposedStateTimer.restart();
 }

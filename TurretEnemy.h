@@ -10,6 +10,28 @@
 #include <string>
 #include "EnemyLoaders.h"
 
+struct PreloadedTurretData {
+
+    unsigned STATE_HIDING, STATE_COMING_OUT_OF_HIDING, STATE_GOING_INTO_HIDING, STATE_SHOOTING;
+
+    //frames of the shooting animation
+    unsigned DOWN, DOWN_LEFT, LEFT, UP_LEFT, UP, UP_RIGHT, RIGHT, DOWN_RIGHT;
+
+    sf::Time gunfireDelay;
+
+    sf::Time hiddenStateDuration;
+    sf::Time exposedStateDuration;
+    int health;
+
+    std::string textureFileName;
+    sf::Time animationNextFrameTime;
+
+    std::map<unsigned, std::vector<sf::IntRect> > animationTextureRects;
+    std::map<unsigned, std::vector<sf::FloatRect> > hitboxes;
+};
+
+extern PreloadedTurretData piranhaData;
+
 //turret enemy is an enemy that shoots at the player and doesn't move
 //some turrets can also hide themselves, like pihrana plant from mario
 //turret enemies don't move at all
@@ -38,6 +60,7 @@ class TurretEnemy : public ShootingEntity {
         virtual void draw(sf::RenderWindow &window);
 
         friend bool loadEnemy(TurretEnemy &enemy, const std::string &dataFileName);
+        void load(PreloadedTurretData &data);
 
     private:
 
@@ -56,12 +79,16 @@ class TurretEnemy : public ShootingEntity {
         }
 
         void setState(const unsigned &newState);
+        void restartStateDurationTimers();
 
         //timer to determine how long to stay in each state
         //this is only for states that aren't animated
         //animated states leave the state as soon as the animation is finished
-        sf::Clock stateDurationTimer;
-        sf::Time stateDuration;
+        sf::Clock hiddenStateTimer;
+        sf::Clock exposedStateTimer;
+
+        sf::Time hiddenStateDuration;
+        sf::Time exposedStateDuration;
 
         //drawing states
         unsigned STATE_HIDING;

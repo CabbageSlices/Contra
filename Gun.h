@@ -31,6 +31,8 @@ class Gun {
 
         std::vector<std::shared_ptr<Bullet> > &getBullets();
 
+        void setFireDelay(const sf::Time &delay);
+
     private:
 
         bool checkCanFire() {

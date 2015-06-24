@@ -10,6 +10,33 @@
 #include "EnemyLoaders.h"
 #include "AnimatedSprite.h"
 
+#include <string>
+#include <vector>
+#include <map>
+
+//struct to store preloaded data about an enemy so whenever a new enemy is created you don't have to open a file to retrieve info about it
+struct PreloadedEnemyData {
+
+    unsigned STATE_WALKING_LEFT;
+    unsigned STATE_WALKING_RIGHT;
+    unsigned STATE_FALLING_LEFT;
+    unsigned STATE_FALLING_RIGHT;
+
+    int health;
+
+    std::string textureFileName;
+    sf::Time animationNextFrameTime;
+
+    //texture rect for each animation state
+    std::map<unsigned, std::vector<sf::IntRect> > animationTextureRects;
+
+    //hitbox for each animation state
+    std::map<unsigned, std::vector<sf::FloatRect> > hitboxes;
+};
+
+//preloaded data about goombas
+extern PreloadedEnemyData goombaData;
+
 class Enemy : public EntityBase {
 
     public:
@@ -29,6 +56,8 @@ class Enemy : public EntityBase {
         virtual void draw(sf::RenderWindow &window);
 
         friend bool loadEnemy(Enemy &enemy, const std::string &filename);
+
+        void load(PreloadedEnemyData &data);
 
     private:
 
