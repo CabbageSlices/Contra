@@ -78,6 +78,8 @@
 		<Unit filename="Bullet.h" />
 		<Unit filename="Camera.cpp" />
 		<Unit filename="Camera.h" />
+		<Unit filename="CollisionResolution.cpp" />
+		<Unit filename="CollisionResolution.h" />
 		<Unit filename="CollisionResponse.h" />
 		<Unit filename="DestructibleBlock.cpp" />
 		<Unit filename="DestructibleBlock.h" />

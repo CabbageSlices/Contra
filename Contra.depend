@@ -304,7 +304,7 @@
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
 
-1434590690 source:c:\users\nimesh\desktop\c++\github\contra\bullet.cpp
+1435095364 source:c:\users\nimesh\desktop\c++\github\contra\bullet.cpp
 	"Bullet.h"
 	"TileCollisionHandling.h"
 	"Enemy.h"
@@ -367,13 +367,15 @@
 
 1432770771 c:\users\nimesh\desktop\c++\github\contra\collisionresponse.h
 
-1435095364 c:\users\nimesh\desktop\c++\github\contra\enemy.h
+1435107236 c:\users\nimesh\desktop\c++\github\contra\enemy.h
 	"SFML/Graphics.hpp"
 	"ObjectHitbox.h"
 	"TileCollisionHandling.h"
 	"TileMap.h"
 	"Direction.h"
 	"EntityBase.h"
+	"EnemyLoaders.h"
+	"AnimatedSprite.h"
 
 1432770771 c:\users\nimesh\desktop\c++\github\contra\direction.h
 	"glm/glm.hpp"
@@ -392,7 +394,7 @@
 
 1432770771 c:\users\nimesh\desktop\c++\github\contra\globalconstants.h
 
-1435085640 source:c:\users\nimesh\desktop\c++\github\contra\destructibleblock.cpp
+1435095364 source:c:\users\nimesh\desktop\c++\github\contra\destructibleblock.cpp
 	"DestructibleBlock.h"
 	"CollisionResolution.h"
 	<iostream>
@@ -416,10 +418,11 @@
 1435085640 source:c:\users\nimesh\desktop\c++\github\contra\dynamicobject.cpp
 	"DynamicObject.h"
 
-1434249642 source:c:\users\nimesh\desktop\c++\github\contra\enemy.cpp
+1435111788 source:c:\users\nimesh\desktop\c++\github\contra\enemy.cpp
 	"Enemy.h"
 	"GlobalConstants.h"
 	<vector>
+	<iostream>
 
 1433566561 source:c:\users\nimesh\desktop\c++\github\contra\enemyspawners.cpp
 	"EnemySpawners.h"
@@ -461,7 +464,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1435095142 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1435111812 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -946,11 +949,12 @@
 	<unordered_set>
 	"Enemy.h"
 
-1434588555 source:c:\users\nimesh\desktop\c++\github\contra\enemyloaders.cpp
+1435111447 source:c:\users\nimesh\desktop\c++\github\contra\enemyloaders.cpp
 	"EnemyLoaders.h"
 	"TurretEnemy.h"
+	"Enemy.h"
 
-1434499274 c:\users\nimesh\desktop\c++\github\contra\enemyloaders.h
+1435107229 c:\users\nimesh\desktop\c++\github\contra\enemyloaders.h
 	<string>
 
 1435094546 source:c:\users\nimesh\desktop\c++\github\contra\collisionresolution.cpp

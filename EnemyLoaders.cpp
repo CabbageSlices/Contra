@@ -1,5 +1,6 @@
 #include "EnemyLoaders.h"
 #include "TurretEnemy.h"
+#include "Enemy.h"
 
 bool loadEnemy(TurretEnemy &enemy, const std::string &dataFileName) {
 
@@ -16,6 +17,8 @@ bool loadEnemy(TurretEnemy &enemy, const std::string &dataFileName) {
 
     //load the sprite
     enemy.sprite.loadTexture("pirana.png");
+
+    enemy.sprite.setNextFrameTime(sf::milliseconds(75));
 
     //create the texture rects
     enemy.sprite.insertTextureRect(enemy.STATE_HIDING, sf::IntRect(0, 0, 0, 0));
@@ -60,4 +63,44 @@ bool loadEnemy(TurretEnemy &enemy, const std::string &dataFileName) {
     enemy.hitbox.insertHitbox(sf::FloatRect(0, 2, 46, 100), enemy.STATE_SHOOTING);
 
     enemy.setState(enemy.STATE_HIDING);
+
+    return true;
+}
+
+bool loadEnemy(Enemy &enemy, const std::string &dataFileName) {
+
+    enemy.STATE_WALKING_LEFT = 0;
+    enemy.STATE_WALKING_RIGHT = 1;
+    enemy.STATE_FALLING_LEFT = 2;
+    enemy.STATE_FALLING_RIGHT = 3;
+
+    enemy.setHealth(1);
+
+    enemy.sprite.loadTexture("enemy.png");
+    enemy.sprite.setNextFrameTime(sf::milliseconds(500));
+
+    int textureRectWidth = 128;
+    int textureRectHeight = 128;
+
+    for(unsigned frames = 0; frames < 5; ++frames) {
+
+        enemy.sprite.insertTextureRect(enemy.STATE_WALKING_LEFT, sf::IntRect(textureRectWidth * frames, 0, textureRectWidth, textureRectHeight));
+    }
+
+    for(unsigned frames = 0; frames < 5; ++frames) {
+
+        enemy.sprite.insertTextureRect(enemy.STATE_WALKING_RIGHT, sf::IntRect(textureRectWidth * frames, textureRectHeight, textureRectWidth, textureRectHeight));
+    }
+
+    enemy.sprite.insertTextureRect(enemy.STATE_FALLING_LEFT, sf::IntRect(0, textureRectHeight * 2, textureRectWidth, textureRectHeight));
+    enemy.sprite.insertTextureRect(enemy.STATE_FALLING_RIGHT, sf::IntRect(textureRectWidth, textureRectHeight * 2, textureRectWidth, textureRectHeight));
+
+    enemy.hitbox.insertHitbox(sf::FloatRect(24, 50, 82, 78), enemy.STATE_WALKING_LEFT);
+    enemy.hitbox.insertHitbox(sf::FloatRect(24, 50, 82, 78), enemy.STATE_WALKING_RIGHT);
+    enemy.hitbox.insertHitbox(sf::FloatRect(24, 59, 74, 69), enemy.STATE_FALLING_LEFT);
+    enemy.hitbox.insertHitbox(sf::FloatRect(32, 59, 74, 69), enemy.STATE_FALLING_RIGHT);
+
+    enemy.determineHorizontalDirection();
+
+    return true;
 }

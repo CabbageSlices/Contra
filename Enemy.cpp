@@ -1,17 +1,24 @@
 #include "Enemy.h"
 #include "GlobalConstants.h"
 #include <vector>
+#include <iostream>
 
+using std::cout;
+using std::endl;
 using std::vector;
 using std::shared_ptr;
 
 Enemy::Enemy(const glm::vec2 &positionWorldSpace, const Direction &initialDirection, const int initialHealth) :
-    EntityBase(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY / 5, 0), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), initialHealth)
+    EntityBase(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY / 5, 0), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), initialHealth),
+    STATE_WALKING_LEFT(0),
+    STATE_WALKING_RIGHT(0),
+    STATE_FALLING_LEFT(0),
+    STATE_FALLING_RIGHT(0),
+    currentState(0),
+    sprite(sf::milliseconds(75)),
+    direction()
     {
-        entity.setSize(sf::Vector2f(64, 64));
         hitbox.setOrigin(positionWorldSpace);
-        hitbox.insertHitbox(sf::FloatRect(0, 0, entity.getSize().x, entity.getSize().y));
-        hitbox.setActiveHitbox(0);
 
         if(initialDirection.horizontal == HorizontalDirection::RIGHT) {
 
@@ -40,11 +47,17 @@ void Enemy::updatePhysics(const float &deltaTime, const sf::FloatRect &worldBoun
     }
 
     handleTileCollisionVertically(map);
+
+    determineHorizontalDirection();
 }
 
 void Enemy::updateRendering() {
 
+    determineAnimationState();
+    sprite.animate();
+
     entity.setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
+    sprite.getSprite().setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
 }
 
 void Enemy::setInitialVelocity(const glm::vec2 &velocity) {
@@ -82,10 +95,69 @@ CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*co
     return response;
 }
 
+void Enemy::draw(sf::RenderWindow &window) {
+
+    sprite.draw(window);
+}
+
+void Enemy::setState(const unsigned &newState) {
+
+    //if new state is equal to current state then no need to switch
+    if(newState == currentState) {
+
+        return;
+    }
+
+    currentState = newState;
+    sprite.setAnimationState(newState);
+    hitbox.setActiveHitbox(0, currentState);
+}
+
 void Enemy::changeDirectionHorizontally() {
 
     //change directions
     glm::vec2 currentVelocity = hitboxMovementController.getVelocities();
     currentVelocity.x *= -1;
     hitboxMovementController.setVelocities(currentVelocity);
+
+    determineHorizontalDirection();
+}
+
+void Enemy::determineHorizontalDirection() {
+
+    if(hitboxMovementController.getVelocities().x < 0) {
+
+        direction.horizontal = HorizontalDirection::LEFT;
+
+    } else if(hitboxMovementController.getVelocities().x > 0) {
+
+        direction.horizontal = HorizontalDirection::RIGHT;
+    }
+}
+
+void Enemy::determineAnimationState() {
+
+    glm::vec2 velocities = hitboxMovementController.getVelocities();
+
+    if(direction.horizontal == HorizontalDirection::LEFT) {
+
+        if(velocities.y != 0) {
+
+            setState(STATE_FALLING_LEFT);
+        } else {
+
+            setState(STATE_WALKING_LEFT);
+        }
+
+    } else {
+
+        if(velocities.y != 0) {
+
+            setState(STATE_FALLING_RIGHT);
+
+        } else {
+
+            setState(STATE_WALKING_RIGHT);
+        }
+    }
 }

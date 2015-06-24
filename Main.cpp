@@ -458,8 +458,9 @@ int main() {
     world.worldBounds = sf::FloatRect(0, 0, 1024 + 64, 768);
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
     world.players.push_back(make_shared<Player>());
-    world.turrets.push_back(make_shared<TurretEnemy>(glm::vec2(512, 768 - 128)));
-    loadEnemy(*world.turrets[0], "asdf.txt");
+
+    world.enemies.push_back(make_shared<Enemy>(glm::vec2(0, 0), Direction()));
+    loadEnemy(*world.enemies[0], "asdf");
 
     while(window.isOpen()) {
 

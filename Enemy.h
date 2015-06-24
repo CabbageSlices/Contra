@@ -7,6 +7,8 @@
 #include "TileMap.h"
 #include "Direction.h"
 #include "EntityBase.h"
+#include "EnemyLoaders.h"
+#include "AnimatedSprite.h"
 
 class Enemy : public EntityBase {
 
@@ -24,11 +26,30 @@ class Enemy : public EntityBase {
 
         virtual void respondToCollision(const CollisionResponse &response);
 
+        virtual void draw(sf::RenderWindow &window);
+
+        friend bool loadEnemy(Enemy &enemy, const std::string &filename);
+
     private:
 
         virtual CollisionResponse handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
 
+        void setState(const unsigned &newState);
+
         void changeDirectionHorizontally();
+        void determineHorizontalDirection();
+        void determineAnimationState();
+
+        unsigned STATE_WALKING_LEFT;
+        unsigned STATE_WALKING_RIGHT;
+        unsigned STATE_FALLING_LEFT;
+        unsigned STATE_FALLING_RIGHT;
+
+        unsigned currentState;
+
+        AnimatedSprite sprite;
+
+        Direction direction;
 };
 
 #endif // ENEMY_H_INCLUDED
