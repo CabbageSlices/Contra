@@ -262,9 +262,12 @@ void Camera::calculateView(const sf::FloatRect &worldBounds) {
 
     glm::vec2 centerPosition = currentPosition;
 
-    centerPosition.x = glm::clamp(centerPosition.x, worldBounds.left + currentSize.x / 2, worldBounds.left + worldBounds.width - currentSize.x / 2);
-    centerPosition.y = glm::clamp(centerPosition.y, worldBounds.top + currentSize.y / 2, worldBounds.top + worldBounds.height - currentSize.y / 2);
+    //if size of camera is smaller than world size on any axis just set the view size to world bounds size and center it on that axis
+    glm::vec2 effectiveSize(glm::min(worldBounds.width, currentSize.x), glm::min(worldBounds.height, currentSize.y));
 
-    view.setSize(currentSize.x, currentSize.y);
+    centerPosition.x = glm::clamp(centerPosition.x, worldBounds.left + effectiveSize.x / 2, worldBounds.left + worldBounds.width - effectiveSize.x / 2);
+    centerPosition.y = glm::clamp(centerPosition.y, worldBounds.top + effectiveSize.y / 2, worldBounds.top + worldBounds.height - effectiveSize.y / 2);
+
+    view.setSize(effectiveSize.x, effectiveSize.y);
     view.setCenter(centerPosition.x, centerPosition.y);
 }
