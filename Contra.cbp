@@ -81,6 +81,8 @@
 		<Unit filename="CollisionResolution.cpp" />
 		<Unit filename="CollisionResolution.h" />
 		<Unit filename="CollisionResponse.h" />
+		<Unit filename="DataLoaders.cpp" />
+		<Unit filename="DataLoaders.h" />
 		<Unit filename="DestructibleBlock.cpp" />
 		<Unit filename="DestructibleBlock.h" />
 		<Unit filename="Direction.cpp" />
@@ -89,8 +91,6 @@
 		<Unit filename="DynamicObject.h" />
 		<Unit filename="Enemy.cpp" />
 		<Unit filename="Enemy.h" />
-		<Unit filename="EnemyLoaders.cpp" />
-		<Unit filename="EnemyLoaders.h" />
 		<Unit filename="EnemySpawners.h" />
 		<Unit filename="EntityBase.cpp" />
 		<Unit filename="EntityBase.h" />
@@ -107,6 +107,7 @@
 		<Unit filename="Player.cpp" />
 		<Unit filename="Player.h" />
 		<Unit filename="PlayerManager.h" />
+		<Unit filename="PreloadedData.cpp" />
 		<Unit filename="PreloadedData.h" />
 		<Unit filename="ShootingEntity.cpp" />
 		<Unit filename="ShootingEntity.h" />
