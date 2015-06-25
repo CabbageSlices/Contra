@@ -7,7 +7,7 @@
 #include "TileMap.h"
 #include "Direction.h"
 #include "EntityBase.h"
-#include "EnemyLoaders.h"
+#include "DataLoaders.h"
 #include "AnimatedSprite.h"
 #include "PreloadedData.h"
 

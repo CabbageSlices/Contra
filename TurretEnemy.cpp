@@ -30,11 +30,7 @@ TurretEnemy::TurretEnemy(const glm::vec2 &position, const int initialHealth) :
     DOWN_RIGHT(0),
     sprite(sf::milliseconds(75))
     {
-        entity.setSize(sf::Vector2f(128, 128));
         hitbox.setOrigin(position);
-        hitbox.insertHitbox(sf::FloatRect(0, 0, entity.getSize().x, entity.getSize().y));
-        hitbox.setActiveHitbox(0);
-        entity.setPosition(position.x, position.y);
 
         gun = make_shared<Gun>();
     }
@@ -163,6 +159,9 @@ void TurretEnemy::draw(sf::RenderWindow &window) {
 
 void TurretEnemy::load(PreloadedTurretData &data) {
 
+    hitbox.clearHitboxes();
+    sprite.clearAnimation();
+
     STATE_HIDING = data.STATE_HIDING;
     STATE_COMING_OUT_OF_HIDING = data.STATE_COMING_OUT_OF_HIDING;
     STATE_GOING_INTO_HIDING = data.STATE_GOING_INTO_HIDING;
@@ -177,7 +176,10 @@ void TurretEnemy::load(PreloadedTurretData &data) {
     RIGHT = data.RIGHT;
     DOWN_RIGHT = data.DOWN_RIGHT;
 
+    gun.reset();
+    gun = createGunOfType(data.gunType);
     gun->setFireDelay(data.gunfireDelay);
+    gun->setBulletType(data.bulletType);
 
     hiddenStateDuration = data.hiddenStateDuration;
     exposedStateDuration = data.exposedStateDuration;

@@ -13,6 +13,17 @@ enum EnemyType {
     ENEMY_PIRANHA,
 };
 
+enum BulletType {
+
+    BULLET_ENEMY,
+    BULLET_PLAYER,
+};
+
+enum GunType {
+
+    GUN_BASIC
+};
+
 struct PreloadedData {
 
     int health;
@@ -34,7 +45,9 @@ struct PreloadedTurretData : public PreloadedData {
     //frames of the shooting animation
     unsigned DOWN, DOWN_LEFT, LEFT, UP_LEFT, UP, UP_RIGHT, RIGHT, DOWN_RIGHT;
 
+    GunType gunType;
     sf::Time gunfireDelay;
+    BulletType bulletType;
 
     sf::Time hiddenStateDuration;
     sf::Time exposedStateDuration;
@@ -49,10 +62,22 @@ struct PreloadedEnemyData : public PreloadedData{
     unsigned STATE_FALLING_RIGHT;
 };
 
+struct PreloadedBulletData : public PreloadedData {
+
+    unsigned STATE_RIGHT, STATE_UP_RIGHT, STATE_UP, STATE_UP_LEFT, STATE_LEFT, STATE_DOWN_LEFT, STATE_DOWN, STATE_DOWN_RIGHT;
+
+    float velocity;
+    sf::Time lifetime;
+};
+
 struct PreloadedDataCollection {
 
     PreloadedEnemyData goombaData;
     PreloadedTurretData piranhaData;
+    PreloadedBulletData enemyBulletData;
+    PreloadedBulletData playerBulletData;
 };
+
+extern PreloadedDataCollection dataCollection;
 
 #endif // PRELOADEDDATA_H_INCLUDED

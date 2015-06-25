@@ -80,9 +80,8 @@ struct SpawnPoint {
 template<class T>
 struct InformationForSpawner {
 
-    InformationForSpawner(std::vector<std::shared_ptr<T> > &enemyContainer, PreloadedDataCollection &collection, const sf::FloatRect &camBounds, const sf::FloatRect &levelBounds) :
+    InformationForSpawner(std::vector<std::shared_ptr<T> > &enemyContainer, const sf::FloatRect &camBounds, const sf::FloatRect &levelBounds) :
         enemies(enemyContainer),
-        dataCollection(collection),
         spawnPoints(),
         currentCameraBounds(camBounds),
         worldBounds(levelBounds)
@@ -91,13 +90,12 @@ struct InformationForSpawner {
         }
 
     std::vector<std::shared_ptr<T> > &enemies;
-    PreloadedDataCollection &dataCollection;
     std::vector<std::shared_ptr<SpawnPoint> > spawnPoints;
     sf::FloatRect currentCameraBounds;
     sf::FloatRect worldBounds;
 };
 
-void applyLoadedData(Enemy &enemy, EnemyType enemyType, PreloadedDataCollection &dataCollection) {
+void applyLoadedData(Enemy &enemy, EnemyType enemyType) {
 
     if(enemyType == EnemyType::ENEMY_GOOMBA) {
 
@@ -106,7 +104,7 @@ void applyLoadedData(Enemy &enemy, EnemyType enemyType, PreloadedDataCollection 
     }
 }
 
-void applyLoadedData(TurretEnemy &enemy, EnemyType enemyType, PreloadedDataCollection &dataCollection) {
+void applyLoadedData(TurretEnemy &enemy, EnemyType enemyType) {
 
     if(enemyType == EnemyType::ENEMY_PIRANHA) {
 
@@ -247,7 +245,7 @@ bool spawnEnemy(InformationForSpawner<T> &spawnInfo, int(*findSpawnPoint)(Inform
         return false;
     }
 
-    applyLoadedData(*enemy, closestPoint->getTypeOfEnemySpawned(), spawnInfo.dataCollection);
+    applyLoadedData(*enemy, closestPoint->getTypeOfEnemySpawned());
 
     closestPoint->resetSpawnTimer();
     closestPoint->increaseSpawnCount();

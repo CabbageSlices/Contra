@@ -24,6 +24,7 @@ class AnimatedSprite {
         //returns true if current animation is finished, and restarts the current animation once finished
         bool animate();
         void draw(sf::RenderWindow &window);
+        void clearAnimation();
 
         void setNextFrameTime(const sf::Time &nextFrameTime);
         void setAnimationState(const unsigned &animationState);

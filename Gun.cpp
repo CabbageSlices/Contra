@@ -8,9 +8,29 @@ using std::make_shared;
 using std::cout;
 using std::endl;
 
-Gun::Gun(const sf::Time &gunfireDelay) :
+std::shared_ptr<Gun> createGunOfType(const GunType &type) {
+
+    switch(type) {
+
+        case GunType::GUN_BASIC: {
+
+            return make_shared<Gun>();
+            break;
+        }
+
+        default: {
+
+            break;
+        }
+    }
+
+    return make_shared<Gun>();
+}
+
+Gun::Gun(const BulletType &type, const sf::Time &gunfireDelay) :
     timeSinceLastFired(sf::seconds(0)),
     fireDelay(gunfireDelay),
+    bulletType(type),
     bullets()
     {
 
@@ -77,9 +97,23 @@ void Gun::setFireDelay(const sf::Time &delay) {
     fireDelay = delay;
 }
 
+void Gun::setBulletType(const BulletType &type) {
+
+    bulletType = type;
+}
+
 void Gun::createBullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace) {
 
-    shared_ptr<Bullet> bullet = make_shared<Bullet>(positionWorldSpace, directionWorldSpace);
+    shared_ptr<Bullet> bullet;
+
+    if(bulletType == BulletType::BULLET_ENEMY) {
+
+        bullet = make_shared<Bullet>(positionWorldSpace, directionWorldSpace, dataCollection.enemyBulletData);
+
+    } else {
+
+        bullet = make_shared<Bullet>(positionWorldSpace, directionWorldSpace, dataCollection.playerBulletData);
+    }
 
     if(bullet) {
 

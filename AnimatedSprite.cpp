@@ -82,6 +82,12 @@ void AnimatedSprite::draw(sf::RenderWindow &window) {
     window.draw(sprite);
 }
 
+void AnimatedSprite::clearAnimation() {
+
+    currentAnimationState = 0;
+    currentStateTextureRects.clear();
+}
+
 void AnimatedSprite::setNextFrameTime(const sf::Time &nextFrameTime) {
 
     timeToNextFrame = nextFrameTime;

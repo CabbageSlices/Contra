@@ -57,7 +57,7 @@ class EntityBase {
 
         ObjectHitbox hitbox;
         HitboxMovementController hitboxMovementController;
-        const glm::vec2 MOVEMENT_VELOCITY; //measured in meters per second
+        glm::vec2 MOVEMENT_VELOCITY; //measured in meters per second
         unsigned health;
 
         sf::RectangleShape entity;

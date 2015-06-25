@@ -11,7 +11,7 @@
 #include "TurretEnemy.h"
 #include "DestructibleBlock.h"
 #include "SpatialHash.h"
-#include "EnemyLoaders.h"
+#include "DataLoaders.h"
 #include "CollisionResolution.h"
 #include "PreloadedData.h"
 
@@ -108,13 +108,12 @@ struct GameWorld {
 		destructibleBlocks(),
 		worldBounds(0, 0, 0, 0),
 		camera(window),
-		loadedDataCollection(),
-		enemySpawnInfo(enemies, loadedDataCollection, worldBounds, worldBounds),
-		turretSpawnInfo(turrets, loadedDataCollection, worldBounds, worldBounds),
+		enemySpawnInfo(enemies, worldBounds, worldBounds),
+		turretSpawnInfo(turrets, worldBounds, worldBounds),
 		destructibleBlockHash(256, 256),
 		updateTimer()
 		{
-            loadDataCollection(loadedDataCollection);
+
 		}
 
 	//entities
@@ -131,7 +130,6 @@ struct GameWorld {
 	Camera camera;
 
 	//spawner properties
-	PreloadedDataCollection loadedDataCollection;
 	InformationForSpawner<Enemy> enemySpawnInfo;
 	InformationForSpawner<TurretEnemy> turretSpawnInfo;
 
@@ -144,6 +142,8 @@ void loadDataCollection(PreloadedDataCollection &collection) {
 
     loadEnemyData(collection.goombaData, "goomba.txt");
     loadTurretData(collection.piranhaData, "piranha.txt");
+    loadBulletData(collection.playerBulletData, "fast");
+    loadBulletData(collection.enemyBulletData, "slow");
 }
 
 void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world) {
@@ -467,16 +467,18 @@ int main() {
 
     sf::Event event;
 
+    loadDataCollection(dataCollection);
+
     GameWorld world(window);
     world.worldBounds = sf::FloatRect(0, 0, 1024 + 64, 768);
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
     world.players.push_back(make_shared<Player>());
 
     world.enemies.push_back(make_shared<Enemy>(glm::vec2(0, 0), Direction()));
-    world.enemies[0]->load(world.loadedDataCollection.goombaData);
+    world.enemies[0]->load(dataCollection.goombaData);
 
-    world.turrets.push_back(make_shared<TurretEnemy>(glm::vec2(512, 512), 1));
-    world.turrets[0]->load(world.loadedDataCollection.piranhaData);
+    world.turrets.push_back(make_shared<TurretEnemy>(glm::vec2(512, 512)));
+    world.turrets[0]->load(dataCollection.piranhaData);
 
     while(window.isOpen()) {
 

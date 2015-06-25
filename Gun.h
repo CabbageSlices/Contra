@@ -8,6 +8,7 @@
 #include <vector>
 #include <memory>
 #include "glm/glm.hpp"
+#include "PreloadedData.h"
 
 class Bullet;
 class TileMap;
@@ -20,7 +21,7 @@ class Gun {
 
     public:
 
-        Gun(const sf::Time &gunfireDelay = sf::seconds(0.3 / 2.3f));
+        Gun(const BulletType &type = BulletType::BULLET_PLAYER, const sf::Time &gunfireDelay = sf::seconds(0.3 / 2.3f));
 
         //user position is position of user in the world
         //bulletOriginUserSpace is the relative origin of the bullet with respect to the user's position
@@ -32,6 +33,7 @@ class Gun {
         std::vector<std::shared_ptr<Bullet> > &getBullets();
 
         void setFireDelay(const sf::Time &delay);
+        void setBulletType(const BulletType &type);
 
     private:
 
@@ -45,7 +47,11 @@ class Gun {
         sf::Time timeSinceLastFired;
         sf::Time fireDelay;
 
+        BulletType bulletType;
+
         std::vector<std::shared_ptr<Bullet> > bullets;
 };
+
+std::shared_ptr<Gun> createGunOfType(const GunType &type);
 
 #endif // GUN_H_INCLUDED
