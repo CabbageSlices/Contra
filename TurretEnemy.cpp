@@ -9,13 +9,11 @@ using std::vector;
 using std::shared_ptr;
 using std::make_shared;
 
-PreloadedTurretData piranhaData;
-
 TurretEnemy::TurretEnemy(const glm::vec2 &position, const int initialHealth) :
     ShootingEntity(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), initialHealth),
     hiddenStateTimer(),
-    hiddenStateDuration(),
     exposedStateTimer(),
+    hiddenStateDuration(),
     exposedStateDuration(),
     STATE_HIDING(0),
     STATE_COMING_OUT_OF_HIDING(0),

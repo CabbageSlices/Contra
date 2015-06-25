@@ -8,8 +8,6 @@ using std::endl;
 using std::vector;
 using std::shared_ptr;
 
-PreloadedEnemyData goombaData;
-
 Enemy::Enemy(const glm::vec2 &positionWorldSpace, const Direction &initialDirection, const int initialHealth) :
     EntityBase(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY / 5, 0), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), initialHealth),
     STATE_WALKING_LEFT(0),

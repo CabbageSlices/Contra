@@ -8,8 +8,9 @@
 #include <memory>
 #include "SpatialHashEntry.h"
 #include "Direction.h"
-
-class Enemy;
+#include "PreloadedData.h"
+#include "Enemy.h"
+#include "TurretEnemy.h"
 
 struct SpawnPoint {
 
@@ -23,7 +24,7 @@ struct SpawnPoint {
 
     }
 
-    SpawnPoint(const glm::vec2 &position, const sf::Time &delay, const unsigned &maxSpawns = 0) :
+    SpawnPoint(const glm::vec2 &position, const sf::Time &delay, const unsigned &maxSpawns = 3) :
         enemiesSpawned(0),
         maxSpawnCount(maxSpawns),
         spawnPosition(position),
@@ -53,6 +54,16 @@ struct SpawnPoint {
         return spawnPosition;
     }
 
+    EnemyType getTypeOfEnemySpawned() const {
+
+        return typeOfEnemySpawned;
+    }
+
+    void setTypeOfEnemySpawned(const EnemyType &type) {
+
+        typeOfEnemySpawned = type;
+    }
+
     private:
 
         unsigned enemiesSpawned;
@@ -61,14 +72,17 @@ struct SpawnPoint {
         glm::vec2 spawnPosition;
         sf::Clock spawnTimer;
         sf::Time spawnDelay;
+
+        EnemyType typeOfEnemySpawned;
 };
 
 //information that a spawner can use for spawning
 template<class T>
 struct InformationForSpawner {
 
-    InformationForSpawner(std::vector<std::shared_ptr<T> > &enemyContainer, const sf::FloatRect &camBounds, const sf::FloatRect &levelBounds) :
+    InformationForSpawner(std::vector<std::shared_ptr<T> > &enemyContainer, PreloadedDataCollection &collection, const sf::FloatRect &camBounds, const sf::FloatRect &levelBounds) :
         enemies(enemyContainer),
+        dataCollection(collection),
         spawnPoints(),
         currentCameraBounds(camBounds),
         worldBounds(levelBounds)
@@ -77,10 +91,28 @@ struct InformationForSpawner {
         }
 
     std::vector<std::shared_ptr<T> > &enemies;
+    PreloadedDataCollection &dataCollection;
     std::vector<std::shared_ptr<SpawnPoint> > spawnPoints;
     sf::FloatRect currentCameraBounds;
     sf::FloatRect worldBounds;
 };
+
+void applyLoadedData(Enemy &enemy, EnemyType enemyType, PreloadedDataCollection &dataCollection) {
+
+    if(enemyType == EnemyType::ENEMY_GOOMBA) {
+
+        enemy.load(dataCollection.goombaData);
+
+    }
+}
+
+void applyLoadedData(TurretEnemy &enemy, EnemyType enemyType, PreloadedDataCollection &dataCollection) {
+
+    if(enemyType == EnemyType::ENEMY_PIRANHA) {
+
+        enemy.load(dataCollection.piranhaData);
+    }
+}
 
 //the returned spawnpoint needs to be a reference but yo ucan't return local reference
 //so instead this function returns the id of the closet spawn point, or -1 if none are available
@@ -163,6 +195,8 @@ bool spawnEnemyOffscreen(InformationForSpawner<T> &spawnInfo) {
 
         return false;
     }
+
+    applyLoadedData(*enemy, closestPoint->getTypeOfEnemySpawned(), spawnInfo.dataCollection);
 
     closestPoint->resetSpawnTimer();
     closestPoint->increaseSpawnCount();

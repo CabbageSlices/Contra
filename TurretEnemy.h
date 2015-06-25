@@ -9,28 +9,7 @@
 #include <vector>
 #include <string>
 #include "EnemyLoaders.h"
-
-struct PreloadedTurretData {
-
-    unsigned STATE_HIDING, STATE_COMING_OUT_OF_HIDING, STATE_GOING_INTO_HIDING, STATE_SHOOTING;
-
-    //frames of the shooting animation
-    unsigned DOWN, DOWN_LEFT, LEFT, UP_LEFT, UP, UP_RIGHT, RIGHT, DOWN_RIGHT;
-
-    sf::Time gunfireDelay;
-
-    sf::Time hiddenStateDuration;
-    sf::Time exposedStateDuration;
-    int health;
-
-    std::string textureFileName;
-    sf::Time animationNextFrameTime;
-
-    std::map<unsigned, std::vector<sf::IntRect> > animationTextureRects;
-    std::map<unsigned, std::vector<sf::FloatRect> > hitboxes;
-};
-
-extern PreloadedTurretData piranhaData;
+#include "PreloadedData.h"
 
 //turret enemy is an enemy that shoots at the player and doesn't move
 //some turrets can also hide themselves, like pihrana plant from mario

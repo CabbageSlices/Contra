@@ -367,7 +367,7 @@
 
 1432770771 c:\users\nimesh\desktop\c++\github\contra\collisionresponse.h
 
-1435117492 c:\users\nimesh\desktop\c++\github\contra\enemy.h
+1435195760 c:\users\nimesh\desktop\c++\github\contra\enemy.h
 	"SFML/Graphics.hpp"
 	"ObjectHitbox.h"
 	"TileCollisionHandling.h"
@@ -376,6 +376,7 @@
 	"EntityBase.h"
 	"EnemyLoaders.h"
 	"AnimatedSprite.h"
+	"PreloadedData.h"
 	<string>
 	<vector>
 	<map>
@@ -421,7 +422,7 @@
 1435085640 source:c:\users\nimesh\desktop\c++\github\contra\dynamicobject.cpp
 	"DynamicObject.h"
 
-1435117492 source:c:\users\nimesh\desktop\c++\github\contra\enemy.cpp
+1435195760 source:c:\users\nimesh\desktop\c++\github\contra\enemy.cpp
 	"Enemy.h"
 	"GlobalConstants.h"
 	<vector>
@@ -432,7 +433,7 @@
 	"Enemy.h"
 	<iostream>
 
-1434766610 c:\users\nimesh\desktop\c++\github\contra\enemyspawners.h
+1435196714 c:\users\nimesh\desktop\c++\github\contra\enemyspawners.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
@@ -440,6 +441,9 @@
 	<memory>
 	"SpatialHashEntry.h"
 	"Direction.h"
+	"PreloadedData.h"
+	"Enemy.h"
+	"TurretEnemy.h"
 
 1434413521 source:c:\users\nimesh\desktop\c++\github\contra\entitybase.cpp
 	"EntityBase.h"
@@ -467,7 +471,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1435119677 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1435196690 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -483,6 +487,7 @@
 	"SpatialHash.h"
 	"EnemyLoaders.h"
 	"CollisionResolution.h"
+	"PreloadedData.h"
 	<functional>
 	<vector>
 	<memory>
@@ -504,7 +509,7 @@
 	"Direction.h"
 	<memory>
 
-1435120711 c:\users\nimesh\desktop\c++\github\contra\turretenemy.h
+1435196630 c:\users\nimesh\desktop\c++\github\contra\turretenemy.h
 	"ShootingEntity.h"
 	"Direction.h"
 	"ShootingEntity.h"
@@ -513,6 +518,7 @@
 	<vector>
 	<string>
 	"EnemyLoaders.h"
+	"PreloadedData.h"
 
 1434508089 source:c:\users\nimesh\desktop\c++\github\contra\objecthitbox.cpp
 	"ObjectHitbox.h"
@@ -543,7 +549,7 @@
 	"glm/glm.hpp"
 	<iostream>
 
-1435120810 source:c:\users\nimesh\desktop\c++\github\contra\turretenemy.cpp
+1435195759 source:c:\users\nimesh\desktop\c++\github\contra\turretenemy.cpp
 	"TurretEnemy.h"
 	"GlobalConstants.h"
 	<cmath>
@@ -952,10 +958,9 @@
 	<unordered_set>
 	"Enemy.h"
 
-1435120921 source:c:\users\nimesh\desktop\c++\github\contra\enemyloaders.cpp
+1435194407 source:c:\users\nimesh\desktop\c++\github\contra\enemyloaders.cpp
 	"EnemyLoaders.h"
-	"TurretEnemy.h"
-	"Enemy.h"
+	"PreloadedData.h"
 
 1435119031 c:\users\nimesh\desktop\c++\github\contra\enemyloaders.h
 	<string>
@@ -972,4 +977,11 @@
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
 	<functional>
+
+1435196630 c:\users\nimesh\desktop\c++\github\contra\preloadeddata.h
+	"SFML/System.hpp"
+	"SFML/Graphics.hpp"
+	<string>
+	<map>
+	<vector>
 

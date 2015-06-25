@@ -13,8 +13,9 @@
 #include "SpatialHash.h"
 #include "EnemyLoaders.h"
 #include "CollisionResolution.h"
-#include <functional>
+#include "PreloadedData.h"
 
+#include <functional>
 #include <vector>
 #include <memory>
 #include <iterator>
@@ -29,46 +30,9 @@ using std::shared_ptr;
 using std::make_shared;
 using std::vector;
 
-struct GameWorld {
+struct GameWorld;
 
-	GameWorld(sf::RenderWindow &window) :
-		players(),
-		enemies(),
-		turrets(),
-		tileMap(),
-		destructibleBlocks(),
-		worldBounds(0, 0, 0, 0),
-		camera(window),
-		enemySpawnInfo(enemies, worldBounds, worldBounds),
-		turretSpawnInfo(turrets, worldBounds, worldBounds),
-		destructibleBlockHash(256, 256),
-		updateTimer()
-		{
-
-		}
-
-	//entities
-	vector<shared_ptr<Player> > players;
-	vector<shared_ptr<Enemy> > enemies;
-	vector<shared_ptr<TurretEnemy> > turrets;
-
-	//environment
-	TileMap tileMap;
-	vector<shared_ptr<DestructibleBlock> > destructibleBlocks;
-
-	//world properties
-	sf::FloatRect worldBounds;
-	Camera camera;
-
-	//spawner properties
-	InformationForSpawner<Enemy> enemySpawnInfo;
-	InformationForSpawner<TurretEnemy> turretSpawnInfo;
-
-	//other stuff
-	SpatialHash<DestructibleBlock> destructibleBlockHash;
-	sf::Clock updateTimer;
-};
-
+void loadDataCollection(PreloadedDataCollection &collection);
 void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world);
 void handleObjectEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world);
 void handleObjectKeystate(sf::RenderWindow &window, GameWorld &world);
@@ -133,6 +97,54 @@ function<void(shared_ptr<Bullet>, shared_ptr<TurretEnemy>)> bulletTurretCollisio
 function<void(shared_ptr<Player>, shared_ptr<Enemy>)> playerEnemyCollisionFunction = playerEnemyEntityCollision;
 function<void(shared_ptr<Player>, shared_ptr<TurretEnemy>)> playerTurretCollisionFunction = playerEnemyEntityCollision;
 function<void(shared_ptr<DestructibleBlock>, shared_ptr<EntityBase>)> destructibleBlockEntityCollisionFunction = destructibleBlockEntityCollision;
+
+struct GameWorld {
+
+	GameWorld(sf::RenderWindow &window) :
+		players(),
+		enemies(),
+		turrets(),
+		tileMap(),
+		destructibleBlocks(),
+		worldBounds(0, 0, 0, 0),
+		camera(window),
+		loadedDataCollection(),
+		enemySpawnInfo(enemies, loadedDataCollection, worldBounds, worldBounds),
+		turretSpawnInfo(turrets, loadedDataCollection, worldBounds, worldBounds),
+		destructibleBlockHash(256, 256),
+		updateTimer()
+		{
+            loadDataCollection(loadedDataCollection);
+		}
+
+	//entities
+	vector<shared_ptr<Player> > players;
+	vector<shared_ptr<Enemy> > enemies;
+	vector<shared_ptr<TurretEnemy> > turrets;
+
+	//environment
+	TileMap tileMap;
+	vector<shared_ptr<DestructibleBlock> > destructibleBlocks;
+
+	//world properties
+	sf::FloatRect worldBounds;
+	Camera camera;
+
+	//spawner properties
+	PreloadedDataCollection loadedDataCollection;
+	InformationForSpawner<Enemy> enemySpawnInfo;
+	InformationForSpawner<TurretEnemy> turretSpawnInfo;
+
+	//other stuff
+	SpatialHash<DestructibleBlock> destructibleBlockHash;
+	sf::Clock updateTimer;
+};
+
+void loadDataCollection(PreloadedDataCollection &collection) {
+
+    loadEnemyData(collection.goombaData, "goomba.txt");
+    loadTurretData(collection.piranhaData, "piranha.txt");
+}
 
 void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world) {
 
@@ -459,14 +471,11 @@ int main() {
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
     world.players.push_back(make_shared<Player>());
 
-    loadEnemyData(goombaData, "asdf");
-    loadTurretData(piranhaData, "asdf");
-
     world.enemies.push_back(make_shared<Enemy>(glm::vec2(0, 0), Direction()));
-    world.enemies[0]->load(goombaData);
+    world.enemies[0]->load(world.loadedDataCollection.goombaData);
 
     world.turrets.push_back(make_shared<TurretEnemy>(glm::vec2(512, 512), 1));
-    world.turrets[0]->load(piranhaData);
+    world.turrets[0]->load(world.loadedDataCollection.piranhaData);
 
     while(window.isOpen()) {
 
@@ -496,7 +505,8 @@ int main() {
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
                         shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6));
-                        world.enemySpawnInfo.spawnPoints.push_back(point);
+                        point->setTypeOfEnemySpawned(EnemyType::ENEMY_PIRANHA);
+                        world.turretSpawnInfo.spawnPoints.push_back(point);
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) {
 

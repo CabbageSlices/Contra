@@ -1,6 +1,5 @@
 #include "EnemyLoaders.h"
-#include "TurretEnemy.h"
-#include "Enemy.h"
+#include "PreloadedData.h"
 
 bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName) {
 

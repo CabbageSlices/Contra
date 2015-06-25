@@ -107,6 +107,7 @@
 		<Unit filename="Player.cpp" />
 		<Unit filename="Player.h" />
 		<Unit filename="PlayerManager.h" />
+		<Unit filename="PreloadedData.h" />
 		<Unit filename="ShootingEntity.cpp" />
 		<Unit filename="ShootingEntity.h" />
 		<Unit filename="SpatialHash.h" />

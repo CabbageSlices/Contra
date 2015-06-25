@@ -17,7 +17,7 @@ class Bullet : public EntityBase {
 
     public:
 
-        Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, const float &bulletVel = 11.f);
+        Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, const float &bulletVel = 6.f);
 
         virtual ~Bullet() {
 
