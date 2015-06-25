@@ -211,7 +211,8 @@ void updateEnemySpawners(GameWorld &world) {
 	world.enemySpawnInfo.worldBounds = world.worldBounds;
 	world.turretSpawnInfo.worldBounds = world.worldBounds;
 
-	spawnEnemyOffscreen(world.enemySpawnInfo);
+	spawnEnemyNearCamera(world.enemySpawnInfo);
+	spawnEnemyNearCamera(world.turretSpawnInfo);
 }
 
 void updateWorldPhyics(GameWorld &world, const float &deltaTime) {
@@ -505,8 +506,8 @@ int main() {
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
                         shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6));
-                        point->setTypeOfEnemySpawned(EnemyType::ENEMY_PIRANHA);
-                        world.turretSpawnInfo.spawnPoints.push_back(point);
+                        point->setTypeOfEnemySpawned(EnemyType::ENEMY_GOOMBA);
+                        world.enemySpawnInfo.spawnPoints.push_back(point);
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) {
 

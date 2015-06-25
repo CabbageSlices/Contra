@@ -114,6 +114,28 @@ void applyLoadedData(TurretEnemy &enemy, EnemyType enemyType, PreloadedDataColle
     }
 }
 
+void spawnEntity(std::shared_ptr<Enemy> &enemy, InformationForSpawner<Enemy> &spawnInfo, std::shared_ptr<SpawnPoint> &closestPoint) {
+
+    Direction direction;
+
+    //enemy spawned to the right of the players so look to left
+    if(closestPoint->getSpawnPosition().x > spawnInfo.currentCameraBounds.left) {
+
+        direction.horizontal = HorizontalDirection::LEFT;
+
+    } else {
+
+        direction.horizontal = HorizontalDirection::RIGHT;
+    }
+
+    enemy = std::make_shared<Enemy>(glm::vec2(closestPoint->getSpawnPosition().x, closestPoint->getSpawnPosition().y), direction);
+}
+
+void spawnEntity(std::shared_ptr<TurretEnemy> &enemy, InformationForSpawner<TurretEnemy> &spawnInfo, std::shared_ptr<SpawnPoint> &closestPoint) {
+
+    enemy = std::make_shared<TurretEnemy>(glm::vec2(closestPoint->getSpawnPosition().x, closestPoint->getSpawnPosition().y));
+}
+
 //the returned spawnpoint needs to be a reference but yo ucan't return local reference
 //so instead this function returns the id of the closet spawn point, or -1 if none are available
 template<class T>
@@ -121,7 +143,7 @@ int findClosestSpawnPointOffscreen(InformationForSpawner<T> &spawnInfo) {
 
     int closestPointId = -1;
 
-    std::vector<std::shared_ptr<SpawnPoint> > spawnPoints = spawnInfo.spawnPoints;
+    std::vector<std::shared_ptr<SpawnPoint> > &spawnPoints = spawnInfo.spawnPoints;
 
     if(spawnPoints.size() == 0) {
 
@@ -165,31 +187,60 @@ int findClosestSpawnPointOffscreen(InformationForSpawner<T> &spawnInfo) {
 }
 
 template<class T>
-bool spawnEnemyOffscreen(InformationForSpawner<T> &spawnInfo) {
+int findPointNearCamera(InformationForSpawner<T> &spawnInfo) {
 
-    int idClosestPoint = findClosestSpawnPointOffscreen(spawnInfo);
+    std::vector<std::shared_ptr<SpawnPoint> > &spawnPoints = spawnInfo.spawnPoints;
 
-    if(idClosestPoint < 0 || idClosestPoint > spawnInfo.spawnPoints.size()) {
+    glm::vec2 camCenter;
+    camCenter.x = spawnInfo.currentCameraBounds.left + spawnInfo.currentCameraBounds.width / 2.f;
+    camCenter.y = spawnInfo.currentCameraBounds.top + spawnInfo.currentCameraBounds.height / 2.f;
+
+    //find a valid point within a certain distance from the camera center
+    //this distance is determined by the camera size scaled by some arbritrary constant
+    float sizeScale = 1.25f;
+
+    glm::vec2 camSizeScaled;
+    camSizeScaled.x = spawnInfo.currentCameraBounds.width;
+    camSizeScaled.y = spawnInfo.currentCameraBounds.height;
+    camSizeScaled *= sizeScale;
+
+    sf::FloatRect validSpawnpointArea(camCenter.x - camSizeScaled.x / 2, camCenter.y - camSizeScaled.y / 2, camSizeScaled.x, camSizeScaled.y);
+
+    for(unsigned i = 0; i < spawnPoints.size(); ++i) {
+
+        if(!spawnPoints[i]->checkCanSpawn()) {
+
+            continue;
+        }
+
+        glm::vec2 position = spawnPoints[i]->getSpawnPosition();
+        sf::Vector2f pos(position.x, position.y);
+
+        if(validSpawnpointArea.contains(pos)) {
+
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+template<class T>
+bool spawnEnemy(InformationForSpawner<T> &spawnInfo, int(*findSpawnPoint)(InformationForSpawner<T> &spawnInfo)) {
+
+    int spawnPointId = findSpawnPoint(spawnInfo);
+
+    if(spawnPointId < 0 || spawnPointId > spawnInfo.spawnPoints.size()) {
 
         //no valid point found so don't spawn anything
         return false;
     }
 
-    std::shared_ptr<SpawnPoint> &closestPoint = spawnInfo.spawnPoints[idClosestPoint];
+    std::shared_ptr<SpawnPoint> &closestPoint = spawnInfo.spawnPoints[spawnPointId];
 
-    Direction direction;
+    std::shared_ptr<T> enemy;
 
-    //enemy spawned to the right of the players so look to left
-    if(closestPoint->getSpawnPosition().x > spawnInfo.currentCameraBounds.left) {
-
-        direction.horizontal = HorizontalDirection::LEFT;
-
-    } else {
-
-        direction.horizontal = HorizontalDirection::RIGHT;
-    }
-
-    std::shared_ptr<T> enemy = std::make_shared<T>(glm::vec2(closestPoint->getSpawnPosition().x, closestPoint->getSpawnPosition().y), direction);
+    spawnEntity(enemy, spawnInfo, closestPoint);
 
     if(!enemy) {
 
@@ -203,6 +254,18 @@ bool spawnEnemyOffscreen(InformationForSpawner<T> &spawnInfo) {
 
     spawnInfo.enemies.push_back(enemy);
     return true;
+}
+
+template<class T>
+bool spawnEnemyOffscreen(InformationForSpawner<T> &spawnInfo) {
+
+    return spawnEnemy(spawnInfo, findClosestSpawnPointOffscreen);
+}
+
+template<class T>
+bool spawnEnemyNearCamera(InformationForSpawner<T> &spawnInfo) {
+
+    return spawnEnemy(spawnInfo, findPointNearCamera);
 }
 
 #endif // ENEMYSPAWNERS_H_INCLUDED
