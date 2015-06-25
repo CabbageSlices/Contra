@@ -52,10 +52,6 @@ class Enemy : public EntityBase {
         unsigned STATE_FALLING_LEFT;
         unsigned STATE_FALLING_RIGHT;
 
-        unsigned currentState;
-
-        AnimatedSprite sprite;
-
         Direction direction;
 };
 

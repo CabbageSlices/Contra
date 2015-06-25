@@ -103,7 +103,6 @@
 		<Unit filename="Main.cpp" />
 		<Unit filename="ObjectHitbox.cpp" />
 		<Unit filename="ObjectHitbox.h" />
-		<Unit filename="PiranhaPlant.h" />
 		<Unit filename="Player.cpp" />
 		<Unit filename="Player.h" />
 		<Unit filename="PlayerManager.h" />

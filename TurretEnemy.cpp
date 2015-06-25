@@ -19,7 +19,6 @@ TurretEnemy::TurretEnemy(const glm::vec2 &position, const int initialHealth) :
     STATE_COMING_OUT_OF_HIDING(0),
     STATE_GOING_INTO_HIDING(0),
     STATE_SHOOTING(0),
-    currentState(0),
     DOWN(0),
     DOWN_LEFT(0),
     LEFT(0),
@@ -27,8 +26,7 @@ TurretEnemy::TurretEnemy(const glm::vec2 &position, const int initialHealth) :
     UP(0),
     UP_RIGHT(0),
     RIGHT(0),
-    DOWN_RIGHT(0),
-    sprite(sf::milliseconds(75))
+    DOWN_RIGHT(0)
     {
         hitbox.setOrigin(position);
 
@@ -183,26 +181,8 @@ void TurretEnemy::load(PreloadedTurretData &data) {
 
     hiddenStateDuration = data.hiddenStateDuration;
     exposedStateDuration = data.exposedStateDuration;
-    setHealth(data.health);
 
-    sprite.loadTexture(data.textureFileName);
-    sprite.setNextFrameTime(data.animationNextFrameTime);
-
-    for(auto it = data.animationTextureRects.begin(); it != data.animationTextureRects.end(); ++it) {
-
-        for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
-
-            sprite.insertTextureRect(it->first, *vt);
-        }
-    }
-
-    for(auto it = data.hitboxes.begin(); it != data.hitboxes.end(); ++it) {
-
-        for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
-
-            hitbox.insertHitbox(*vt, it->first);
-        }
-    }
+    loadBase(data);
 
     setState(STATE_HIDING);
 }

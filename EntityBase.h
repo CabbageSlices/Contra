@@ -9,6 +9,7 @@
 #include "TileCollisionHandling.h"
 #include "ObjectHitbox.h"
 #include "CollisionResponse.h"
+#include "AnimatedSprite.h"
 #include "HitboxMovementController.h"
 
 #include "glm/glm.hpp"
@@ -55,12 +56,43 @@ class EntityBase {
         CollisionResponse handleTileCollisionHorizontally(TileMap& map);
         CollisionResponse handleTileCollisionVertically(TileMap& map);
 
+        template<class Data>
+        void loadBase(const Data &data);
+
         ObjectHitbox hitbox;
         HitboxMovementController hitboxMovementController;
         glm::vec2 MOVEMENT_VELOCITY; //measured in meters per second
         unsigned health;
 
         sf::RectangleShape entity;
+
+        unsigned currentState;
+        AnimatedSprite sprite;
 };
+
+template<class Data>
+void EntityBase::loadBase(const Data &data) {
+
+    health = data.health;
+
+    sprite.loadTexture(data.textureFileName);
+    sprite.setNextFrameTime(data.animationNextFrameTime);
+
+    for(auto it = data.animationTextureRects.begin(); it != data.animationTextureRects.end(); ++it) {
+
+        for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
+
+            sprite.insertTextureRect(it->first, *vt);
+        }
+    }
+
+    for(auto it = data.hitboxes.begin(); it != data.hitboxes.end(); ++it) {
+
+        for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
+
+            hitbox.insertHitbox(*vt, it->first);
+        }
+    }
+}
 
 #endif // ENTITYBASE_H_INCLUDED

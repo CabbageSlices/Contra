@@ -8,8 +8,7 @@ using std::endl;
 using std::shared_ptr;
 
 DestructibleBlock::DestructibleBlock(const glm::vec2 &position) :
-    DynamicObject(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), 1),
-    sprite(sf::milliseconds(30))
+    DynamicObject(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), 1)
     {
         setup();
         hitbox.setOrigin(position);

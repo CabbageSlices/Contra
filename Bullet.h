@@ -58,10 +58,6 @@ class Bullet : public EntityBase {
         unsigned STATE_DOWN_LEFT;
         unsigned STATE_DOWN;
         unsigned STATE_DOWN_RIGHT;
-
-        unsigned currentState;
-
-        AnimatedSprite sprite;
 };
 
 #endif // BULLET_H_INCLUDED

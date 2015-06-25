@@ -14,8 +14,6 @@ Enemy::Enemy(const glm::vec2 &positionWorldSpace, const Direction &initialDirect
     STATE_WALKING_RIGHT(0),
     STATE_FALLING_LEFT(0),
     STATE_FALLING_RIGHT(0),
-    currentState(0),
-    sprite(sf::milliseconds(75)),
     direction()
     {
         hitbox.setOrigin(positionWorldSpace);
@@ -109,26 +107,7 @@ void Enemy::load(PreloadedEnemyData &data) {
     STATE_FALLING_LEFT = data.STATE_FALLING_LEFT;
     STATE_FALLING_RIGHT = data.STATE_FALLING_RIGHT;
 
-    setHealth(data.health);
-
-    sprite.loadTexture(data.textureFileName);
-    sprite.setNextFrameTime(data.animationNextFrameTime);
-
-    for(auto it = data.animationTextureRects.begin(); it != data.animationTextureRects.end(); ++it) {
-
-        for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
-
-            sprite.insertTextureRect(it->first, *vt);
-        }
-    }
-
-    for(auto it = data.hitboxes.begin(); it != data.hitboxes.end(); ++it) {
-
-        for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
-
-            hitbox.insertHitbox(*vt, it->first);
-        }
-    }
+    loadBase(data);
 }
 
 void Enemy::setState(const unsigned &newState) {

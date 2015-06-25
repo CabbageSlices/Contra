@@ -22,9 +22,7 @@ Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWo
     STATE_LEFT(0),
     STATE_DOWN_LEFT(0),
     STATE_DOWN(0),
-    STATE_DOWN_RIGHT(0),
-    currentState(0),
-    sprite(sf::seconds(1))
+    STATE_DOWN_RIGHT(0)
     {
         entity.setSize(sf::Vector2f(20, 20));
         hitbox.setOrigin(positionWorldSpace - glm::vec2(10, 10));
@@ -45,9 +43,7 @@ Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWo
     STATE_LEFT(0),
     STATE_DOWN_LEFT(0),
     STATE_DOWN(0),
-    STATE_DOWN_RIGHT(0),
-    currentState(0),
-    sprite(sf::seconds(1))
+    STATE_DOWN_RIGHT(0)
     {
         load(data);
 
@@ -116,26 +112,7 @@ void Bullet::load(PreloadedBulletData &data) {
     MOVEMENT_VELOCITY = direction * data.velocity;
     lifeTime = data.lifetime;
 
-    setHealth(data.health);
-
-    sprite.loadTexture(data.textureFileName);
-    sprite.setNextFrameTime(data.animationNextFrameTime);
-
-    for(auto it = data.animationTextureRects.begin(); it != data.animationTextureRects.end(); ++it) {
-
-        for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
-
-            sprite.insertTextureRect(it->first, *vt);
-        }
-    }
-
-    for(auto it = data.hitboxes.begin(); it != data.hitboxes.end(); ++it) {
-
-        for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
-
-            hitbox.insertHitbox(*vt, it->first);
-        }
-    }
+    loadBase(data);
 
     determineState();
 }

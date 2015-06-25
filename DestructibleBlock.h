@@ -38,8 +38,6 @@ class DestructibleBlock : public DynamicObject {
 
         void setup();
         void createTextureRects();
-
-        AnimatedSprite sprite;
 };
 
 #endif // DESTRUCTIBLEBLOCK_H_INCLUDED

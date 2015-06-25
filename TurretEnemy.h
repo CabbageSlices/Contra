@@ -75,8 +75,6 @@ class TurretEnemy : public ShootingEntity {
         unsigned STATE_GOING_INTO_HIDING;
         unsigned STATE_SHOOTING;
 
-        unsigned currentState;
-
         //texture rect index number for each direction the object faces when shooting
         unsigned DOWN;
         unsigned DOWN_LEFT;
@@ -86,8 +84,6 @@ class TurretEnemy : public ShootingEntity {
         unsigned UP_RIGHT;
         unsigned RIGHT;
         unsigned DOWN_RIGHT;
-
-        AnimatedSprite sprite;
 };
 
 #endif // TURRETENEMY_H_INCLUDED
