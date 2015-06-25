@@ -108,7 +108,9 @@ void Tile::setType(const TileType& tileType) {
 
 sf::FloatRect Tile::getBoundingBox() const {
 
-    return tile.getGlobalBounds();
+    sf::FloatRect bounds = tile.getGlobalBounds();
+
+    return bounds;
 }
 
 TileType Tile::getType() const {

@@ -203,9 +203,10 @@ bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, HitboxMovementController
 
     if(snapToBottom) {
 
-        //calculate offset needed to move object so that it will be standing at base of tile
+        //calculate offset needed to move object so that it will be standing at bottom of slope
         float objectBottom = objectHitbox.top + objectHitbox.height;
-        float tileBottom = tileBoundingBox.top + tileBoundingBox.height;
+        float tileBottom = tileBoundingBox.top + tileIntercepts.y;// bottom of tile is the y-intercept because its the point on the slope with the largest y value that can be reached with the slope
+
         float yOffset = tileBottom - objectBottom;
 
         object.getHitbox()->move(glm::vec2(0, yOffset));
