@@ -21,6 +21,11 @@ AnimatedSprite::AnimatedSprite(const sf::Time &nextFrameTime) :
 
     }
 
+void AnimatedSprite::clearLoadedTextures() {
+
+    loadedTextures.clear();
+}
+
 bool AnimatedSprite::loadTexture(const std::string &fileName) {
 
     //try to use a preloaded sprite if possible

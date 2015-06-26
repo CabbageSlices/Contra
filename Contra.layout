@@ -1,24 +1,59 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_layout_file>
 	<ActiveTarget name="Debug" />
-	<File name="Gun.h" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+	<File name="Tile.h" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1402" topLine="9" />
+			<Cursor1 position="1371" topLine="8" />
 		</Cursor>
 	</File>
-	<File name="AnimatedSprite.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+	<File name="DynamicObject.cpp" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="335" topLine="5" />
+			<Cursor1 position="30" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="AnimatedSprite.cpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+	<File name="AnimatedSprite.h" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2242" topLine="55" />
+			<Cursor1 position="501" topLine="5" />
 		</Cursor>
 	</File>
-	<File name="HitboxMovementController.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+	<File name="DynamicObject.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="962" topLine="0" />
+			<Cursor1 position="611" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="AnimatedSprite.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="534" topLine="10" />
+		</Cursor>
+	</File>
+	<File name="Enemy.cpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="3640" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Enemy.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1556" topLine="4" />
+		</Cursor>
+	</File>
+	<File name="EnemySpawners.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="2491" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="EntityBase.cpp" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1135" topLine="34" />
+		</Cursor>
+	</File>
+	<File name="EntityBase.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1258" topLine="41" />
+		</Cursor>
+	</File>
+	<File name="Gun.cpp" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="381" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="TileCollisionHandling.cpp" open="0" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
@@ -26,9 +61,9 @@
 			<Cursor1 position="2964" topLine="93" />
 		</Cursor>
 	</File>
-	<File name="Main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="845" zoom_1="-2" zoom_2="-2">
+	<File name="Gun.h" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="17644" topLine="502" />
+			<Cursor1 position="1402" topLine="9" />
 		</Cursor>
 	</File>
 	<File name="TileCollisionHandling.h" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
@@ -36,14 +71,39 @@
 			<Cursor1 position="448" topLine="0" />
 		</Cursor>
 	</File>
+	<File name="TileMap.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="403" topLine="5" />
+		</Cursor>
+	</File>
+	<File name="HitboxMovementController.h" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="962" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="TileMap.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="505" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="Main.cpp" open="1" top="1" tabpos="1" split="0" active="1" splitpos="845" zoom_1="-2" zoom_2="-2">
+		<Cursor>
+			<Cursor1 position="15666" topLine="469" />
+		</Cursor>
+	</File>
+	<File name="TurretEnemy.cpp" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1135" topLine="29" />
+		</Cursor>
+	</File>
 	<File name="ObjectHitbox.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1323" topLine="59" />
 		</Cursor>
 	</File>
-	<File name="TileMap.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
+	<File name="TurretEnemy.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="403" topLine="5" />
+			<Cursor1 position="2658" topLine="8" />
 		</Cursor>
 	</File>
 	<File name="Bullet.cpp" open="0" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
@@ -56,11 +116,6 @@
 			<Cursor1 position="863" topLine="12" />
 		</Cursor>
 	</File>
-	<File name="TileMap.h" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="505" topLine="0" />
-		</Cursor>
-	</File>
 	<File name="Bullet.h" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1773" topLine="0" />
@@ -71,11 +126,6 @@
 			<Cursor1 position="4728" topLine="129" />
 		</Cursor>
 	</File>
-	<File name="TurretEnemy.cpp" open="0" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="5268" topLine="154" />
-		</Cursor>
-	</File>
 	<File name="Camera.cpp" open="0" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="2760" topLine="0" />
@@ -84,11 +134,6 @@
 	<File name="Player.h" open="0" top="0" tabpos="13" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="1429" topLine="23" />
-		</Cursor>
-	</File>
-	<File name="TurretEnemy.h" open="0" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2658" topLine="8" />
 		</Cursor>
 	</File>
 	<File name="Camera.h" open="0" top="0" tabpos="16" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
@@ -159,51 +204,6 @@
 	<File name="Tile.cpp" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="966" topLine="24" />
-		</Cursor>
-	</File>
-	<File name="Tile.h" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1371" topLine="8" />
-		</Cursor>
-	</File>
-	<File name="DynamicObject.cpp" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="30" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="DynamicObject.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="611" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Enemy.cpp" open="0" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="3640" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="Enemy.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1556" topLine="4" />
-		</Cursor>
-	</File>
-	<File name="EnemySpawners.h" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2491" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="EntityBase.cpp" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1135" topLine="34" />
-		</Cursor>
-	</File>
-	<File name="EntityBase.h" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1258" topLine="41" />
-		</Cursor>
-	</File>
-	<File name="Gun.cpp" open="0" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="-2" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="381" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

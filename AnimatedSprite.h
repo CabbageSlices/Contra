@@ -15,6 +15,10 @@ class AnimatedSprite {
 
         AnimatedSprite(const sf::Time &nextFrameTime);
 
+        ///does not guarantee that any textures are currently in use
+        ///if textures are cleared while they are still being used then it will cause an error
+        static void clearLoadedTextures();
+
         bool loadTexture(const std::string &fileName);
 
         //returns id of texture rect in the texture container for the given state
