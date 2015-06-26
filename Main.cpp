@@ -471,7 +471,7 @@ int main() {
     loadDataCollection(dataCollection);
 
     GameWorld world(window);
-    world.worldBounds = sf::FloatRect(0, 0, 1024 + 64, 768);
+    world.worldBounds = sf::FloatRect(0, 0, 2048, 768);
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
     world.players.push_back(make_shared<Player>());
 
@@ -547,8 +547,8 @@ int main() {
 
         window.clear();
 
-        drawWorld(window, world);
 
+        drawWorld(window, world);
         window.display();
 
     }

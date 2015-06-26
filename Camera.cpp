@@ -71,6 +71,16 @@ sf::FloatRect Camera::getCameraBounds() const {
     return sf::FloatRect(topLeft.x, topLeft.y, size.x, size.y);
 }
 
+glm::vec2 Camera::getCurrentPosition() const {
+
+    return currentPosition;
+}
+
+sf::Vector2f Camera::getViewCenter() const {
+
+    return view.getCenter();
+}
+
 void Camera::handleTransitions(const float &delta) {
 
     if(checkShouldSnapPosition()) {

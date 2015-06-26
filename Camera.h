@@ -30,6 +30,8 @@ class Camera {
         void applyCamera(sf::RenderWindow &window) const;
 
         sf::FloatRect getCameraBounds() const;
+        glm::vec2 getCurrentPosition() const;
+        sf::Vector2f getViewCenter() const;
 
     private:
 
