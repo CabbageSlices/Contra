@@ -8,21 +8,38 @@ using std::endl;
 using std::pair;
 using std::make_pair;
 
+std::map<std::string, sf::Texture> AnimatedSprite::loadedTextures;
+
 AnimatedSprite::AnimatedSprite(const sf::Time &nextFrameTime) :
     currentStateTextureRects(),
     currentAnimationState(0),
-    texture(),
     sprite(),
     frame(0),
     timeToNextFrame(nextFrameTime),
     animationTimer()
     {
-        sprite.setTexture(texture);
+
     }
 
 bool AnimatedSprite::loadTexture(const std::string &fileName) {
 
-    return texture.loadFromFile(fileName);
+    //try to use a preloaded sprite if possible
+    if(loadedTextures.count(fileName) != 0) {
+
+        sprite.setTexture(loadedTextures[fileName]);
+        return true;
+    }
+
+    //not previously loaded so load the texture
+    if(!loadedTextures[fileName].loadFromFile(fileName)) {
+
+        return false;
+    }
+
+    loadedTextures[fileName].setRepeated(true);
+    sprite.setTexture(loadedTextures[fileName]);
+
+    return true;
 }
 
 unsigned AnimatedSprite::insertTextureRect(const unsigned &animationState, const sf::IntRect &textureRect) {

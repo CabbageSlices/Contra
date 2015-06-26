@@ -71,7 +71,7 @@ void TurretEnemy::updateRendering() {
 
     //don't animate when entity is shooting because the shooting frames aren't animated
     //use the sprites animation state instead of the enemies because if the enemy state changes but the sprite doesn't then the sprite won't draw the correct state
-    if(sprite.getAnimationState() != STATE_SHOOTING && sprite.animate()) {
+    if(sprite.animate() && sprite.getAnimationState() != STATE_SHOOTING) {
 
         //animation finished so if its the transition animation then complete transitions
         if(currentState == STATE_COMING_OUT_OF_HIDING) {
@@ -90,14 +90,12 @@ void TurretEnemy::updateRendering() {
     if(currentState == STATE_HIDING && hiddenStateTimer.getElapsedTime() > hiddenStateDuration) {
 
         setState(STATE_COMING_OUT_OF_HIDING);
-    }
 
-    if(currentState == STATE_SHOOTING && exposedStateTimer.getElapsedTime() > exposedStateDuration) {
+    } else if(currentState == STATE_SHOOTING && exposedStateTimer.getElapsedTime() > exposedStateDuration) {
 
         setState(STATE_GOING_INTO_HIDING);
-    }
 
-    if(currentState == STATE_SHOOTING) {
+    } else if(currentState == STATE_SHOOTING) {
 
         if(direction.vertical == VerticalDirection::STRAIGHT) {
 
@@ -138,6 +136,11 @@ void TurretEnemy::updateRendering() {
                 sprite.setFrame(DOWN_RIGHT);
             }
         }
+
+    } else {
+
+        //going into hiding or coming out of hiding so use the correct hitbox every frame
+        hitbox.setActiveHitbox(sprite.getFrame(), currentState);
     }
 
     glm::vec2 position = hitbox.getOrigin();

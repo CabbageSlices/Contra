@@ -42,12 +42,13 @@ class AnimatedSprite {
         //key represents the current animation state, textureRectconatiner gives the textureRects for current states animation and is accessed by 'frame'
         std::map<unsigned, TextureRectContainer> currentStateTextureRects;
         unsigned currentAnimationState;
-        sf::Texture texture;
         sf::Sprite sprite;
 
         unsigned frame;
         sf::Time timeToNextFrame;
         sf::Clock animationTimer;
+
+        static std::map<std::string, sf::Texture> loadedTextures;
 };
 
 #endif // ANIMATEDSPRITE_H_INCLUDED
