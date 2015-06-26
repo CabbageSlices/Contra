@@ -158,3 +158,30 @@ bool loadBulletData(PreloadedBulletData &data, const std::string &dataFileName) 
 
     return true;
 }
+
+bool loadDestrutibleBlockData(PreloadedDestructibleBlockData &data, const std::string &dataFileName) {
+
+    data.STATE_SOLID = 0;
+    data.STATE_DESTROYING = 1;
+    data.STATE_DESTROYED = 2;
+
+    data.textureFileName = "BrickBreak.png";
+    data.animationNextFrameTime = sf::milliseconds(40);
+
+    data.animationTextureRects[data.STATE_SOLID].push_back(sf::IntRect(0, 0, 64, 64));
+
+    data.animationTextureRects[data.STATE_DESTROYING].push_back(sf::IntRect(64, 0, 64, 64));
+    data.animationTextureRects[data.STATE_DESTROYING].push_back(sf::IntRect(128, 0, 64, 64));
+    data.animationTextureRects[data.STATE_DESTROYING].push_back(sf::IntRect(0, 64, 64, 64));
+    data.animationTextureRects[data.STATE_DESTROYING].push_back(sf::IntRect(64, 64, 64, 64));
+    data.animationTextureRects[data.STATE_DESTROYING].push_back(sf::IntRect(128, 64, 64, 64));
+    data.animationTextureRects[data.STATE_DESTROYING].push_back(sf::IntRect(0, 128, 64, 64));
+    data.animationTextureRects[data.STATE_DESTROYING].push_back(sf::IntRect(64, 128, 64, 64));
+    data.animationTextureRects[data.STATE_DESTROYING].push_back(sf::IntRect(128, 128, 64, 64));
+
+    data.hitboxes[data.STATE_SOLID].push_back(sf::FloatRect(0, 0, 64, 64));
+    data.hitboxes[data.STATE_DESTROYING].push_back(sf::FloatRect(1, 1, 1, 1));
+    data.hitboxes[data.STATE_DESTROYED].push_back(sf::FloatRect(1, 1, 1, 1));
+
+    data.health = 1;
+}

@@ -144,6 +144,7 @@ void loadDataCollection(PreloadedDataCollection &collection) {
     loadTurretData(collection.piranhaData, "piranha.txt");
     loadBulletData(collection.playerBulletData, "fast");
     loadBulletData(collection.enemyBulletData, "slow");
+    loadDestrutibleBlockData(collection.basicDestructibleBlockData, "asdf");
 }
 
 void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world) {
@@ -521,7 +522,7 @@ int main() {
 
                         position *= static_cast<float>(TILE_SIZE);
 
-                        shared_ptr<DestructibleBlock> block = make_shared<DestructibleBlock>(position);
+                        shared_ptr<DestructibleBlock> block = make_shared<DestructibleBlock>(position, dataCollection.basicDestructibleBlockData);
                         world.destructibleBlocks.push_back(block);
                         world.destructibleBlockHash.insert(block);
 

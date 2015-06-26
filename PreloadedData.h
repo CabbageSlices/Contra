@@ -62,6 +62,11 @@ struct PreloadedEnemyData : public PreloadedData{
     unsigned STATE_FALLING_RIGHT;
 };
 
+struct PreloadedDestructibleBlockData : public PreloadedData {
+
+    unsigned STATE_SOLID, STATE_DESTROYING, STATE_DESTROYED;
+};
+
 struct PreloadedBulletData : public PreloadedData {
 
     unsigned STATE_RIGHT, STATE_UP_RIGHT, STATE_UP, STATE_UP_LEFT, STATE_LEFT, STATE_DOWN_LEFT, STATE_DOWN, STATE_DOWN_RIGHT;
@@ -76,6 +81,7 @@ struct PreloadedDataCollection {
     PreloadedTurretData piranhaData;
     PreloadedBulletData enemyBulletData;
     PreloadedBulletData playerBulletData;
+    PreloadedDestructibleBlockData basicDestructibleBlockData;
 };
 
 extern PreloadedDataCollection dataCollection;

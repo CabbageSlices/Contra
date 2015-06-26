@@ -7,24 +7,23 @@ using std::cout;
 using std::endl;
 using std::shared_ptr;
 
-DestructibleBlock::DestructibleBlock(const glm::vec2 &position) :
-    DynamicObject(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), 1)
+DestructibleBlock::DestructibleBlock(const glm::vec2 &position, const PreloadedDestructibleBlockData &data) :
+    DynamicObject(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), 1),
+    STATE_SOLID(0),
+    STATE_DESTROYING(0),
+    STATE_DESTROYED(0)
     {
-        setup();
         hitbox.setOrigin(position);
-        hitbox.insertHitbox(sf::FloatRect(0, 0, 64, 64));
-        hitbox.setActiveHitbox(0);
-        sprite.getSprite().setPosition(sf::Vector2f(position.x, position.y));
+        load(data);
 
         updateRendering();
     }
 
 void DestructibleBlock::updateRendering() {
 
-    if(sprite.animate() && sprite.getAnimationState() == DESTRYOING) {
+    if(sprite.animate() && sprite.getAnimationState() == STATE_DESTROYING) {
 
-        sprite.setAnimationState(DESTROYED);
-        health = 0;
+        setState(STATE_DESTROYED);
     }
 
     sprite.getSprite().setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
@@ -32,12 +31,22 @@ void DestructibleBlock::updateRendering() {
 
 bool DestructibleBlock::checkCanGetHit() {
 
-    return sprite.getAnimationState() == SOLID;
+    return currentState == STATE_SOLID;
+}
+
+bool DestructibleBlock::checkIsAlive() {
+
+    return currentState != STATE_DESTROYED;
 }
 
 void DestructibleBlock::getHit(int damage) {
 
-    sprite.setAnimationState(DESTRYOING);
+    setHealth(health - damage);
+
+    if(health == 0) {
+
+        setState(STATE_DESTROYING);
+    }
 }
 
 void DestructibleBlock::draw(sf::RenderWindow &window) {
@@ -45,24 +54,13 @@ void DestructibleBlock::draw(sf::RenderWindow &window) {
     sprite.draw(window);
 }
 
-void DestructibleBlock::setup() {
+void DestructibleBlock::load(const PreloadedDestructibleBlockData &data) {
 
-    //load the appropriate texture
-    sprite.loadTexture("BrickBreak.png");
+    loadBase(data);
 
-    createTextureRects();
-}
+    STATE_SOLID = data.STATE_SOLID;
+    STATE_DESTROYING = data.STATE_DESTROYING;
+    STATE_DESTROYED = data.STATE_DESTROYED;
 
-void DestructibleBlock::createTextureRects() {
-
-    sprite.insertTextureRect(SOLID, sf::IntRect(0, 0, 64, 64));
-    sprite.insertTextureRect(DESTROYED, sf::IntRect(0, 0, 0, 0));
-
-    for(int y = 0; y < 3; ++y) {
-
-        for(int x = 0; x < 3; ++x) {
-
-            sprite.insertTextureRect(DESTRYOING, sf::IntRect(x * 64, y * 64, 64, 64));
-        }
-    }
+    setState(STATE_SOLID);
 }

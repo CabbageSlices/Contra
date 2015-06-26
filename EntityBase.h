@@ -42,7 +42,7 @@ class EntityBase {
         HitboxMovementController& getMovementController();
         const glm::vec2 getPosition() const;
 
-        void setHealth(const unsigned &newVal);
+        void setHealth(const int &newVal);
 
     protected:
 
@@ -59,6 +59,8 @@ class EntityBase {
         template<class Data>
         void loadBase(const Data &data);
 
+        void setState(const unsigned &state);
+
         ObjectHitbox hitbox;
         HitboxMovementController hitboxMovementController;
         glm::vec2 MOVEMENT_VELOCITY; //measured in meters per second
@@ -72,6 +74,9 @@ class EntityBase {
 
 template<class Data>
 void EntityBase::loadBase(const Data &data) {
+
+    hitbox.clearHitboxes();
+    sprite.clearAnimation();
 
     health = data.health;
 

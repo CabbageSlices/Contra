@@ -157,9 +157,6 @@ void TurretEnemy::draw(sf::RenderWindow &window) {
 
 void TurretEnemy::load(PreloadedTurretData &data) {
 
-    hitbox.clearHitboxes();
-    sprite.clearAnimation();
-
     STATE_HIDING = data.STATE_HIDING;
     STATE_COMING_OUT_OF_HIDING = data.STATE_COMING_OUT_OF_HIDING;
     STATE_GOING_INTO_HIDING = data.STATE_GOING_INTO_HIDING;

@@ -99,9 +99,6 @@ void Enemy::draw(sf::RenderWindow &window) {
 
 void Enemy::load(PreloadedEnemyData &data) {
 
-    hitbox.clearHitboxes();
-    sprite.clearAnimation();
-
     STATE_WALKING_LEFT = data.STATE_WALKING_LEFT;
     STATE_WALKING_RIGHT = data.STATE_WALKING_RIGHT;
     STATE_FALLING_LEFT = data.STATE_FALLING_LEFT;

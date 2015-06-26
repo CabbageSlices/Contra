@@ -3,6 +3,7 @@
 
 #include "DynamicObject.h"
 #include "AnimatedSprite.h"
+#include "PreloadedData.h"
 
 #include <memory>
 
@@ -10,7 +11,7 @@ class DestructibleBlock : public DynamicObject {
 
     public:
 
-        DestructibleBlock(const glm::vec2 &position);
+        DestructibleBlock(const glm::vec2 &position, const PreloadedDestructibleBlockData &data);
 
         virtual ~DestructibleBlock() {
 
@@ -24,20 +25,17 @@ class DestructibleBlock : public DynamicObject {
         void updateRendering();
 
         virtual bool checkCanGetHit();
+        virtual bool checkIsAlive();
         virtual void getHit(int damage = 1);
         virtual void draw(sf::RenderWindow &window);
 
+        void load(const PreloadedDestructibleBlockData &data);
+
     private:
 
-        enum AnimationStates {
-
-            SOLID,
-            DESTRYOING,
-            DESTROYED
-        };
-
-        void setup();
-        void createTextureRects();
+        unsigned STATE_SOLID;
+        unsigned STATE_DESTROYING;
+        unsigned STATE_DESTROYED;
 };
 
 #endif // DESTRUCTIBLEBLOCK_H_INCLUDED

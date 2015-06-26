@@ -50,9 +50,14 @@ const glm::vec2 EntityBase::getPosition() const {
     return hitbox.getOrigin();
 }
 
-void EntityBase::setHealth(const unsigned &newVal) {
+void EntityBase::setHealth(const int &newVal) {
 
     health = newVal;
+
+    if(newVal < 0) {
+
+        health = 0;
+    }
 }
 
 vector<shared_ptr<Tile> > EntityBase::getSurroundingTiles(const TileMap &map, const glm::vec2 &areaPadding) {
@@ -83,4 +88,16 @@ CollisionResponse EntityBase::handleTileCollisionHorizontally(TileMap &map) {
 CollisionResponse EntityBase::handleTileCollisionVertically(TileMap &map) {
 
     return handleTileCollision(map, &handleCollisionVertical);
+}
+
+void EntityBase::setState(const unsigned &state) {
+
+    if(currentState == state) {
+
+        return;
+    }
+
+    currentState = state;
+    sprite.setAnimationState(state);
+    hitbox.setActiveHitbox(0, state);
 }
