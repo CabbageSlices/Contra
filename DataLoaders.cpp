@@ -22,7 +22,7 @@ bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName) 
 
     data.gunType = GunType::GUN_BASIC;
     data.gunfireDelay = sf::seconds(1.8);
-    data.bulletType = BulletType::BULLET_ENEMY;
+    data.bulletType = BulletType::BULLET_SLOW;
 
     //load the animation properties
     data.hiddenStateDuration = sf::seconds(2.5);
@@ -126,6 +126,8 @@ bool loadBulletData(PreloadedBulletData &data, const std::string &dataFileName) 
     data.STATE_DOWN = 6;
     data.STATE_DOWN_RIGHT = 7;
 
+    data.velocity = 7.f;
+
     if(dataFileName == "slow")
     data.velocity = 3.5f;
 
@@ -184,4 +186,38 @@ bool loadDestrutibleBlockData(PreloadedDestructibleBlockData &data, const std::s
     data.hitboxes[data.STATE_DESTROYED].push_back(sf::FloatRect(1, 1, 1, 1));
 
     data.health = 1;
+
+    return true;
+}
+
+bool loadPowerUpData(PreloadedPowerUpData &data, const std::string &dataFileName) {
+
+    data.health = 1;
+
+    data.STATE_SPAWNING = 0;
+    data.STATE_SPAWNED = 1;
+    data.STATE_DISAPPEARING = 2;
+    data.STATE_DISAPPEARED = 3;
+
+    data.textureFileName = "powerups.png";
+    data.animationNextFrameTime = sf::milliseconds(200);
+
+    data.FRAME_MACHINEGUN = 0;
+
+    for(unsigned i = 0; i < 5; ++i) {
+
+        data.animationTextureRects[data.STATE_SPAWNING].push_back(sf::IntRect(128 * i, 0, 128, 128));
+        data.animationTextureRects[data.STATE_DISAPPEARING].push_back(sf::IntRect(128 * i, 256, 128, 128));
+    }
+
+    //machinegun frame
+    data.animationTextureRects[data.STATE_SPAWNED].push_back(sf::IntRect(0, 128, 128, 128));
+    data.animationTextureRects[data.STATE_DISAPPEARED].push_back(sf::IntRect(1, 1, 1, 1));
+
+    data.hitboxes[data.STATE_SPAWNING].push_back(sf::FloatRect(1, 1, 1, 1));
+    data.hitboxes[data.STATE_SPAWNED].push_back(sf::FloatRect(25, 145, 87, 87));//machinegun
+    data.hitboxes[data.STATE_DISAPPEARING].push_back(sf::FloatRect(1, 1, 1, 1));
+    data.hitboxes[data.STATE_DISAPPEARED].push_back(sf::FloatRect(1, 1, 1, 1));
+
+    return true;
 }

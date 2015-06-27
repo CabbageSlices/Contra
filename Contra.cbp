@@ -108,6 +108,8 @@
 		<Unit filename="Player.cpp" />
 		<Unit filename="Player.h" />
 		<Unit filename="PlayerManager.h" />
+		<Unit filename="PowerUp.cpp" />
+		<Unit filename="PowerUp.h" />
 		<Unit filename="PreloadedData.cpp" />
 		<Unit filename="PreloadedData.h" />
 		<Unit filename="ShootingEntity.cpp" />

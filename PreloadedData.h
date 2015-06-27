@@ -15,13 +15,19 @@ enum EnemyType {
 
 enum BulletType {
 
-    BULLET_ENEMY,
-    BULLET_PLAYER,
+    BULLET_SLOW,
+    BULLET_FAST,
+    BULLET_MEDIUM,
 };
 
 enum GunType {
 
     GUN_BASIC
+};
+
+enum PowerUpType {
+
+    MACHINE_GUN
 };
 
 struct PreloadedData {
@@ -75,13 +81,26 @@ struct PreloadedBulletData : public PreloadedData {
     sf::Time lifetime;
 };
 
+struct PreloadedPowerUpData : public PreloadedData {
+
+    unsigned STATE_SPAWNING;
+    unsigned STATE_SPAWNED;
+    unsigned STATE_DISAPPEARING;
+    unsigned STATE_DISAPPEARED;
+
+    //each frame of the spawned animation state refers to a different powerup image
+    unsigned FRAME_MACHINEGUN;
+};
+
 struct PreloadedDataCollection {
 
     PreloadedEnemyData goombaData;
     PreloadedTurretData piranhaData;
-    PreloadedBulletData enemyBulletData;
-    PreloadedBulletData playerBulletData;
+    PreloadedBulletData slowBulletData;
+    PreloadedBulletData mediumBulletData;
+    PreloadedBulletData fastBulletData;
     PreloadedDestructibleBlockData basicDestructibleBlockData;
+    PreloadedPowerUpData powerupData;
 };
 
 extern PreloadedDataCollection dataCollection;

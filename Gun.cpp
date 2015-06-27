@@ -8,6 +8,10 @@ using std::make_shared;
 using std::cout;
 using std::endl;
 
+const sf::Time FIRE_DELAY_SHORT = sf::seconds(0.15);
+const sf::Time FIRE_DELAY_MEDIUM = sf::seconds(0.4);
+const sf::Time FIRE_DELAY_LONG = sf::seconds(0.6);
+
 std::shared_ptr<Gun> createGunOfType(const GunType &type) {
 
     switch(type) {
@@ -106,13 +110,18 @@ void Gun::createBullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &dir
 
     shared_ptr<Bullet> bullet;
 
-    if(bulletType == BulletType::BULLET_ENEMY) {
+    if(bulletType == BulletType::BULLET_SLOW) {
 
-        bullet = make_shared<Bullet>(positionWorldSpace, directionWorldSpace, dataCollection.enemyBulletData);
+        bullet = make_shared<Bullet>(positionWorldSpace, directionWorldSpace, dataCollection.slowBulletData);
 
-    } else {
 
-        bullet = make_shared<Bullet>(positionWorldSpace, directionWorldSpace, dataCollection.playerBulletData);
+    } else if(bulletType == BulletType::BULLET_MEDIUM){
+
+        bullet = make_shared<Bullet>(positionWorldSpace, directionWorldSpace, dataCollection.mediumBulletData);
+
+    } else if(bulletType == BulletType::BULLET_FAST) {
+
+        bullet = make_shared<Bullet>(positionWorldSpace, directionWorldSpace, dataCollection.fastBulletData);
     }
 
     if(bullet) {

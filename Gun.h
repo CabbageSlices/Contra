@@ -13,6 +13,10 @@
 class Bullet;
 class TileMap;
 
+extern const sf::Time FIRE_DELAY_SHORT;
+extern const sf::Time FIRE_DELAY_MEDIUM;
+extern const sf::Time FIRE_DELAY_LONG;
+
 //gun object position is relative to top left corner of its owner (heirachal model)
 //the gun's initial firing direction is also specified by the owner
 //these traits of the gun are all in the space of the object that owns the gun
@@ -21,7 +25,7 @@ class Gun {
 
     public:
 
-        Gun(const BulletType &type = BulletType::BULLET_PLAYER, const sf::Time &gunfireDelay = sf::seconds(0.3 / 2.3f));
+        Gun(const BulletType &type = BulletType::BULLET_MEDIUM, const sf::Time &gunfireDelay = FIRE_DELAY_MEDIUM);
 
         //user position is position of user in the world
         //bulletOriginUserSpace is the relative origin of the bullet with respect to the user's position

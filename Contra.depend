@@ -456,12 +456,12 @@
 1432770771 source:c:\users\nimesh\desktop\c++\github\contra\globalconstants.cpp
 	"GlobalConstants.h"
 
-1435266641 source:c:\users\nimesh\desktop\c++\github\contra\gun.cpp
+1435443218 source:c:\users\nimesh\desktop\c++\github\contra\gun.cpp
 	"Gun.h"
 	"Bullet.h"
 	<iostream>
 
-1435266622 c:\users\nimesh\desktop\c++\github\contra\gun.h
+1435443038 c:\users\nimesh\desktop\c++\github\contra\gun.h
 	<SFML/Graphics.hpp>
 	<SFML/Window.hpp>
 	"ObjectHitbox.h"
@@ -477,7 +477,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1435433133 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1435443175 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -495,6 +495,7 @@
 	"CollisionResolution.h"
 	"PreloadedData.h"
 	"BackgroundManager.h"
+	"PowerUp.h"
 	<functional>
 	<vector>
 	<memory>
@@ -531,7 +532,7 @@
 	"ObjectHitbox.h"
 	<iostream>
 
-1433568664 source:c:\users\nimesh\desktop\c++\github\contra\player.cpp
+1435442946 source:c:\users\nimesh\desktop\c++\github\contra\player.cpp
 	"Player.h"
 	<iostream>
 	<vector>
@@ -542,7 +543,7 @@
 1432770771 source:c:\users\nimesh\desktop\c++\github\contra\shootingentity.cpp
 	"ShootingEntity.h"
 
-1435433553 source:c:\users\nimesh\desktop\c++\github\contra\tile.cpp
+1435433669 source:c:\users\nimesh\desktop\c++\github\contra\tile.cpp
 	"Tile.h"
 
 1435254647 source:c:\users\nimesh\desktop\c++\github\contra\tilecollisionhandling.cpp
@@ -985,17 +986,17 @@
 	"glm/glm.hpp"
 	<functional>
 
-1435276374 c:\users\nimesh\desktop\c++\github\contra\preloadeddata.h
+1435442620 c:\users\nimesh\desktop\c++\github\contra\preloadeddata.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	<string>
 	<map>
 	<vector>
 
-1435276374 c:\users\nimesh\desktop\c++\github\contra\dataloaders.h
+1435441961 c:\users\nimesh\desktop\c++\github\contra\dataloaders.h
 	<string>
 
-1435276966 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
+1435442620 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
 	"DataLoaders.h"
 	"PreloadedData.h"
 
@@ -1013,4 +1014,16 @@
 	<vector>
 	<utility>
 	<string>
+
+1435443218 source:c:\users\nimesh\desktop\c++\github\contra\powerup.cpp
+	"PowerUp.h"
+	"GlobalConstants.h"
+
+1435443175 c:\users\nimesh\desktop\c++\github\contra\powerup.h
+	"DynamicObject.h"
+	"Gun.h"
+	"Bullet.h"
+	"PreloadedData.h"
+	"TileMap.h"
+	<memory>
 

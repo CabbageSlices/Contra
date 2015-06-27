@@ -15,6 +15,7 @@
 #include "CollisionResolution.h"
 #include "PreloadedData.h"
 #include "BackgroundManager.h"
+#include "PowerUp.h"
 
 #include <functional>
 #include <vector>
@@ -147,9 +148,11 @@ void loadDataCollection(PreloadedDataCollection &collection) {
 
     loadEnemyData(collection.goombaData, "goomba.txt");
     loadTurretData(collection.piranhaData, "piranha.txt");
-    loadBulletData(collection.playerBulletData, "fast");
-    loadBulletData(collection.enemyBulletData, "slow");
+    loadBulletData(collection.slowBulletData, "slow");
+    loadBulletData(collection.mediumBulletData, "medium");
+    loadBulletData(collection.fastBulletData, "fast");
     loadDestrutibleBlockData(collection.basicDestructibleBlockData, "asdf");
+    loadPowerUpData(collection.powerupData, "powerups.txt");
 }
 
 void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world) {
@@ -482,9 +485,11 @@ int main() {
     loadDataCollection(dataCollection);
 
     GameWorld world(window);
-    world.worldBounds = sf::FloatRect(0, 0, 2048, 1024);
+    world.worldBounds = sf::FloatRect(0, 0, 2048, 768);
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
     world.players.push_back(make_shared<Player>());
+
+    PowerUp powerup(glm::vec2(0, 0), PowerUpType::MACHINE_GUN, dataCollection.powerupData);
 
     while(window.isOpen()) {
 
@@ -550,9 +555,19 @@ int main() {
 
         updateWorld(window, world);
 
+        powerup.updateRendering();
+
+        if(powerup.checkCanGetHit()) {
+
+            applyPowerUp(world.players[0]->getGun(), powerup.getPowerUpType());
+            powerup.getHit();
+        }
+
         window.clear();
 
         drawWorld(window, world);
+
+        powerup.draw(window);
 
         window.display();
 
