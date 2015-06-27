@@ -38,6 +38,8 @@ bool AnimatedSprite::loadTexture(const std::string &fileName) {
     //not previously loaded so load the texture
     if(!loadedTextures[fileName].loadFromFile(fileName)) {
 
+        //make sure you remove this texture since it failed to load
+        loadedTextures.erase(fileName);
         return false;
     }
 

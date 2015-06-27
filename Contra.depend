@@ -292,7 +292,7 @@
 	<cmath>
 	<iostream>
 
-1435295366 source:c:\users\nimesh\desktop\c++\github\contra\animatedsprite.cpp
+1435433133 source:c:\users\nimesh\desktop\c++\github\contra\animatedsprite.cpp
 	"AnimatedSprite.h"
 	<utility>
 	<iostream>
@@ -334,7 +334,7 @@
 	<map>
 	<vector>
 
-1432770771 c:\users\nimesh\desktop\c++\github\contra\tilemap.h
+1435433133 c:\users\nimesh\desktop\c++\github\contra\tilemap.h
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
 	"Tile.h"
@@ -342,10 +342,12 @@
 	<memory>
 	<vector>
 
-1432770771 c:\users\nimesh\desktop\c++\github\contra\tile.h
+1435431621 c:\users\nimesh\desktop\c++\github\contra\tile.h
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
 	"HitboxMovementController.h"
+	<string>
+	<map>
 
 1435276374 c:\users\nimesh\desktop\c++\github\contra\entitybase.h
 	"SFML/System.hpp"
@@ -475,7 +477,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1435376831 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1435433133 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -540,7 +542,7 @@
 1432770771 source:c:\users\nimesh\desktop\c++\github\contra\shootingentity.cpp
 	"ShootingEntity.h"
 
-1435254460 source:c:\users\nimesh\desktop\c++\github\contra\tile.cpp
+1435433553 source:c:\users\nimesh\desktop\c++\github\contra\tile.cpp
 	"Tile.h"
 
 1435254647 source:c:\users\nimesh\desktop\c++\github\contra\tilecollisionhandling.cpp
@@ -549,7 +551,7 @@
 	"GlobalConstants.h"
 	<iostream>
 
-1435376382 source:c:\users\nimesh\desktop\c++\github\contra\tilemap.cpp
+1435433569 source:c:\users\nimesh\desktop\c++\github\contra\tilemap.cpp
 	"TileMap.h"
 	"glm/glm.hpp"
 	<iostream>
@@ -1000,7 +1002,7 @@
 1435264161 source:c:\users\nimesh\desktop\c++\github\contra\preloadeddata.cpp
 	"PreloadedData.h"
 
-1435376197 source:c:\users\nimesh\desktop\c++\github\contra\backgroundmanager.cpp
+1435432054 source:c:\users\nimesh\desktop\c++\github\contra\backgroundmanager.cpp
 	"BackgroundManager.h"
 	<iostream>
 

@@ -74,6 +74,8 @@
 		</Linker>
 		<Unit filename="AnimatedSprite.cpp" />
 		<Unit filename="AnimatedSprite.h" />
+		<Unit filename="BackgroundManager.cpp" />
+		<Unit filename="BackgroundManager.h" />
 		<Unit filename="Bullet.cpp" />
 		<Unit filename="Bullet.h" />
 		<Unit filename="Camera.cpp" />

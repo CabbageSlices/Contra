@@ -24,9 +24,11 @@ BackgroundManager::BackgroundManager() :
 void BackgroundManager::insertBackground(const string &backgroundFileName, const float &distanceFromView, const sf::FloatRect &worldBounds) {
 
     //check if the given background has already been loaded
-    if(!loadedTextures.count(backgroundFileName)) {
+    if(!loadedTextures.count(backgroundFileName) && !loadedTextures[backgroundFileName].loadFromFile(backgroundFileName)) {
 
-        loadedTextures[backgroundFileName].loadFromFile(backgroundFileName);
+        //failed to load image so remove texturerect and exit
+        loadedTextures.erase(backgroundFileName);
+        return;
     }
 
     sf::Texture &textureToUse = loadedTextures[backgroundFileName];

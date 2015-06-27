@@ -501,15 +501,15 @@ int main() {
 
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
 
-                        world.tileMap.setTile(mousePosition, TileType::UPWARD_RIGHT_1_1);
+                        world.tileMap.setTile(mousePosition, TileType::UPWARD_RIGHT_1_1, "tileset.png", sf::IntRect(0, 0, 64, 64));
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
 
-                        world.tileMap.setTile(mousePosition, TileType::UPWARD_LEFT_1_1);
+                        world.tileMap.setTile(mousePosition, TileType::UPWARD_LEFT_1_1, "tileset.png", sf::IntRect(0, 0, 64, 64));
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
 
-                        world.tileMap.setTile(mousePosition, TileType::ONE_WAY);
+                        world.tileMap.setTile(mousePosition, TileType::ONE_WAY, "tileset.png", sf::IntRect(0, 0, 64, 64));
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
@@ -533,14 +533,14 @@ int main() {
 
                     } else {
 
-                        world.tileMap.setTile(mousePosition, TileType::SOLID);
+                        world.tileMap.setTile(mousePosition, TileType::SOLID, "tileset.png", sf::IntRect(0, 0, 64, 64));
                     }
 
                 }
 
                 if(event.mouseButton.button == sf::Mouse::Right) {
 
-                    world.tileMap.setTile(mousePosition, TileType::EMPTY);
+                    world.tileMap.setTile(mousePosition, TileType::EMPTY, "tileset.png", sf::IntRect(0, 0, 0, 0));
                 }
             }
 

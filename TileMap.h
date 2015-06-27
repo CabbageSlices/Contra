@@ -19,7 +19,7 @@ class TileMap {
         TileMap(const unsigned &width, const unsigned &height);
 
         void resize(const unsigned &width, const unsigned &height);
-        void setTile(const sf::Vector2f& position, const TileType& type);
+        void setTile(const sf::Vector2f& position, const TileType& type, const std::string &textureName, const sf::IntRect &textureRect);
 
         //return all the tiles enclosed in the given region
         //if any part of the region is out of bounds it will only return the tiles that are in bounds

@@ -60,7 +60,7 @@ void TileMap::resize(const unsigned &mapWidth, const unsigned &mapHeight) {
     createRenderedAreas();
 }
 
-void TileMap::setTile(const sf::Vector2f& position, const TileType& type) {
+void TileMap::setTile(const sf::Vector2f& position, const TileType& type, const std::string &textureName, const sf::IntRect &textureRect) {
 
     glm::i32vec2 gridPosition = convertToGridPosition(glm::vec2(position.x, position.y));
 
@@ -77,6 +77,8 @@ void TileMap::setTile(const sf::Vector2f& position, const TileType& type) {
     }
 
     tiles[index]->setType(type);
+    tiles[index]->setTexture(textureName);
+    tiles[index]->setTextureRect(textureRect);
     createRenderedAreas();
 }
 
