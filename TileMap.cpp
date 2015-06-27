@@ -185,7 +185,7 @@ void TileMap::createRenderedAreas() {
 
             shared_ptr<RenderedArea> area = make_shared<RenderedArea>();
             area->texture.create(areaSize, areaSize);
-            area->texture.clear();
+            area->texture.clear(sf::Color(0, 0, 0, 0));
 
             //determine the offset of the topleft tile in this area, and use thsi position to create the view that way tiles that are offscreen are still drawn
             int left = x * areaSize;

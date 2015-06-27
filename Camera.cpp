@@ -79,6 +79,12 @@ glm::vec2 Camera::getCurrentPosition() const {
 sf::Vector2f Camera::getViewCenter() const {
 
     return view.getCenter();
+
+}
+
+sf::Vector2f Camera::getViewTopLeft() const {
+
+    return view.getCenter() - view.getSize() / 2.f;
 }
 
 void Camera::handleTransitions(const float &delta) {

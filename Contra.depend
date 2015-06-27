@@ -386,13 +386,13 @@
 1432770771 c:\users\nimesh\desktop\c++\github\contra\direction.h
 	"glm/glm.hpp"
 
-1435296293 source:c:\users\nimesh\desktop\c++\github\contra\camera.cpp
+1435375338 source:c:\users\nimesh\desktop\c++\github\contra\camera.cpp
 	"Camera.h"
 	"glm/gtx/compatibility.hpp"
 	<iostream>
 	"GlobalConstants.h"
 
-1435296293 c:\users\nimesh\desktop\c++\github\contra\camera.h
+1435375331 c:\users\nimesh\desktop\c++\github\contra\camera.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	<vector>
@@ -475,7 +475,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1435296042 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1435376831 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -492,6 +492,7 @@
 	"DataLoaders.h"
 	"CollisionResolution.h"
 	"PreloadedData.h"
+	"BackgroundManager.h"
 	<functional>
 	<vector>
 	<memory>
@@ -548,7 +549,7 @@
 	"GlobalConstants.h"
 	<iostream>
 
-1432858358 source:c:\users\nimesh\desktop\c++\github\contra\tilemap.cpp
+1435376382 source:c:\users\nimesh\desktop\c++\github\contra\tilemap.cpp
 	"TileMap.h"
 	"glm/glm.hpp"
 	<iostream>
@@ -998,4 +999,16 @@
 
 1435264161 source:c:\users\nimesh\desktop\c++\github\contra\preloadeddata.cpp
 	"PreloadedData.h"
+
+1435376197 source:c:\users\nimesh\desktop\c++\github\contra\backgroundmanager.cpp
+	"BackgroundManager.h"
+	<iostream>
+
+1435375070 c:\users\nimesh\desktop\c++\github\contra\backgroundmanager.h
+	"SFML/Graphics.hpp"
+	"SFML/System.hpp"
+	<map>
+	<vector>
+	<utility>
+	<string>
 

@@ -14,6 +14,7 @@
 #include "DataLoaders.h"
 #include "CollisionResolution.h"
 #include "PreloadedData.h"
+#include "BackgroundManager.h"
 
 #include <functional>
 #include <vector>
@@ -106,8 +107,10 @@ struct GameWorld {
 		turrets(),
 		tileMap(),
 		destructibleBlocks(),
+		backgrounds(),
 		worldBounds(0, 0, 0, 0),
 		camera(window),
+		viewPositionLastFrame(0, 0),
 		enemySpawnInfo(enemies, worldBounds, worldBounds),
 		turretSpawnInfo(turrets, worldBounds, worldBounds),
 		destructibleBlockHash(256, 256),
@@ -124,10 +127,12 @@ struct GameWorld {
 	//environment
 	TileMap tileMap;
 	vector<shared_ptr<DestructibleBlock> > destructibleBlocks;
+	BackgroundManager backgrounds;
 
 	//world properties
 	sf::FloatRect worldBounds;
 	Camera camera;
+	sf::Vector2f viewPositionLastFrame;
 
 	//spawner properties
 	InformationForSpawner<Enemy> enemySpawnInfo;
@@ -197,6 +202,7 @@ void updateWorld(sf::RenderWindow &window, GameWorld &world) {
 
 void drawWorld(sf::RenderWindow &window, GameWorld &world) {
 
+    world.backgrounds.draw(window);
 	drawTiles(window, world);
 	drawEntities(window, world.players);
 	drawEntities(window, world.enemies);
@@ -258,6 +264,11 @@ void updateWorldRendering(sf::RenderWindow &window, GameWorld &world) {
 	updateObjectRendering(world.destructibleBlocks);
 
 	world.camera.applyCamera(window);
+
+	sf::Vector2f viewOffset = world.camera.getViewTopLeft() - world.viewPositionLastFrame;
+	world.viewPositionLastFrame = world.camera.getViewTopLeft();
+
+	world.backgrounds.updateRendering(viewOffset);
 }
 
 void handleEntityCollisions(GameWorld &world) {
@@ -471,15 +482,9 @@ int main() {
     loadDataCollection(dataCollection);
 
     GameWorld world(window);
-    world.worldBounds = sf::FloatRect(0, 0, 2048, 768);
+    world.worldBounds = sf::FloatRect(0, 0, 2048, 1024);
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
     world.players.push_back(make_shared<Player>());
-
-    world.enemies.push_back(make_shared<Enemy>(glm::vec2(0, 0), Direction()));
-    world.enemies[0]->load(dataCollection.goombaData);
-
-    world.turrets.push_back(make_shared<TurretEnemy>(glm::vec2(512, 512)));
-    world.turrets[0]->load(dataCollection.piranhaData);
 
     while(window.isOpen()) {
 
@@ -547,8 +552,8 @@ int main() {
 
         window.clear();
 
-
         drawWorld(window, world);
+
         window.display();
 
     }
