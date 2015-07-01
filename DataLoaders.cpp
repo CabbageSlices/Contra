@@ -215,7 +215,7 @@ bool loadPowerUpData(PreloadedPowerUpData &data, const std::string &dataFileName
     data.animationTextureRects[data.STATE_DISAPPEARED].push_back(sf::IntRect(1, 1, 1, 1));
 
     data.hitboxes[data.STATE_SPAWNING].push_back(sf::FloatRect(1, 1, 1, 1));
-    data.hitboxes[data.STATE_SPAWNED].push_back(sf::FloatRect(25, 145, 87, 87));//machinegun
+    data.hitboxes[data.STATE_SPAWNED].push_back(sf::FloatRect(25, 17, 87, 87));//machinegun
     data.hitboxes[data.STATE_DISAPPEARING].push_back(sf::FloatRect(1, 1, 1, 1));
     data.hitboxes[data.STATE_DISAPPEARED].push_back(sf::FloatRect(1, 1, 1, 1));
 

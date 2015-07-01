@@ -97,6 +97,7 @@ function<void(shared_ptr<Bullet>, shared_ptr<DestructibleBlock>)> bulletBlockCol
 function<void(shared_ptr<Bullet>, shared_ptr<Enemy>)> bulletEnemyCollisionFunction= bulletNonDeflectingEntityCollision;
 function<void(shared_ptr<Bullet>, shared_ptr<TurretEnemy>)> bulletTurretCollisionFunction= bulletNonDeflectingEntityCollision;
 function<void(shared_ptr<Player>, shared_ptr<Enemy>)> playerEnemyCollisionFunction = playerEnemyEntityCollision;
+function<void(shared_ptr<Player>, shared_ptr<PowerUp>)> playerPowerUpCollisionFunction = playerPowerUpCollision;
 function<void(shared_ptr<Player>, shared_ptr<TurretEnemy>)> playerTurretCollisionFunction = playerEnemyEntityCollision;
 function<void(shared_ptr<DestructibleBlock>, shared_ptr<EntityBase>)> destructibleBlockEntityCollisionFunction = destructibleBlockEntityCollision;
 
@@ -106,6 +107,7 @@ struct GameWorld {
 		players(),
 		enemies(),
 		turrets(),
+		powerUps(),
 		tileMap(),
 		destructibleBlocks(),
 		backgrounds(),
@@ -124,6 +126,7 @@ struct GameWorld {
 	vector<shared_ptr<Player> > players;
 	vector<shared_ptr<Enemy> > enemies;
 	vector<shared_ptr<TurretEnemy> > turrets;
+	vector<shared_ptr<PowerUp> > powerUps;
 
 	//environment
 	TileMap tileMap;
@@ -211,6 +214,7 @@ void drawWorld(sf::RenderWindow &window, GameWorld &world) {
 	drawEntities(window, world.enemies);
 	drawEntities(window, world.turrets);
 	drawEntities(window, world.destructibleBlocks);
+	drawEntities(window, world.powerUps);
 }
 
 void updateEnemySpawners(GameWorld &world) {
@@ -254,6 +258,7 @@ void updateWorldPhyics(GameWorld &world, const float &deltaTime) {
 		world.turrets[i]->updatePhysics(deltaTime, world.worldBounds, world.tileMap, playerPositions);
 	}
 
+    removeDeadEntities(world.powerUps);
 	removeDeadEntities(world.enemies);
 	removeDeadEntities(world.turrets);
 	removeDeadHashEntries(world.destructibleBlocks, world.destructibleBlockHash);
@@ -265,6 +270,7 @@ void updateWorldRendering(sf::RenderWindow &window, GameWorld &world) {
 	updateObjectRendering(world.enemies);
 	updateObjectRendering(world.turrets);
 	updateObjectRendering(world.destructibleBlocks);
+	updateObjectRendering(world.powerUps);
 
 	world.camera.applyCamera(window);
 
@@ -287,6 +293,8 @@ void playerWorldCollision(GameWorld &world) {
 	for(auto &it : world.players) {
 
 		collideShootingEntityDynamicObjectHash(it, world.destructibleBlockHash, destructibleBlockEntityCollisionFunction, bulletBlockCollisionFunction);
+
+		collidePlayerEntities(it, world.powerUps, playerPowerUpCollisionFunction);
 
 		collidePlayerEntities(it, world.enemies, playerEnemyCollisionFunction);
 		collidePlayerShootingEntities(it, world.turrets, playerTurretCollisionFunction);
@@ -489,7 +497,7 @@ int main() {
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
     world.players.push_back(make_shared<Player>());
 
-    PowerUp powerup(glm::vec2(0, 0), PowerUpType::MACHINE_GUN, dataCollection.powerupData);
+    world.powerUps.push_back(make_shared<PowerUp>(glm::vec2(0, 0), PowerUpType::MACHINE_GUN, dataCollection.powerupData));
 
     while(window.isOpen()) {
 
@@ -555,19 +563,9 @@ int main() {
 
         updateWorld(window, world);
 
-        powerup.updateRendering();
-
-        if(powerup.checkCanGetHit()) {
-
-            applyPowerUp(world.players[0]->getGun(), powerup.getPowerUpType());
-            powerup.getHit();
-        }
-
         window.clear();
 
         drawWorld(window, world);
-
-        powerup.draw(window);
 
         window.display();
 

@@ -11,6 +11,7 @@ class EntityBase;
 class Enemy;
 class Bullet;
 class Player;
+class PowerUp;
 
 //calculates the minimum distance required for rectA to move in order to escape collision with rectB
 glm::vec2 calculateCollisionResolutionTranslation(sf::FloatRect rectA, sf::FloatRect rectB);
@@ -22,5 +23,7 @@ void destructibleBlockEntityCollision(std::shared_ptr<DestructibleBlock> block, 
 void bulletNonDeflectingEntityCollision(std::shared_ptr<Bullet> bullet, std::shared_ptr<EntityBase> entity);
 
 void playerEnemyEntityCollision(std::shared_ptr<Player> player, std::shared_ptr<EntityBase> enemy);
+
+void playerPowerUpCollision(std::shared_ptr<Player> player, std::shared_ptr<PowerUp> powerUp);
 
 #endif // COLLISIONRESOLUTION_H_INCLUDED

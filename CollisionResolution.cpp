@@ -4,7 +4,12 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "DestructibleBlock.h"
+#include "PowerUp.h"
 
+#include <iostream>
+
+using std::cout;
+using std::endl;
 using std::shared_ptr;
 
 glm::vec2 calculateCollisionResolutionTranslation(sf::FloatRect rectA, sf::FloatRect rectB) {
@@ -130,4 +135,23 @@ void playerEnemyEntityCollision(shared_ptr<Player> player, shared_ptr<EntityBase
     }
 
     player->getHit();
+}
+
+void playerPowerUpCollision(std::shared_ptr<Player> player, std::shared_ptr<PowerUp> powerUp) {
+
+    if(!player->checkIsAlive() || !powerUp->checkCanGetHit()) {
+
+        return;
+    }
+
+    sf::FloatRect powerRect = powerUp->getHitbox().getActiveHitboxWorldSpace();
+    sf::FloatRect playerRect = player->getHitbox().getActiveHitboxWorldSpace();
+
+    if(!powerRect.intersects(playerRect)) {
+
+        return;
+    }
+
+    applyPowerUp(player->getGun(), powerUp->getPowerUpType());
+    powerUp->getHit();
 }
