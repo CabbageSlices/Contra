@@ -31,6 +31,7 @@ PowerUp::PowerUp(const glm::vec2 &positionWorldSpace, const PowerUpType &powerUp
     powerUpType(powerUp)
     {
         load(powerupData);
+        setPosition(positionWorldSpace);
     }
 
 void PowerUp::updatePhysics(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {

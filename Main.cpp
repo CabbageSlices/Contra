@@ -16,6 +16,7 @@
 #include "PreloadedData.h"
 #include "BackgroundManager.h"
 #include "PowerUp.h"
+#include "Random.h"
 
 #include <functional>
 #include <vector>
@@ -23,6 +24,7 @@
 #include <iterator>
 #include <algorithm>
 #include <unordered_set>
+#include <cstdlib>
 
 using std::function;
 using std::unordered_set;
@@ -43,6 +45,7 @@ void drawWorld(sf::RenderWindow &window, GameWorld &world);
 void updateEnemySpawners(GameWorld &world);
 void updateWorldPhyics(GameWorld &world, const float &deltaTime);
 void updateWorldRendering(sf::RenderWindow &window, GameWorld &world);
+void spawnPowerUp(const unsigned &occuranceThreshold, const unsigned &possibleOutcomes, const glm::vec2 &position, GameWorld &world);
 void handleEntityCollisions(GameWorld &world);
 void playerWorldCollision(GameWorld &world);
 void enemyWorldCollision(GameWorld &world);
@@ -147,6 +150,12 @@ struct GameWorld {
 	sf::Clock updateTimer;
 };
 
+//when an enemy dies theres a certain chance it will drop a power up
+//these values determine the likelihood of a powerup being dropped
+unsigned powerUpDropPossibleOutcomes = 100;
+unsigned enemyPowerUpDropOccuranceThreshold = 6;
+unsigned turretPowerUpDropOccuranceThreshold = 10;
+
 void loadDataCollection(PreloadedDataCollection &collection) {
 
     loadEnemyData(collection.goombaData, "goomba.txt");
@@ -155,7 +164,7 @@ void loadDataCollection(PreloadedDataCollection &collection) {
     loadBulletData(collection.mediumBulletData, "medium");
     loadBulletData(collection.fastBulletData, "fast");
     loadDestrutibleBlockData(collection.basicDestructibleBlockData, "asdf");
-    loadPowerUpData(collection.powerupData, "powerups.txt");
+    loadPowerUpData(collection.powerUpData, "powerups.txt");
 }
 
 void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world) {
@@ -200,10 +209,9 @@ void updateWorld(sf::RenderWindow &window, GameWorld &world) {
 	float deltaTime = world.updateTimer.restart().asSeconds();
 
 	updateWorldPhyics(world, deltaTime);
+	updateEnemySpawners(world);
 	handleEntityCollisions(world);
 	updateWorldRendering(window, world);
-
-	updateEnemySpawners(world);
 }
 
 void drawWorld(sf::RenderWindow &window, GameWorld &world) {
@@ -251,14 +259,25 @@ void updateWorldPhyics(GameWorld &world, const float &deltaTime) {
 	for(unsigned i = 0; i < world.enemies.size(); ++i) {
 
 		world.enemies[i]->updatePhysics(deltaTime, world.worldBounds, world.tileMap);
+
+		if(!world.enemies[i]->checkIsAlive()) {
+
+            spawnPowerUp(enemyPowerUpDropOccuranceThreshold, powerUpDropPossibleOutcomes, world.enemies[i]->getPosition(), world);
+		}
 	}
 
 	for(unsigned i = 0; i < world.turrets.size(); ++i) {
 
 		world.turrets[i]->updatePhysics(deltaTime, world.worldBounds, world.tileMap, playerPositions);
+
+		if(!world.turrets[i]->checkIsAlive()) {
+
+            spawnPowerUp(turretPowerUpDropOccuranceThreshold, powerUpDropPossibleOutcomes, world.turrets[i]->getPosition(), world);
+		}
 	}
 
     removeDeadEntities(world.powerUps);
+
 	removeDeadEntities(world.enemies);
 	removeDeadEntities(world.turrets);
 	removeDeadHashEntries(world.destructibleBlocks, world.destructibleBlockHash);
@@ -278,6 +297,37 @@ void updateWorldRendering(sf::RenderWindow &window, GameWorld &world) {
 	world.viewPositionLastFrame = world.camera.getViewTopLeft();
 
 	world.backgrounds.updateRendering(viewOffset);
+}
+
+void spawnPowerUp(const unsigned &occuranceThreshold, const unsigned &possibleOutcomes, const glm::vec2 &position, GameWorld &world) {
+
+    bool shouldSpawn = determineIfEventOccurs(occuranceThreshold, possibleOutcomes);
+
+    if(!shouldSpawn) {
+
+        return;
+    }
+
+    //randomly determine the type of powerup to give
+    int powerUpType = getRand(PowerUpType::MACHINE_GUN, PowerUpType::MACHINE_GUN);
+    PreloadedPowerUpData *powerUpData = &dataCollection.powerUpData;
+
+    switch(powerUpType) {
+
+        case PowerUpType::MACHINE_GUN: {
+
+            powerUpData = &dataCollection.powerUpData;
+            break;
+        }
+
+        default: {
+
+            powerUpData = &dataCollection.powerUpData;
+        }
+    }
+
+    shared_ptr<PowerUp> powerUp = make_shared<PowerUp>(position, (PowerUpType)powerUpType, *powerUpData);
+    world.powerUps.push_back(powerUp);
 }
 
 void handleEntityCollisions(GameWorld &world) {
@@ -486,6 +536,8 @@ void drawEntities(sf::RenderWindow &window, vector<shared_ptr<T> > &entities) {
 
 int main() {
 
+    srand((long)time(0));
+
     sf::RenderWindow window(sf::VideoMode(1024, 768), "Contra");
 
     sf::Event event;
@@ -497,7 +549,7 @@ int main() {
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
     world.players.push_back(make_shared<Player>());
 
-    world.powerUps.push_back(make_shared<PowerUp>(glm::vec2(0, 0), PowerUpType::MACHINE_GUN, dataCollection.powerupData));
+    world.powerUps.push_back(make_shared<PowerUp>(glm::vec2(0, 0), PowerUpType::MACHINE_GUN, dataCollection.powerUpData));
 
     while(window.isOpen()) {
 

@@ -101,3 +101,9 @@ void EntityBase::setState(const unsigned &state) {
     sprite.setAnimationState(state);
     hitbox.setActiveHitbox(0, state);
 }
+
+void EntityBase::setPosition(const glm::vec2 &position) {
+
+    hitbox.setOrigin(position);
+    sprite.getSprite().setPosition(position.x, position.y);
+}

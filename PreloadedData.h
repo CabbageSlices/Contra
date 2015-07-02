@@ -100,7 +100,7 @@ struct PreloadedDataCollection {
     PreloadedBulletData mediumBulletData;
     PreloadedBulletData fastBulletData;
     PreloadedDestructibleBlockData basicDestructibleBlockData;
-    PreloadedPowerUpData powerupData;
+    PreloadedPowerUpData powerUpData;
 };
 
 extern PreloadedDataCollection dataCollection;

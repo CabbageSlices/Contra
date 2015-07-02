@@ -60,6 +60,7 @@ class EntityBase {
         void loadBase(const Data &data);
 
         void setState(const unsigned &state);
+        void setPosition(const glm::vec2 &position);
 
         ObjectHitbox hitbox;
         HitboxMovementController hitboxMovementController;

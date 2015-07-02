@@ -68,6 +68,7 @@ void AnimatedSprite::resetAnimation() {
 
     frame = 0;
     animationTimer.restart();
+    applyActiveTextureRect();
 }
 
 bool AnimatedSprite::animate() {

@@ -13,7 +13,7 @@ DestructibleBlock::DestructibleBlock(const glm::vec2 &position, const PreloadedD
     STATE_DESTROYING(0),
     STATE_DESTROYED(0)
     {
-        hitbox.setOrigin(position);
+        setPosition(position);
         load(data);
 
         updateRendering();

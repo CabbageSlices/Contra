@@ -5,6 +5,7 @@
 #include "Gun.h"
 #include "Tile.h"
 
+using std::make_shared;
 using std::vector;
 using std::shared_ptr;
 using std::cout;
@@ -374,4 +375,6 @@ void Player::die() {
 
     ///later this should stop animations but for now just kill player
     lifeState = DEAD;
+
+    gun = make_shared<Gun>();
 }

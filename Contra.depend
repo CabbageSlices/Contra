@@ -292,7 +292,7 @@
 	<cmath>
 	<iostream>
 
-1435433133 source:c:\users\nimesh\desktop\c++\github\contra\animatedsprite.cpp
+1435878292 source:c:\users\nimesh\desktop\c++\github\contra\animatedsprite.cpp
 	"AnimatedSprite.h"
 	<utility>
 	<iostream>
@@ -349,7 +349,7 @@
 	<string>
 	<map>
 
-1435276374 c:\users\nimesh\desktop\c++\github\contra\entitybase.h
+1435877535 c:\users\nimesh\desktop\c++\github\contra\entitybase.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"TileMap.h"
@@ -402,7 +402,7 @@
 
 1432770771 c:\users\nimesh\desktop\c++\github\contra\globalconstants.h
 
-1435276990 source:c:\users\nimesh\desktop\c++\github\contra\destructibleblock.cpp
+1435877664 source:c:\users\nimesh\desktop\c++\github\contra\destructibleblock.cpp
 	"DestructibleBlock.h"
 	"CollisionResolution.h"
 	<iostream>
@@ -427,7 +427,7 @@
 1435085640 source:c:\users\nimesh\desktop\c++\github\contra\dynamicobject.cpp
 	"DynamicObject.h"
 
-1435276374 source:c:\users\nimesh\desktop\c++\github\contra\enemy.cpp
+1435878434 source:c:\users\nimesh\desktop\c++\github\contra\enemy.cpp
 	"Enemy.h"
 	"GlobalConstants.h"
 	<vector>
@@ -450,7 +450,7 @@
 	"Enemy.h"
 	"TurretEnemy.h"
 
-1435276215 source:c:\users\nimesh\desktop\c++\github\contra\entitybase.cpp
+1435877682 source:c:\users\nimesh\desktop\c++\github\contra\entitybase.cpp
 	"EntityBase.h"
 
 1432770771 source:c:\users\nimesh\desktop\c++\github\contra\globalconstants.cpp
@@ -477,7 +477,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1435779211 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1435878503 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -496,12 +496,14 @@
 	"PreloadedData.h"
 	"BackgroundManager.h"
 	"PowerUp.h"
+	"Random.h"
 	<functional>
 	<vector>
 	<memory>
 	<iterator>
 	<algorithm>
 	<unordered_set>
+	<cstdlib>
 
 1434509271 c:\users\nimesh\desktop\c++\github\contra\player.h
 	"SFML/Graphics.hpp"
@@ -532,7 +534,7 @@
 	"ObjectHitbox.h"
 	<iostream>
 
-1435442946 source:c:\users\nimesh\desktop\c++\github\contra\player.cpp
+1435877800 source:c:\users\nimesh\desktop\c++\github\contra\player.cpp
 	"Player.h"
 	<iostream>
 	<vector>
@@ -973,13 +975,14 @@
 1435119031 c:\users\nimesh\desktop\c++\github\contra\enemyloaders.h
 	<string>
 
-1435778497 source:c:\users\nimesh\desktop\c++\github\contra\collisionresolution.cpp
+1435779802 source:c:\users\nimesh\desktop\c++\github\contra\collisionresolution.cpp
 	"CollisionResolution.h"
 	"EntityBase.h"
 	"Player.h"
 	"Bullet.h"
 	"DestructibleBlock.h"
 	"PowerUp.h"
+	<iostream>
 
 1435778478 c:\users\nimesh\desktop\c++\github\contra\collisionresolution.h
 	<memory>
@@ -987,7 +990,7 @@
 	"glm/glm.hpp"
 	<functional>
 
-1435442620 c:\users\nimesh\desktop\c++\github\contra\preloadeddata.h
+1435877274 c:\users\nimesh\desktop\c++\github\contra\preloadeddata.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	<string>
@@ -997,7 +1000,7 @@
 1435441961 c:\users\nimesh\desktop\c++\github\contra\dataloaders.h
 	<string>
 
-1435442620 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
+1435779802 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
 	"DataLoaders.h"
 	"PreloadedData.h"
 
@@ -1016,7 +1019,7 @@
 	<utility>
 	<string>
 
-1435443218 source:c:\users\nimesh\desktop\c++\github\contra\powerup.cpp
+1435877664 source:c:\users\nimesh\desktop\c++\github\contra\powerup.cpp
 	"PowerUp.h"
 	"GlobalConstants.h"
 
@@ -1027,4 +1030,11 @@
 	"PreloadedData.h"
 	"TileMap.h"
 	<memory>
+
+1435878565 source:c:\users\nimesh\desktop\c++\github\contra\random.cpp
+	"Random.h"
+	<iostream>
+
+1435877422 c:\users\nimesh\desktop\c++\github\contra\random.h
+	<cstdlib>
 

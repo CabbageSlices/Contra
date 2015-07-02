@@ -16,7 +16,7 @@ Enemy::Enemy(const glm::vec2 &positionWorldSpace, const Direction &initialDirect
     STATE_FALLING_RIGHT(0),
     direction()
     {
-        hitbox.setOrigin(positionWorldSpace);
+        setPosition(positionWorldSpace);
 
         if(initialDirection.horizontal == HorizontalDirection::RIGHT) {
 
@@ -105,6 +105,8 @@ void Enemy::load(PreloadedEnemyData &data) {
     STATE_FALLING_RIGHT = data.STATE_FALLING_RIGHT;
 
     loadBase(data);
+
+    determineAnimationState();
 }
 
 void Enemy::setState(const unsigned &newState) {
@@ -145,6 +147,7 @@ void Enemy::determineHorizontalDirection() {
 void Enemy::determineAnimationState() {
 
     glm::vec2 velocities = hitboxMovementController.getVelocities();
+    determineHorizontalDirection();
 
     if(direction.horizontal == HorizontalDirection::LEFT) {
 

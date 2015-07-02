@@ -112,6 +112,8 @@
 		<Unit filename="PowerUp.h" />
 		<Unit filename="PreloadedData.cpp" />
 		<Unit filename="PreloadedData.h" />
+		<Unit filename="Random.cpp" />
+		<Unit filename="Random.h" />
 		<Unit filename="ShootingEntity.cpp" />
 		<Unit filename="ShootingEntity.h" />
 		<Unit filename="SpatialHash.h" />
