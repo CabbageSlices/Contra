@@ -9,7 +9,7 @@ EntityBase::EntityBase(const glm::vec2 &gravity, const glm::vec2 &movementVeloci
     MOVEMENT_VELOCITY(movementVelocity),
     health(initialHealth),
     entity(sf::Vector2f(64, 64)),
-    currentState(0),
+    currentState(-1),
     sprite(sf::milliseconds(75))
     {
 

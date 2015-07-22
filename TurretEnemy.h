@@ -3,13 +3,11 @@
 
 #include "ShootingEntity.h"
 #include "Direction.h"
-#include "ShootingEntity.h"
-#include "AnimatedSprite.h"
 #include <memory>
 #include <vector>
 #include <string>
-#include "DataLoaders.h"
 #include "PreloadedData.h"
+#include "glm/glm.hpp"
 
 //turret enemy is an enemy that shoots at the player and doesn't move
 //some turrets can also hide themselves, like pihrana plant from mario
@@ -38,7 +36,6 @@ class TurretEnemy : public ShootingEntity {
         virtual bool checkCanGetHit();
         virtual void draw(sf::RenderWindow &window);
 
-        friend bool loadEnemy(TurretEnemy &enemy, const std::string &dataFileName);
         void load(PreloadedTurretData &data);
 
     private:
@@ -57,7 +54,6 @@ class TurretEnemy : public ShootingEntity {
             return CollisionResponse();
         }
 
-        void setState(const unsigned &newState);
         void restartStateDurationTimers();
 
         //timer to determine how long to stay in each state

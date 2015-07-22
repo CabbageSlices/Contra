@@ -11,6 +11,7 @@ enum EnemyType {
 
     ENEMY_GOOMBA,
     ENEMY_PIRANHA,
+    ENEMY_MUSHROOM,
 };
 
 enum BulletType {
@@ -37,6 +38,8 @@ struct PreloadedData {
     std::string textureFileName;
     sf::Time animationNextFrameTime;
 
+    float scale = 1.0f;
+
     //texture rect for each animation state
     std::map<unsigned, std::vector<sf::IntRect> > animationTextureRects;
 
@@ -57,6 +60,19 @@ struct PreloadedTurretData : public PreloadedData {
 
     sf::Time hiddenStateDuration;
     sf::Time exposedStateDuration;
+};
+
+struct PreloadedOmniDirectionalTurretData : public PreloadedData {
+
+    unsigned STATE_HIDING, STATE_COMING_OUT_OF_HIDING, STATE_GOING_INTO_HIDING, STATE_EXPOSED, STATE_SHOOTING;
+
+    GunType gunType;
+    sf::Time gunfireDelay;
+    BulletType bulletType;
+
+    sf::Time hiddenStateDuration;
+    sf::Time exposedStateDuration;
+    sf::Time shootingDelay;
 };
 
 //struct to store preloaded data about an enemy so whenever a new enemy is created you don't have to open a file to retrieve info about it
@@ -96,6 +112,7 @@ struct PreloadedDataCollection {
 
     PreloadedEnemyData goombaData;
     PreloadedTurretData piranhaData;
+    PreloadedOmniDirectionalTurretData mushroomData;
     PreloadedBulletData slowBulletData;
     PreloadedBulletData mediumBulletData;
     PreloadedBulletData fastBulletData;

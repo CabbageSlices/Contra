@@ -116,7 +116,7 @@ sf::FloatRect ObjectHitbox::getActiveHitboxObjectSpace() const {
 
 sf::FloatRect ObjectHitbox::getHitboxObjectSpace(const unsigned &id, const unsigned &state) const {
 
-    if(checkIdValid(id)) {
+    if(checkIdValid(id, state)) {
 
         return hitboxes[state][id];
     }

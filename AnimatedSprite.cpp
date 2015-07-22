@@ -124,8 +124,8 @@ void AnimatedSprite::setAnimationState(const unsigned &animationState) {
     //only change states if the given state is valid
     if(currentStateTextureRects.count(animationState) != 0) {
 
-        resetAnimation();
         currentAnimationState = animationState;
+        resetAnimation();
     }
 }
 

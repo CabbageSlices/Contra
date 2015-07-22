@@ -292,7 +292,7 @@
 	<cmath>
 	<iostream>
 
-1435878292 source:c:\users\nimesh\desktop\c++\github\contra\animatedsprite.cpp
+1437245699 source:c:\users\nimesh\desktop\c++\github\contra\animatedsprite.cpp
 	"AnimatedSprite.h"
 	<utility>
 	<iostream>
@@ -349,7 +349,7 @@
 	<string>
 	<map>
 
-1435877535 c:\users\nimesh\desktop\c++\github\contra\entitybase.h
+1437524994 c:\users\nimesh\desktop\c++\github\contra\entitybase.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"TileMap.h"
@@ -371,7 +371,7 @@
 
 1432770771 c:\users\nimesh\desktop\c++\github\contra\collisionresponse.h
 
-1435274891 c:\users\nimesh\desktop\c++\github\contra\enemy.h
+1436729004 c:\users\nimesh\desktop\c++\github\contra\enemy.h
 	"SFML/Graphics.hpp"
 	"ObjectHitbox.h"
 	"TileCollisionHandling.h"
@@ -385,7 +385,7 @@
 	<vector>
 	<map>
 
-1432770771 c:\users\nimesh\desktop\c++\github\contra\direction.h
+1436741479 c:\users\nimesh\desktop\c++\github\contra\direction.h
 	"glm/glm.hpp"
 
 1435375338 source:c:\users\nimesh\desktop\c++\github\contra\camera.cpp
@@ -421,7 +421,7 @@
 	"glm/glm.hpp"
 	<memory>
 
-1432770771 source:c:\users\nimesh\desktop\c++\github\contra\direction.cpp
+1436741648 source:c:\users\nimesh\desktop\c++\github\contra\direction.cpp
 	"Direction.h"
 
 1435085640 source:c:\users\nimesh\desktop\c++\github\contra\dynamicobject.cpp
@@ -438,7 +438,7 @@
 	"Enemy.h"
 	<iostream>
 
-1435265164 c:\users\nimesh\desktop\c++\github\contra\enemyspawners.h
+1437243737 c:\users\nimesh\desktop\c++\github\contra\enemyspawners.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
@@ -449,19 +449,20 @@
 	"PreloadedData.h"
 	"Enemy.h"
 	"TurretEnemy.h"
+	"OmniDirectionalTurret.h"
 
-1435877682 source:c:\users\nimesh\desktop\c++\github\contra\entitybase.cpp
+1437521128 source:c:\users\nimesh\desktop\c++\github\contra\entitybase.cpp
 	"EntityBase.h"
 
 1432770771 source:c:\users\nimesh\desktop\c++\github\contra\globalconstants.cpp
 	"GlobalConstants.h"
 
-1435443241 source:c:\users\nimesh\desktop\c++\github\contra\gun.cpp
+1437243907 source:c:\users\nimesh\desktop\c++\github\contra\gun.cpp
 	"Gun.h"
 	"Bullet.h"
 	<iostream>
 
-1435443038 c:\users\nimesh\desktop\c++\github\contra\gun.h
+1437521471 c:\users\nimesh\desktop\c++\github\contra\gun.h
 	<SFML/Graphics.hpp>
 	<SFML/Window.hpp>
 	"ObjectHitbox.h"
@@ -477,7 +478,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1435878503 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1437522668 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -519,18 +520,16 @@
 	"Direction.h"
 	<memory>
 
-1435274891 c:\users\nimesh\desktop\c++\github\contra\turretenemy.h
+1436746884 c:\users\nimesh\desktop\c++\github\contra\turretenemy.h
 	"ShootingEntity.h"
 	"Direction.h"
-	"ShootingEntity.h"
-	"AnimatedSprite.h"
 	<memory>
 	<vector>
 	<string>
-	"DataLoaders.h"
 	"PreloadedData.h"
+	"glm/glm.hpp"
 
-1434508089 source:c:\users\nimesh\desktop\c++\github\contra\objecthitbox.cpp
+1437524321 source:c:\users\nimesh\desktop\c++\github\contra\objecthitbox.cpp
 	"ObjectHitbox.h"
 	<iostream>
 
@@ -559,7 +558,7 @@
 	"glm/glm.hpp"
 	<iostream>
 
-1435294758 source:c:\users\nimesh\desktop\c++\github\contra\turretenemy.cpp
+1436746884 source:c:\users\nimesh\desktop\c++\github\contra\turretenemy.cpp
 	"TurretEnemy.h"
 	"GlobalConstants.h"
 	<cmath>
@@ -990,17 +989,17 @@
 	"glm/glm.hpp"
 	<functional>
 
-1435877274 c:\users\nimesh\desktop\c++\github\contra\preloadeddata.h
+1437521796 c:\users\nimesh\desktop\c++\github\contra\preloadeddata.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	<string>
 	<map>
 	<vector>
 
-1435441961 c:\users\nimesh\desktop\c++\github\contra\dataloaders.h
+1436746884 c:\users\nimesh\desktop\c++\github\contra\dataloaders.h
 	<string>
 
-1435779802 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
+1437525118 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
 	"DataLoaders.h"
 	"PreloadedData.h"
 
@@ -1019,9 +1018,10 @@
 	<utility>
 	<string>
 
-1435877664 source:c:\users\nimesh\desktop\c++\github\contra\powerup.cpp
+1437245644 source:c:\users\nimesh\desktop\c++\github\contra\powerup.cpp
 	"PowerUp.h"
 	"GlobalConstants.h"
+	<iostream>
 
 1435443175 c:\users\nimesh\desktop\c++\github\contra\powerup.h
 	"DynamicObject.h"
@@ -1031,10 +1031,21 @@
 	"TileMap.h"
 	<memory>
 
-1435878565 source:c:\users\nimesh\desktop\c++\github\contra\random.cpp
+1435885172 source:c:\users\nimesh\desktop\c++\github\contra\random.cpp
 	"Random.h"
 	<iostream>
 
 1435877422 c:\users\nimesh\desktop\c++\github\contra\random.h
 	<cstdlib>
+
+1436746884 c:\users\nimesh\desktop\c++\github\contra\omnidirectionalturret.h
+	"ShootingEntity.h"
+	"PreloadedData.h"
+	"glm/glm.hpp"
+
+1437525118 source:c:\users\nimesh\desktop\c++\github\contra\omnidirectionalturret.cpp
+	"OmniDirectionalTurret.h"
+	"TileMap.h"
+	<memory>
+	<iostream>
 

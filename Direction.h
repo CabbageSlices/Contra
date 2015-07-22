@@ -24,6 +24,15 @@ struct Direction {
     bool isFacingCompletelyVertical = false;
 };
 
+extern const glm::vec2 downLeftVector;
+extern const glm::vec2 leftVector;
+extern const glm::vec2 upLeftVector;
+extern const glm::vec2 upVector;
+extern const glm::vec2 upRightVector;
+extern const glm::vec2 rightVector;
+extern const glm::vec2 downRightVector;
+extern const glm::vec2 downVector;
+
 //calculate the normalized vector that points in the given direction
 //the vector is in a general object space,
 //it must be transformed into world space using the transfomration of whatever object uses them

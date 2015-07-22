@@ -11,6 +11,7 @@
 #include "PreloadedData.h"
 #include "Enemy.h"
 #include "TurretEnemy.h"
+#include "OmniDirectionalTurret.h"
 
 struct SpawnPoint {
 
@@ -109,6 +110,14 @@ void applyLoadedData(TurretEnemy &enemy, EnemyType enemyType) {
     if(enemyType == EnemyType::ENEMY_PIRANHA) {
 
         enemy.load(dataCollection.piranhaData);
+    }
+}
+
+void applyLoadedData(OmniDirectionalTurret &enemy, EnemyType enemyType) {
+
+    if(enemyType == EnemyType::ENEMY_MUSHROOM) {
+
+        enemy.load(dataCollection.mushroomData);
     }
 }
 

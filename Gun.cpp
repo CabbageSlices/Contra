@@ -50,6 +50,16 @@ void Gun::fire(const glm::vec2 &userPosition, const glm::vec2 &bulletOriginUserS
     glm::vec2 directionVector = getDirectionVector(fireDirection);
     directionVector = glm::normalize(directionVector);
 
+    fire(userPosition, bulletOriginUserSpace, directionVector);
+}
+
+void Gun::fire(const glm::vec2 &userPosition, const glm::vec2 &bulletOriginUserSpace, const glm::vec2 &directionVector) {
+
+    if(!checkCanFire()) {
+
+        return;
+    }
+
     glm::vec2 bulletOrigin = userPosition + bulletOriginUserSpace;
 
     createBullet(bulletOrigin, directionVector);

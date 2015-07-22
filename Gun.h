@@ -30,6 +30,7 @@ class Gun {
         //user position is position of user in the world
         //bulletOriginUserSpace is the relative origin of the bullet with respect to the user's position
         void fire(const glm::vec2 &userPosition, const glm::vec2 &bulletOriginUserSpace, const Direction &fireDirection);
+        void fire(const glm::vec2 &userPosition, const glm::vec2 &bulletOriginUserSpace, const glm::vec2 &directionVector);
         void updatePhysics(const float &delta, const sf::FloatRect &worldBounds, TileMap& map);
         void updateRendering();
         void draw(sf::RenderWindow& window);
@@ -43,7 +44,7 @@ class Gun {
 
         bool checkCanFire() {
 
-            return timeSinceLastFired > fireDelay;
+            return timeSinceLastFired >= fireDelay;
         }
 
         void createBullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace);

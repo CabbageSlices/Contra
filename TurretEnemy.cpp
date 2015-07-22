@@ -45,6 +45,7 @@ void TurretEnemy::updatePhysics(const float& deltaTime, const sf::FloatRect& wor
         //enemy isn't shooting so no need to fire new bullets
         //the gun needs to update though so keep this after the gun physics update
         //when not shooting the animation frame adn the hitbox match up
+        //set the hitbox according to the current frame of animation
         hitbox.setActiveHitbox(frame, currentState);
         return;
     }
@@ -82,6 +83,8 @@ void TurretEnemy::updateRendering() {
 
             setState(STATE_HIDING);
         }
+
+        restartStateDurationTimers();
     }
 
     //turret only really from hiding or shooting
@@ -90,10 +93,12 @@ void TurretEnemy::updateRendering() {
     if(currentState == STATE_HIDING && hiddenStateTimer.getElapsedTime() > hiddenStateDuration) {
 
         setState(STATE_COMING_OUT_OF_HIDING);
+        restartStateDurationTimers();
 
     } else if(currentState == STATE_SHOOTING && exposedStateTimer.getElapsedTime() > exposedStateDuration) {
 
         setState(STATE_GOING_INTO_HIDING);
+        restartStateDurationTimers();
 
     } else if(currentState == STATE_SHOOTING) {
 
@@ -185,6 +190,7 @@ void TurretEnemy::load(PreloadedTurretData &data) {
     loadBase(data);
 
     setState(STATE_HIDING);
+    restartStateDurationTimers();
 }
 
 void TurretEnemy::createHitboxes(const vector<sf::FloatRect> &hitboxes) {
@@ -266,20 +272,6 @@ void TurretEnemy::determineDirection(const glm::vec2 &targetPosition) {
 
         direction.vertical = VerticalDirection::STRAIGHT;
     }
-}
-
-void TurretEnemy::setState(const unsigned &newState) {
-
-    if(currentState == newState) {
-
-        return;
-    }
-
-    currentState = newState;
-    sprite.setAnimationState(newState);
-    hitbox.setActiveHitbox(0, newState);
-
-    restartStateDurationTimers();
 }
 
 void TurretEnemy::restartStateDurationTimers() {

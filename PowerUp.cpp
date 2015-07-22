@@ -1,6 +1,9 @@
 #include "PowerUp.h"
 #include "GlobalConstants.h"
+#include <iostream>
 
+using std::cout;
+using std::endl;
 using std::make_shared;
 using std::shared_ptr;
 
@@ -78,6 +81,7 @@ void PowerUp::updateRendering() {
 
 void PowerUp::draw(sf::RenderWindow &window) {
 
+    cout << "powerup:  ";
     sprite.draw(window);
 }
 

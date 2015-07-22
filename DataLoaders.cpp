@@ -115,6 +115,74 @@ bool loadEnemyData(PreloadedEnemyData &data, const std::string &dataFileName) {
     return true;
 }
 
+bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, const std::string &dataFileName) {
+
+    data.scale = 1;
+    data.STATE_HIDING = 0;
+    data.STATE_COMING_OUT_OF_HIDING = 1;
+    data.STATE_EXPOSED = 2;
+    data.STATE_SHOOTING = 3;
+    data.STATE_GOING_INTO_HIDING = 4;
+
+    data.gunType = GunType::GUN_BASIC;
+    data.gunfireDelay = sf::seconds(0);
+    data.bulletType = BulletType::BULLET_FAST;
+
+    data.hiddenStateDuration = sf::seconds(3.5);
+    data.exposedStateDuration = sf::seconds(6);
+    data.shootingDelay = sf::seconds(2.f);
+    data.health = 10;
+
+    data.textureFileName = "mushroom.png";
+
+    data.animationNextFrameTime = sf::milliseconds(90);
+
+    data.animationTextureRects[data.STATE_HIDING].push_back(sf::IntRect(1, 1, 1, 1));
+
+    for(unsigned i = 0; i < 4; ++i) {
+
+        data.animationTextureRects[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::IntRect(256 * i, 0, 256, 256));
+    }
+
+    for(unsigned i = 0; i < 4; ++i) {
+
+        data.animationTextureRects[data.STATE_GOING_INTO_HIDING].push_back(sf::IntRect(769 - 256 * i, 0, 256, 256));
+    }
+
+    for(unsigned i = 0; i < 4; ++i) {
+
+        data.animationTextureRects[data.STATE_SHOOTING].push_back(sf::IntRect(256 * i, 256, 256, 256));
+    }
+
+    data.animationTextureRects[data.STATE_SHOOTING].push_back(sf::IntRect(769, 256, 256, 256));
+    data.animationTextureRects[data.STATE_SHOOTING].push_back(sf::IntRect(769, 256, 256, 256));
+
+    data.animationTextureRects[data.STATE_EXPOSED].push_back(sf::IntRect(769, 0, 256, 256));
+
+
+    data.hitboxes[data.STATE_HIDING].push_back(sf::FloatRect(1, 1, 1, 1));
+    data.hitboxes[data.STATE_EXPOSED].push_back(sf::FloatRect(52, 10, 175, 245));
+
+    data.hitboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(44, 217, 126, 38));
+    data.hitboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(68, 178, 130, 78));
+    data.hitboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(79, 105, 123, 151));
+    data.hitboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(60, 15, 160, 241));
+
+    data.hitboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(60, 15, 160, 241));
+    data.hitboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(79, 105, 123, 151));
+    data.hitboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(68, 178, 130, 78));
+    data.hitboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(44, 217, 126, 38));
+
+    data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(27, 47, 154, 209));
+    data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(47, 293 - 256, 143, 219));
+    data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(38, 312 - 256, 153, 200));
+    data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
+    data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
+    data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
+
+    return true;
+}
+
 bool loadBulletData(PreloadedBulletData &data, const std::string &dataFileName) {
 
     data.STATE_RIGHT = 0;

@@ -28,7 +28,6 @@ int getRand(const int &min, const int &max) {
 bool determineIfEventOccurs(const unsigned &occuranceThreshold, const unsigned &possibleOutcomes) {
 
     int random = getRand(1, possibleOutcomes);
-    cout << random << endl;
 
     return random <= occuranceThreshold;
 }

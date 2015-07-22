@@ -153,13 +153,14 @@ struct GameWorld {
 //when an enemy dies theres a certain chance it will drop a power up
 //these values determine the likelihood of a powerup being dropped
 unsigned powerUpDropPossibleOutcomes = 100;
-unsigned enemyPowerUpDropOccuranceThreshold = 6;
+unsigned enemyPowerUpDropOccuranceThreshold = 7;
 unsigned turretPowerUpDropOccuranceThreshold = 10;
 
 void loadDataCollection(PreloadedDataCollection &collection) {
 
     loadEnemyData(collection.goombaData, "goomba.txt");
     loadTurretData(collection.piranhaData, "piranha.txt");
+    loadOmniDirectionalTurretData(collection.mushroomData, "mushroom.txt");
     loadBulletData(collection.slowBulletData, "slow");
     loadBulletData(collection.mediumBulletData, "medium");
     loadBulletData(collection.fastBulletData, "fast");
@@ -206,7 +207,7 @@ void handleObjectKeystate(sf::RenderWindow &window, GameWorld &world) {
 
 void updateWorld(sf::RenderWindow &window, GameWorld &world) {
 
-	float deltaTime = world.updateTimer.restart().asSeconds();
+    float deltaTime = world.updateTimer.restart().asSeconds();
 
 	updateWorldPhyics(world, deltaTime);
 	updateEnemySpawners(world);
@@ -549,7 +550,8 @@ int main() {
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
     world.players.push_back(make_shared<Player>());
 
-    world.powerUps.push_back(make_shared<PowerUp>(glm::vec2(0, 0), PowerUpType::MACHINE_GUN, dataCollection.powerUpData));
+    shared_ptr<OmniDirectionalTurret> mushroom = make_shared<OmniDirectionalTurret>(glm::vec2(200, 200));
+    mushroom->load(dataCollection.mushroomData);
 
     while(window.isOpen()) {
 
@@ -578,9 +580,12 @@ int main() {
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
-                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6));
-                        point->setTypeOfEnemySpawned(EnemyType::ENEMY_GOOMBA);
-                        world.enemySpawnInfo.spawnPoints.push_back(point);
+//                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6));
+//                        point->setTypeOfEnemySpawned(EnemyType::ENEMY_GOOMBA);
+//                        world.enemySpawnInfo.spawnPoints.push_back(point);
+
+                        shared_ptr<PowerUp> powerUp = make_shared<PowerUp>(glm::vec2(mousePosition.x, mousePosition.y), PowerUpType::MACHINE_GUN, dataCollection.powerUpData);
+                        world.powerUps.push_back(powerUp);
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) {
 
@@ -613,11 +618,16 @@ int main() {
 
         handleObjectKeystate(window, world);
 
+        mushroom->updatePhysics(world.updateTimer.getElapsedTime().asSeconds(), world.worldBounds, world.tileMap);
+        mushroom->updateRendering();
         updateWorld(window, world);
+
+        playerEnemyEntityCollision(world.players[0], mushroom);
 
         window.clear();
 
         drawWorld(window, world);
+        mushroom->draw(window);
 
         window.display();
 

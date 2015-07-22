@@ -81,6 +81,7 @@ void EntityBase::loadBase(const Data &data) {
 
     health = data.health;
 
+    sprite.getSprite().setScale(data.scale, data.scale);
     sprite.loadTexture(data.textureFileName);
     sprite.setNextFrameTime(data.animationNextFrameTime);
 
@@ -96,7 +97,12 @@ void EntityBase::loadBase(const Data &data) {
 
         for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
 
-            hitbox.insertHitbox(*vt, it->first);
+            //scale the hitbox size and position by the scale factor
+            //this way if the object is scaled then the hitbox appropriately encompass the scaled sprite
+            float scale = data.scale;
+            sf::FloatRect bounds(vt->left * scale, vt->top * scale, vt->width * scale, vt->height * scale);
+
+            hitbox.insertHitbox(bounds, it->first);
         }
     }
 }
