@@ -95,6 +95,9 @@ CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*co
 void Enemy::draw(sf::RenderWindow &window) {
 
     sprite.draw(window);
+    sf::FloatRect box = hitbox.getActiveHitboxWorldSpace();
+    entity.setPosition(box.left, box.top);
+    entity.setSize(sf::Vector2f(box.width, box.height));
 }
 
 void Enemy::load(PreloadedEnemyData &data) {
@@ -107,19 +110,6 @@ void Enemy::load(PreloadedEnemyData &data) {
     loadBase(data);
 
     determineAnimationState();
-}
-
-void Enemy::setState(const unsigned &newState) {
-
-    //if new state is equal to current state then no need to switch
-    if(newState == currentState) {
-
-        return;
-    }
-
-    currentState = newState;
-    sprite.setAnimationState(newState);
-    hitbox.setActiveHitbox(0, currentState);
 }
 
 void Enemy::changeDirectionHorizontally() {

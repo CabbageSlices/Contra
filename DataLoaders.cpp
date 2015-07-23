@@ -117,7 +117,7 @@ bool loadEnemyData(PreloadedEnemyData &data, const std::string &dataFileName) {
 
 bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, const std::string &dataFileName) {
 
-    data.scale = 1;
+    data.scale = 1.5;
     data.STATE_HIDING = 0;
     data.STATE_COMING_OUT_OF_HIDING = 1;
     data.STATE_EXPOSED = 2;

@@ -143,6 +143,11 @@ void spawnEntity(std::shared_ptr<TurretEnemy> &enemy, InformationForSpawner<Turr
     enemy = std::make_shared<TurretEnemy>(glm::vec2(closestPoint->getSpawnPosition().x, closestPoint->getSpawnPosition().y));
 }
 
+void spawnEntity(std::shared_ptr<OmniDirectionalTurret> &enemy, InformationForSpawner<OmniDirectionalTurret> &spawnInfo, std::shared_ptr<SpawnPoint> &closestPoint) {
+
+    enemy = std::make_shared<OmniDirectionalTurret>(glm::vec2(closestPoint->getSpawnPosition().x, closestPoint->getSpawnPosition().y));
+}
+
 //the returned spawnpoint needs to be a reference but yo ucan't return local reference
 //so instead this function returns the id of the closet spawn point, or -1 if none are available
 template<class T>

@@ -39,8 +39,6 @@ class Enemy : public EntityBase {
 
         virtual CollisionResponse handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
 
-        void setState(const unsigned &newState);
-
         void changeDirectionHorizontally();
         void determineHorizontalDirection();
         void determineAnimationState();

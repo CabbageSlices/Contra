@@ -75,16 +75,19 @@ void TurretEnemy::updateRendering() {
     if(sprite.animate() && sprite.getAnimationState() != STATE_SHOOTING) {
 
         //animation finished so if its the transition animation then complete transitions
+        //don't restart state timers if the current state isn't one of these
+        //because turrets also animate while hiding and if you restart state timers at the end up the hiding animation
+        //then the timers will be reset every frame so turret will stay hiding forever
         if(currentState == STATE_COMING_OUT_OF_HIDING) {
 
             setState(STATE_SHOOTING);
+            restartStateDurationTimers();
 
         } else if(currentState == STATE_GOING_INTO_HIDING) {
 
             setState(STATE_HIDING);
+            restartStateDurationTimers();
         }
-
-        restartStateDurationTimers();
     }
 
     //turret only really from hiding or shooting

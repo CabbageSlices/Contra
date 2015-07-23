@@ -97,11 +97,13 @@ template<class T>
 void drawEntities(sf::RenderWindow &window, vector<shared_ptr<T> > &entities);
 
 function<void(shared_ptr<Bullet>, shared_ptr<DestructibleBlock>)> bulletBlockCollisionFunction = bulletNonDeflectingEntityCollision;
-function<void(shared_ptr<Bullet>, shared_ptr<Enemy>)> bulletEnemyCollisionFunction= bulletNonDeflectingEntityCollision;
-function<void(shared_ptr<Bullet>, shared_ptr<TurretEnemy>)> bulletTurretCollisionFunction= bulletNonDeflectingEntityCollision;
+function<void(shared_ptr<Bullet>, shared_ptr<Enemy>)> bulletEnemyCollisionFunction = bulletNonDeflectingEntityCollision;
+function<void(shared_ptr<Bullet>, shared_ptr<TurretEnemy>)> bulletTurretCollisionFunction = bulletNonDeflectingEntityCollision;
+function<void(shared_ptr<Bullet>, shared_ptr<OmniDirectionalTurret>)> bulletOmnidirectionalTurretCollisionFunction = bulletNonDeflectingEntityCollision;
 function<void(shared_ptr<Player>, shared_ptr<Enemy>)> playerEnemyCollisionFunction = playerEnemyEntityCollision;
 function<void(shared_ptr<Player>, shared_ptr<PowerUp>)> playerPowerUpCollisionFunction = playerPowerUpCollision;
 function<void(shared_ptr<Player>, shared_ptr<TurretEnemy>)> playerTurretCollisionFunction = playerEnemyEntityCollision;
+function<void(shared_ptr<Player>, shared_ptr<OmniDirectionalTurret>)> playerOmnidirectionalTurretCollisionFunction = playerEnemyEntityCollision;
 function<void(shared_ptr<DestructibleBlock>, shared_ptr<EntityBase>)> destructibleBlockEntityCollisionFunction = destructibleBlockEntityCollision;
 
 struct GameWorld {
@@ -110,6 +112,7 @@ struct GameWorld {
 		players(),
 		enemies(),
 		turrets(),
+		omnidirectionalTurrets(),
 		powerUps(),
 		tileMap(),
 		destructibleBlocks(),
@@ -119,6 +122,7 @@ struct GameWorld {
 		viewPositionLastFrame(0, 0),
 		enemySpawnInfo(enemies, worldBounds, worldBounds),
 		turretSpawnInfo(turrets, worldBounds, worldBounds),
+		omnidirectionalTurretSpawnInfo(omnidirectionalTurrets, worldBounds, worldBounds),
 		destructibleBlockHash(256, 256),
 		updateTimer()
 		{
@@ -129,6 +133,7 @@ struct GameWorld {
 	vector<shared_ptr<Player> > players;
 	vector<shared_ptr<Enemy> > enemies;
 	vector<shared_ptr<TurretEnemy> > turrets;
+	vector<shared_ptr<OmniDirectionalTurret> > omnidirectionalTurrets;
 	vector<shared_ptr<PowerUp> > powerUps;
 
 	//environment
@@ -144,6 +149,7 @@ struct GameWorld {
 	//spawner properties
 	InformationForSpawner<Enemy> enemySpawnInfo;
 	InformationForSpawner<TurretEnemy> turretSpawnInfo;
+	InformationForSpawner<OmniDirectionalTurret> omnidirectionalTurretSpawnInfo;
 
 	//other stuff
 	SpatialHash<DestructibleBlock> destructibleBlockHash;
@@ -222,6 +228,7 @@ void drawWorld(sf::RenderWindow &window, GameWorld &world) {
 	drawEntities(window, world.players);
 	drawEntities(window, world.enemies);
 	drawEntities(window, world.turrets);
+	drawEntities(window, world.omnidirectionalTurrets);
 	drawEntities(window, world.destructibleBlocks);
 	drawEntities(window, world.powerUps);
 }
@@ -230,12 +237,15 @@ void updateEnemySpawners(GameWorld &world) {
 
 	world.enemySpawnInfo.currentCameraBounds = world.camera.getCameraBounds();
 	world.turretSpawnInfo.currentCameraBounds = world.camera.getCameraBounds();
+	world.omnidirectionalTurretSpawnInfo.currentCameraBounds = world.camera.getCameraBounds();
 
 	world.enemySpawnInfo.worldBounds = world.worldBounds;
 	world.turretSpawnInfo.worldBounds = world.worldBounds;
+	world.omnidirectionalTurretSpawnInfo.worldBounds = world.worldBounds;
 
 	spawnEnemyNearCamera(world.enemySpawnInfo);
 	spawnEnemyNearCamera(world.turretSpawnInfo);
+	spawnEnemyNearCamera(world.omnidirectionalTurretSpawnInfo);
 }
 
 void updateWorldPhyics(GameWorld &world, const float &deltaTime) {
@@ -277,8 +287,19 @@ void updateWorldPhyics(GameWorld &world, const float &deltaTime) {
 		}
 	}
 
+	for(unsigned i = 0; i < world.omnidirectionalTurrets.size(); ++i) {
+
+		world.omnidirectionalTurrets[i]->updatePhysics(deltaTime, world.worldBounds, world.tileMap);
+
+		if(!world.omnidirectionalTurrets[i]->checkIsAlive()) {
+
+            spawnPowerUp(turretPowerUpDropOccuranceThreshold, powerUpDropPossibleOutcomes, world.omnidirectionalTurrets[i]->getPosition(), world);
+		}
+	}
+
     removeDeadEntities(world.powerUps);
 
+    removeDeadEntities(world.omnidirectionalTurrets);
 	removeDeadEntities(world.enemies);
 	removeDeadEntities(world.turrets);
 	removeDeadHashEntries(world.destructibleBlocks, world.destructibleBlockHash);
@@ -291,6 +312,7 @@ void updateWorldRendering(sf::RenderWindow &window, GameWorld &world) {
 	updateObjectRendering(world.turrets);
 	updateObjectRendering(world.destructibleBlocks);
 	updateObjectRendering(world.powerUps);
+	updateObjectRendering(world.omnidirectionalTurrets);
 
 	world.camera.applyCamera(window);
 
@@ -349,10 +371,12 @@ void playerWorldCollision(GameWorld &world) {
 
 		collidePlayerEntities(it, world.enemies, playerEnemyCollisionFunction);
 		collidePlayerShootingEntities(it, world.turrets, playerTurretCollisionFunction);
+		collidePlayerShootingEntities(it, world.omnidirectionalTurrets, playerOmnidirectionalTurretCollisionFunction);
 
 		//handle collision with player's bullets and enemies
 		collideBulletsEntities(it->getGun()->getBullets(), world.enemies, bulletEnemyCollisionFunction);
 		collideBulletsEntities(it->getGun()->getBullets(), world.turrets, bulletTurretCollisionFunction);
+		collideBulletsEntities(it->getGun()->getBullets(), world.omnidirectionalTurrets, bulletOmnidirectionalTurretCollisionFunction);
 	}
 }
 
@@ -550,9 +574,6 @@ int main() {
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
     world.players.push_back(make_shared<Player>());
 
-    shared_ptr<OmniDirectionalTurret> mushroom = make_shared<OmniDirectionalTurret>(glm::vec2(200, 200));
-    mushroom->load(dataCollection.mushroomData);
-
     while(window.isOpen()) {
 
         while(window.pollEvent(event)) {
@@ -580,12 +601,9 @@ int main() {
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
-//                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6));
-//                        point->setTypeOfEnemySpawned(EnemyType::ENEMY_GOOMBA);
-//                        world.enemySpawnInfo.spawnPoints.push_back(point);
-
-                        shared_ptr<PowerUp> powerUp = make_shared<PowerUp>(glm::vec2(mousePosition.x, mousePosition.y), PowerUpType::MACHINE_GUN, dataCollection.powerUpData);
-                        world.powerUps.push_back(powerUp);
+                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6), 1);
+                        point->setTypeOfEnemySpawned(EnemyType::ENEMY_MUSHROOM);
+                        world.omnidirectionalTurretSpawnInfo.spawnPoints.push_back(point);
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) {
 
@@ -618,16 +636,11 @@ int main() {
 
         handleObjectKeystate(window, world);
 
-        mushroom->updatePhysics(world.updateTimer.getElapsedTime().asSeconds(), world.worldBounds, world.tileMap);
-        mushroom->updateRendering();
         updateWorld(window, world);
-
-        playerEnemyEntityCollision(world.players[0], mushroom);
 
         window.clear();
 
         drawWorld(window, world);
-        mushroom->draw(window);
 
         window.display();
 
