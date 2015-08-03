@@ -29,6 +29,8 @@ class ObjectHitbox {
 
         void clearHitboxes();
 
+        void scale(const float &xFactor, const float &yFactor);
+
         //translate the origin
         void move(const glm::vec2& displacement);
 

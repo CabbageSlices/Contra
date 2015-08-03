@@ -61,6 +61,11 @@ void Camera::applyCamera(sf::RenderWindow &window) const {
     window.setView(view);
 }
 
+glm::vec2 Camera::getDefaultSize() const {
+
+    return defaultSize;
+}
+
 sf::FloatRect Camera::getCameraBounds() const {
 
     sf::Vector2f size = view.getSize();
@@ -85,6 +90,16 @@ sf::Vector2f Camera::getViewCenter() const {
 sf::Vector2f Camera::getViewTopLeft() const {
 
     return view.getCenter() - view.getSize() / 2.f;
+}
+
+void Camera::setTargetSize(const glm::vec2 &target) {
+
+    targetSize = target;
+}
+
+void Camera::setTargetPosition(const glm::vec2 &target) {
+
+    targetPosition = target;
 }
 
 void Camera::handleTransitions(const float &delta) {
@@ -129,9 +144,9 @@ void Camera::finishAllTransitions() {
 bool Camera::checkShouldSnapProperty(glm::vec2 currentValue, glm::vec2 targetValue) const {
 
     glm::vec2 distance = glm::abs(targetValue - currentValue);
-    float minimumDistance = glm::min(distance.x, distance.y);
+    float distanceSquared = glm::dot(distance, distance);
 
-    return minimumDistance < snapThreshold;
+    return distanceSquared < snapThreshold * snapThreshold;
 }
 
 bool Camera::checkShouldSnapPosition() const {
@@ -150,11 +165,11 @@ glm::vec2 Camera::calculateVelocity() const {
 
     if(currentPosition.x < targetPosition.x) {
 
-        velocity.x = TERMINAL_VELOCITY * 2;
+        velocity.x = TERMINAL_VELOCITY;
 
     } else if(currentPosition.x > targetPosition.x) {
 
-        velocity.x = -TERMINAL_VELOCITY * 2;
+        velocity.x = -TERMINAL_VELOCITY;
 
     } else {
 
@@ -163,11 +178,11 @@ glm::vec2 Camera::calculateVelocity() const {
 
     if(currentPosition.y < targetPosition.y) {
 
-        velocity.y = TERMINAL_VELOCITY * 2;
+        velocity.y = TERMINAL_VELOCITY;
 
     } else if(currentPosition.y > targetPosition.y) {
 
-        velocity.y = -TERMINAL_VELOCITY * 2;
+        velocity.y = -TERMINAL_VELOCITY;
 
     } else {
 

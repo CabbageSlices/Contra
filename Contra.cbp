@@ -96,6 +96,7 @@
 		<Unit filename="EnemySpawners.h" />
 		<Unit filename="EntityBase.cpp" />
 		<Unit filename="EntityBase.h" />
+		<Unit filename="GameWorld.h" />
 		<Unit filename="GlobalConstants.cpp" />
 		<Unit filename="GlobalConstants.h" />
 		<Unit filename="Gun.cpp" />

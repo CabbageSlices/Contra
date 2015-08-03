@@ -33,6 +33,20 @@ void ObjectHitbox::clearHitboxes() {
     idActiveHitbox = 0;
 }
 
+void ObjectHitbox::scale(const float &xFactor, const float &yFactor) {
+
+    for(auto &iter : hitboxes) {
+
+        for(auto hitboxIter = iter.second.begin(); hitboxIter != iter.second.end(); ++hitboxIter) {
+
+            hitboxIter->left *= xFactor;
+            hitboxIter->top *= yFactor;
+            hitboxIter->width *= xFactor;
+            hitboxIter->height *= yFactor;
+        }
+    }
+}
+
 void ObjectHitbox::move(const glm::vec2 &displacement) {
 
     origin += displacement;

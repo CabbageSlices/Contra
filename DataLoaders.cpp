@@ -126,7 +126,7 @@ bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, con
 
     data.gunType = GunType::GUN_BASIC;
     data.gunfireDelay = sf::seconds(0);
-    data.bulletType = BulletType::BULLET_FAST;
+    data.bulletType = BulletType::BULLET_MEDIUM;
 
     data.hiddenStateDuration = sf::seconds(3.5);
     data.exposedStateDuration = sf::seconds(6);

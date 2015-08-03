@@ -17,6 +17,7 @@
 #include "BackgroundManager.h"
 #include "PowerUp.h"
 #include "Random.h"
+#include "GameWorld.h"
 
 #include <functional>
 #include <vector>
@@ -34,22 +35,23 @@ using std::shared_ptr;
 using std::make_shared;
 using std::vector;
 
-struct GameWorld;
-
 void loadDataCollection(PreloadedDataCollection &collection);
 void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world);
 void handleObjectEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world);
 void handleObjectKeystate(sf::RenderWindow &window, GameWorld &world);
 void updateWorld(sf::RenderWindow &window, GameWorld &world);
 void drawWorld(sf::RenderWindow &window, GameWorld &world);
-void updateEnemySpawners(GameWorld &world);
+void updateEnemySpawners(GameWorld &world, EnemySpawnerCollection &spawnerCollection);
 void updateWorldPhyics(GameWorld &world, const float &deltaTime);
+void updateCameraProperties(GameWorld &world, vector<glm::vec2> &playerPositions, const float &deltaTime);
+void updateEnemyCollectionPhysics(EnemyCollection &collection, const float &delta, vector<glm::vec2> &playerPositions, GameWorld &world);
 void updateWorldRendering(sf::RenderWindow &window, GameWorld &world);
 void spawnPowerUp(const unsigned &occuranceThreshold, const unsigned &possibleOutcomes, const glm::vec2 &position, GameWorld &world);
 void handleEntityCollisions(GameWorld &world);
-void playerWorldCollision(GameWorld &world);
-void enemyWorldCollision(GameWorld &world);
-void turretWorldCollision(GameWorld &world);
+void playerWorldCollision(GameWorld &world, EnemyCollection &enemyCollection);
+void enemyWorldCollision(GameWorld &world, EnemyCollection &enemyCollection);
+void turretWorldCollision(GameWorld &world, EnemyCollection &enemyCollection);
+void omnidirectionalTurretWorldCollision(GameWorld &world, EnemyCollection &enemyCollection);
 void drawTiles(sf::RenderWindow &window, GameWorld &world);
 
 template<class Entity>
@@ -106,56 +108,6 @@ function<void(shared_ptr<Player>, shared_ptr<TurretEnemy>)> playerTurretCollisio
 function<void(shared_ptr<Player>, shared_ptr<OmniDirectionalTurret>)> playerOmnidirectionalTurretCollisionFunction = playerEnemyEntityCollision;
 function<void(shared_ptr<DestructibleBlock>, shared_ptr<EntityBase>)> destructibleBlockEntityCollisionFunction = destructibleBlockEntityCollision;
 
-struct GameWorld {
-
-	GameWorld(sf::RenderWindow &window) :
-		players(),
-		enemies(),
-		turrets(),
-		omnidirectionalTurrets(),
-		powerUps(),
-		tileMap(),
-		destructibleBlocks(),
-		backgrounds(),
-		worldBounds(0, 0, 0, 0),
-		camera(window),
-		viewPositionLastFrame(0, 0),
-		enemySpawnInfo(enemies, worldBounds, worldBounds),
-		turretSpawnInfo(turrets, worldBounds, worldBounds),
-		omnidirectionalTurretSpawnInfo(omnidirectionalTurrets, worldBounds, worldBounds),
-		destructibleBlockHash(256, 256),
-		updateTimer()
-		{
-
-		}
-
-	//entities
-	vector<shared_ptr<Player> > players;
-	vector<shared_ptr<Enemy> > enemies;
-	vector<shared_ptr<TurretEnemy> > turrets;
-	vector<shared_ptr<OmniDirectionalTurret> > omnidirectionalTurrets;
-	vector<shared_ptr<PowerUp> > powerUps;
-
-	//environment
-	TileMap tileMap;
-	vector<shared_ptr<DestructibleBlock> > destructibleBlocks;
-	BackgroundManager backgrounds;
-
-	//world properties
-	sf::FloatRect worldBounds;
-	Camera camera;
-	sf::Vector2f viewPositionLastFrame;
-
-	//spawner properties
-	InformationForSpawner<Enemy> enemySpawnInfo;
-	InformationForSpawner<TurretEnemy> turretSpawnInfo;
-	InformationForSpawner<OmniDirectionalTurret> omnidirectionalTurretSpawnInfo;
-
-	//other stuff
-	SpatialHash<DestructibleBlock> destructibleBlockHash;
-	sf::Clock updateTimer;
-};
-
 //when an enemy dies theres a certain chance it will drop a power up
 //these values determine the likelihood of a powerup being dropped
 unsigned powerUpDropPossibleOutcomes = 100;
@@ -197,26 +149,45 @@ void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &w
 
 void handleObjectEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world) {
 
-	for(unsigned i = 0; i < world.players.size(); ++i) {
+    if(world.worldState != GameWorld::TRANSITIONING_TO_BOSS_FIGHT) {
 
-		world.players[i]->handleInputEvents(event, window);
-	}
+        for(unsigned i = 0; i < world.players.size(); ++i) {
+
+            world.players[i]->handleInputEvents(event, window);
+        }
+    }
+
 }
 
 void handleObjectKeystate(sf::RenderWindow &window, GameWorld &world) {
 
-	for(unsigned i = 0; i < world.players.size(); ++i) {
+    if(world.worldState != GameWorld::TRANSITIONING_TO_BOSS_FIGHT) {
 
-		world.players[i]->handleKeystate(window);
-	}
+        for(unsigned i = 0; i < world.players.size(); ++i) {
+
+            world.players[i]->handleKeystate(window);
+        }
+    }
+
 }
 
 void updateWorld(sf::RenderWindow &window, GameWorld &world) {
 
+    //determine current state of the gameworld
+    if(world.worldState == GameWorld::NOT_FIGHTING_BOSS && world.shouldBeginBossFightTransition()) {
+
+        world.beginBossFightTransition();
+    }
+
+    if(world.worldState == GameWorld::TRANSITIONING_TO_BOSS_FIGHT && world.shouldBeginBossFight()) {
+
+        world.beginBossFight();
+    }
+
     float deltaTime = world.updateTimer.restart().asSeconds();
 
 	updateWorldPhyics(world, deltaTime);
-	updateEnemySpawners(world);
+	updateEnemySpawners(world, world.nonBossEnemySpawners);
 	handleEntityCollisions(world);
 	updateWorldRendering(window, world);
 }
@@ -226,31 +197,45 @@ void drawWorld(sf::RenderWindow &window, GameWorld &world) {
     world.backgrounds.draw(window);
 	drawTiles(window, world);
 	drawEntities(window, world.players);
-	drawEntities(window, world.enemies);
-	drawEntities(window, world.turrets);
-	drawEntities(window, world.omnidirectionalTurrets);
+	drawEntities(window, world.nonBossEnemyCollection.enemies);
+	drawEntities(window, world.nonBossEnemyCollection.turrets);
+	drawEntities(window, world.nonBossEnemyCollection.omnidirectionalTurrets);
 	drawEntities(window, world.destructibleBlocks);
 	drawEntities(window, world.powerUps);
 }
 
-void updateEnemySpawners(GameWorld &world) {
+void updateEnemySpawners(GameWorld &world, EnemySpawnerCollection &spawnerCollection) {
 
-	world.enemySpawnInfo.currentCameraBounds = world.camera.getCameraBounds();
-	world.turretSpawnInfo.currentCameraBounds = world.camera.getCameraBounds();
-	world.omnidirectionalTurretSpawnInfo.currentCameraBounds = world.camera.getCameraBounds();
+	spawnerCollection.enemySpawnInfo.currentCameraBounds = world.camera.getCameraBounds();
+	spawnerCollection.turretSpawnInfo.currentCameraBounds = world.camera.getCameraBounds();
+	spawnerCollection.omnidirectionalTurretSpawnInfo.currentCameraBounds = world.camera.getCameraBounds();
 
-	world.enemySpawnInfo.worldBounds = world.worldBounds;
-	world.turretSpawnInfo.worldBounds = world.worldBounds;
-	world.omnidirectionalTurretSpawnInfo.worldBounds = world.worldBounds;
+	spawnerCollection.enemySpawnInfo.worldBounds = world.worldBounds;
+	spawnerCollection.turretSpawnInfo.worldBounds = world.worldBounds;
+	spawnerCollection.omnidirectionalTurretSpawnInfo.worldBounds = world.worldBounds;
 
-	spawnEnemyNearCamera(world.enemySpawnInfo);
-	spawnEnemyNearCamera(world.turretSpawnInfo);
-	spawnEnemyNearCamera(world.omnidirectionalTurretSpawnInfo);
+	spawnEnemyNearCamera(spawnerCollection.enemySpawnInfo);
+	spawnEnemyNearCamera(spawnerCollection.turretSpawnInfo);
+	spawnEnemyNearCamera(spawnerCollection.omnidirectionalTurretSpawnInfo);
 }
 
 void updateWorldPhyics(GameWorld &world, const float &deltaTime) {
 
 	vector<glm::vec2> playerPositions;
+
+	//have this loop up here so the player positions vector can be populated for hte camera
+	for(auto &it : world.players) {
+
+		playerPositions.push_back(it->getPosition());
+	}
+
+	updateCameraProperties(world, playerPositions, deltaTime);
+
+	if(world.worldState == GameWorld::TRANSITIONING_TO_BOSS_FIGHT) {
+
+        //don't update any objects while transitioning to a boss fight
+        return;
+	}
 
 	for(auto &it : world.players) {
 
@@ -264,55 +249,88 @@ void updateWorldPhyics(GameWorld &world, const float &deltaTime) {
 		playerPositions.push_back(it->getPosition());
 	}
 
-	world.camera.calculateProperties(playerPositions);
-	world.camera.update(deltaTime, world.worldBounds);
-
-	for(unsigned i = 0; i < world.enemies.size(); ++i) {
-
-		world.enemies[i]->updatePhysics(deltaTime, world.worldBounds, world.tileMap);
-
-		if(!world.enemies[i]->checkIsAlive()) {
-
-            spawnPowerUp(enemyPowerUpDropOccuranceThreshold, powerUpDropPossibleOutcomes, world.enemies[i]->getPosition(), world);
-		}
-	}
-
-	for(unsigned i = 0; i < world.turrets.size(); ++i) {
-
-		world.turrets[i]->updatePhysics(deltaTime, world.worldBounds, world.tileMap, playerPositions);
-
-		if(!world.turrets[i]->checkIsAlive()) {
-
-            spawnPowerUp(turretPowerUpDropOccuranceThreshold, powerUpDropPossibleOutcomes, world.turrets[i]->getPosition(), world);
-		}
-	}
-
-	for(unsigned i = 0; i < world.omnidirectionalTurrets.size(); ++i) {
-
-		world.omnidirectionalTurrets[i]->updatePhysics(deltaTime, world.worldBounds, world.tileMap);
-
-		if(!world.omnidirectionalTurrets[i]->checkIsAlive()) {
-
-            spawnPowerUp(turretPowerUpDropOccuranceThreshold, powerUpDropPossibleOutcomes, world.omnidirectionalTurrets[i]->getPosition(), world);
-		}
-	}
+	updateEnemyCollectionPhysics(world.nonBossEnemyCollection, deltaTime, playerPositions, world);
 
     removeDeadEntities(world.powerUps);
 
-    removeDeadEntities(world.omnidirectionalTurrets);
-	removeDeadEntities(world.enemies);
-	removeDeadEntities(world.turrets);
+    removeDeadEntities(world.nonBossEnemyCollection.omnidirectionalTurrets);
+	removeDeadEntities(world.nonBossEnemyCollection.enemies);
+	removeDeadEntities(world.nonBossEnemyCollection.turrets);
 	removeDeadHashEntries(world.destructibleBlocks, world.destructibleBlockHash);
+}
+
+void updateCameraProperties(GameWorld &world, vector<glm::vec2> &playerPositions, const float &deltaTime) {
+
+    ///camera should track a certain position depending on the current state of the gameworld
+    ///during normal gameplay camera should track players
+
+    ///if current gameplay state is a normal game play state, then
+    if(world.worldState != GameWorld::TRANSITIONING_TO_BOSS_FIGHT) {
+
+        world.camera.calculateProperties(playerPositions);
+        world.camera.update(deltaTime, world.worldBounds);
+
+    } else {
+
+        //transitioing to boss fight, make the camera move to default view size
+        //and towards the center of the boss world bounds
+        //so that when the world size is forcibly set to the boss world bounds
+        //the camera doesn't just jump from one position and size to another
+        glm::vec2 cameraTargetPosition(world.worldBoundsBossFight.left + world.worldBounds.width / 2,
+                                       world.worldBounds.top + world.worldBounds.height / 2);
+
+        world.camera.setTargetSize(world.camera.getDefaultSize());
+        world.camera.setTargetPosition(cameraTargetPosition);
+
+        //slow down the speed that the camera transitions at for a cooler effect
+        world.camera.update(deltaTime / 2.5f, world.worldBounds);
+    }
+
+    //now update camera as normal
+    ///world.camera.update(deltaTime, world.worldBounds);
+}
+
+void updateEnemyCollectionPhysics(EnemyCollection &collection, const float &delta, vector<glm::vec2> &playerPositions, GameWorld &world) {
+
+    for(unsigned i = 0; i < collection.enemies.size(); ++i) {
+
+		collection.enemies[i]->updatePhysics(delta, world.worldBounds, world.tileMap);
+
+		if(!collection.enemies[i]->checkIsAlive()) {
+
+            spawnPowerUp(enemyPowerUpDropOccuranceThreshold, powerUpDropPossibleOutcomes, collection.enemies[i]->getPosition(), world);
+		}
+	}
+
+	for(unsigned i = 0; i < collection.turrets.size(); ++i) {
+
+		collection.turrets[i]->updatePhysics(delta, world.worldBounds, world.tileMap, playerPositions);
+
+		if(!collection.turrets[i]->checkIsAlive()) {
+
+            spawnPowerUp(turretPowerUpDropOccuranceThreshold, powerUpDropPossibleOutcomes, collection.turrets[i]->getPosition(), world);
+		}
+	}
+
+	for(unsigned i = 0; i < collection.omnidirectionalTurrets.size(); ++i) {
+
+		collection.omnidirectionalTurrets[i]->updatePhysics(delta, world.worldBounds, world.tileMap);
+
+		if(!collection.omnidirectionalTurrets[i]->checkIsAlive()) {
+
+            spawnPowerUp(turretPowerUpDropOccuranceThreshold, powerUpDropPossibleOutcomes, collection.omnidirectionalTurrets[i]->getPosition(), world);
+		}
+	}
 }
 
 void updateWorldRendering(sf::RenderWindow &window, GameWorld &world) {
 
 	updateObjectRendering(world.players);
-	updateObjectRendering(world.enemies);
-	updateObjectRendering(world.turrets);
+	updateObjectRendering(world.nonBossEnemyCollection.enemies);
+	updateObjectRendering(world.nonBossEnemyCollection.turrets);
 	updateObjectRendering(world.destructibleBlocks);
 	updateObjectRendering(world.powerUps);
-	updateObjectRendering(world.omnidirectionalTurrets);
+	updateObjectRendering(world.nonBossEnemyCollection.omnidirectionalTurrets);
 
 	world.camera.applyCamera(window);
 
@@ -355,12 +373,13 @@ void spawnPowerUp(const unsigned &occuranceThreshold, const unsigned &possibleOu
 
 void handleEntityCollisions(GameWorld &world) {
 
-	playerWorldCollision(world);
-	enemyWorldCollision(world);
-	turretWorldCollision(world);
+	playerWorldCollision(world, world.nonBossEnemyCollection);
+	enemyWorldCollision(world, world.nonBossEnemyCollection);
+	turretWorldCollision(world, world.nonBossEnemyCollection);
+	omnidirectionalTurretWorldCollision(world, world.nonBossEnemyCollection);
 }
 
-void playerWorldCollision(GameWorld &world) {
+void playerWorldCollision(GameWorld &world, EnemyCollection &enemyCollection) {
 
 	//collision with players against rest of world
 	for(auto &it : world.players) {
@@ -369,14 +388,14 @@ void playerWorldCollision(GameWorld &world) {
 
 		collidePlayerEntities(it, world.powerUps, playerPowerUpCollisionFunction);
 
-		collidePlayerEntities(it, world.enemies, playerEnemyCollisionFunction);
-		collidePlayerShootingEntities(it, world.turrets, playerTurretCollisionFunction);
-		collidePlayerShootingEntities(it, world.omnidirectionalTurrets, playerOmnidirectionalTurretCollisionFunction);
+		collidePlayerEntities(it, enemyCollection.enemies, playerEnemyCollisionFunction);
+		collidePlayerShootingEntities(it, enemyCollection.turrets, playerTurretCollisionFunction);
+		collidePlayerShootingEntities(it, enemyCollection.omnidirectionalTurrets, playerOmnidirectionalTurretCollisionFunction);
 
 		//handle collision with player's bullets and enemies
-		collideBulletsEntities(it->getGun()->getBullets(), world.enemies, bulletEnemyCollisionFunction);
-		collideBulletsEntities(it->getGun()->getBullets(), world.turrets, bulletTurretCollisionFunction);
-		collideBulletsEntities(it->getGun()->getBullets(), world.omnidirectionalTurrets, bulletOmnidirectionalTurretCollisionFunction);
+		collideBulletsEntities(it->getGun()->getBullets(), enemyCollection.enemies, bulletEnemyCollisionFunction);
+		collideBulletsEntities(it->getGun()->getBullets(), enemyCollection.turrets, bulletTurretCollisionFunction);
+		collideBulletsEntities(it->getGun()->getBullets(), enemyCollection.omnidirectionalTurrets, bulletOmnidirectionalTurretCollisionFunction);
 	}
 }
 
@@ -416,20 +435,28 @@ void collidePlayerShootingEntities(shared_ptr<Player> player, vector<shared_ptr<
 	}
 }
 
-void enemyWorldCollision(GameWorld &world) {
+void enemyWorldCollision(GameWorld &world, EnemyCollection &enemyCollection) {
 
-	for(auto &it : world.enemies) {
+	for(auto &it : enemyCollection.enemies) {
 
 		collideEntityDynamicObjectHash(it, world.destructibleBlockHash, destructibleBlockEntityCollisionFunction);
 	}
 }
 
-void turretWorldCollision(GameWorld &world) {
+void turretWorldCollision(GameWorld &world, EnemyCollection &enemyCollection) {
 
-	for(auto &it : world.turrets) {
+	for(auto &it : enemyCollection.turrets) {
 
 		collideShootingEntityDynamicObjectHash(it, world.destructibleBlockHash, destructibleBlockEntityCollisionFunction, bulletBlockCollisionFunction);
 	}
+}
+
+void omnidirectionalTurretWorldCollision(GameWorld &world, EnemyCollection &enemyCollection) {
+
+    for(auto &it : enemyCollection.omnidirectionalTurrets) {
+
+        collideShootingEntityDynamicObjectHash(it, world.destructibleBlockHash, destructibleBlockEntityCollisionFunction, bulletBlockCollisionFunction);
+    }
 }
 
 template<class DynamicObject>
@@ -570,7 +597,8 @@ int main() {
     loadDataCollection(dataCollection);
 
     GameWorld world(window);
-    world.worldBounds = sf::FloatRect(0, 0, 2048, 768);
+    world.worldBounds = sf::FloatRect(0, 0, 2048 + 1024, 768);
+    world.worldBoundsBossFight = sf::FloatRect(1024 + 512, 0, 1028, 768);
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
     world.players.push_back(make_shared<Player>());
 
@@ -603,7 +631,7 @@ int main() {
 
                         shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6), 1);
                         point->setTypeOfEnemySpawned(EnemyType::ENEMY_MUSHROOM);
-                        world.omnidirectionalTurretSpawnInfo.spawnPoints.push_back(point);
+                        world.nonBossEnemySpawners.omnidirectionalTurretSpawnInfo.spawnPoints.push_back(point);
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) {
 

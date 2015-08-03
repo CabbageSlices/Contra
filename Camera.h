@@ -29,10 +29,15 @@ class Camera {
         void update(const float &delta, const sf::FloatRect &worldBounds);
         void applyCamera(sf::RenderWindow &window) const;
 
+        glm::vec2 getDefaultSize() const;
         sf::FloatRect getCameraBounds() const;
         glm::vec2 getCurrentPosition() const;
         sf::Vector2f getViewCenter() const;
         sf::Vector2f getViewTopLeft() const;
+
+        //manually set the camera's target size and positions in order to do some kind of camera transition effect
+        void setTargetSize(const glm::vec2 &target);
+        void setTargetPosition(const glm::vec2 &target);
 
     private:
 
