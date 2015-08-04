@@ -60,6 +60,11 @@ struct SpawnPoint {
         return typeOfEnemySpawned;
     }
 
+    unsigned getEnemiesLeftToSpawn() const {
+
+        return maxSpawnCount - enemiesSpawned;
+    }
+
     void setTypeOfEnemySpawned(const EnemyType &type) {
 
         typeOfEnemySpawned = type;
@@ -238,7 +243,7 @@ int findPointNearCamera(InformationForSpawner<T> &spawnInfo) {
 }
 
 template<class T>
-bool spawnEnemy(InformationForSpawner<T> &spawnInfo, int(*findSpawnPoint)(InformationForSpawner<T> &spawnInfo)) {
+bool spawnEnemy(InformationForSpawner<T> &spawnInfo, int(*findSpawnPoint)(InformationForSpawner<T> &spawnInfo), bool applyBossData = false) {
 
     int spawnPointId = findSpawnPoint(spawnInfo);
 
@@ -261,6 +266,17 @@ bool spawnEnemy(InformationForSpawner<T> &spawnInfo, int(*findSpawnPoint)(Inform
 
     applyLoadedData(*enemy, closestPoint->getTypeOfEnemySpawned());
 
+    //scale the enemy by some factor if it's a boss
+    //only do so if there is even data about the scaling that should be applied
+    if(applyBossData && dataCollection.bossData.count(closestPoint->getTypeOfEnemySpawned()) != 0) {
+
+        float scaleFactor = dataCollection.bossData[closestPoint->getTypeOfEnemySpawned()].scale;
+        int health = dataCollection.bossData[closestPoint->getTypeOfEnemySpawned()].health;
+
+        enemy->scale(scaleFactor, scaleFactor);
+        enemy->setHealth(health);
+    }
+
     closestPoint->resetSpawnTimer();
     closestPoint->increaseSpawnCount();
 
@@ -269,15 +285,15 @@ bool spawnEnemy(InformationForSpawner<T> &spawnInfo, int(*findSpawnPoint)(Inform
 }
 
 template<class T>
-bool spawnEnemyOffscreen(InformationForSpawner<T> &spawnInfo) {
+bool spawnEnemyOffscreen(InformationForSpawner<T> &spawnInfo, bool applyBossData = false) {
 
-    return spawnEnemy(spawnInfo, findClosestSpawnPointOffscreen);
+    return spawnEnemy(spawnInfo, findClosestSpawnPointOffscreen, applyBossData);
 }
 
 template<class T>
-bool spawnEnemyNearCamera(InformationForSpawner<T> &spawnInfo) {
+bool spawnEnemyNearCamera(InformationForSpawner<T> &spawnInfo, bool applyBossData = false) {
 
-    return spawnEnemy(spawnInfo, findPointNearCamera);
+    return spawnEnemy(spawnInfo, findPointNearCamera, applyBossData);
 }
 
 #endif // ENEMYSPAWNERS_H_INCLUDED

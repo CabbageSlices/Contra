@@ -158,7 +158,10 @@ bool Player::checkCanRespawn() {
 void Player::respawn(const sf::FloatRect &cameraBounds) {
 
     lifeState = ALIVE;
-    glm::vec2 spawnPosition(cameraBounds.left + hitbox.getActiveHitboxObjectSpace().width, cameraBounds.top);
+
+    //move player slightly below camera beucase once they respawn if they hold jump then he wil always be able to jump
+    //because he will be touchign top of screen so the game registers it as if he is standing on the ground
+    glm::vec2 spawnPosition(cameraBounds.left + hitbox.getActiveHitboxObjectSpace().width, cameraBounds.top + 1);
     hitbox.setOrigin(spawnPosition);
 
     setLives(health - 1);

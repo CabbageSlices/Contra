@@ -2,6 +2,7 @@
 #define DATALOADERS_H_INCLUDED
 
 #include <string>
+#include <map>
 
 class PreloadedTurretData;
 class PreloadedEnemyData;
@@ -9,6 +10,11 @@ class PreloadedBulletData;
 class PreloadedDestructibleBlockData;
 class PreloadedPowerUpData;
 class PreloadedOmniDirectionalTurretData;
+
+enum EnemyType : int;
+struct BossProperties;
+
+bool loadBossData(std::map<EnemyType, BossProperties> &bossData, const std::string &dataFileName);
 
 bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName);
 bool loadEnemyData(PreloadedEnemyData &daa, const std::string &dataFileName);

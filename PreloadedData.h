@@ -7,14 +7,14 @@
 #include <map>
 #include <vector>
 
-enum EnemyType {
+enum EnemyType : int {
 
     ENEMY_GOOMBA,
     ENEMY_PIRANHA,
     ENEMY_MUSHROOM,
 };
 
-enum BulletType {
+enum BulletType : int {
 
     BULLET_SLOW,
     BULLET_FAST,
@@ -30,6 +30,18 @@ enum PowerUpType {
 
     MACHINE_GUN
 };
+
+//characteristics of an enemy that is changed when it turns into a boss
+struct BossProperties {
+
+    float scale;
+    int health;
+};
+
+//matches a given enemy type to the scaling factor applied to it if the enemy if upgraded to a boss type
+//that is, if this type of enemy were to be used as a boss, how much should it be scaled by
+//key is the enemy type, value gives the scaling applied
+typedef std::map<EnemyType, BossProperties> BossData;
 
 struct PreloadedData {
 
@@ -118,6 +130,8 @@ struct PreloadedDataCollection {
     PreloadedBulletData fastBulletData;
     PreloadedDestructibleBlockData basicDestructibleBlockData;
     PreloadedPowerUpData powerUpData;
+
+    BossData bossData;
 };
 
 extern PreloadedDataCollection dataCollection;

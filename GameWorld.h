@@ -50,6 +50,7 @@ struct GameWorld {
 		players(),
 		powerUps(),
 		nonBossEnemyCollection(),
+		bossEnemyCollection(),
 		tileMap(),
 		destructibleBlocks(),
 		backgrounds(),
@@ -58,6 +59,7 @@ struct GameWorld {
 		viewPositionLastFrame(0, 0),
 		worldBoundsBossFight(0, 0, 0, 0),
 		nonBossEnemySpawners(nonBossEnemyCollection, worldBounds),
+		bossEnemySpawners(bossEnemyCollection, worldBounds),
 		destructibleBlockHash(256, 256),
 		updateTimer()
 		{
@@ -77,6 +79,7 @@ struct GameWorld {
 	std::vector<std::shared_ptr<Player> > players;
 	std::vector<std::shared_ptr<PowerUp> > powerUps;
 	EnemyCollection nonBossEnemyCollection; //collection of non boss type enemies
+	EnemyCollection bossEnemyCollection; //collection of boss type enemies
 
 	//environment
 	TileMap tileMap;
@@ -95,6 +98,9 @@ struct GameWorld {
 	//spawner properties for non boss enemy types
     EnemySpawnerCollection nonBossEnemySpawners;
 
+    //spawners for boss
+    EnemySpawnerCollection bossEnemySpawners;
+
 	//other stuff
 	SpatialHash<DestructibleBlock> destructibleBlockHash;
 	sf::Clock updateTimer;
@@ -112,7 +118,6 @@ struct GameWorld {
                     return false;
             }
 
-            cout << playerBounds.left << endl;
         }
 
         //don't return true if there are no players
@@ -135,7 +140,6 @@ struct GameWorld {
            cameraBounds.top >= worldBoundsBossFight.top && cameraBounds.top + cameraBounds.height <= worldBoundsBossFight.height) {
 
             cameraWithinBossFightBounds = true;
-            cout << " C : " << cameraBounds.left << endl;
         }
 
         return cameraWithinBossFightBounds;

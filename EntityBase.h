@@ -33,11 +33,13 @@ class EntityBase {
         virtual bool checkIsAlive();
         virtual bool checkCanGetHit();
         virtual void getHit(int damage = 1);
-        virtual void scale(const float &xFactor, const float& yFactor) {
+        void scale(const float &xFactor, const float& yFactor) {
 
             //scale all hitboxes and sprite
             hitbox.scale(xFactor, yFactor);
             sprite.getSprite().scale(xFactor, yFactor);
+
+            this->scaleComponents(xFactor, yFactor);
         }
 
         //this one should be called
@@ -63,6 +65,11 @@ class EntityBase {
         virtual CollisionResponse handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
         CollisionResponse handleTileCollisionHorizontally(TileMap& map);
         CollisionResponse handleTileCollisionVertically(TileMap& map);
+
+        //derived classes can override this function to scale other paramters
+        virtual void scaleComponents(const float &xFactor, const float &yFactor) {
+
+        }
 
         template<class Data>
         void loadBase(const Data &data);

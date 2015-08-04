@@ -81,7 +81,6 @@ void PowerUp::updateRendering() {
 
 void PowerUp::draw(sf::RenderWindow &window) {
 
-    cout << "powerup:  ";
     sprite.draw(window);
 }
 

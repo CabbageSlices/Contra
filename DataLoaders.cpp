@@ -1,6 +1,22 @@
 #include "DataLoaders.h"
 #include "PreloadedData.h"
 
+using std::map;
+
+bool loadBossData(map<EnemyType, BossProperties> &bossData, const std::string &dataFileName) {
+
+    bossData[EnemyType::ENEMY_GOOMBA].scale = 2.f;
+    bossData[EnemyType::ENEMY_GOOMBA].health = 5;
+
+    bossData[EnemyType::ENEMY_PIRANHA].scale = 2.f;
+    bossData[EnemyType::ENEMY_PIRANHA].health = 13.f;
+
+    bossData[EnemyType::ENEMY_MUSHROOM].scale = 2.f;
+    bossData[EnemyType::ENEMY_MUSHROOM].health = 20.f;
+
+    return true;
+}
+
 bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName) {
 
     ///for now ignore the data file
@@ -117,7 +133,7 @@ bool loadEnemyData(PreloadedEnemyData &data, const std::string &dataFileName) {
 
 bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, const std::string &dataFileName) {
 
-    data.scale = 1.5;
+    data.scale = 1;
     data.STATE_HIDING = 0;
     data.STATE_COMING_OUT_OF_HIDING = 1;
     data.STATE_EXPOSED = 2;
