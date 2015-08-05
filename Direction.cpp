@@ -56,3 +56,51 @@ glm::vec2 getDirectionVector(const Direction& direction) {
 
     return glm::vec2(0, 0);
 }
+
+CombinedAxis::Direction convertToCombinedAxis(const Direction &direction) {
+
+    if(direction.isFacingCompletelyVertical && direction.vertical != VerticalDirection::STRAIGHT) {
+
+        if(direction.vertical == VerticalDirection::UP) {
+
+            return CombinedAxis::UP;
+
+        } else if(direction.vertical == VerticalDirection::DOWN) {
+
+            return CombinedAxis::DOWN;
+        }
+    }
+
+    if(direction.horizontal == HorizontalDirection::LEFT) {
+
+        if(direction.vertical == VerticalDirection::STRAIGHT) {
+
+            return CombinedAxis::LEFT;
+
+        } else if(direction.vertical == VerticalDirection::UP) {
+
+            return CombinedAxis::UP_LEFT;
+
+        } else if(direction.vertical == VerticalDirection::DOWN) {
+
+            return CombinedAxis::DOWN_LEFT;
+        }
+
+    } else if(direction.horizontal == HorizontalDirection::RIGHT) {
+
+        if(direction.vertical == VerticalDirection::STRAIGHT) {
+
+            return CombinedAxis::RIGHT;
+
+        } else if(direction.vertical == VerticalDirection::UP) {
+
+            return CombinedAxis::UP_RIGHT;
+
+        } else if(direction.vertical == VerticalDirection::DOWN) {
+
+            return CombinedAxis::DOWN_RIGHT;
+        }
+    }
+
+    return CombinedAxis::RIGHT;
+}

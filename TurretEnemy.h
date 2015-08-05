@@ -45,7 +45,7 @@ class TurretEnemy : public ShootingEntity {
         unsigned getIdOfClosestTarget(const std::vector<glm::vec2> &targetPositions) const;
 
         //calculate the position where the gun produces bullets relative to the turret
-        virtual glm::vec2 calculateGunfireOrigin(const glm::vec2 &targetPosition) const;
+        virtual glm::vec2 calculateGunfireOrigin(const glm::vec2 &targetPosition);
         void determineDirection(const glm::vec2 &targetPosition);
 
         virtual CollisionResponse handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {

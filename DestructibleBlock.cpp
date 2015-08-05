@@ -57,6 +57,7 @@ void DestructibleBlock::draw(sf::RenderWindow &window) {
 void DestructibleBlock::load(const PreloadedDestructibleBlockData &data) {
 
     loadBase(data);
+    scale(data.scale, data.scale);
 
     STATE_SOLID = data.STATE_SOLID;
     STATE_DESTROYING = data.STATE_DESTROYING;

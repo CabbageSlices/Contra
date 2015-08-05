@@ -95,6 +95,8 @@ void OmniDirectionalTurret::draw(sf::RenderWindow &window) {
 void OmniDirectionalTurret::load(PreloadedOmniDirectionalTurretData &data) {
 
     loadBase(data);
+    loadBulletOriginData(data);
+    scale(data.scale, data.scale);
 
     STATE_HIDING = data.STATE_HIDING;
     STATE_COMING_OUT_OF_HIDING = data.STATE_COMING_OUT_OF_HIDING;
@@ -135,12 +137,12 @@ void OmniDirectionalTurret::shoot() {
     //shoot in 8 directions
     glm::vec2 bulletOrigin(140, 61);
 
-    gun->fire(hitbox.getOrigin(), bulletOrigin, leftVector);
-    gun->fire(hitbox.getOrigin(), bulletOrigin, upLeftVector);
-    gun->fire(hitbox.getOrigin(), bulletOrigin, upVector);
-    gun->fire(hitbox.getOrigin(), bulletOrigin, upRightVector);
-    gun->fire(hitbox.getOrigin(), bulletOrigin, rightVector);
-    gun->fire(hitbox.getOrigin(), bulletOrigin, downRightVector);
-    gun->fire(hitbox.getOrigin(), bulletOrigin, downVector);
-    gun->fire(hitbox.getOrigin(), bulletOrigin, downLeftVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::LEFT], leftVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::UP_LEFT], upLeftVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::UP], upVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::UP_RIGHT], upRightVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::RIGHT], rightVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::DOWN_RIGHT], downRightVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::DOWN], downVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::DOWN_LEFT], downLeftVector);
 }

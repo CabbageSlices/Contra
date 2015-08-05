@@ -257,7 +257,10 @@ void updateWorldPhyics(GameWorld &world, const float &deltaTime) {
 	//have this loop up here so the player positions vector can be populated for hte camera
 	for(auto &it : world.players) {
 
-		playerPositions.push_back(it->getPosition());
+        if(it->checkIsAlive()) {
+
+            playerPositions.push_back(it->getPosition());
+        }
 	}
 
 	updateCameraProperties(world, playerPositions, deltaTime);

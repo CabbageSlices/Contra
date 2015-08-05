@@ -62,7 +62,6 @@ void TurretEnemy::updatePhysics(const float& deltaTime, const sf::FloatRect& wor
     }
 
     glm::vec2 gunfireOrigin = calculateGunfireOrigin(targetPositions[idClosestTarget]);
-    determineDirection(targetPositions[idClosestTarget]);
     gun->fire(hitbox.getOrigin(), gunfireOrigin, direction);
 }
 
@@ -168,6 +167,10 @@ void TurretEnemy::draw(sf::RenderWindow &window) {
 
 void TurretEnemy::load(PreloadedTurretData &data) {
 
+    loadBase(data);
+    loadBulletOriginData(data);
+    scale(data.scale, data.scale);
+
     STATE_HIDING = data.STATE_HIDING;
     STATE_COMING_OUT_OF_HIDING = data.STATE_COMING_OUT_OF_HIDING;
     STATE_GOING_INTO_HIDING = data.STATE_GOING_INTO_HIDING;
@@ -189,8 +192,6 @@ void TurretEnemy::load(PreloadedTurretData &data) {
 
     hiddenStateDuration = data.hiddenStateDuration;
     exposedStateDuration = data.exposedStateDuration;
-
-    loadBase(data);
 
     setState(STATE_HIDING);
     restartStateDurationTimers();
@@ -230,11 +231,11 @@ unsigned TurretEnemy::getIdOfClosestTarget(const vector<glm::vec2> &targetPositi
     return closestId;
 }
 
-glm::vec2 TurretEnemy::calculateGunfireOrigin(const glm::vec2 &targetPosition) const {
+glm::vec2 TurretEnemy::calculateGunfireOrigin(const glm::vec2 &targetPosition) {
 
-    //for now just shoot from the center
-    sf::FloatRect bounds = hitbox.getActiveHitboxObjectSpace();
-    return glm::vec2(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
+    determineDirection(targetPosition);
+
+    return bulletOriginForDirection[convertToCombinedAxis(direction)];
 }
 
 void TurretEnemy::determineDirection(const glm::vec2 &targetPosition) {

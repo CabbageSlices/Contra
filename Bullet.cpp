@@ -100,6 +100,9 @@ void Bullet::handleTileCollision(TileMap& map) {
 
 void Bullet::load(PreloadedBulletData &data) {
 
+    loadBase(data);
+    scale(data.scale, data.scale);
+
     STATE_RIGHT = data.STATE_RIGHT;
     STATE_UP_RIGHT = data.STATE_UP_RIGHT;
     STATE_UP = data.STATE_UP;
@@ -111,8 +114,6 @@ void Bullet::load(PreloadedBulletData &data) {
 
     MOVEMENT_VELOCITY = direction * data.velocity;
     lifeTime = data.lifetime;
-
-    loadBase(data);
 
     determineState();
 }

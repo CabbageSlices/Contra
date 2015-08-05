@@ -112,10 +112,7 @@ void EntityBase::loadBase(const Data &data) {
 
         for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
 
-            //scale the hitbox size and position by the scale factor
-            //this way if the object is scaled then the hitbox appropriately encompass the scaled sprite
-            float scale = data.scale;
-            sf::FloatRect bounds(vt->left * scale, vt->top * scale, vt->width * scale, vt->height * scale);
+            sf::FloatRect bounds(vt->left, vt->top, vt->width, vt->height);
 
             hitbox.insertHitbox(bounds, it->first);
         }

@@ -3,6 +3,7 @@
 
 #include "SFML/System.hpp"
 #include "SFML/Graphics.hpp"
+#include "Direction.h"
 #include <string>
 #include <map>
 #include <vector>
@@ -59,28 +60,29 @@ struct PreloadedData {
     std::map<unsigned, std::vector<sf::FloatRect> > hitboxes;
 };
 
-struct PreloadedTurretData : public PreloadedData {
+struct ShootingEntityPreloadedData : public PreloadedData{
+
+    GunType gunType;
+    sf::Time gunfireDelay;
+    BulletType bulletType;
+
+    std::map<CombinedAxis::Direction, glm::vec2> bulletOriginForDirection;
+};
+
+struct PreloadedTurretData : public ShootingEntityPreloadedData {
 
     unsigned STATE_HIDING, STATE_COMING_OUT_OF_HIDING, STATE_GOING_INTO_HIDING, STATE_SHOOTING;
 
     //frames of the shooting animation
     unsigned DOWN, DOWN_LEFT, LEFT, UP_LEFT, UP, UP_RIGHT, RIGHT, DOWN_RIGHT;
 
-    GunType gunType;
-    sf::Time gunfireDelay;
-    BulletType bulletType;
-
     sf::Time hiddenStateDuration;
     sf::Time exposedStateDuration;
 };
 
-struct PreloadedOmniDirectionalTurretData : public PreloadedData {
+struct PreloadedOmniDirectionalTurretData : public ShootingEntityPreloadedData {
 
     unsigned STATE_HIDING, STATE_COMING_OUT_OF_HIDING, STATE_GOING_INTO_HIDING, STATE_EXPOSED, STATE_SHOOTING;
-
-    GunType gunType;
-    sf::Time gunfireDelay;
-    BulletType bulletType;
 
     sf::Time hiddenStateDuration;
     sf::Time exposedStateDuration;

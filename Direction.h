@@ -16,6 +16,21 @@ enum VerticalDirection {
     DOWN,
 };
 
+namespace CombinedAxis {
+
+    enum Direction {
+
+        UP_LEFT,
+        UP,
+        UP_RIGHT,
+        RIGHT,
+        DOWN_RIGHT,
+        DOWN,
+        DOWN_LEFT,
+        LEFT,
+    };
+}
+
 struct Direction {
 
     HorizontalDirection horizontal = RIGHT;
@@ -23,6 +38,8 @@ struct Direction {
 
     bool isFacingCompletelyVertical = false;
 };
+
+CombinedAxis::Direction convertToCombinedAxis(const Direction &direction);
 
 extern const glm::vec2 downLeftVector;
 extern const glm::vec2 leftVector;

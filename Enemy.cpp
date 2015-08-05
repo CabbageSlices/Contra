@@ -108,6 +108,7 @@ void Enemy::load(PreloadedEnemyData &data) {
     STATE_FALLING_RIGHT = data.STATE_FALLING_RIGHT;
 
     loadBase(data);
+    scale(data.scale, data.scale);
 
     determineAnimationState();
 }

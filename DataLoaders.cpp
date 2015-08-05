@@ -92,6 +92,15 @@ bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName) 
 
     data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(0, 2, 46, 100));
 
+    data.bulletOriginForDirection[CombinedAxis::UP_LEFT] = glm::vec2(140, 51);
+    data.bulletOriginForDirection[CombinedAxis::UP] = glm::vec2(140, 51);
+    data.bulletOriginForDirection[CombinedAxis::UP_RIGHT] = glm::vec2(140, 51);
+    data.bulletOriginForDirection[CombinedAxis::RIGHT] = glm::vec2(140, 51);
+    data.bulletOriginForDirection[CombinedAxis::DOWN_RIGHT] = glm::vec2(140, 51);
+    data.bulletOriginForDirection[CombinedAxis::DOWN] = glm::vec2(140, 51);
+    data.bulletOriginForDirection[CombinedAxis::DOWN_LEFT] = glm::vec2(140, 51);
+    data.bulletOriginForDirection[CombinedAxis::LEFT] = glm::vec2(140, 51);
+
     return true;
 }
 
@@ -195,6 +204,15 @@ bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, con
     data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
     data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
     data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
+
+    data.bulletOriginForDirection[CombinedAxis::UP_LEFT] = glm::vec2(140, 51);
+    data.bulletOriginForDirection[CombinedAxis::UP] = glm::vec2(140, 51);
+    data.bulletOriginForDirection[CombinedAxis::UP_RIGHT] = glm::vec2(140, 51);
+    data.bulletOriginForDirection[CombinedAxis::RIGHT] = glm::vec2(140, 51);
+    data.bulletOriginForDirection[CombinedAxis::DOWN_RIGHT] = glm::vec2(140, 51);
+    data.bulletOriginForDirection[CombinedAxis::DOWN] = glm::vec2(140, 51);
+    data.bulletOriginForDirection[CombinedAxis::DOWN_LEFT] = glm::vec2(140, 51);
+    data.bulletOriginForDirection[CombinedAxis::LEFT] = glm::vec2(140, 51);
 
     return true;
 }

@@ -6,6 +6,7 @@
 #include "Direction.h"
 
 #include <memory>
+#include <map>
 
 class ShootingEntity : public EntityBase {
 
@@ -24,8 +25,24 @@ class ShootingEntity : public EntityBase {
 
     protected:
 
+        template<class PreloadedData>
+        void loadBulletOriginData(PreloadedData &data);
+
+        virtual void scaleComponents(const float &xFactor, const float &yFactor);
+
         std::shared_ptr<Gun> gun;
         Direction direction;
+
+        //shooting entity should produce bullets at some position relative to its origin
+        //keep track of the relative position a bullet should be created for each direction the entity is facing
+        std::map<CombinedAxis::Direction, glm::vec2> bulletOriginForDirection;
 };
+
+template<class PreloadedData>
+void ShootingEntity::loadBulletOriginData(PreloadedData &data) {
+
+    bulletOriginForDirection.clear();
+    bulletOriginForDirection.insert(data.bulletOriginForDirection.begin(), data.bulletOriginForDirection.end());
+}
 
 #endif // SHOOTINGENTITY_H_INCLUDED
