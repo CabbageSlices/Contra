@@ -1,5 +1,6 @@
 #include "DataLoaders.h"
 #include "PreloadedData.h"
+#include "Gun.h"
 
 using std::map;
 
@@ -13,6 +14,149 @@ bool loadBossData(map<EnemyType, BossProperties> &bossData, const std::string &d
 
     bossData[EnemyType::ENEMY_MUSHROOM].scale = 2.f;
     bossData[EnemyType::ENEMY_MUSHROOM].health = 20.f;
+
+    return true;
+}
+
+bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFileName) {
+
+    data.health = 3;
+    data.textureFileName = "player.png";
+    data.animationNextFrameTime = sf::milliseconds(100);
+
+    data.gunType = GunType::GUN_BASIC;
+    data.gunfireDelay = FIRE_DELAY_MEDIUM;
+    data.bulletType = BulletType::BULLET_MEDIUM;
+
+    data.STATE_STANDING_LEFT = 0;
+    data.STATE_STANDING_UP_FACING_LEFT = 1;
+    data.STATE_STANDING_UP_FACING_RIGHT = 2;
+    data.STATE_STANDING_RIGHT = 3;
+
+    data.STATE_WALKING_DOWN_LEFT = 4;
+    data.STATE_WALKING_LEFT = 5;
+    data.STATE_WALKING_UP_LEFT = 6;
+    data.STATE_WALKING_UP_RIGHT = 7;
+    data.STATE_WALKING_RIGHT = 8;
+    data.STATE_WALKING_DOWN_RIGHT = 9;
+
+    data.STATE_CROUCHING_LEFT = 10;
+    data.STATE_CROUCHING_RIGHT = 11;
+
+    data.STATE_FALLING_DOWN_FACING_LEFT = 12;
+    data.STATE_FALLING_DOWN_FACING_RIGHT = 13;
+    data.STATE_FALLING_DOWN_LEFT = 14;
+    data.STATE_FALLING_LEFT = 15;
+    data.STATE_FALLING_UP_LEFT = 16;
+    data.STATE_FALLING_UP_FACING_LEFT = 17;
+    data.STATE_FALLING_UP_FACING_RIGHT = 18;
+    data.STATE_FALLING_UP_RIGHT = 19;
+    data.STATE_FALLING_RIGHT = 20;
+    data.STATE_FALLING_DOWN_RIGHT = 21;
+
+    data.STATE_JUMPING = 22;
+
+    data.bulletOriginForState[data.STATE_STANDING_LEFT] = glm::vec2(0, 57);
+    data.bulletOriginForState[data.STATE_STANDING_RIGHT] = glm::vec2(126, 62);
+    data.bulletOriginForState[data.STATE_STANDING_UP_FACING_LEFT] = glm::vec2(73, 0);
+    data.bulletOriginForState[data.STATE_STANDING_UP_FACING_RIGHT] = glm::vec2(48, 0);
+
+    data.bulletOriginForState[data.STATE_WALKING_DOWN_LEFT] = glm::vec2(15, 128);
+    data.bulletOriginForState[data.STATE_WALKING_LEFT] = glm::vec2(0, 56);
+    data.bulletOriginForState[data.STATE_WALKING_UP_LEFT] = glm::vec2(32, 14);
+    data.bulletOriginForState[data.STATE_WALKING_UP_RIGHT] = glm::vec2(109, 10);
+    data.bulletOriginForState[data.STATE_WALKING_RIGHT] = glm::vec2(128, 61);
+    data.bulletOriginForState[data.STATE_WALKING_DOWN_RIGHT] = glm::vec2(114, 128);
+
+    data.bulletOriginForState[data.STATE_CROUCHING_LEFT] = glm::vec2(-5, 102);
+    data.bulletOriginForState[data.STATE_CROUCHING_RIGHT] = glm::vec2(128, 104);
+
+    data.bulletOriginForState[data.STATE_FALLING_DOWN_FACING_LEFT] = glm::vec2(37, 112);
+    data.bulletOriginForState[data.STATE_FALLING_DOWN_FACING_RIGHT] = glm::vec2(51, 114);
+    data.bulletOriginForState[data.STATE_FALLING_RIGHT] = glm::vec2(128, 51);
+    data.bulletOriginForState[data.STATE_FALLING_DOWN_RIGHT] = glm::vec2(128, 110);
+    data.bulletOriginForState[data.STATE_FALLING_UP_RIGHT] = glm::vec2(120, 9);
+    data.bulletOriginForState[data.STATE_FALLING_UP_LEFT] = glm::vec2(74, 0);
+    data.bulletOriginForState[data.STATE_FALLING_UP_LEFT] = glm::vec2(0, 0);
+    data.bulletOriginForState[data.STATE_FALLING_DOWN_LEFT] = glm::vec2(13, 108);
+    data.bulletOriginForState[data.STATE_FALLING_LEFT] = glm::vec2(0, 47);
+
+    for(unsigned i = 0; i < 3; ++i) {
+
+        data.animationTextureRects[data.STATE_WALKING_RIGHT].push_back(sf::IntRect(0, 128 * i, 128, 128));
+        data.hitboxes[data.STATE_WALKING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+    }
+
+    for(unsigned i = 0; i < 3; ++i) {
+
+        data.animationTextureRects[data.STATE_WALKING_DOWN_RIGHT].push_back(sf::IntRect(128, 128 * i, 128, 128));
+        data.hitboxes[data.STATE_WALKING_DOWN_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+    }
+
+    for(unsigned i = 0; i < 3; ++i) {
+
+        data.animationTextureRects[data.STATE_WALKING_UP_RIGHT].push_back(sf::IntRect(256, 128 * i, 128, 128));
+        data.hitboxes[data.STATE_WALKING_UP_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+    }
+
+    for(unsigned i = 0; i < 3; ++i) {
+
+        data.animationTextureRects[data.STATE_WALKING_UP_LEFT].push_back(sf::IntRect(640, 128 * i, 128, 128));
+        data.hitboxes[data.STATE_WALKING_UP_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+    }
+
+    for(unsigned i = 0; i < 3; ++i) {
+
+        data.animationTextureRects[data.STATE_WALKING_DOWN_LEFT].push_back(sf::IntRect(768, 128 * i, 128, 128));
+        data.hitboxes[data.STATE_WALKING_DOWN_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+    }
+
+    for(unsigned i = 0; i < 3; ++i) {
+
+        data.animationTextureRects[data.STATE_WALKING_LEFT].push_back(sf::IntRect(896, 128 * i, 128, 128));
+        data.hitboxes[data.STATE_WALKING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+    }
+
+    for(unsigned i = 0; i < 3; ++i) {
+
+        data.animationTextureRects[data.STATE_JUMPING].push_back(sf::IntRect(384, 512 + 128 * i, 128, 128));
+        data.hitboxes[data.STATE_JUMPING].push_back(sf::FloatRect(33, 39, 50, 55));
+    }
+
+    data.animationTextureRects[data.STATE_STANDING_UP_FACING_LEFT].push_back(sf::IntRect(512, 0, 128, 128));
+    data.animationTextureRects[data.STATE_STANDING_UP_FACING_RIGHT].push_back(sf::IntRect(384, 0, 128, 128));
+
+    data.animationTextureRects[data.STATE_CROUCHING_RIGHT].push_back(sf::IntRect(384, 128, 128, 128));
+    data.animationTextureRects[data.STATE_CROUCHING_LEFT].push_back(sf::IntRect(512, 128, 128, 128));
+
+    data.animationTextureRects[data.STATE_FALLING_RIGHT].push_back(sf::IntRect(0, 384, 128, 128));
+    data.animationTextureRects[data.STATE_FALLING_DOWN_RIGHT].push_back(sf::IntRect(128, 384, 128, 128));
+    data.animationTextureRects[data.STATE_FALLING_UP_RIGHT].push_back(sf::IntRect(256, 384, 128, 128));
+    data.animationTextureRects[data.STATE_FALLING_UP_FACING_RIGHT].push_back(sf::IntRect(384, 384, 128, 128));
+    data.animationTextureRects[data.STATE_FALLING_UP_FACING_LEFT].push_back(sf::IntRect(512, 384, 128, 128));
+    data.animationTextureRects[data.STATE_FALLING_UP_LEFT].push_back(sf::IntRect(640, 384, 128, 128));
+    data.animationTextureRects[data.STATE_FALLING_DOWN_LEFT].push_back(sf::IntRect(768, 384, 128, 128));
+    data.animationTextureRects[data.STATE_FALLING_LEFT].push_back(sf::IntRect(896, 384, 128, 128));
+    data.animationTextureRects[data.STATE_FALLING_DOWN_FACING_RIGHT].push_back(sf::IntRect(128, 512, 128, 128));
+    data.animationTextureRects[data.STATE_FALLING_DOWN_FACING_LEFT].push_back(sf::IntRect(256, 512, 128, 128));
+
+
+    data.hitboxes[data.STATE_STANDING_UP_FACING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+    data.hitboxes[data.STATE_STANDING_UP_FACING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+
+    data.hitboxes[data.STATE_CROUCHING_RIGHT].push_back(sf::FloatRect(10, 79, 118, 49));
+    data.hitboxes[data.STATE_CROUCHING_LEFT].push_back(sf::FloatRect(512, 128, 128, 128));
+
+    data.hitboxes[data.STATE_FALLING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hitboxes[data.STATE_FALLING_DOWN_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hitboxes[data.STATE_FALLING_UP_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hitboxes[data.STATE_FALLING_UP_FACING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hitboxes[data.STATE_FALLING_UP_FACING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hitboxes[data.STATE_FALLING_UP_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hitboxes[data.STATE_FALLING_DOWN_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hitboxes[data.STATE_FALLING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hitboxes[data.STATE_FALLING_DOWN_FACING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hitboxes[data.STATE_FALLING_DOWN_FACING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
 
     return true;
 }
@@ -92,14 +236,14 @@ bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName) 
 
     data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(0, 2, 46, 100));
 
-    data.bulletOriginForDirection[CombinedAxis::UP_LEFT] = glm::vec2(140, 51);
-    data.bulletOriginForDirection[CombinedAxis::UP] = glm::vec2(140, 51);
-    data.bulletOriginForDirection[CombinedAxis::UP_RIGHT] = glm::vec2(140, 51);
-    data.bulletOriginForDirection[CombinedAxis::RIGHT] = glm::vec2(140, 51);
-    data.bulletOriginForDirection[CombinedAxis::DOWN_RIGHT] = glm::vec2(140, 51);
-    data.bulletOriginForDirection[CombinedAxis::DOWN] = glm::vec2(140, 51);
-    data.bulletOriginForDirection[CombinedAxis::DOWN_LEFT] = glm::vec2(140, 51);
-    data.bulletOriginForDirection[CombinedAxis::LEFT] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::UP_LEFT] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::UP] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::UP_RIGHT] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::RIGHT] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::DOWN_RIGHT] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::DOWN] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::DOWN_LEFT] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::LEFT] = glm::vec2(140, 51);
 
     return true;
 }
@@ -205,14 +349,14 @@ bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, con
     data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
     data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
 
-    data.bulletOriginForDirection[CombinedAxis::UP_LEFT] = glm::vec2(140, 51);
-    data.bulletOriginForDirection[CombinedAxis::UP] = glm::vec2(140, 51);
-    data.bulletOriginForDirection[CombinedAxis::UP_RIGHT] = glm::vec2(140, 51);
-    data.bulletOriginForDirection[CombinedAxis::RIGHT] = glm::vec2(140, 51);
-    data.bulletOriginForDirection[CombinedAxis::DOWN_RIGHT] = glm::vec2(140, 51);
-    data.bulletOriginForDirection[CombinedAxis::DOWN] = glm::vec2(140, 51);
-    data.bulletOriginForDirection[CombinedAxis::DOWN_LEFT] = glm::vec2(140, 51);
-    data.bulletOriginForDirection[CombinedAxis::LEFT] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::UP_LEFT] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::UP] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::UP_RIGHT] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::RIGHT] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::DOWN_RIGHT] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::DOWN] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::DOWN_LEFT] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::LEFT] = glm::vec2(140, 51);
 
     return true;
 }

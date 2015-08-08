@@ -18,7 +18,7 @@ enum VerticalDirection {
 
 namespace CombinedAxis {
 
-    enum Direction {
+    enum Direction : unsigned {
 
         UP_LEFT,
         UP,

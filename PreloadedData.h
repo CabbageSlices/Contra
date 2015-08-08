@@ -66,7 +66,38 @@ struct ShootingEntityPreloadedData : public PreloadedData{
     sf::Time gunfireDelay;
     BulletType bulletType;
 
-    std::map<CombinedAxis::Direction, glm::vec2> bulletOriginForDirection;
+    std::map<unsigned, glm::vec2> bulletOriginForState;
+};
+
+struct PreloadedPlayerData : public ShootingEntityPreloadedData {
+
+    unsigned STATE_STANDING_LEFT;
+    unsigned STATE_STANDING_UP_FACING_LEFT;
+    unsigned STATE_STANDING_UP_FACING_RIGHT;
+    unsigned STATE_STANDING_RIGHT;
+
+    unsigned STATE_WALKING_DOWN_LEFT;
+    unsigned STATE_WALKING_LEFT;
+    unsigned STATE_WALKING_UP_LEFT;
+    unsigned STATE_WALKING_UP_RIGHT;
+    unsigned STATE_WALKING_RIGHT;
+    unsigned STATE_WALKING_DOWN_RIGHT;
+
+    unsigned STATE_CROUCHING_LEFT;
+    unsigned STATE_CROUCHING_RIGHT;
+
+    unsigned STATE_FALLING_DOWN_FACING_LEFT;
+    unsigned STATE_FALLING_DOWN_FACING_RIGHT;
+    unsigned STATE_FALLING_DOWN_LEFT;
+    unsigned STATE_FALLING_LEFT;
+    unsigned STATE_FALLING_UP_LEFT;
+    unsigned STATE_FALLING_UP_FACING_LEFT;
+    unsigned STATE_FALLING_UP_FACING_RIGHT;
+    unsigned STATE_FALLING_UP_RIGHT;
+    unsigned STATE_FALLING_RIGHT;
+    unsigned STATE_FALLING_DOWN_RIGHT;
+
+    unsigned STATE_JUMPING;
 };
 
 struct PreloadedTurretData : public ShootingEntityPreloadedData {

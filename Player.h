@@ -5,6 +5,7 @@
 #include "GlobalConstants.h"
 #include "TileCollisionHandling.h"
 #include "TileMap.h"
+#include "PreloadedData.h"
 #include "ShootingEntity.h"
 #include <iostream>
 
@@ -13,13 +14,13 @@ using std::endl;
 
 struct PlayerKeys {
 
-    sf::Keyboard::Key up = sf::Keyboard::Up;
-    sf::Keyboard::Key down = sf::Keyboard::Down;
-    sf::Keyboard::Key left = sf::Keyboard::Left;
-    sf::Keyboard::Key right = sf::Keyboard::Right;
+    sf::Keyboard::Key up = sf::Keyboard::W;
+    sf::Keyboard::Key down = sf::Keyboard::S;
+    sf::Keyboard::Key left = sf::Keyboard::A;
+    sf::Keyboard::Key right = sf::Keyboard::D;
 
-    sf::Keyboard::Key jump = sf::Keyboard::A;
-    sf::Keyboard::Key fire = sf::Keyboard::S;
+    sf::Keyboard::Key jump = sf::Keyboard::F;
+    sf::Keyboard::Key fire = sf::Keyboard::G;
 };
 
 //since player inherits from EntityBase his lives is equal to the health
@@ -44,6 +45,8 @@ class Player : public ShootingEntity{
         virtual bool checkCanGetHit();
         virtual void getHit(int damage = 1);//damage parameters is pretty much ignored, its only needed for inheritance purposes
         virtual void respondToCollision(const CollisionResponse &collisionResponse);
+
+        void load(PreloadedPlayerData &data);
 
         bool checkCanRespawn();
         void respawn(const sf::FloatRect &cameraBounds);//spawns at top of camera
@@ -74,6 +77,37 @@ class Player : public ShootingEntity{
         void stopStandingOnPlatforms();
 
         void die();
+
+        //all possible animation states for the player
+        //when it says up/down facing left/right it means that player is looking straight up or down, but his body is still facing toward the left or right
+        //it doesn't mean he is movign
+        unsigned STATE_STANDING_LEFT;
+        unsigned STATE_STANDING_UP_FACING_LEFT;
+        unsigned STATE_STANDING_UP_FACING_RIGHT;
+        unsigned STATE_STANDING_RIGHT;
+
+        unsigned STATE_WALKING_DOWN_LEFT;
+        unsigned STATE_WALKING_LEFT;
+        unsigned STATE_WALKING_UP_LEFT;
+        unsigned STATE_WALKING_UP_RIGHT;
+        unsigned STATE_WALKING_RIGHT;
+        unsigned STATE_WALKING_DOWN_RIGHT;
+
+        unsigned STATE_CROUCHING_LEFT;
+        unsigned STATE_CROUCHING_RIGHT;
+
+        unsigned STATE_FALLING_DOWN_FACING_LEFT;
+        unsigned STATE_FALLING_DOWN_FACING_RIGHT;
+        unsigned STATE_FALLING_DOWN_LEFT;
+        unsigned STATE_FALLING_LEFT;
+        unsigned STATE_FALLING_UP_LEFT;
+        unsigned STATE_FALLING_UP_FACING_LEFT;
+        unsigned STATE_FALLING_UP_FACING_RIGHT;
+        unsigned STATE_FALLING_UP_RIGHT;
+        unsigned STATE_FALLING_RIGHT;
+        unsigned STATE_FALLING_DOWN_RIGHT;
+
+        unsigned STATE_JUMPING;
 
         enum LifeState {
 

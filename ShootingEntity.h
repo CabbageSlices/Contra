@@ -34,15 +34,16 @@ class ShootingEntity : public EntityBase {
         Direction direction;
 
         //shooting entity should produce bullets at some position relative to its origin
-        //keep track of the relative position a bullet should be created for each direction the entity is facing
-        std::map<CombinedAxis::Direction, glm::vec2> bulletOriginForDirection;
+        //keep track of the position the bullet shoudl be created at
+        //in whatever state the inherited object specifies
+        std::map<unsigned, glm::vec2> bulletOriginForState;
 };
 
 template<class PreloadedData>
 void ShootingEntity::loadBulletOriginData(PreloadedData &data) {
 
-    bulletOriginForDirection.clear();
-    bulletOriginForDirection.insert(data.bulletOriginForDirection.begin(), data.bulletOriginForDirection.end());
+    bulletOriginForState.clear();
+    bulletOriginForState.insert(data.bulletOriginForState.begin(), data.bulletOriginForState.end());
 }
 
 #endif // SHOOTINGENTITY_H_INCLUDED

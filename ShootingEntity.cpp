@@ -6,7 +6,7 @@ ShootingEntity::ShootingEntity(const glm::vec2 &gravity, const glm::vec2 &moveme
     EntityBase(gravity, movementVelocity, terminalVelocity, initialHealth),
     gun(),
     direction(),
-    bulletOriginForDirection()
+    bulletOriginForState()
     {
 
     }
@@ -28,7 +28,7 @@ shared_ptr<Gun>& ShootingEntity::getGun() {
 
 void ShootingEntity::scaleComponents(const float &xFactor, const float &yFactor) {
 
-    for(auto &pair : bulletOriginForDirection) {
+    for(auto &pair : bulletOriginForState) {
 
         pair.second.x *= xFactor;
         pair.second.y *= yFactor;

@@ -235,7 +235,7 @@ glm::vec2 TurretEnemy::calculateGunfireOrigin(const glm::vec2 &targetPosition) {
 
     determineDirection(targetPosition);
 
-    return bulletOriginForDirection[convertToCombinedAxis(direction)];
+    return bulletOriginForState[convertToCombinedAxis(direction)];
 }
 
 void TurretEnemy::determineDirection(const glm::vec2 &targetPosition) {

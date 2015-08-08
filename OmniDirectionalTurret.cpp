@@ -137,12 +137,12 @@ void OmniDirectionalTurret::shoot() {
     //shoot in 8 directions
     glm::vec2 bulletOrigin(140, 61);
 
-    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::LEFT], leftVector);
-    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::UP_LEFT], upLeftVector);
-    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::UP], upVector);
-    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::UP_RIGHT], upRightVector);
-    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::RIGHT], rightVector);
-    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::DOWN_RIGHT], downRightVector);
-    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::DOWN], downVector);
-    gun->fire(hitbox.getOrigin(), bulletOriginForDirection[CombinedAxis::DOWN_LEFT], downLeftVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::LEFT], leftVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::UP_LEFT], upLeftVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::UP], upVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::UP_RIGHT], upRightVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::RIGHT], rightVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::DOWN_RIGHT], downRightVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::DOWN], downVector);
+    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::DOWN_LEFT], downLeftVector);
 }
