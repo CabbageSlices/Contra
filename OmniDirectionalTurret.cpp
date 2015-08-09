@@ -95,7 +95,7 @@ void OmniDirectionalTurret::draw(sf::RenderWindow &window) {
 void OmniDirectionalTurret::load(PreloadedOmniDirectionalTurretData &data) {
 
     loadBase(data);
-    loadBulletOriginData(data);
+    loadShootingEntityData(data);
     scale(data.scale, data.scale);
 
     STATE_HIDING = data.STATE_HIDING;
@@ -103,11 +103,6 @@ void OmniDirectionalTurret::load(PreloadedOmniDirectionalTurretData &data) {
     STATE_GOING_INTO_HIDING = data.STATE_GOING_INTO_HIDING;
     STATE_EXPOSED = data.STATE_EXPOSED;
     STATE_SHOOTING = data.STATE_SHOOTING;
-
-    gun.reset();
-    gun = createGunOfType(data.gunType);
-    gun->setFireDelay(data.gunfireDelay);
-    gun->setBulletType(data.bulletType);
 
     hiddenStateDuration = data.hiddenStateDuration;
     exposedStateDuration = data.exposedStateDuration;

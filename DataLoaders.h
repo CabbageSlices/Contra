@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 
+class PreloadedPlayerData;
 class PreloadedTurretData;
 class PreloadedEnemyData;
 class PreloadedBulletData;
@@ -15,6 +16,8 @@ enum EnemyType : int;
 struct BossProperties;
 
 bool loadBossData(std::map<EnemyType, BossProperties> &bossData, const std::string &dataFileName);
+
+bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFileName);
 
 bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName);
 bool loadEnemyData(PreloadedEnemyData &daa, const std::string &dataFileName);

@@ -98,6 +98,11 @@ struct PreloadedPlayerData : public ShootingEntityPreloadedData {
     unsigned STATE_FALLING_DOWN_RIGHT;
 
     unsigned STATE_JUMPING;
+
+    unsigned STATE_DYING_FACING_LEFT;
+    unsigned STATE_DYING_FACING_RIGHT;
+
+    unsigned STATE_DEAD;
 };
 
 struct PreloadedTurretData : public ShootingEntityPreloadedData {

@@ -56,6 +56,11 @@ bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFileName) 
 
     data.STATE_JUMPING = 22;
 
+    data.STATE_DYING_FACING_LEFT = 23;
+    data.STATE_DYING_FACING_RIGHT = 24;
+
+    data.STATE_DEAD = 25;
+
     data.bulletOriginForState[data.STATE_STANDING_LEFT] = glm::vec2(0, 57);
     data.bulletOriginForState[data.STATE_STANDING_RIGHT] = glm::vec2(126, 62);
     data.bulletOriginForState[data.STATE_STANDING_UP_FACING_LEFT] = glm::vec2(73, 0);
@@ -80,6 +85,17 @@ bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFileName) 
     data.bulletOriginForState[data.STATE_FALLING_UP_LEFT] = glm::vec2(0, 0);
     data.bulletOriginForState[data.STATE_FALLING_DOWN_LEFT] = glm::vec2(13, 108);
     data.bulletOriginForState[data.STATE_FALLING_LEFT] = glm::vec2(0, 47);
+
+    //bullet origin for each direction the player could face
+    //this is only usedw hen player is jumping since the jumping state can shoot in 8 directions without changing the animation state
+    data.bulletOriginForState[CombinedAxis::UP] = glm::vec2(50, 0);
+    data.bulletOriginForState[CombinedAxis::UP_RIGHT] = glm::vec2(100, 0);
+    data.bulletOriginForState[CombinedAxis::RIGHT] = glm::vec2(100, 64);
+    data.bulletOriginForState[CombinedAxis::DOWN_RIGHT] = glm::vec2(100, 100);
+    data.bulletOriginForState[CombinedAxis::DOWN] = glm::vec2(64, 100);
+    data.bulletOriginForState[CombinedAxis::DOWN_LEFT] = glm::vec2(0, 100);
+    data.bulletOriginForState[CombinedAxis::LEFT] = glm::vec2(0, 64);
+    data.bulletOriginForState[CombinedAxis::UP_LEFT] = glm::vec2(0, 0);
 
     for(unsigned i = 0; i < 3; ++i) {
 
@@ -120,9 +136,23 @@ bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFileName) 
     for(unsigned i = 0; i < 3; ++i) {
 
         data.animationTextureRects[data.STATE_JUMPING].push_back(sf::IntRect(384, 512 + 128 * i, 128, 128));
-        data.hitboxes[data.STATE_JUMPING].push_back(sf::FloatRect(33, 39, 50, 55));
+        data.hitboxes[data.STATE_JUMPING].push_back(sf::FloatRect(33, 31, 55, 97));
     }
 
+    for(unsigned i = 0; i < 3; ++i) {
+
+        data.animationTextureRects[data.STATE_DYING_FACING_LEFT].push_back(sf::IntRect(512 + 128 * i, 640, 128, 128));
+        data.hitboxes[data.STATE_DYING_FACING_LEFT].push_back(sf::FloatRect(2, 2, 2, 2));
+    }
+
+    for(unsigned i = 0; i < 3; ++i) {
+
+        data.animationTextureRects[data.STATE_DYING_FACING_RIGHT].push_back(sf::IntRect(128 * i, 640, 128, 128));
+        data.hitboxes[data.STATE_DYING_FACING_RIGHT].push_back(sf::FloatRect(2, 2, 2, 2));
+    }
+
+    data.animationTextureRects[data.STATE_STANDING_RIGHT].push_back(sf::IntRect(0, 0, 128, 128));
+    data.animationTextureRects[data.STATE_STANDING_LEFT].push_back(sf::IntRect(896, 0, 128, 128));
     data.animationTextureRects[data.STATE_STANDING_UP_FACING_LEFT].push_back(sf::IntRect(512, 0, 128, 128));
     data.animationTextureRects[data.STATE_STANDING_UP_FACING_RIGHT].push_back(sf::IntRect(384, 0, 128, 128));
 
@@ -140,12 +170,17 @@ bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFileName) 
     data.animationTextureRects[data.STATE_FALLING_DOWN_FACING_RIGHT].push_back(sf::IntRect(128, 512, 128, 128));
     data.animationTextureRects[data.STATE_FALLING_DOWN_FACING_LEFT].push_back(sf::IntRect(256, 512, 128, 128));
 
+    data.animationTextureRects[data.STATE_DEAD].push_back(sf::IntRect(1, 1, 1, 1));
 
+
+
+    data.hitboxes[data.STATE_STANDING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+    data.hitboxes[data.STATE_STANDING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
     data.hitboxes[data.STATE_STANDING_UP_FACING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
     data.hitboxes[data.STATE_STANDING_UP_FACING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
 
     data.hitboxes[data.STATE_CROUCHING_RIGHT].push_back(sf::FloatRect(10, 79, 118, 49));
-    data.hitboxes[data.STATE_CROUCHING_LEFT].push_back(sf::FloatRect(512, 128, 128, 128));
+    data.hitboxes[data.STATE_CROUCHING_LEFT].push_back(sf::FloatRect(0, 81, 128, 47));
 
     data.hitboxes[data.STATE_FALLING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
     data.hitboxes[data.STATE_FALLING_DOWN_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
@@ -157,6 +192,8 @@ bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFileName) 
     data.hitboxes[data.STATE_FALLING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
     data.hitboxes[data.STATE_FALLING_DOWN_FACING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
     data.hitboxes[data.STATE_FALLING_DOWN_FACING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+
+    data.hitboxes[data.STATE_DEAD].push_back(sf::FloatRect(1, 1, 1, 1));
 
     return true;
 }

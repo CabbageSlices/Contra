@@ -20,14 +20,14 @@ namespace CombinedAxis {
 
     enum Direction : unsigned {
 
-        UP_LEFT,
-        UP,
-        UP_RIGHT,
-        RIGHT,
-        DOWN_RIGHT,
-        DOWN,
-        DOWN_LEFT,
-        LEFT,
+        UP_LEFT = 2100,
+        UP = 2101,
+        UP_RIGHT = 2102,
+        RIGHT = 2103,
+        DOWN_RIGHT = 2104,
+        DOWN = 2105,
+        DOWN_LEFT = 2107,
+        LEFT = 2108,
     };
 }
 

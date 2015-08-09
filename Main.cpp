@@ -674,6 +674,9 @@ int main() {
     world.worldBoundsBossFight = sf::FloatRect(0, 0, 1028 + 1028, 768 + 768);
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
     world.players.push_back(make_shared<Player>());
+    PreloadedPlayerData data;
+    loadPlayerData(data, "player.txt");
+    world.players[0]->load(data);
 
     while(window.isOpen()) {
 

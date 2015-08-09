@@ -36,6 +36,8 @@ class ObjectHitbox {
 
         //all in pixels
         void setOrigin(const glm::vec2& position);
+
+        ///VERY IMPORTANT, THE HITBOX FRAME COMES FIRST, AND THEN THE ANIMATION STATE COMES SECOND
         void setActiveHitbox(const unsigned &id, const unsigned &state = DEFAULT_STATE); //does nothing if id is invalid
 
         glm::vec2 getOrigin() const;

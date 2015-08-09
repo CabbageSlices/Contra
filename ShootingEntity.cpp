@@ -13,12 +13,12 @@ ShootingEntity::ShootingEntity(const glm::vec2 &gravity, const glm::vec2 &moveme
 
 void ShootingEntity::draw(sf::RenderWindow &window) {
 
+    EntityBase::draw(window);
+
     if(gun) {
 
         gun->draw(window);
     }
-
-    EntityBase::draw(window);
 }
 
 shared_ptr<Gun>& ShootingEntity::getGun() {

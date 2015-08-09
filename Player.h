@@ -60,13 +60,19 @@ class Player : public ShootingEntity{
         bool checkCanJumpDown() const; //check if player can jump down from the current platform
         bool checkIsJumping() const;
         bool checkIsCrouching() const;
+        bool checkIsInAir() const;
 
         //check if player can extend his jump by holding the jump button
         bool checkExtendJump() const;
 
+        void fireGun();
+        void startDeathAnimation();
+
+        void determineRenderingState();
+
         //calculate the position where the gun produces bullets relative to the player
         //differs whenever player is facing in different directions
-        glm::vec2 calculateGunfireOrigin() const;
+        glm::vec2 calculateGunfireOrigin();
 
         //vertical and horizontal tile collisions differ only in terms of the collision handling function they call
         virtual CollisionResponse handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
@@ -109,6 +115,11 @@ class Player : public ShootingEntity{
 
         unsigned STATE_JUMPING;
 
+        unsigned STATE_DYING_FACING_RIGHT;
+        unsigned STATE_DYING_FACING_LEFT;
+
+        unsigned STATE_DEAD;
+
         enum LifeState {
 
             ALIVE, //while player is dying or dead he can't move or jump
@@ -125,11 +136,15 @@ class Player : public ShootingEntity{
         //when user is holding jump he will jump higher
         //it will basically disable gravity until extra jump timer exceeds the max time allowed for user to hold jump
         bool holdingJump;
+        bool wasJumpButtonPressed;//when player isn't on the ground he could either be falling, or jumping, if the jump button was pressed then he is jumping, otherwise he is just falling
         sf::Clock extraJumpTimer;
         const sf::Time extraJumpDuration;
 
         //the control setup for this player
         PlayerKeys controls;
+
+        sf::Clock respawnTimer;
+        sf::Time respawnDelay;
 
         sf::Clock respawnInvinsibilityTimer;
         sf::Time respawnInvinsibilityDuration;

@@ -14,36 +14,42 @@ using std::endl;
 Player::Player(const PlayerKeys& keyConfiguration):
     ShootingEntity(glm::vec2(0, GRAVITY), glm::vec2(4.f, 4.05f), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), 3),
     STATE_STANDING_LEFT(0),
-    STATE_STANDING_UP_FACING_LEFT(0),
-    STATE_STANDING_UP_FACING_RIGHT(0),
-    STATE_STANDING_RIGHT(0),
-    STATE_WALKING_DOWN_LEFT(0),
-    STATE_WALKING_LEFT(0),
-    STATE_WALKING_UP_LEFT(0),
-    STATE_WALKING_UP_RIGHT(0),
-    STATE_WALKING_RIGHT(0),
-    STATE_WALKING_DOWN_RIGHT(0),
-    STATE_CROUCHING_LEFT(0),
-    STATE_CROUCHING_RIGHT(0),
-    STATE_FALLING_DOWN_FACING_LEFT(0),
-    STATE_FALLING_DOWN_FACING_RIGHT(0),
-    STATE_FALLING_DOWN_LEFT(0),
-    STATE_FALLING_LEFT(0),
-    STATE_FALLING_UP_LEFT(0),
-    STATE_FALLING_UP_FACING_LEFT(0),
-    STATE_FALLING_UP_FACING_RIGHT(0),
-    STATE_FALLING_UP_RIGHT(0),
-    STATE_FALLING_RIGHT(0),
-    STATE_FALLING_DOWN_RIGHT(0),
-    STATE_JUMPING(0),
+    STATE_STANDING_UP_FACING_LEFT(1),
+    STATE_STANDING_UP_FACING_RIGHT(2),
+    STATE_STANDING_RIGHT(3),
+    STATE_WALKING_DOWN_LEFT(4),
+    STATE_WALKING_LEFT(5),
+    STATE_WALKING_UP_LEFT(6),
+    STATE_WALKING_UP_RIGHT(7),
+    STATE_WALKING_RIGHT(8),
+    STATE_WALKING_DOWN_RIGHT(9),
+    STATE_CROUCHING_LEFT(10),
+    STATE_CROUCHING_RIGHT(11),
+    STATE_FALLING_DOWN_FACING_LEFT(12),
+    STATE_FALLING_DOWN_FACING_RIGHT(13),
+    STATE_FALLING_DOWN_LEFT(14),
+    STATE_FALLING_LEFT(15),
+    STATE_FALLING_UP_LEFT(16),
+    STATE_FALLING_UP_FACING_LEFT(17),
+    STATE_FALLING_UP_FACING_RIGHT(18),
+    STATE_FALLING_UP_RIGHT(19),
+    STATE_FALLING_RIGHT(20),
+    STATE_FALLING_DOWN_RIGHT(21),
+    STATE_JUMPING(22),
+    STATE_DYING_FACING_RIGHT(23),
+    STATE_DYING_FACING_LEFT(24),
+    STATE_DEAD(25),
     lifeState(ALIVE),
     standingOnSolid(false),
     standingOnTile(false),
     standingOnPassablePlatform(false),
     holdingJump(false),
+    wasJumpButtonPressed(false),
     extraJumpTimer(),
     extraJumpDuration(sf::milliseconds(200)),
     controls(keyConfiguration),
+    respawnTimer(),
+    respawnDelay(sf::seconds(1.5)),
     respawnInvinsibilityTimer(),
     respawnInvinsibilityDuration(sf::seconds(3))
     {
@@ -55,10 +61,6 @@ Player::Player(const PlayerKeys& keyConfiguration):
         }
 
         entity.setSize(sf::Vector2f(50, 100));
-
-        hitbox.insertHitbox(sf::FloatRect(0, 0, 50, 100));
-        hitbox.insertHitbox(sf::FloatRect(-25, 50, 100, 50));
-        hitbox.setActiveHitbox(0);
     }
 
 void Player::handleInputEvents(sf::Event& event, sf::RenderWindow& window) {
@@ -101,7 +103,7 @@ void Player::handleKeystate(sf::RenderWindow& window) {
 
     if(sf::Keyboard::isKeyPressed(controls.fire)) {
 
-        gun->fire(hitbox.getOrigin(), calculateGunfireOrigin(), direction);
+        fireGun();
     }
 
     holdingJump = sf::Keyboard::isKeyPressed(controls.jump);
@@ -142,9 +144,20 @@ void Player::updatePhysics(const float& deltaTime, const sf::FloatRect& worldBou
 
 void Player::updateRendering() {
 
+    if(sprite.animate() && (currentState == STATE_DYING_FACING_LEFT || currentState == STATE_DYING_FACING_RIGHT)) {
+
+        die();
+    }
+
+    determineRenderingState();
+    hitbox.setActiveHitbox(sprite.getFrame(), currentState);
+
     sf::FloatRect activeHitbox = hitbox.getActiveHitboxWorldSpace();
+    //cout << activeHitbox.top << "  " << activeHitbox.height << endl;
     entity.setPosition(activeHitbox.left, activeHitbox.top);
     entity.setSize(sf::Vector2f(activeHitbox.width, activeHitbox.height));
+
+    setPosition(hitbox.getOrigin());
 
     gun->updateRendering();
 }
@@ -156,9 +169,11 @@ bool Player::checkCanGetHit() {
 
 void Player::getHit(int damage) {
 
+    startDeathAnimation();
+
     ///later this should start a death animation and set lifestate to dying, and once the animation finishes the player should actually die
     ///for now just make player die since there are no animations yet
-    die();
+    ///die();
 }
 
 void Player::respondToCollision(const CollisionResponse &collisionResponse) {
@@ -171,7 +186,7 @@ void Player::respondToCollision(const CollisionResponse &collisionResponse) {
 void Player::load(PreloadedPlayerData &data) {
 
     loadBase(data);
-    loadBulletOriginData(data);
+    loadShootingEntityData(data);
 
     scale(data.scale, data.scale);
 
@@ -202,6 +217,13 @@ void Player::load(PreloadedPlayerData &data) {
     STATE_FALLING_DOWN_RIGHT = data.STATE_FALLING_DOWN_RIGHT;
 
     STATE_JUMPING = data.STATE_JUMPING;
+
+    STATE_DYING_FACING_LEFT = data.STATE_DYING_FACING_LEFT;
+    STATE_DYING_FACING_RIGHT = data.STATE_DYING_FACING_RIGHT;
+
+    STATE_DEAD = data.STATE_DEAD;
+
+    setState(STATE_STANDING_RIGHT);
 }
 
 bool Player::checkIsAlive() {
@@ -211,7 +233,7 @@ bool Player::checkIsAlive() {
 
 bool Player::checkCanRespawn() {
 
-    return lifeState == DEAD && health > 0;
+    return lifeState == DEAD && health > 0 && respawnTimer.getElapsedTime() > respawnDelay;
 }
 
 void Player::respawn(const sf::FloatRect &cameraBounds) {
@@ -221,7 +243,7 @@ void Player::respawn(const sf::FloatRect &cameraBounds) {
     //move player slightly below camera beucase once they respawn if they hold jump then he wil always be able to jump
     //because he will be touchign top of screen so the game registers it as if he is standing on the ground
     glm::vec2 spawnPosition(cameraBounds.left + hitbox.getActiveHitboxObjectSpace().width, cameraBounds.top + 1);
-    hitbox.setOrigin(spawnPosition);
+    setPosition(spawnPosition);
 
     setLives(health - 1);
 
@@ -236,6 +258,7 @@ void Player::draw(sf::RenderWindow& window) {
     }
 
     ShootingEntity::draw(window);
+    sprite.draw(window);
 }
 
 void Player::setLives(const int &newLives) {
@@ -264,8 +287,7 @@ bool Player::checkCanJumpDown() const {
 
 bool Player::checkIsJumping() const {
 
-    //player is jumping if he is moving upwards and he isn't able to jump
-    return hitboxMovementController.getVelocities().y < 0 && !standingOnSolid;
+    return checkIsInAir() && wasJumpButtonPressed;
 }
 
 bool Player::checkIsCrouching() const {
@@ -274,13 +296,235 @@ bool Player::checkIsCrouching() const {
     return checkCanJump() && sf::Keyboard::isKeyPressed(controls.down) && hitboxMovementController.getVelocities().x == 0;
 }
 
+bool Player::checkIsInAir() const {
+
+    //player is only in the air if he isn't standing on anything
+    return !standingOnSolid && !standingOnTile && !standingOnPassablePlatform;
+}
+
 //check if player can extend his jump by holding the jump button
 bool Player::checkExtendJump() const {
 
     return holdingJump && extraJumpTimer.getElapsedTime() < extraJumpDuration;
 }
 
-glm::vec2 Player::calculateGunfireOrigin() const {
+void Player::fireGun() {
+
+    bool canFire = checkIsAlive();
+
+    if(canFire) {
+
+        gun->fire(hitbox.getOrigin(), calculateGunfireOrigin(), direction);
+    }
+}
+
+void Player::startDeathAnimation() {
+
+    lifeState = DYING;
+}
+
+void Player::determineRenderingState() {
+
+    if(lifeState == LifeState::DYING) {
+
+        if(direction.horizontal == HorizontalDirection::LEFT) {
+
+            setState(STATE_DYING_FACING_LEFT);
+        }
+
+        if(direction.horizontal == HorizontalDirection::RIGHT) {
+
+            setState(STATE_DYING_FACING_RIGHT);
+        }
+
+        return;
+    }
+
+    if(lifeState == LifeState::DEAD) {
+
+        setState(STATE_DEAD);
+        return;
+    }
+
+    //if player is no longer in the air then his jump has finished
+    //so indicate that he didn't press the jump button so the animation doesn't draw the player jumping
+    wasJumpButtonPressed = checkIsInAir() && wasJumpButtonPressed;
+
+    if(checkIsJumping()) {
+
+        setState(STATE_JUMPING);
+
+        return;
+    }
+
+    CombinedAxis::Direction combinedDirection = convertToCombinedAxis(direction);
+
+    if(checkIsInAir()) {
+
+        switch(combinedDirection) {
+
+            case CombinedAxis::LEFT : {
+
+                setState(STATE_FALLING_LEFT);
+                return;
+            }
+
+            case CombinedAxis::UP_LEFT : {
+
+                setState(STATE_FALLING_UP_LEFT);
+                return;
+            }
+
+            case CombinedAxis::UP : {
+
+                if(direction.horizontal == HorizontalDirection::LEFT) {
+
+                    setState(STATE_FALLING_UP_FACING_LEFT);
+                    return;
+                }
+
+                if(direction.horizontal == HorizontalDirection::RIGHT) {
+
+                    setState(STATE_FALLING_UP_FACING_RIGHT);
+                    return;
+                }
+            }
+
+            case CombinedAxis::UP_RIGHT : {
+
+                setState(STATE_FALLING_UP_RIGHT);
+                return;
+            }
+
+            case CombinedAxis::RIGHT : {
+
+                setState(STATE_FALLING_RIGHT);
+                return;
+            }
+
+            case CombinedAxis::DOWN_RIGHT : {
+
+                setState(STATE_FALLING_DOWN_RIGHT);
+                return;
+            }
+
+            case CombinedAxis::DOWN : {
+
+                if(direction.horizontal == HorizontalDirection::LEFT) {
+
+                    setState(STATE_FALLING_DOWN_FACING_LEFT);
+                    return;
+                }
+
+                if(direction.horizontal == HorizontalDirection::RIGHT) {
+
+                    setState(STATE_FALLING_DOWN_FACING_RIGHT);
+                    return;
+                }
+            }
+
+            default : {
+
+                setState(STATE_FALLING_DOWN_FACING_LEFT);
+                return;
+            }
+        }
+
+        return;
+    }
+
+    if(checkIsCrouching()) {
+
+        if(direction.horizontal == HorizontalDirection::LEFT) {
+
+            setState(STATE_CROUCHING_LEFT);
+        }
+
+        if(direction.horizontal == HorizontalDirection::RIGHT) {
+
+            setState(STATE_CROUCHING_RIGHT);
+        }
+
+        return;
+    }
+
+    if(hitboxMovementController.getVelocities().x == 0) {
+
+        if(direction.vertical == VerticalDirection::STRAIGHT && direction.horizontal == HorizontalDirection::LEFT) {
+
+            setState(STATE_STANDING_LEFT);
+        }
+
+        if(direction.vertical == VerticalDirection::STRAIGHT && direction.horizontal == HorizontalDirection::RIGHT) {
+
+            setState(STATE_STANDING_RIGHT);
+        }
+
+        if(direction.vertical == VerticalDirection::UP) {
+
+            if(direction.horizontal == HorizontalDirection::LEFT) {
+
+                setState(STATE_STANDING_UP_FACING_LEFT);
+            }
+
+            if(direction.horizontal == HorizontalDirection::RIGHT) {
+
+                setState(STATE_STANDING_UP_FACING_RIGHT);
+            }
+        }
+
+        return;
+    }
+
+    //player is moving and doing stuff now
+    if(direction.vertical == VerticalDirection::STRAIGHT && direction.horizontal == HorizontalDirection::LEFT) {
+
+        setState(STATE_WALKING_LEFT);
+        return;
+    }
+
+    if(direction.vertical == VerticalDirection::STRAIGHT && direction.horizontal == HorizontalDirection::RIGHT) {
+
+        setState(STATE_WALKING_RIGHT);
+        return;
+    }
+
+    if(direction.vertical == VerticalDirection::UP && direction.horizontal == HorizontalDirection::LEFT) {
+
+        setState(STATE_WALKING_UP_LEFT);
+        return;
+    }
+
+    if(direction.vertical == VerticalDirection::UP && direction.horizontal == HorizontalDirection::RIGHT) {
+
+        setState(STATE_WALKING_UP_RIGHT);
+        return;
+    }
+
+    if(direction.vertical == VerticalDirection::DOWN && direction.horizontal == HorizontalDirection::LEFT) {
+
+        setState(STATE_WALKING_DOWN_LEFT);
+        return;
+    }
+
+    if(direction.vertical == VerticalDirection::DOWN && direction.horizontal == HorizontalDirection::RIGHT) {
+
+        setState(STATE_WALKING_DOWN_RIGHT);
+        return;
+    }
+}
+
+glm::vec2 Player::calculateGunfireOrigin() {
+
+    //if player isn't jumping then his gunfire direction is dtermined by his currnet state
+    if(currentState != STATE_JUMPING) {
+
+        return bulletOriginForState[currentState];
+    }
+
+    //jumping so bullet direction is determine by the direction the player is facing
+    CombinedAxis::Direction combinedAxisDirection = convertToCombinedAxis(direction);
+    return bulletOriginForState[combinedAxisDirection];
 
     //default facing right so its at the right side of the player
     glm::vec2 gunPosition(entity.getGlobalBounds().width, entity.getGlobalBounds().height / 2);
@@ -391,11 +635,7 @@ void Player::determineDirection() {
     if(checkIsCrouching()) {
 
         direction.vertical = VerticalDirection::STRAIGHT;
-        hitbox.setActiveHitbox(1);
 
-    } else {
-
-        hitbox.setActiveHitbox(0);
     }
 
     direction.isFacingCompletelyVertical = (hitboxMovementController.getVelocities().x == 0 && direction.vertical != VerticalDirection::STRAIGHT);
@@ -408,6 +648,7 @@ void Player::jump() {
         extraJumpTimer.restart();
         hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, -MOVEMENT_VELOCITY.y);
         stopStandingOnPlatforms();
+        wasJumpButtonPressed = true;
     }
 }
 
@@ -438,5 +679,7 @@ void Player::die() {
     ///later this should stop animations but for now just kill player
     lifeState = DEAD;
 
+    //reset the gun so player starts with a basic gun again
     gun = make_shared<Gun>();
+    respawnTimer.restart();
 }

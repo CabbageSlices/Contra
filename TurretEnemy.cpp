@@ -168,7 +168,7 @@ void TurretEnemy::draw(sf::RenderWindow &window) {
 void TurretEnemy::load(PreloadedTurretData &data) {
 
     loadBase(data);
-    loadBulletOriginData(data);
+    loadShootingEntityData(data);
     scale(data.scale, data.scale);
 
     STATE_HIDING = data.STATE_HIDING;
@@ -184,11 +184,6 @@ void TurretEnemy::load(PreloadedTurretData &data) {
     UP_RIGHT = data.UP_RIGHT;
     RIGHT = data.RIGHT;
     DOWN_RIGHT = data.DOWN_RIGHT;
-
-    gun.reset();
-    gun = createGunOfType(data.gunType);
-    gun->setFireDelay(data.gunfireDelay);
-    gun->setBulletType(data.bulletType);
 
     hiddenStateDuration = data.hiddenStateDuration;
     exposedStateDuration = data.exposedStateDuration;

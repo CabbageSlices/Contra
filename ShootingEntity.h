@@ -26,7 +26,7 @@ class ShootingEntity : public EntityBase {
     protected:
 
         template<class PreloadedData>
-        void loadBulletOriginData(PreloadedData &data);
+        void loadShootingEntityData(PreloadedData &data);
 
         virtual void scaleComponents(const float &xFactor, const float &yFactor);
 
@@ -40,10 +40,15 @@ class ShootingEntity : public EntityBase {
 };
 
 template<class PreloadedData>
-void ShootingEntity::loadBulletOriginData(PreloadedData &data) {
+void ShootingEntity::loadShootingEntityData(PreloadedData &data) {
 
     bulletOriginForState.clear();
     bulletOriginForState.insert(data.bulletOriginForState.begin(), data.bulletOriginForState.end());
+
+    gun.reset();
+    gun = createGunOfType(data.gunType);
+    gun->setFireDelay(data.gunfireDelay);
+    gun->setBulletType(data.bulletType);
 }
 
 #endif // SHOOTINGENTITY_H_INCLUDED
