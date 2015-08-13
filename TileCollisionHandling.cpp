@@ -1,5 +1,5 @@
 #include "TileCollisionHandling.h"
-#include "ObjectHitbox.h"
+#include "ObjectCollisionbox.h"
 #include "GlobalConstants.h"
 
 #include <iostream>
@@ -11,9 +11,9 @@ using std::endl;
 const float fallThroughTopThreshold = 10.f;
 const int MAX_SLOPE_SNAPPING_DISTANCE = 10;
 
-bool checkSolidTileIntersection(std::shared_ptr<Tile>& tile, HitboxMovementController& object) {
+bool checkSolidTileIntersection(std::shared_ptr<Tile>& tile, CollisionboxMovementController& object) {
 
-    if(!object.getHitbox()) {
+    if(!object.getCollisionbox()) {
 
         return false;
     }
@@ -21,7 +21,7 @@ bool checkSolidTileIntersection(std::shared_ptr<Tile>& tile, HitboxMovementContr
     TileType type = tile->getType();
 
     sf::FloatRect tileBoundingBox = tile->getBoundingBox();
-    sf::FloatRect objBoundingBox = object.getHitbox()->getActiveHitboxWorldSpace();
+    sf::FloatRect objBoundingBox = object.getCollisionbox()->getActiveCollisionboxWorldSpace();
 
     switch(type) {
 
@@ -37,7 +37,7 @@ bool checkSolidTileIntersection(std::shared_ptr<Tile>& tile, HitboxMovementContr
     return false;
 }
 
-CollisionResponse handleCollisionHorizontal(shared_ptr<Tile>& tile, HitboxMovementController& object) {
+CollisionResponse handleCollisionHorizontal(shared_ptr<Tile>& tile, CollisionboxMovementController& object) {
 
     TileType type = tile->getType();
 
@@ -66,7 +66,7 @@ CollisionResponse handleCollisionHorizontal(shared_ptr<Tile>& tile, HitboxMoveme
     return response;
 }
 
-CollisionResponse handleCollisionVertical(shared_ptr<Tile>& tile, HitboxMovementController& object) {
+CollisionResponse handleCollisionVertical(shared_ptr<Tile>& tile, CollisionboxMovementController& object) {
 
     TileType type = tile->getType();
 
@@ -93,17 +93,17 @@ CollisionResponse handleCollisionVertical(shared_ptr<Tile>& tile, HitboxMovement
     return response;
 }
 
-bool handleSolidTileCollisionHorizontal(shared_ptr<Tile>& tile, HitboxMovementController& object) {
+bool handleSolidTileCollisionHorizontal(shared_ptr<Tile>& tile, CollisionboxMovementController& object) {
 
-    if(!object.getHitbox()) {
+    if(!object.getCollisionbox()) {
 
         return false;
     }
 
     sf::FloatRect tileBoundingBox = tile->getBoundingBox();
-    const sf::FloatRect objectHitbox = object.getHitbox()->getActiveHitboxWorldSpace();
+    const sf::FloatRect objectCollisionbox = object.getCollisionbox()->getActiveCollisionboxWorldSpace();
 
-    if(!tileBoundingBox.intersects(objectHitbox)) {
+    if(!tileBoundingBox.intersects(objectCollisionbox)) {
 
         return false;
     }
@@ -113,36 +113,36 @@ bool handleSolidTileCollisionHorizontal(shared_ptr<Tile>& tile, HitboxMovementCo
 
     float offset = 0;
 
-    if(objectHitbox.left < tileLeft) {
+    if(objectCollisionbox.left < tileLeft) {
 
-        offset = tileLeft - (objectHitbox.left + objectHitbox.width);
+        offset = tileLeft - (objectCollisionbox.left + objectCollisionbox.width);
 
     } else {
 
-        offset = tileRight - objectHitbox.left;
+        offset = tileRight - objectCollisionbox.left;
     }
 
-    object.getHitbox()->move(glm::vec2(offset, 0));
+    object.getCollisionbox()->move(glm::vec2(offset, 0));
 
     return true;
 }
 
-bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, HitboxMovementController& object) {
+bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, CollisionboxMovementController& object) {
 
-    if(!object.getHitbox()) {
+    if(!object.getCollisionbox()) {
 
         return false;
     }
 
-    const sf::FloatRect& objectHitbox = object.getHitbox()->getActiveHitboxWorldSpace();
+    const sf::FloatRect& objectCollisionbox = object.getCollisionbox()->getActiveCollisionboxWorldSpace();
     sf::FloatRect tileBoundingBox = tile->getBoundingBox();
 
     glm::vec2 tileSlope = getSlopeForTileType(tile->getType());
     glm::vec2 tileIntercepts = getInterceptsForTileType(tile->getType());
     glm::vec2 tilePosition(tileBoundingBox.left, tileBoundingBox.top);
 
-    glm::vec2 objPosition(objectHitbox.left, objectHitbox.top);
-    glm::vec2 objSize(objectHitbox.width, objectHitbox.height);
+    glm::vec2 objPosition(objectCollisionbox.left, objectCollisionbox.top);
+    glm::vec2 objSize(objectCollisionbox.width, objectCollisionbox.height);
 
     //for slope position calculations, use the center of the bottom of the object
     //also make it so tile position is at 0,0
@@ -204,12 +204,12 @@ bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, HitboxMovementController
     if(snapToBottom) {
 
         //calculate offset needed to move object so that it will be standing at bottom of slope
-        float objectBottom = objectHitbox.top + objectHitbox.height;
+        float objectBottom = objectCollisionbox.top + objectCollisionbox.height;
         float tileBottom = tileBoundingBox.top + tileIntercepts.y;// bottom of tile is the y-intercept because its the point on the slope with the largest y value that can be reached with the slope
 
         float yOffset = tileBottom - objectBottom;
 
-        object.getHitbox()->move(glm::vec2(0, yOffset));
+        object.getCollisionbox()->move(glm::vec2(0, yOffset));
         return true;
     }
 
@@ -227,24 +227,24 @@ bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, HitboxMovementController
     //calculate offset requried
     float yPositionTileSpace = (tileSlope.y / tileSlope.x) * objPosInTile.x + tileIntercepts.y;
     float yPositionWorldSpace = yPositionTileSpace + tileBoundingBox.top;
-    float yOffset = yPositionWorldSpace - (objectHitbox.top + objectHitbox.height);
+    float yOffset = yPositionWorldSpace - (objectCollisionbox.top + objectCollisionbox.height);
 
-    object.getHitbox()->move(glm::vec2(0, yOffset));
+    object.getCollisionbox()->move(glm::vec2(0, yOffset));
     object.setVelocities(object.getVelocities().x, 0);
     return true;
 }
 
-bool handleSolidTileCollisionVertical(shared_ptr<Tile>& tile, HitboxMovementController& object) {
+bool handleSolidTileCollisionVertical(shared_ptr<Tile>& tile, CollisionboxMovementController& object) {
 
-    if(!object.getHitbox()) {
+    if(!object.getCollisionbox()) {
 
         return false;
     }
 
-    sf::FloatRect objectHitbox = object.getHitbox()->getActiveHitboxWorldSpace();
+    sf::FloatRect objectCollisionbox = object.getCollisionbox()->getActiveCollisionboxWorldSpace();
     sf::FloatRect tileBoundingBox = tile->getBoundingBox();
 
-    if(!tileBoundingBox.intersects(objectHitbox)) {
+    if(!tileBoundingBox.intersects(objectCollisionbox)) {
 
         return false;
     }
@@ -252,7 +252,7 @@ bool handleSolidTileCollisionVertical(shared_ptr<Tile>& tile, HitboxMovementCont
     float tileTop = tileBoundingBox.top;
     float tileBottom = tileBoundingBox.top + tileBoundingBox.height;
 
-    float previousPosition = objectHitbox.top + objectHitbox.height - object.getVelocities().y * METERS_TO_PIXEL_RATIO * object.getLastDelta();
+    float previousPosition = objectCollisionbox.top + objectCollisionbox.height - object.getVelocities().y * METERS_TO_PIXEL_RATIO * object.getLastDelta();
 
     //one way tiles only collide if object jumps on top of the tile
     //round the position because floating point math might cause inaccuracies
@@ -264,16 +264,16 @@ bool handleSolidTileCollisionVertical(shared_ptr<Tile>& tile, HitboxMovementCont
 
     object.setVelocities(object.getVelocities().x, 0);
 
-    if(objectHitbox.top + objectHitbox.height < tileTop + fallThroughTopThreshold) {
+    if(objectCollisionbox.top + objectCollisionbox.height < tileTop + fallThroughTopThreshold) {
 
-        float offset = tileTop - (objectHitbox.top + objectHitbox.height);
-        object.getHitbox()->move(glm::vec2(0, offset));
+        float offset = tileTop - (objectCollisionbox.top + objectCollisionbox.height);
+        object.getCollisionbox()->move(glm::vec2(0, offset));
         return true;
 
     } else if(tile->getType() != TileType::ONE_WAY) {
 
-        float offset = tileBottom - objectHitbox.top;
-        object.getHitbox()->move(glm::vec2(0, offset));
+        float offset = tileBottom - objectCollisionbox.top;
+        object.getCollisionbox()->move(glm::vec2(0, offset));
     }
 
     return false;

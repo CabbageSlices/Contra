@@ -19,7 +19,7 @@ OmniDirectionalTurret::OmniDirectionalTurret(const glm::vec2 &position, const in
     STATE_COMING_OUT_OF_HIDING(0),
     STATE_GOING_INTO_HIDING(0)
     {
-        hitbox.setOrigin(position);
+        Collisionbox.setOrigin(position);
 
         //this type of turret enemy's fire delay is determined by the object itself, and not its gun
         gun = make_shared<Gun>();
@@ -33,7 +33,7 @@ void OmniDirectionalTurret::updatePhysics(const float& deltaTime, const sf::Floa
 
     unsigned frame = sprite.getFrame();
 
-    hitbox.setActiveHitbox(frame, currentState);
+    Collisionbox.setActiveCollisionbox(frame, currentState);
 
     if(checkCanShoot()) {
 
@@ -75,9 +75,9 @@ void OmniDirectionalTurret::updateRendering() {
         setState(STATE_GOING_INTO_HIDING);
     }
 
-    hitbox.setActiveHitbox(sprite.getFrame(), currentState);
+    Collisionbox.setActiveCollisionbox(sprite.getFrame(), currentState);
 
-    glm::vec2 position = hitbox.getOrigin();
+    glm::vec2 position = Collisionbox.getOrigin();
     sprite.getSprite().setPosition(position.x, position.y);
 }
 
@@ -132,12 +132,12 @@ void OmniDirectionalTurret::shoot() {
     //shoot in 8 directions
     glm::vec2 bulletOrigin(140, 61);
 
-    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::LEFT], leftVector);
-    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::UP_LEFT], upLeftVector);
-    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::UP], upVector);
-    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::UP_RIGHT], upRightVector);
-    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::RIGHT], rightVector);
-    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::DOWN_RIGHT], downRightVector);
-    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::DOWN], downVector);
-    gun->fire(hitbox.getOrigin(), bulletOriginForState[CombinedAxis::DOWN_LEFT], downLeftVector);
+    gun->fire(Collisionbox.getOrigin(), bulletOriginForState[CombinedAxis::LEFT], leftVector);
+    gun->fire(Collisionbox.getOrigin(), bulletOriginForState[CombinedAxis::UP_LEFT], upLeftVector);
+    gun->fire(Collisionbox.getOrigin(), bulletOriginForState[CombinedAxis::UP], upVector);
+    gun->fire(Collisionbox.getOrigin(), bulletOriginForState[CombinedAxis::UP_RIGHT], upRightVector);
+    gun->fire(Collisionbox.getOrigin(), bulletOriginForState[CombinedAxis::RIGHT], rightVector);
+    gun->fire(Collisionbox.getOrigin(), bulletOriginForState[CombinedAxis::DOWN_RIGHT], downRightVector);
+    gun->fire(Collisionbox.getOrigin(), bulletOriginForState[CombinedAxis::DOWN], downVector);
+    gun->fire(Collisionbox.getOrigin(), bulletOriginForState[CombinedAxis::DOWN_LEFT], downLeftVector);
 }

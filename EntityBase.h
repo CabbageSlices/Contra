@@ -7,10 +7,10 @@
 #include "TileMap.h"
 #include "Tile.h"
 #include "TileCollisionHandling.h"
-#include "ObjectHitbox.h"
+#include "ObjectCollisionbox.h"
 #include "CollisionResponse.h"
 #include "AnimatedSprite.h"
-#include "HitboxMovementController.h"
+#include "CollisionboxMovementController.h"
 
 #include "glm/glm.hpp"
 #include <memory>
@@ -35,8 +35,8 @@ class EntityBase {
         virtual void getHit(int damage = 1);
         void scale(const float &xFactor, const float& yFactor) {
 
-            //scale all hitboxes and sprite
-            hitbox.scale(xFactor, yFactor);
+            //scale all Collisionboxes and sprite
+            Collisionbox.scale(xFactor, yFactor);
             sprite.getSprite().scale(xFactor, yFactor);
 
             this->scaleComponents(xFactor, yFactor);
@@ -48,8 +48,8 @@ class EntityBase {
             //empty
         }
 
-        ObjectHitbox& getHitbox();
-        HitboxMovementController& getMovementController();
+        ObjectCollisionbox& getCollisionbox();
+        CollisionboxMovementController& getMovementController();
         const glm::vec2 getPosition() const;
 
         void setHealth(const int &newVal);
@@ -62,7 +62,7 @@ class EntityBase {
         std::vector<std::shared_ptr<Tile> > getSurroundingTiles(const TileMap &map, const glm::vec2 &areaPadding);
 
         //leave this virtual since different objects have different collision handling
-        virtual CollisionResponse handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
+        virtual CollisionResponse handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, CollisionboxMovementController& object));
         CollisionResponse handleTileCollisionHorizontally(TileMap& map);
         CollisionResponse handleTileCollisionVertically(TileMap& map);
 
@@ -77,8 +77,8 @@ class EntityBase {
         void setState(const unsigned &state);
         void setPosition(const glm::vec2 &position);
 
-        ObjectHitbox hitbox;
-        HitboxMovementController hitboxMovementController;
+        ObjectCollisionbox Collisionbox;
+        CollisionboxMovementController collisionboxMovementController;
         glm::vec2 MOVEMENT_VELOCITY; //measured in meters per second
         unsigned health;
 
@@ -91,7 +91,7 @@ class EntityBase {
 template<class Data>
 void EntityBase::loadBase(const Data &data) {
 
-    hitbox.clearHitboxes();
+    Collisionbox.clearCollisionboxes();
     sprite.clearAnimation();
 
     health = data.health;
@@ -108,13 +108,13 @@ void EntityBase::loadBase(const Data &data) {
         }
     }
 
-    for(auto it = data.hitboxes.begin(); it != data.hitboxes.end(); ++it) {
+    for(auto it = data.Collisionboxes.begin(); it != data.Collisionboxes.end(); ++it) {
 
         for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
 
             sf::FloatRect bounds(vt->left, vt->top, vt->width, vt->height);
 
-            hitbox.insertHitbox(bounds, it->first);
+            Collisionbox.insertCollisionbox(bounds, it->first);
         }
     }
 }

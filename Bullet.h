@@ -1,12 +1,12 @@
 #ifndef BULLET_H_INCLUDED
 #define BULLET_H_INCLUDED
 
-#include "HitboxMovementController.h"
+#include "CollisionboxMovementController.h"
 #include "SFML/Graphics.hpp"
 #include "SFML/System.hpp"
 #include "glm/glm.hpp"
 #include "TileMap.h"
-#include "ObjectHitbox.h"
+#include "ObjectCollisionbox.h"
 #include "EntityBase.h"
 #include "AnimatedSprite.h"
 #include "PreloadedData.h"
@@ -34,7 +34,7 @@ class Bullet : public EntityBase {
     private:
 
         void handleTileCollision(TileMap& map);
-        virtual CollisionResponse handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object))  {
+        virtual CollisionResponse handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, CollisionboxMovementController& object))  {
 
             //empty since bullets don't need to handle collision
             return CollisionResponse();

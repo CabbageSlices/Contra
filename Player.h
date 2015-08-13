@@ -75,7 +75,7 @@ class Player : public ShootingEntity{
         glm::vec2 calculateGunfireOrigin();
 
         //vertical and horizontal tile collisions differ only in terms of the collision handling function they call
-        virtual CollisionResponse handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
+        virtual CollisionResponse handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, CollisionboxMovementController& object));
 
         void determineDirection();
         void jump();

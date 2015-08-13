@@ -75,7 +75,7 @@ template<class T> SpatialHash<T>::SpatialHash(const unsigned &hashCellWidth, con
 template<class T> void SpatialHash<T>::insert(std::shared_ptr<T> &entry) {
 
     //get current bounding box to determine which cells the entry occupies
-    sf::FloatRect boundingBox = entry->getHitbox().getActiveHitboxWorldSpace();
+    sf::FloatRect boundingBox = entry->getCollisionbox().getActiveCollisionboxWorldSpace();
 
     sf::IntRect gridBounds = calculateEnclosedGrid(boundingBox);
 
@@ -84,8 +84,8 @@ template<class T> void SpatialHash<T>::insert(std::shared_ptr<T> &entry) {
 
 template<class T> void SpatialHash<T>::remove(std::shared_ptr<T> &entry) {
 
-    //don't use the latest hitbox since objects position in the hash is determined by his previous hitbox, not current one
-    sf::FloatRect boundingBox = entry->getHitbox().getActiveHitboxWorldSpace();
+    //don't use the latest Collisionbox since objects position in the hash is determined by his previous Collisionbox, not current one
+    sf::FloatRect boundingBox = entry->getCollisionbox().getActiveCollisionboxWorldSpace();
 
     //find what grids object occupied and remove it from those places
     sf::IntRect gridBounds = calculateEnclosedGrid(boundingBox);
