@@ -25,7 +25,7 @@ class OmniDirectionalTurret : public ShootingEntity {
 
     private:
 
-        virtual CollisionResponse handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
+        virtual CollisionResponse handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, CollisionboxMovementController& object)) {
 
             //empty for now because this turret doesn't move so it doesn't collide with anything
             return CollisionResponse();

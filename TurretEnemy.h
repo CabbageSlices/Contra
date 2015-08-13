@@ -12,7 +12,7 @@
 //turret enemy is an enemy that shoots at the player and doesn't move
 //some turrets can also hide themselves, like pihrana plant from mario
 //turret enemies don't move at all
-//the reason they have a hitbox movement controller is because this will derive off the enemies class later
+//the reason they have a collisionbox movement controller is because this will derive off the enemies class later
 //and the enemy class requires one
 class TurretEnemy : public ShootingEntity {
 
@@ -24,7 +24,7 @@ class TurretEnemy : public ShootingEntity {
 
         }
 
-        void createHitboxes(const std::vector<sf::FloatRect> &hitboxes);
+        void createCollisionboxes(const std::vector<sf::FloatRect> &collisionboxes);
 
         void updatePhysics(const float& deltaTime, const sf::FloatRect& worldBounds, TileMap& map, const std::vector<glm::vec2> &targetPositions);
         void updateRendering();
@@ -48,7 +48,7 @@ class TurretEnemy : public ShootingEntity {
         virtual glm::vec2 calculateGunfireOrigin(const glm::vec2 &targetPosition);
         void determineDirection(const glm::vec2 &targetPosition);
 
-        virtual CollisionResponse handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
+        virtual CollisionResponse handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, CollisionboxMovementController& object)) {
 
             //empty for now because this turret doesn't move so it doesn't collide with anything
             return CollisionResponse();

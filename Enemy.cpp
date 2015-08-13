@@ -30,18 +30,18 @@ Enemy::Enemy(const glm::vec2 &positionWorldSpace, const Direction &initialDirect
 
 void Enemy::updatePhysics(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {
 
-    hitboxMovementController.updateVelocities(deltaTime);
+    collisionboxMovementController.updateVelocities(deltaTime);
 
-    if(hitboxMovementController.moveAlongXAxis(deltaTime, worldBounds)) {
+    if(collisionboxMovementController.moveAlongXAxis(deltaTime, worldBounds)) {
 
         changeDirectionHorizontally();
     }
 
     handleTileCollisionHorizontally(map);
 
-    if(hitboxMovementController.moveAlongYAxis(deltaTime, worldBounds)) {
+    if(collisionboxMovementController.moveAlongYAxis(deltaTime, worldBounds)) {
 
-        hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, 0);
+        collisionboxMovementController.setVelocities(collisionboxMovementController.getVelocities().x, 0);
     }
 
     handleTileCollisionVertically(map);
@@ -54,12 +54,12 @@ void Enemy::updateRendering() {
     determineAnimationState();
     sprite.animate();
 
-    sprite.getSprite().setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
+    sprite.getSprite().setPosition(collisionbox.getOrigin().x, collisionbox.getOrigin().y);
 }
 
 void Enemy::setInitialVelocity(const glm::vec2 &velocity) {
 
-    hitboxMovementController.setVelocities(velocity);
+    collisionboxMovementController.setVelocities(velocity);
 }
 
 void Enemy::respondToCollision(const CollisionResponse &response) {
@@ -70,7 +70,7 @@ void Enemy::respondToCollision(const CollisionResponse &response) {
     }
 }
 
-CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
+CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, CollisionboxMovementController& object)) {
 
     vector<shared_ptr<Tile> > tiles = getSurroundingTiles(map, glm::vec2(TILE_SIZE, TILE_SIZE));
 
@@ -78,12 +78,12 @@ CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*co
 
     for(unsigned i = 0; i < tiles.size(); ++i) {
 
-        CollisionResponse currentResponse = collisionFunction(tiles[i], hitboxMovementController);
+        CollisionResponse currentResponse = collisionFunction(tiles[i], collisionboxMovementController);
 
         if(currentResponse.handledHorizontal) {
 
             response.handledHorizontal = true;
-            hitboxMovementController.setVelocities(-hitboxMovementController.getVelocities().x, hitboxMovementController.getVelocities().y);
+            collisionboxMovementController.setVelocities(-collisionboxMovementController.getVelocities().x, collisionboxMovementController.getVelocities().y);
         }
 
         response.pushedToTop = currentResponse.pushedToTop || response.pushedToTop;
@@ -95,7 +95,7 @@ CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*co
 void Enemy::draw(sf::RenderWindow &window) {
 
     sprite.draw(window);
-    sf::FloatRect box = hitbox.getActiveHitboxWorldSpace();
+    sf::FloatRect box = collisionbox.getActiveCollisionboxWorldSpace();
     entity.setPosition(box.left, box.top);
     entity.setSize(sf::Vector2f(box.width, box.height));
 }
@@ -116,20 +116,20 @@ void Enemy::load(PreloadedEnemyData &data) {
 void Enemy::changeDirectionHorizontally() {
 
     //change directions
-    glm::vec2 currentVelocity = hitboxMovementController.getVelocities();
+    glm::vec2 currentVelocity = collisionboxMovementController.getVelocities();
     currentVelocity.x *= -1;
-    hitboxMovementController.setVelocities(currentVelocity);
+    collisionboxMovementController.setVelocities(currentVelocity);
 
     determineHorizontalDirection();
 }
 
 void Enemy::determineHorizontalDirection() {
 
-    if(hitboxMovementController.getVelocities().x < 0) {
+    if(collisionboxMovementController.getVelocities().x < 0) {
 
         direction.horizontal = HorizontalDirection::LEFT;
 
-    } else if(hitboxMovementController.getVelocities().x > 0) {
+    } else if(collisionboxMovementController.getVelocities().x > 0) {
 
         direction.horizontal = HorizontalDirection::RIGHT;
     }
@@ -137,7 +137,7 @@ void Enemy::determineHorizontalDirection() {
 
 void Enemy::determineAnimationState() {
 
-    glm::vec2 velocities = hitboxMovementController.getVelocities();
+    glm::vec2 velocities = collisionboxMovementController.getVelocities();
     determineHorizontalDirection();
 
     if(direction.horizontal == HorizontalDirection::LEFT) {

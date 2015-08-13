@@ -45,12 +45,12 @@ void PowerUp::updatePhysics(const float &deltaTime, const sf::FloatRect &worldBo
         return;
     }
 
-    hitboxMovementController.updateVelocities(deltaTime);
+    collisionboxMovementController.updateVelocities(deltaTime);
 
-    hitboxMovementController.moveAlongXAxis(deltaTime, worldBounds);
+    collisionboxMovementController.moveAlongXAxis(deltaTime, worldBounds);
     handleTileCollisionHorizontally(map);
 
-    hitboxMovementController.moveAlongYAxis(deltaTime, worldBounds);
+    collisionboxMovementController.moveAlongYAxis(deltaTime, worldBounds);
     handleTileCollisionVertically(map);
 }
 
@@ -76,7 +76,7 @@ void PowerUp::updateRendering() {
         setFrameForPowerUpType();
     }
 
-    sprite.getSprite().setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
+    sprite.getSprite().setPosition(collisionbox.getOrigin().x, collisionbox.getOrigin().y);
 }
 
 void PowerUp::draw(sf::RenderWindow &window) {
@@ -118,6 +118,6 @@ void PowerUp::setFrameForPowerUpType() {
     if(powerUpType == PowerUpType::MACHINE_GUN) {
 
         sprite.setFrame(FRAME_MACHINEGUN);
-        hitbox.setActiveHitbox(FRAME_MACHINEGUN, STATE_SPAWNED);
+        collisionbox.setActiveCollisionbox(FRAME_MACHINEGUN, STATE_SPAWNED);
     }
 }

@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include "ObjectHitbox.h"
+#include "ObjectCollisionbox.h"
 #include "Direction.h"
 #include <vector>
 #include <memory>
