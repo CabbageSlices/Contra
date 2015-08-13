@@ -536,8 +536,8 @@ template<class DynamicObject>
 void collideEntityDynamicObjectHash(shared_ptr<EntityBase> entity, SpatialHash<DynamicObject> &hash,
                                  function<void(shared_ptr<DynamicObject>, shared_ptr<EntityBase>)> collisionFunction) {
 
-	sf::FloatRect collisionbox = entity->getCollisionbox().getActiveCollisionboxWorldSpace();
-	auto blocks = hash.getSurroundingEntites(collisionbox);
+	sf::FloatRect hitbox = entity->getHitbox().getActiveHitboxWorldSpace();
+	auto blocks = hash.getSurroundingEntites(hitbox);
 
 	collideEntityDynamicObjects(entity, blocks, collisionFunction);
 }
@@ -553,8 +553,8 @@ void collideShootingEntityDynamicObjectHash(shared_ptr<ShootingEntity> shooter, 
 
 	for(auto &it : bullets) {
 
-		sf::FloatRect bulletCollisionbox = it->getCollisionbox().getActiveCollisionboxWorldSpace();
-		auto collidingWithBullet = hash.getSurroundingEntites(bulletCollisionbox);
+		sf::FloatRect bulletHitbox = it->getHitbox().getActiveHitboxWorldSpace();
+		auto collidingWithBullet = hash.getSurroundingEntites(bulletHitbox);
 
 		collideBulletDynamicObjects(it, collidingWithBullet, bulletDynamicObjectCollision);
 	}
