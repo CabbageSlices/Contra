@@ -110,7 +110,7 @@ struct GameWorld {
         //if any player isn't isn't in the boss world bounds then don't transition
         for(auto &player : players) {
 
-            sf::FloatRect playerBounds = player->getHitbox().getActiveHitboxWorldSpace();
+            sf::FloatRect playerBounds = player->getHurtbox().getActiveHitboxWorldSpace();
 
             if(!(playerBounds.left >= worldBoundsBossFight.left && playerBounds.left + playerBounds.width <= worldBoundsBossFight.left + worldBoundsBossFight.width &&
                playerBounds.top >= worldBoundsBossFight.top && playerBounds.top + playerBounds.height <= worldBoundsBossFight.top + worldBoundsBossFight.height)) {

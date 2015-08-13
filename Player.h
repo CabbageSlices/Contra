@@ -120,6 +120,8 @@ class Player : public ShootingEntity{
 
         unsigned STATE_DEAD;
 
+        unsigned jumpingHitboxState;
+
         enum LifeState {
 
             ALIVE, //while player is dying or dead he can't move or jump

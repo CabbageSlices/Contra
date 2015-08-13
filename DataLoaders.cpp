@@ -100,55 +100,55 @@ bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFileName) 
     for(unsigned i = 0; i < 3; ++i) {
 
         data.animationTextureRects[data.STATE_WALKING_RIGHT].push_back(sf::IntRect(0, 128 * i, 128, 128));
-        data.hitboxes[data.STATE_WALKING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+        data.hurtboxes[data.STATE_WALKING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
     }
 
     for(unsigned i = 0; i < 3; ++i) {
 
         data.animationTextureRects[data.STATE_WALKING_DOWN_RIGHT].push_back(sf::IntRect(128, 128 * i, 128, 128));
-        data.hitboxes[data.STATE_WALKING_DOWN_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+        data.hurtboxes[data.STATE_WALKING_DOWN_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
     }
 
     for(unsigned i = 0; i < 3; ++i) {
 
         data.animationTextureRects[data.STATE_WALKING_UP_RIGHT].push_back(sf::IntRect(256, 128 * i, 128, 128));
-        data.hitboxes[data.STATE_WALKING_UP_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+        data.hurtboxes[data.STATE_WALKING_UP_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
     }
 
     for(unsigned i = 0; i < 3; ++i) {
 
         data.animationTextureRects[data.STATE_WALKING_UP_LEFT].push_back(sf::IntRect(640, 128 * i, 128, 128));
-        data.hitboxes[data.STATE_WALKING_UP_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+        data.hurtboxes[data.STATE_WALKING_UP_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
     }
 
     for(unsigned i = 0; i < 3; ++i) {
 
         data.animationTextureRects[data.STATE_WALKING_DOWN_LEFT].push_back(sf::IntRect(768, 128 * i, 128, 128));
-        data.hitboxes[data.STATE_WALKING_DOWN_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+        data.hurtboxes[data.STATE_WALKING_DOWN_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
     }
 
     for(unsigned i = 0; i < 3; ++i) {
 
         data.animationTextureRects[data.STATE_WALKING_LEFT].push_back(sf::IntRect(896, 128 * i, 128, 128));
-        data.hitboxes[data.STATE_WALKING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+        data.hurtboxes[data.STATE_WALKING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
     }
 
     for(unsigned i = 0; i < 3; ++i) {
 
         data.animationTextureRects[data.STATE_JUMPING].push_back(sf::IntRect(384, 512 + 128 * i, 128, 128));
-        data.hitboxes[data.STATE_JUMPING].push_back(sf::FloatRect(33, 31, 55, 97));
+        data.hurtboxes[data.STATE_JUMPING].push_back(sf::FloatRect(40, 79, 55, 55));
     }
 
     for(unsigned i = 0; i < 3; ++i) {
 
         data.animationTextureRects[data.STATE_DYING_FACING_LEFT].push_back(sf::IntRect(512 + 128 * i, 640, 128, 128));
-        data.hitboxes[data.STATE_DYING_FACING_LEFT].push_back(sf::FloatRect(2, 2, 2, 2));
+        data.hurtboxes[data.STATE_DYING_FACING_LEFT].push_back(sf::FloatRect(2, 2, 2, 2));
     }
 
     for(unsigned i = 0; i < 3; ++i) {
 
         data.animationTextureRects[data.STATE_DYING_FACING_RIGHT].push_back(sf::IntRect(128 * i, 640, 128, 128));
-        data.hitboxes[data.STATE_DYING_FACING_RIGHT].push_back(sf::FloatRect(2, 2, 2, 2));
+        data.hurtboxes[data.STATE_DYING_FACING_RIGHT].push_back(sf::FloatRect(2, 2, 2, 2));
     }
 
     data.animationTextureRects[data.STATE_STANDING_RIGHT].push_back(sf::IntRect(0, 0, 128, 128));
@@ -174,26 +174,30 @@ bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFileName) 
 
 
 
-    data.hitboxes[data.STATE_STANDING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
-    data.hitboxes[data.STATE_STANDING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
-    data.hitboxes[data.STATE_STANDING_UP_FACING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
-    data.hitboxes[data.STATE_STANDING_UP_FACING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+    data.hurtboxes[data.STATE_STANDING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+    data.hurtboxes[data.STATE_STANDING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+    data.hurtboxes[data.STATE_STANDING_UP_FACING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+    data.hurtboxes[data.STATE_STANDING_UP_FACING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
 
-    data.hitboxes[data.STATE_CROUCHING_RIGHT].push_back(sf::FloatRect(10, 79, 118, 49));
-    data.hitboxes[data.STATE_CROUCHING_LEFT].push_back(sf::FloatRect(0, 81, 128, 47));
+    data.hurtboxes[data.STATE_CROUCHING_RIGHT].push_back(sf::FloatRect(10, 79, 118, 49));
+    data.hurtboxes[data.STATE_CROUCHING_LEFT].push_back(sf::FloatRect(0, 81, 128, 47));
 
-    data.hitboxes[data.STATE_FALLING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hitboxes[data.STATE_FALLING_DOWN_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hitboxes[data.STATE_FALLING_UP_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hitboxes[data.STATE_FALLING_UP_FACING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hitboxes[data.STATE_FALLING_UP_FACING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hitboxes[data.STATE_FALLING_UP_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hitboxes[data.STATE_FALLING_DOWN_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hitboxes[data.STATE_FALLING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hitboxes[data.STATE_FALLING_DOWN_FACING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hitboxes[data.STATE_FALLING_DOWN_FACING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hurtboxes[data.STATE_FALLING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hurtboxes[data.STATE_FALLING_DOWN_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hurtboxes[data.STATE_FALLING_UP_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hurtboxes[data.STATE_FALLING_UP_FACING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hurtboxes[data.STATE_FALLING_UP_FACING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hurtboxes[data.STATE_FALLING_UP_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hurtboxes[data.STATE_FALLING_DOWN_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hurtboxes[data.STATE_FALLING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hurtboxes[data.STATE_FALLING_DOWN_FACING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+    data.hurtboxes[data.STATE_FALLING_DOWN_FACING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
 
-    data.hitboxes[data.STATE_DEAD].push_back(sf::FloatRect(1, 1, 1, 1));
+    data.hurtboxes[data.STATE_DEAD].push_back(sf::FloatRect(1, 1, 1, 1));
+
+    ///aside from the default hitbox, if an object
+    data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(47, 13, 47, 115));
+    data.hitboxes[data.jumpingHitboxState].push_back(sf::FloatRect(40, 13 + 115 - 49, 49, 49));
 
     return true;
 }
@@ -257,21 +261,21 @@ bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName) 
 
     //create hitboxes for each state and frame of animation
     ///hitbox positions are relative to origin of the data
-    data.hitboxes[data.STATE_HIDING].push_back(sf::FloatRect(1, 1, 1, 1));
+    data.hurtboxes[data.STATE_HIDING].push_back(sf::FloatRect(1, 1, 1, 1));
 
-    data.hitboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(0, 88, 28, 12));
-    data.hitboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(0, 75, 38, 25));
-    data.hitboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(0, 58, 35, 44));
-    data.hitboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(0, 35, 31, 62));
-    data.hitboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(0, 15, 32, 87));
+    data.hurtboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(0, 88, 28, 12));
+    data.hurtboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(0, 75, 38, 25));
+    data.hurtboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(0, 58, 35, 44));
+    data.hurtboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(0, 35, 31, 62));
+    data.hurtboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(0, 15, 32, 87));
 
-    data.hitboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(0, 15, 32, 87));
-    data.hitboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(0, 35, 31, 62));
-    data.hitboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(0, 58, 35, 44));
-    data.hitboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(0, 75, 38, 25));
-    data.hitboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(0, 88, 28, 12));
+    data.hurtboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(0, 15, 32, 87));
+    data.hurtboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(0, 35, 31, 62));
+    data.hurtboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(0, 58, 35, 44));
+    data.hurtboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(0, 75, 38, 25));
+    data.hurtboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(0, 88, 28, 12));
 
-    data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(0, 2, 46, 100));
+    data.hurtboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(0, 2, 46, 100));
 
     data.bulletOriginForState[CombinedAxis::UP_LEFT] = glm::vec2(140, 51);
     data.bulletOriginForState[CombinedAxis::UP] = glm::vec2(140, 51);
@@ -281,6 +285,9 @@ bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName) 
     data.bulletOriginForState[CombinedAxis::DOWN] = glm::vec2(140, 51);
     data.bulletOriginForState[CombinedAxis::DOWN_LEFT] = glm::vec2(140, 51);
     data.bulletOriginForState[CombinedAxis::LEFT] = glm::vec2(140, 51);
+
+    //these objects don't collide with environment
+    data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(1, 1, 1, 1));
 
     return true;
 }
@@ -313,10 +320,12 @@ bool loadEnemyData(PreloadedEnemyData &data, const std::string &dataFileName) {
     data.animationTextureRects[data.STATE_FALLING_LEFT].push_back(sf::IntRect(0, textureRectHeight * 2, textureRectWidth, textureRectHeight));
     data.animationTextureRects[data.STATE_FALLING_RIGHT].push_back(sf::IntRect(textureRectWidth, textureRectHeight * 2, textureRectWidth, textureRectHeight));
 
-    data.hitboxes[data.STATE_WALKING_LEFT].push_back(sf::FloatRect(24, 50, 82, 78));
-    data.hitboxes[data.STATE_WALKING_RIGHT].push_back(sf::FloatRect(24, 50, 82, 78));
-    data.hitboxes[data.STATE_FALLING_LEFT].push_back(sf::FloatRect(24, 59, 74, 69));
-    data.hitboxes[data.STATE_FALLING_RIGHT].push_back(sf::FloatRect(32, 59, 74, 69));
+    data.hurtboxes[data.STATE_WALKING_LEFT].push_back(sf::FloatRect(24, 50, 82, 78));
+    data.hurtboxes[data.STATE_WALKING_RIGHT].push_back(sf::FloatRect(24, 50, 82, 78));
+    data.hurtboxes[data.STATE_FALLING_LEFT].push_back(sf::FloatRect(24, 59, 74, 69));
+    data.hurtboxes[data.STATE_FALLING_RIGHT].push_back(sf::FloatRect(32, 59, 74, 69));
+
+    data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(24, 50, 82, 78));
 
     return true;
 }
@@ -366,25 +375,25 @@ bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, con
     data.animationTextureRects[data.STATE_EXPOSED].push_back(sf::IntRect(769, 0, 256, 256));
 
 
-    data.hitboxes[data.STATE_HIDING].push_back(sf::FloatRect(1, 1, 1, 1));
-    data.hitboxes[data.STATE_EXPOSED].push_back(sf::FloatRect(52, 10, 175, 245));
+    data.hurtboxes[data.STATE_HIDING].push_back(sf::FloatRect(1, 1, 1, 1));
+    data.hurtboxes[data.STATE_EXPOSED].push_back(sf::FloatRect(52, 10, 175, 245));
 
-    data.hitboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(44, 217, 126, 38));
-    data.hitboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(68, 178, 130, 78));
-    data.hitboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(79, 105, 123, 151));
-    data.hitboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(60, 15, 160, 241));
+    data.hurtboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(44, 217, 126, 38));
+    data.hurtboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(68, 178, 130, 78));
+    data.hurtboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(79, 105, 123, 151));
+    data.hurtboxes[data.STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(60, 15, 160, 241));
 
-    data.hitboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(60, 15, 160, 241));
-    data.hitboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(79, 105, 123, 151));
-    data.hitboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(68, 178, 130, 78));
-    data.hitboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(44, 217, 126, 38));
+    data.hurtboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(60, 15, 160, 241));
+    data.hurtboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(79, 105, 123, 151));
+    data.hurtboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(68, 178, 130, 78));
+    data.hurtboxes[data.STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(44, 217, 126, 38));
 
-    data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(27, 47, 154, 209));
-    data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(47, 293 - 256, 143, 219));
-    data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(38, 312 - 256, 153, 200));
-    data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
-    data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
-    data.hitboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
+    data.hurtboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(27, 47, 154, 209));
+    data.hurtboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(47, 293 - 256, 143, 219));
+    data.hurtboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(38, 312 - 256, 153, 200));
+    data.hurtboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
+    data.hurtboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
+    data.hurtboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
 
     data.bulletOriginForState[CombinedAxis::UP_LEFT] = glm::vec2(140, 51);
     data.bulletOriginForState[CombinedAxis::UP] = glm::vec2(140, 51);
@@ -394,6 +403,9 @@ bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, con
     data.bulletOriginForState[CombinedAxis::DOWN] = glm::vec2(140, 51);
     data.bulletOriginForState[CombinedAxis::DOWN_LEFT] = glm::vec2(140, 51);
     data.bulletOriginForState[CombinedAxis::LEFT] = glm::vec2(140, 51);
+
+    //these turrets don't collide with blocks
+    data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(1, 1, 1, 1));
 
     return true;
 }
@@ -432,14 +444,16 @@ bool loadBulletData(PreloadedBulletData &data, const std::string &dataFileName) 
     data.animationTextureRects[data.STATE_DOWN].push_back(sf::IntRect(0, 0, 21, 21));
     data.animationTextureRects[data.STATE_DOWN_RIGHT].push_back(sf::IntRect(0, 0, 21, 21));
 
-    data.hitboxes[data.STATE_RIGHT].push_back(sf::FloatRect(0, 0, 21, 21));
-    data.hitboxes[data.STATE_UP_RIGHT].push_back(sf::FloatRect(0, 0, 21, 21));
-    data.hitboxes[data.STATE_UP].push_back(sf::FloatRect(0, 0, 21, 21));
-    data.hitboxes[data.STATE_UP_LEFT].push_back(sf::FloatRect(0, 0, 21, 21));
-    data.hitboxes[data.STATE_LEFT].push_back(sf::FloatRect(0, 0, 21, 21));
-    data.hitboxes[data.STATE_DOWN_LEFT].push_back(sf::FloatRect(0, 0, 21, 21));
-    data.hitboxes[data.STATE_DOWN].push_back(sf::FloatRect(0, 0, 21, 21));
-    data.hitboxes[data.STATE_DOWN_RIGHT].push_back(sf::FloatRect(0, 0, 21, 21));
+    data.hurtboxes[data.STATE_RIGHT].push_back(sf::FloatRect(0, 0, 21, 21));
+    data.hurtboxes[data.STATE_UP_RIGHT].push_back(sf::FloatRect(0, 0, 21, 21));
+    data.hurtboxes[data.STATE_UP].push_back(sf::FloatRect(0, 0, 21, 21));
+    data.hurtboxes[data.STATE_UP_LEFT].push_back(sf::FloatRect(0, 0, 21, 21));
+    data.hurtboxes[data.STATE_LEFT].push_back(sf::FloatRect(0, 0, 21, 21));
+    data.hurtboxes[data.STATE_DOWN_LEFT].push_back(sf::FloatRect(0, 0, 21, 21));
+    data.hurtboxes[data.STATE_DOWN].push_back(sf::FloatRect(0, 0, 21, 21));
+    data.hurtboxes[data.STATE_DOWN_RIGHT].push_back(sf::FloatRect(0, 0, 21, 21));
+
+    data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(0, 0, 21, 21));
 
     return true;
 }
@@ -464,11 +478,13 @@ bool loadDestrutibleBlockData(PreloadedDestructibleBlockData &data, const std::s
     data.animationTextureRects[data.STATE_DESTROYING].push_back(sf::IntRect(64, 128, 64, 64));
     data.animationTextureRects[data.STATE_DESTROYING].push_back(sf::IntRect(128, 128, 64, 64));
 
-    data.hitboxes[data.STATE_SOLID].push_back(sf::FloatRect(0, 0, 64, 64));
-    data.hitboxes[data.STATE_DESTROYING].push_back(sf::FloatRect(1, 1, 1, 1));
-    data.hitboxes[data.STATE_DESTROYED].push_back(sf::FloatRect(1, 1, 1, 1));
+    data.hurtboxes[data.STATE_SOLID].push_back(sf::FloatRect(0, 0, 64, 64));
+    data.hurtboxes[data.STATE_DESTROYING].push_back(sf::FloatRect(1, 1, 1, 1));
+    data.hurtboxes[data.STATE_DESTROYED].push_back(sf::FloatRect(1, 1, 1, 1));
 
     data.health = 1;
+
+    data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(0, 0, 64, 64));
 
     return true;
 }
@@ -497,10 +513,12 @@ bool loadPowerUpData(PreloadedPowerUpData &data, const std::string &dataFileName
     data.animationTextureRects[data.STATE_SPAWNED].push_back(sf::IntRect(0, 128, 128, 128));
     data.animationTextureRects[data.STATE_DISAPPEARED].push_back(sf::IntRect(1, 1, 1, 1));
 
-    data.hitboxes[data.STATE_SPAWNING].push_back(sf::FloatRect(1, 1, 1, 1));
-    data.hitboxes[data.STATE_SPAWNED].push_back(sf::FloatRect(25, 17, 87, 87));//machinegun
-    data.hitboxes[data.STATE_DISAPPEARING].push_back(sf::FloatRect(1, 1, 1, 1));
-    data.hitboxes[data.STATE_DISAPPEARED].push_back(sf::FloatRect(1, 1, 1, 1));
+    data.hurtboxes[data.STATE_SPAWNING].push_back(sf::FloatRect(1, 1, 1, 1));
+    data.hurtboxes[data.STATE_SPAWNED].push_back(sf::FloatRect(25, 17, 87, 87));//machinegun
+    data.hurtboxes[data.STATE_DISAPPEARING].push_back(sf::FloatRect(1, 1, 1, 1));
+    data.hurtboxes[data.STATE_DISAPPEARED].push_back(sf::FloatRect(1, 1, 1, 1));
+
+    data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(25, 17, 87, 87));
 
     return true;
 }

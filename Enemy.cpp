@@ -47,6 +47,8 @@ void Enemy::updatePhysics(const float &deltaTime, const sf::FloatRect &worldBoun
     handleTileCollisionVertically(map);
 
     determineHorizontalDirection();
+
+    matchHitboxPosition();
 }
 
 void Enemy::updateRendering() {
@@ -54,7 +56,9 @@ void Enemy::updateRendering() {
     determineAnimationState();
     sprite.animate();
 
-    sprite.getSprite().setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
+    sprite.getSprite().setPosition(hurtbox.getOrigin().x, hurtbox.getOrigin().y);
+
+    matchHitboxPosition();
 }
 
 void Enemy::setInitialVelocity(const glm::vec2 &velocity) {
@@ -68,6 +72,8 @@ void Enemy::respondToCollision(const CollisionResponse &response) {
 
         changeDirectionHorizontally();
     }
+
+    matchHitboxPosition();
 }
 
 CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object)) {
@@ -95,7 +101,7 @@ CollisionResponse Enemy::handleTileCollision(TileMap &map, CollisionResponse(*co
 void Enemy::draw(sf::RenderWindow &window) {
 
     sprite.draw(window);
-    sf::FloatRect box = hitbox.getActiveHitboxWorldSpace();
+    sf::FloatRect box = hurtbox.getActiveHitboxWorldSpace();
     entity.setPosition(box.left, box.top);
     entity.setSize(sf::Vector2f(box.width, box.height));
 }
@@ -145,6 +151,7 @@ void Enemy::determineAnimationState() {
         if(velocities.y != 0) {
 
             setState(STATE_FALLING_LEFT);
+
         } else {
 
             setState(STATE_WALKING_LEFT);

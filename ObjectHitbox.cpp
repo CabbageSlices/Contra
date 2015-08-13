@@ -83,16 +83,16 @@ sf::FloatRect ObjectHitbox::getActiveHitboxWorldSpace() const {
 
 sf::FloatRect ObjectHitbox::getHitboxWorldSpace(const unsigned &id, const unsigned &state) const {
 
-    sf::FloatRect hitbox = getHitboxObjectSpace(id, state);
+    sf::FloatRect hurtbox = getHitboxObjectSpace(id, state);
 
     //check if hitbox is valid
-    if(hitbox.width != 0) {
+    if(hurtbox.width != 0) {
 
-        hitbox.left += origin.x;
-        hitbox.top += origin.y;
+        hurtbox.left += origin.x;
+        hurtbox.top += origin.y;
     }
 
-    return hitbox;
+    return hurtbox;
 }
 
 sf::FloatRect ObjectHitbox::getTotalHitboxWorldSpace(const unsigned &state) const {

@@ -26,7 +26,8 @@ void DestructibleBlock::updateRendering() {
         setState(STATE_DESTROYED);
     }
 
-    sprite.getSprite().setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
+    sprite.getSprite().setPosition(hurtbox.getOrigin().x, hurtbox.getOrigin().y);
+    matchHitboxPosition();
 }
 
 bool DestructibleBlock::checkCanGetHit() {

@@ -76,7 +76,7 @@ void PowerUp::updateRendering() {
         setFrameForPowerUpType();
     }
 
-    sprite.getSprite().setPosition(hitbox.getOrigin().x, hitbox.getOrigin().y);
+    sprite.getSprite().setPosition(hurtbox.getOrigin().x, hurtbox.getOrigin().y);
 }
 
 void PowerUp::draw(sf::RenderWindow &window) {
@@ -118,6 +118,6 @@ void PowerUp::setFrameForPowerUpType() {
     if(powerUpType == PowerUpType::MACHINE_GUN) {
 
         sprite.setFrame(FRAME_MACHINEGUN);
-        hitbox.setActiveHitbox(FRAME_MACHINEGUN, STATE_SPAWNED);
+        hurtbox.setActiveHitbox(FRAME_MACHINEGUN, STATE_SPAWNED);
     }
 }

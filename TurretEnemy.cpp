@@ -28,7 +28,7 @@ TurretEnemy::TurretEnemy(const glm::vec2 &position, const int initialHealth) :
     RIGHT(0),
     DOWN_RIGHT(0)
     {
-        hitbox.setOrigin(position);
+        setPosition(position);
 
         gun = make_shared<Gun>();
     }
@@ -46,12 +46,12 @@ void TurretEnemy::updatePhysics(const float& deltaTime, const sf::FloatRect& wor
         //the gun needs to update though so keep this after the gun physics update
         //when not shooting the animation frame adn the hitbox match up
         //set the hitbox according to the current frame of animation
-        hitbox.setActiveHitbox(frame, currentState);
+        hurtbox.setActiveHitbox(frame, currentState);
         return;
     }
 
     //when shooting there is only one hitbox
-    hitbox.setActiveHitbox(0, currentState);
+    hurtbox.setActiveHitbox(0, currentState);
 
     //start shooting at the closest player
     unsigned idClosestTarget = getIdOfClosestTarget(targetPositions);
@@ -62,7 +62,9 @@ void TurretEnemy::updatePhysics(const float& deltaTime, const sf::FloatRect& wor
     }
 
     glm::vec2 gunfireOrigin = calculateGunfireOrigin(targetPositions[idClosestTarget]);
-    gun->fire(hitbox.getOrigin(), gunfireOrigin, direction);
+    gun->fire(hurtbox.getOrigin(), gunfireOrigin, direction);
+
+    matchHitboxPosition();
 }
 
 void TurretEnemy::updateRendering() {
@@ -147,10 +149,12 @@ void TurretEnemy::updateRendering() {
     } else {
 
         //going into hiding or coming out of hiding so use the correct hitbox every frame
-        hitbox.setActiveHitbox(sprite.getFrame(), currentState);
+        hurtbox.setActiveHitbox(sprite.getFrame(), currentState);
     }
 
-    glm::vec2 position = hitbox.getOrigin();
+    matchHitboxPosition();
+
+    glm::vec2 position = hurtbox.getOrigin();
     sprite.getSprite().setPosition(position.x, position.y);
 }
 
@@ -194,11 +198,11 @@ void TurretEnemy::load(PreloadedTurretData &data) {
 
 void TurretEnemy::createHitboxes(const vector<sf::FloatRect> &hitboxes) {
 
-    hitbox.clearHitboxes();
+    hurtbox.clearHitboxes();
 
     for(unsigned i = 0; i < hitboxes.size(); ++i) {
 
-        hitbox.insertHitbox(hitboxes[i]);
+        hurtbox.insertHitbox(hitboxes[i]);
     }
 }
 
@@ -210,11 +214,11 @@ unsigned TurretEnemy::getIdOfClosestTarget(const vector<glm::vec2> &targetPositi
     }
 
     unsigned closestId = 0;
-    float distanceToClosest = glm::dot(targetPositions[0] - hitbox.getOrigin(), targetPositions[0] - hitbox.getOrigin());
+    float distanceToClosest = glm::dot(targetPositions[0] - hurtbox.getOrigin(), targetPositions[0] - hurtbox.getOrigin());
 
     for(unsigned i = 1; i < targetPositions.size(); ++i) {
 
-        float distanceToTarget = glm::dot(targetPositions[i] - hitbox.getOrigin(), targetPositions[i] - hitbox.getOrigin());
+        float distanceToTarget = glm::dot(targetPositions[i] - hurtbox.getOrigin(), targetPositions[i] - hurtbox.getOrigin());
 
         if(distanceToTarget < distanceToClosest) {
 
@@ -236,8 +240,8 @@ glm::vec2 TurretEnemy::calculateGunfireOrigin(const glm::vec2 &targetPosition) {
 void TurretEnemy::determineDirection(const glm::vec2 &targetPosition) {
 
     //determine angle to target
-    float x = targetPosition.x - hitbox.getOrigin().x;
-    float y = targetPosition.y - hitbox.getOrigin().y;
+    float x = targetPosition.x - hurtbox.getOrigin().x;
+    float y = targetPosition.y - hurtbox.getOrigin().y;
 
     float angleRadians = atan2(y, x);
 

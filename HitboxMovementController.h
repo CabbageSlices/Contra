@@ -15,9 +15,9 @@ class HitboxMovementController {
 
         //specify the size of the bounding box
         //and the max velocity the object can reach on each axis
-        HitboxMovementController(const glm::vec2& gravity, const glm::vec2& terminalVelocities, ObjectHitbox *hitbox);
+        HitboxMovementController(const glm::vec2& gravity, const glm::vec2& terminalVelocities, ObjectHitbox *hurtbox);
 
-        void setHitbox(ObjectHitbox *hitbox);
+        void setHitbox(ObjectHitbox *hurtbox);
         void setVelocities(const glm::vec2& velocities);
         void setVelocities(const float& xVelocity, const float& yVelocity);
 

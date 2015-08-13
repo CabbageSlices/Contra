@@ -55,7 +55,7 @@ template<class Object> void SpatialHashEntry<Object>::updateBoundingBox() {
         return;
     }
 
-    previousBoundingBox = object->getHitbox().getTotalHitboxWorldSpace();
+    previousBoundingBox = object->getHurtbox().getTotalHitboxWorldSpace();
 }
 
 template<class Object> bool SpatialHashEntry<Object>::checkObjectExists() {

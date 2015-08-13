@@ -536,8 +536,8 @@ template<class DynamicObject>
 void collideEntityDynamicObjectHash(shared_ptr<EntityBase> entity, SpatialHash<DynamicObject> &hash,
                                  function<void(shared_ptr<DynamicObject>, shared_ptr<EntityBase>)> collisionFunction) {
 
-	sf::FloatRect hitbox = entity->getHitbox().getActiveHitboxWorldSpace();
-	auto blocks = hash.getSurroundingEntites(hitbox);
+	sf::FloatRect hurtbox = entity->getHitbox().getActiveHitboxWorldSpace();
+	auto blocks = hash.getSurroundingEntites(hurtbox);
 
 	collideEntityDynamicObjects(entity, blocks, collisionFunction);
 }
@@ -706,8 +706,8 @@ int main() {
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
                         shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6), 1);
-                        point->setTypeOfEnemySpawned(EnemyType::ENEMY_MUSHROOM);
-                        world.bossEnemySpawners.omnidirectionalTurretSpawnInfo.spawnPoints.push_back(point);
+                        point->setTypeOfEnemySpawned(EnemyType::ENEMY_GOOMBA);
+                        world.bossEnemySpawners.enemySpawnInfo.spawnPoints.push_back(point);
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) {
 

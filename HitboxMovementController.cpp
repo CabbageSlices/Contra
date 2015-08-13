@@ -6,8 +6,8 @@
 using std::cout;
 using std::endl;
 
-HitboxMovementController::HitboxMovementController(const glm::vec2& objectGravity, const glm::vec2& terminalVelocity, ObjectHitbox *hitbox):
-    objectHitbox(hitbox),
+HitboxMovementController::HitboxMovementController(const glm::vec2& objectGravity, const glm::vec2& terminalVelocity, ObjectHitbox *hurtbox):
+    objectHitbox(hurtbox),
     gravity(objectGravity),
     terminalVelocities(terminalVelocity),
     velocities(0, 0),
@@ -16,9 +16,9 @@ HitboxMovementController::HitboxMovementController(const glm::vec2& objectGravit
 
     }
 
-void HitboxMovementController::setHitbox(ObjectHitbox *hitbox) {
+void HitboxMovementController::setHitbox(ObjectHitbox *hurtbox) {
 
-    objectHitbox = hitbox;
+    objectHitbox = hurtbox;
 }
 
 void HitboxMovementController::setVelocities(const glm::vec2& velocity) {

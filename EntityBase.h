@@ -36,6 +36,7 @@ class EntityBase {
         void scale(const float &xFactor, const float& yFactor) {
 
             //scale all hitboxes and sprite
+            hurtbox.scale(xFactor, yFactor);
             hitbox.scale(xFactor, yFactor);
             sprite.getSprite().scale(xFactor, yFactor);
 
@@ -45,9 +46,10 @@ class EntityBase {
         //this one should be called
         virtual void respondToCollision(const CollisionResponse &collisionResponse) {
 
-            //empty
+            matchHitboxPosition();
         }
 
+        ObjectHitbox& getHurtbox();
         ObjectHitbox& getHitbox();
         HitboxMovementController& getMovementController();
         const glm::vec2 getPosition() const;
@@ -66,6 +68,9 @@ class EntityBase {
         CollisionResponse handleTileCollisionHorizontally(TileMap& map);
         CollisionResponse handleTileCollisionVertically(TileMap& map);
 
+        //set the position of all components to the hitbox's position
+        void matchHitboxPosition();
+
         //derived classes can override this function to scale other paramters
         virtual void scaleComponents(const float &xFactor, const float &yFactor) {
 
@@ -77,7 +82,16 @@ class EntityBase {
         void setState(const unsigned &state);
         void setPosition(const glm::vec2 &position);
 
+        //hitbox collides with environment and is generally static
+        ObjectHitbox hurtbox;
+
+        //hurt box collides with attacks and stuff and can vary every frame
         ObjectHitbox hitbox;
+
+         //all entities have a default hitbox state, which is the hitbox they use for almost all animation states when colliding with the environment
+         //this is defined so that when an object is first born it has a state to use
+        unsigned defaultHitboxState;
+
         HitboxMovementController hitboxMovementController;
         glm::vec2 MOVEMENT_VELOCITY; //measured in meters per second
         unsigned health;
@@ -91,7 +105,7 @@ class EntityBase {
 template<class Data>
 void EntityBase::loadBase(const Data &data) {
 
-    hitbox.clearHitboxes();
+    hurtbox.clearHitboxes();
     sprite.clearAnimation();
 
     health = data.health;
@@ -100,11 +114,23 @@ void EntityBase::loadBase(const Data &data) {
     sprite.loadTexture(data.textureFileName);
     sprite.setNextFrameTime(data.animationNextFrameTime);
 
+    defaultHitboxState = data.defaultHitboxState;
+
     for(auto it = data.animationTextureRects.begin(); it != data.animationTextureRects.end(); ++it) {
 
         for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
 
             sprite.insertTextureRect(it->first, *vt);
+        }
+    }
+
+    for(auto it = data.hurtboxes.begin(); it != data.hurtboxes.end(); ++it) {
+
+        for(auto vt = it->second.begin(); vt != it->second.end(); ++vt) {
+
+            sf::FloatRect bounds(vt->left, vt->top, vt->width, vt->height);
+
+            hurtbox.insertHitbox(bounds, it->first);
         }
     }
 
@@ -117,6 +143,8 @@ void EntityBase::loadBase(const Data &data) {
             hitbox.insertHitbox(bounds, it->first);
         }
     }
+
+    hitbox.setActiveHitbox(0, defaultHitboxState);
 }
 
 #endif // ENTITYBASE_H_INCLUDED

@@ -53,10 +53,16 @@ struct PreloadedData {
 
     float scale = 1.0f;
 
+    //all entities have a default hitbox state, which is the hitbox they use for almost all animation states when colliding with the environment
+    unsigned defaultHitboxState = 0;
+
     //texture rect for each animation state
     std::map<unsigned, std::vector<sf::IntRect> > animationTextureRects;
 
-    //hitbox for each animation state
+    //hurtbox for each animation state
+    std::map<unsigned, std::vector<sf::FloatRect> > hurtboxes;
+
+    //hitboxes for the different states of the entity
     std::map<unsigned, std::vector<sf::FloatRect> > hitboxes;
 };
 
@@ -70,6 +76,8 @@ struct ShootingEntityPreloadedData : public PreloadedData{
 };
 
 struct PreloadedPlayerData : public ShootingEntityPreloadedData {
+
+    unsigned jumpingHitboxState = 1;
 
     unsigned STATE_STANDING_LEFT;
     unsigned STATE_STANDING_UP_FACING_LEFT;

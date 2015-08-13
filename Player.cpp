@@ -39,6 +39,7 @@ Player::Player(const PlayerKeys& keyConfiguration):
     STATE_DYING_FACING_RIGHT(23),
     STATE_DYING_FACING_LEFT(24),
     STATE_DEAD(25),
+    jumpingHitboxState(0),
     lifeState(ALIVE),
     standingOnSolid(false),
     standingOnTile(false),
@@ -120,6 +121,11 @@ void Player::updatePhysics(const float& deltaTime, const sf::FloatRect& worldBou
         hitboxMovementController.updateVelocities(deltaTime);
     }
 
+    if(!checkIsJumping()) {
+
+        hitbox.setActiveHitbox(0, defaultHitboxState);
+    }
+
     hitboxMovementController.moveAlongXAxis(deltaTime, worldBounds);
 
     CollisionResponse collisionResponseHorizontal = handleTileCollisionHorizontally(map);
@@ -140,6 +146,8 @@ void Player::updatePhysics(const float& deltaTime, const sf::FloatRect& worldBou
     standingOnPassablePlatform = collisionResponseHorizontal.canFallThroughGround || collisionResponseVertical.canFallThroughGround;
 
     gun->updatePhysics(deltaTime, worldBounds, map);
+
+    matchHitboxPosition();
 }
 
 void Player::updateRendering() {
@@ -150,14 +158,13 @@ void Player::updateRendering() {
     }
 
     determineRenderingState();
-    hitbox.setActiveHitbox(sprite.getFrame(), currentState);
+    hurtbox.setActiveHitbox(sprite.getFrame(), currentState);
 
-    sf::FloatRect activeHitbox = hitbox.getActiveHitboxWorldSpace();
-    //cout << activeHitbox.top << "  " << activeHitbox.height << endl;
-    entity.setPosition(activeHitbox.left, activeHitbox.top);
-    entity.setSize(sf::Vector2f(activeHitbox.width, activeHitbox.height));
+    sf::FloatRect box = hurtbox.getActiveHitboxWorldSpace();
+    entity.setPosition(box.left, box.top);
+    entity.setSize(sf::Vector2f(box.width, box.height));
 
-    setPosition(hitbox.getOrigin());
+    matchHitboxPosition();
 
     gun->updateRendering();
 }
@@ -181,6 +188,8 @@ void Player::respondToCollision(const CollisionResponse &collisionResponse) {
     //check if player is able to jump now
     standingOnSolid = collisionResponse.pushedToTop || standingOnSolid;
     standingOnPassablePlatform = collisionResponse.canFallThroughGround || standingOnPassablePlatform;
+
+    matchHitboxPosition();
 }
 
 void Player::load(PreloadedPlayerData &data) {
@@ -189,6 +198,8 @@ void Player::load(PreloadedPlayerData &data) {
     loadShootingEntityData(data);
 
     scale(data.scale, data.scale);
+
+    jumpingHitboxState = data.jumpingHitboxState;
 
     STATE_STANDING_LEFT = data.STATE_STANDING_LEFT;
     STATE_STANDING_UP_FACING_LEFT = data.STATE_STANDING_UP_FACING_LEFT;
@@ -224,6 +235,7 @@ void Player::load(PreloadedPlayerData &data) {
     STATE_DEAD = data.STATE_DEAD;
 
     setState(STATE_STANDING_RIGHT);
+    hitbox.setActiveHitbox(0, defaultHitboxState);
 }
 
 bool Player::checkIsAlive() {
@@ -242,7 +254,7 @@ void Player::respawn(const sf::FloatRect &cameraBounds) {
 
     //move player slightly below camera beucase once they respawn if they hold jump then he wil always be able to jump
     //because he will be touchign top of screen so the game registers it as if he is standing on the ground
-    glm::vec2 spawnPosition(cameraBounds.left + hitbox.getActiveHitboxObjectSpace().width, cameraBounds.top + 1);
+    glm::vec2 spawnPosition(cameraBounds.left + hurtbox.getActiveHitboxObjectSpace().width, cameraBounds.top + 1);
     setPosition(spawnPosition);
 
     setLives(health - 1);
@@ -314,7 +326,7 @@ void Player::fireGun() {
 
     if(canFire) {
 
-        gun->fire(hitbox.getOrigin(), calculateGunfireOrigin(), direction);
+        gun->fire(hurtbox.getOrigin(), calculateGunfireOrigin(), direction);
     }
 }
 
@@ -649,6 +661,7 @@ void Player::jump() {
         hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, -MOVEMENT_VELOCITY.y);
         stopStandingOnPlatforms();
         wasJumpButtonPressed = true;
+        hitbox.setActiveHitbox(0, jumpingHitboxState);
     }
 }
 
@@ -660,7 +673,7 @@ void Player::jumpDown() {
 
         //when jumping down just push the player down into the ground since the collision detection code should allow him to pass
         //push him just out of the threshold so collision resolution won't occur
-        hitbox.move(glm::vec2(0, fallThroughTopThreshold + 1.f));
+        hurtbox.move(glm::vec2(0, fallThroughTopThreshold + 1.f));
 
         //also set his velocity to go downwards that way it looks a bit smoother
         hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, 1.0f);

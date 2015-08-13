@@ -25,9 +25,9 @@ Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWo
     STATE_DOWN_RIGHT(0)
     {
         entity.setSize(sf::Vector2f(20, 20));
-        hitbox.setOrigin(positionWorldSpace - glm::vec2(10, 10));
-        hitbox.insertHitbox(sf::FloatRect(0, 0, entity.getSize().x, entity.getSize().y));
-        hitbox.setActiveHitbox(0);
+        hurtbox.setOrigin(positionWorldSpace - glm::vec2(10, 10));
+        hurtbox.insertHitbox(sf::FloatRect(0, 0, entity.getSize().x, entity.getSize().y));
+        hurtbox.setActiveHitbox(0);
         hitboxMovementController.setVelocities(MOVEMENT_VELOCITY);
     }
 
@@ -47,10 +47,7 @@ Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWo
     {
         load(data);
 
-        //center the bullet at the given position
-        sf::FloatRect boundingBox = hitbox.getActiveHitboxWorldSpace();
-
-        hitbox.setOrigin(positionWorldSpace - glm::vec2(boundingBox.width / 2, boundingBox.height / 2));
+        setPosition(positionWorldSpace);
         hitboxMovementController.setVelocities(MOVEMENT_VELOCITY);
     }
 
@@ -60,14 +57,15 @@ void Bullet::updatePhysics(const float &delta, const sf::FloatRect &worldBounds,
 
     hitboxMovementController.move(delta);
     handleTileCollision(map);
+
+    matchHitboxPosition();
 }
 
 void Bullet::updateRendering() {
 
     sprite.animate();
 
-    glm::vec2 position = hitbox.getOrigin();
-    sprite.getSprite().setPosition(position.x, position.y);
+    matchHitboxPosition();
 }
 
 bool Bullet::checkIsAlive() {
@@ -173,5 +171,5 @@ void Bullet::setState(const unsigned &state) {
 
     currentState = state;
     sprite.setAnimationState(state);
-    hitbox.setActiveHitbox(0, state);
+    hurtbox.setActiveHitbox(0, state);
 }

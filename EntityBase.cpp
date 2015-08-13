@@ -4,7 +4,9 @@ using std::vector;
 using std::shared_ptr;
 
 EntityBase::EntityBase(const glm::vec2 &gravity, const glm::vec2 &movementVelocity, const glm::vec2 &terminalVelocity, const unsigned &initialHealth) :
+    hurtbox(),
     hitbox(),
+    defaultHitboxState(0),
     hitboxMovementController(gravity, terminalVelocity, &hitbox),
     MOVEMENT_VELOCITY(movementVelocity),
     health(initialHealth),
@@ -35,6 +37,11 @@ void EntityBase::getHit(int damage) {
     health -= damage;
 }
 
+ObjectHitbox &EntityBase::getHurtbox() {
+
+    return hurtbox;
+}
+
 ObjectHitbox &EntityBase::getHitbox() {
 
     return hitbox;
@@ -47,7 +54,7 @@ HitboxMovementController& EntityBase::getMovementController() {
 
 const glm::vec2 EntityBase::getPosition() const {
 
-    return hitbox.getOrigin();
+    return hurtbox.getOrigin();
 }
 
 void EntityBase::setHealth(const int &newVal) {
@@ -62,7 +69,7 @@ void EntityBase::setHealth(const int &newVal) {
 
 vector<shared_ptr<Tile> > EntityBase::getSurroundingTiles(const TileMap &map, const glm::vec2 &areaPadding) {
 
-    sf::FloatRect bounding = hitbox.getActiveHitboxWorldSpace();
+    sf::FloatRect bounding = hurtbox.getActiveHitboxWorldSpace();
 
     //calculate region encompassed by object
     //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
@@ -90,6 +97,12 @@ CollisionResponse EntityBase::handleTileCollisionVertically(TileMap &map) {
     return handleTileCollision(map, &handleCollisionVertical);
 }
 
+void EntityBase::matchHitboxPosition() {
+
+    glm::vec2 position = hitbox.getOrigin();
+    setPosition(position);
+}
+
 void EntityBase::setState(const unsigned &state) {
 
     if(currentState == state) {
@@ -99,11 +112,12 @@ void EntityBase::setState(const unsigned &state) {
 
     currentState = state;
     sprite.setAnimationState(state);
-    hitbox.setActiveHitbox(0, state);
+    hurtbox.setActiveHitbox(0, state);
 }
 
 void EntityBase::setPosition(const glm::vec2 &position) {
 
     hitbox.setOrigin(position);
+    hurtbox.setOrigin(position);
     sprite.getSprite().setPosition(position.x, position.y);
 }

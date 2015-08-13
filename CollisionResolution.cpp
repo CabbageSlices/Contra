@@ -64,7 +64,7 @@ void destructibleBlockEntityCollision(shared_ptr<DestructibleBlock> block, share
     }
 
     sf::FloatRect entityRect = entity->getHitbox().getActiveHitboxWorldSpace();
-    sf::FloatRect blockRect = block->getHitbox().getActiveHitboxWorldSpace();
+    sf::FloatRect blockRect = block->getHurtbox().getActiveHitboxWorldSpace();///use the blocks hitbox because when it is destroying its collision box is changed
 
     if(!blockRect.intersects(entityRect)) {
 
@@ -107,8 +107,8 @@ void bulletNonDeflectingEntityCollision(shared_ptr<Bullet> bullet, shared_ptr<En
         return;
     }
 
-    sf::FloatRect entityRect = entity->getHitbox().getActiveHitboxWorldSpace();
-    sf::FloatRect bulletRect = bullet->getHitbox().getActiveHitboxWorldSpace();
+    sf::FloatRect entityRect = entity->getHurtbox().getActiveHitboxWorldSpace();
+    sf::FloatRect bulletRect = bullet->getHurtbox().getActiveHitboxWorldSpace();
 
     if(!entityRect.intersects(bulletRect)) {
 
@@ -126,8 +126,8 @@ void playerEnemyEntityCollision(shared_ptr<Player> player, shared_ptr<EntityBase
         return;
     }
 
-    sf::FloatRect enemyRect = enemy->getHitbox().getActiveHitboxWorldSpace();
-    sf::FloatRect playerRect = player->getHitbox().getActiveHitboxWorldSpace();
+    sf::FloatRect enemyRect = enemy->getHurtbox().getActiveHitboxWorldSpace();
+    sf::FloatRect playerRect = player->getHurtbox().getActiveHitboxWorldSpace();
 
     if(!enemyRect.intersects(playerRect)) {
 
@@ -144,8 +144,8 @@ void playerPowerUpCollision(std::shared_ptr<Player> player, std::shared_ptr<Powe
         return;
     }
 
-    sf::FloatRect powerRect = powerUp->getHitbox().getActiveHitboxWorldSpace();
-    sf::FloatRect playerRect = player->getHitbox().getActiveHitboxWorldSpace();
+    sf::FloatRect powerRect = powerUp->getHurtbox().getActiveHitboxWorldSpace();
+    sf::FloatRect playerRect = player->getHurtbox().getActiveHitboxWorldSpace();
 
     if(!powerRect.intersects(playerRect)) {
 
