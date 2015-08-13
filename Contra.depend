@@ -311,13 +311,13 @@
 	<vector>
 	<iostream>
 
-1439427957 c:\users\nimesh\desktop\c++\github\contra\bullet.h
-	"CollisionboxMovementController.h"
+1435274891 c:\users\nimesh\desktop\c++\github\contra\bullet.h
+	"HitboxMovementController.h"
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
 	"glm/glm.hpp"
 	"TileMap.h"
-	"ObjectCollisionbox.h"
+	"ObjectHitbox.h"
 	"EntityBase.h"
 	"AnimatedSprite.h"
 	"PreloadedData.h"
@@ -342,30 +342,30 @@
 	<memory>
 	<vector>
 
-1439427958 c:\users\nimesh\desktop\c++\github\contra\tile.h
+1435431621 c:\users\nimesh\desktop\c++\github\contra\tile.h
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
-	"CollisionboxMovementController.h"
+	"HitboxMovementController.h"
 	<string>
 	<map>
 
-1439428015 c:\users\nimesh\desktop\c++\github\contra\entitybase.h
+1438746328 c:\users\nimesh\desktop\c++\github\contra\entitybase.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"TileMap.h"
 	"Tile.h"
 	"TileCollisionHandling.h"
-	"ObjectCollisionbox.h"
+	"ObjectHitbox.h"
 	"CollisionResponse.h"
 	"AnimatedSprite.h"
-	"CollisionboxMovementController.h"
+	"HitboxMovementController.h"
 	"glm/glm.hpp"
 	<memory>
 	<vector>
 
-1439427957 c:\users\nimesh\desktop\c++\github\contra\tilecollisionhandling.h
+1432770771 c:\users\nimesh\desktop\c++\github\contra\tilecollisionhandling.h
 	"Tile.h"
-	"CollisionboxMovementController.h"
+	"HitboxMovementController.h"
 	"CollisionResponse.h"
 	<memory>
 
@@ -385,16 +385,16 @@
 	<vector>
 	<map>
 
-1439425951 c:\users\nimesh\desktop\c++\github\contra\direction.h
+1439087048 c:\users\nimesh\desktop\c++\github\contra\direction.h
 	"glm/glm.hpp"
 
-1439425951 source:c:\users\nimesh\desktop\c++\github\contra\camera.cpp
+1438561590 source:c:\users\nimesh\desktop\c++\github\contra\camera.cpp
 	"Camera.h"
 	"glm/gtx/compatibility.hpp"
 	<iostream>
 	"GlobalConstants.h"
 
-1439425951 c:\users\nimesh\desktop\c++\github\contra\camera.h
+1438560593 c:\users\nimesh\desktop\c++\github\contra\camera.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	<vector>
@@ -421,7 +421,7 @@
 	"glm/glm.hpp"
 	<memory>
 
-1439425951 source:c:\users\nimesh\desktop\c++\github\contra\direction.cpp
+1438750010 source:c:\users\nimesh\desktop\c++\github\contra\direction.cpp
 	"Direction.h"
 
 1435085640 source:c:\users\nimesh\desktop\c++\github\contra\dynamicobject.cpp
@@ -462,10 +462,10 @@
 	"Bullet.h"
 	<iostream>
 
-1439427957 c:\users\nimesh\desktop\c++\github\contra\gun.h
+1437521471 c:\users\nimesh\desktop\c++\github\contra\gun.h
 	<SFML/Graphics.hpp>
 	<SFML/Window.hpp>
-	"ObjectCollisionbox.h"
+	"ObjectHitbox.h"
 	"Direction.h"
 	<vector>
 	<memory>
@@ -516,7 +516,7 @@
 	"ShootingEntity.h"
 	<iostream>
 
-1439425951 c:\users\nimesh\desktop\c++\github\contra\shootingentity.h
+1439091271 c:\users\nimesh\desktop\c++\github\contra\shootingentity.h
 	"EntityBase.h"
 	"Gun.h"
 	"Direction.h"
@@ -544,7 +544,7 @@
 	"Gun.h"
 	"Tile.h"
 
-1439425951 source:c:\users\nimesh\desktop\c++\github\contra\shootingentity.cpp
+1439090499 source:c:\users\nimesh\desktop\c++\github\contra\shootingentity.cpp
 	"ShootingEntity.h"
 
 1435433669 source:c:\users\nimesh\desktop\c++\github\contra\tile.cpp
@@ -992,7 +992,7 @@
 	"glm/glm.hpp"
 	<functional>
 
-1439427957 c:\users\nimesh\desktop\c++\github\contra\preloadeddata.h
+1439088376 c:\users\nimesh\desktop\c++\github\contra\preloadeddata.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Direction.h"
@@ -1063,15 +1063,4 @@
 	<iostream>
 	<vector>
 	<memory>
-
-1439427957 c:\users\nimesh\desktop\c++\github\contra\objectcollisionbox.h
-	<SFML/Graphics.hpp>
-	"glm/glm.hpp"
-	<map>
-	<vector>
-
-1439427957 c:\users\nimesh\desktop\c++\github\contra\collisionboxmovementcontroller.h
-	"SFML/Graphics.hpp"
-	"glm/glm.hpp"
-	"ObjectCollisionbox.h"
 

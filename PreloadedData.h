@@ -56,8 +56,8 @@ struct PreloadedData {
     //texture rect for each animation state
     std::map<unsigned, std::vector<sf::IntRect> > animationTextureRects;
 
-    //Collisionbox for each animation state
-    std::map<unsigned, std::vector<sf::FloatRect> > Collisionboxes;
+    //hitbox for each animation state
+    std::map<unsigned, std::vector<sf::FloatRect> > hitboxes;
 };
 
 struct ShootingEntityPreloadedData : public PreloadedData{

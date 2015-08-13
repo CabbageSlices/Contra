@@ -4,8 +4,8 @@ using std::vector;
 using std::shared_ptr;
 
 EntityBase::EntityBase(const glm::vec2 &gravity, const glm::vec2 &movementVelocity, const glm::vec2 &terminalVelocity, const unsigned &initialHealth) :
-    Collisionbox(),
-    CollisionboxMovementController(gravity, terminalVelocity, &Collisionbox),
+    hitbox(),
+    hitboxMovementController(gravity, terminalVelocity, &hitbox),
     MOVEMENT_VELOCITY(movementVelocity),
     health(initialHealth),
     entity(sf::Vector2f(64, 64)),
@@ -35,19 +35,19 @@ void EntityBase::getHit(int damage) {
     health -= damage;
 }
 
-ObjectCollisionbox &EntityBase::getCollisionbox() {
+ObjectHitbox &EntityBase::getHitbox() {
 
-    return Collisionbox;
+    return hitbox;
 }
 
-CollisionboxMovementController& EntityBase::getMovementController() {
+HitboxMovementController& EntityBase::getMovementController() {
 
-    return CollisionboxMovementController;
+    return hitboxMovementController;
 }
 
 const glm::vec2 EntityBase::getPosition() const {
 
-    return Collisionbox.getOrigin();
+    return hitbox.getOrigin();
 }
 
 void EntityBase::setHealth(const int &newVal) {
@@ -62,7 +62,7 @@ void EntityBase::setHealth(const int &newVal) {
 
 vector<shared_ptr<Tile> > EntityBase::getSurroundingTiles(const TileMap &map, const glm::vec2 &areaPadding) {
 
-    sf::FloatRect bounding = Collisionbox.getActiveCollisionboxWorldSpace();
+    sf::FloatRect bounding = hitbox.getActiveHitboxWorldSpace();
 
     //calculate region encompassed by object
     //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
@@ -74,7 +74,7 @@ vector<shared_ptr<Tile> > EntityBase::getSurroundingTiles(const TileMap &map, co
     return tiles;
 }
 
-CollisionResponse EntityBase::handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(shared_ptr<Tile>& tile, CollisionboxMovementController& object)) {
+CollisionResponse EntityBase::handleTileCollision(TileMap &map, CollisionResponse(*collisionFunction)(shared_ptr<Tile>& tile, HitboxMovementController& object)) {
 
     //empty default
     return CollisionResponse();
@@ -99,11 +99,11 @@ void EntityBase::setState(const unsigned &state) {
 
     currentState = state;
     sprite.setAnimationState(state);
-    Collisionbox.setActiveCollisionbox(0, state);
+    hitbox.setActiveHitbox(0, state);
 }
 
 void EntityBase::setPosition(const glm::vec2 &position) {
 
-    Collisionbox.setOrigin(position);
+    hitbox.setOrigin(position);
     sprite.getSprite().setPosition(position.x, position.y);
 }

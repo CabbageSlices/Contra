@@ -25,10 +25,10 @@ Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWo
     STATE_DOWN_RIGHT(0)
     {
         entity.setSize(sf::Vector2f(20, 20));
-        Collisionbox.setOrigin(positionWorldSpace - glm::vec2(10, 10));
-        Collisionbox.insertCollisionbox(sf::FloatRect(0, 0, entity.getSize().x, entity.getSize().y));
-        Collisionbox.setActiveCollisionbox(0);
-        CollisionboxMovementController.setVelocities(MOVEMENT_VELOCITY);
+        hitbox.setOrigin(positionWorldSpace - glm::vec2(10, 10));
+        hitbox.insertHitbox(sf::FloatRect(0, 0, entity.getSize().x, entity.getSize().y));
+        hitbox.setActiveHitbox(0);
+        hitboxMovementController.setVelocities(MOVEMENT_VELOCITY);
     }
 
 Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, PreloadedBulletData &data) :
@@ -48,17 +48,17 @@ Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWo
         load(data);
 
         //center the bullet at the given position
-        sf::FloatRect boundingBox = Collisionbox.getActiveCollisionboxWorldSpace();
+        sf::FloatRect boundingBox = hitbox.getActiveHitboxWorldSpace();
 
-        Collisionbox.setOrigin(positionWorldSpace - glm::vec2(boundingBox.width / 2, boundingBox.height / 2));
-        CollisionboxMovementController.setVelocities(MOVEMENT_VELOCITY);
+        hitbox.setOrigin(positionWorldSpace - glm::vec2(boundingBox.width / 2, boundingBox.height / 2));
+        hitboxMovementController.setVelocities(MOVEMENT_VELOCITY);
     }
 
 void Bullet::updatePhysics(const float &delta, const sf::FloatRect &worldBounds, TileMap& map) {
 
     timeElapsed += delta;
 
-    CollisionboxMovementController.move(delta);
+    hitboxMovementController.move(delta);
     handleTileCollision(map);
 }
 
@@ -66,7 +66,7 @@ void Bullet::updateRendering() {
 
     sprite.animate();
 
-    glm::vec2 position = Collisionbox.getOrigin();
+    glm::vec2 position = hitbox.getOrigin();
     sprite.getSprite().setPosition(position.x, position.y);
 }
 
@@ -91,7 +91,7 @@ void Bullet::handleTileCollision(TileMap& map) {
 
     for(unsigned i = 0; i < tiles.size(); ++i) {
 
-        if(checkSolidTileIntersection(tiles[i], CollisionboxMovementController)) {
+        if(checkSolidTileIntersection(tiles[i], hitboxMovementController)) {
 
             killBullet();
         }
@@ -173,5 +173,5 @@ void Bullet::setState(const unsigned &state) {
 
     currentState = state;
     sprite.setAnimationState(state);
-    Collisionbox.setActiveCollisionbox(0, state);
+    hitbox.setActiveHitbox(0, state);
 }

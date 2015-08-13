@@ -63,8 +63,8 @@ void destructibleBlockEntityCollision(shared_ptr<DestructibleBlock> block, share
         return;
     }
 
-    sf::FloatRect entityRect = entity->getCollisionbox().getActiveCollisionboxWorldSpace();
-    sf::FloatRect blockRect = block->getCollisionbox().getActiveCollisionboxWorldSpace();
+    sf::FloatRect entityRect = entity->getHitbox().getActiveHitboxWorldSpace();
+    sf::FloatRect blockRect = block->getHitbox().getActiveHitboxWorldSpace();
 
     if(!blockRect.intersects(entityRect)) {
 
@@ -73,7 +73,7 @@ void destructibleBlockEntityCollision(shared_ptr<DestructibleBlock> block, share
 
     glm::vec2 minimumTranslation = calculateCollisionResolutionTranslation(entityRect, blockRect);
 
-    entity->getCollisionbox().move(minimumTranslation);
+    entity->getHitbox().move(minimumTranslation);
 
     CollisionResponse response;
 
@@ -107,8 +107,8 @@ void bulletNonDeflectingEntityCollision(shared_ptr<Bullet> bullet, shared_ptr<En
         return;
     }
 
-    sf::FloatRect entityRect = entity->getCollisionbox().getActiveCollisionboxWorldSpace();
-    sf::FloatRect bulletRect = bullet->getCollisionbox().getActiveCollisionboxWorldSpace();
+    sf::FloatRect entityRect = entity->getHitbox().getActiveHitboxWorldSpace();
+    sf::FloatRect bulletRect = bullet->getHitbox().getActiveHitboxWorldSpace();
 
     if(!entityRect.intersects(bulletRect)) {
 
@@ -126,8 +126,8 @@ void playerEnemyEntityCollision(shared_ptr<Player> player, shared_ptr<EntityBase
         return;
     }
 
-    sf::FloatRect enemyRect = enemy->getCollisionbox().getActiveCollisionboxWorldSpace();
-    sf::FloatRect playerRect = player->getCollisionbox().getActiveCollisionboxWorldSpace();
+    sf::FloatRect enemyRect = enemy->getHitbox().getActiveHitboxWorldSpace();
+    sf::FloatRect playerRect = player->getHitbox().getActiveHitboxWorldSpace();
 
     if(!enemyRect.intersects(playerRect)) {
 
@@ -144,8 +144,8 @@ void playerPowerUpCollision(std::shared_ptr<Player> player, std::shared_ptr<Powe
         return;
     }
 
-    sf::FloatRect powerRect = powerUp->getCollisionbox().getActiveCollisionboxWorldSpace();
-    sf::FloatRect playerRect = player->getCollisionbox().getActiveCollisionboxWorldSpace();
+    sf::FloatRect powerRect = powerUp->getHitbox().getActiveHitboxWorldSpace();
+    sf::FloatRect playerRect = player->getHitbox().getActiveHitboxWorldSpace();
 
     if(!powerRect.intersects(playerRect)) {
 

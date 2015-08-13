@@ -2,7 +2,7 @@
 #define ENEMY_H_INCLUDED
 
 #include "SFML/Graphics.hpp"
-#include "ObjectCollisionbox.h"
+#include "ObjectHitbox.h"
 #include "TileCollisionHandling.h"
 #include "TileMap.h"
 #include "Direction.h"
@@ -37,7 +37,7 @@ class Enemy : public EntityBase {
 
     private:
 
-        virtual CollisionResponse handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, CollisionboxMovementController& object));
+        virtual CollisionResponse handleTileCollision(TileMap& map, CollisionResponse(*collisionFunction)(std::shared_ptr<Tile>& tile, HitboxMovementController& object));
 
         void changeDirectionHorizontally();
         void determineHorizontalDirection();

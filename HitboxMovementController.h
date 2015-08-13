@@ -3,27 +3,27 @@
 
 #include "SFML/Graphics.hpp"
 #include "glm/glm.hpp"
-#include "ObjectCollisionbox.h"
+#include "ObjectHitbox.h"
 
 //objects that other classes can use to manage their velocities and handle movement
-//the objects using this will have to keep track of their own Collisionboxes
+//the objects using this will have to keep track of their own hitboxes
 //this object is used to that all other objects have a reusable interface when colliding with tiles
 ///VELOCITY DATA GIVEN TO THIS OBJECT NEEDS TO BE IN METERS PER SECOND
-class CollisionboxMovementController {
+class HitboxMovementController {
 
     public:
 
         //specify the size of the bounding box
         //and the max velocity the object can reach on each axis
-        CollisionboxMovementController(const glm::vec2& gravity, const glm::vec2& terminalVelocities, ObjectCollisionbox *Collisionbox);
+        HitboxMovementController(const glm::vec2& gravity, const glm::vec2& terminalVelocities, ObjectHitbox *hitbox);
 
-        void setCollisionbox(ObjectCollisionbox *Collisionbox);
+        void setHitbox(ObjectHitbox *hitbox);
         void setVelocities(const glm::vec2& velocities);
         void setVelocities(const float& xVelocity, const float& yVelocity);
 
         const glm::vec2 getVelocities() const;
         const float getLastDelta() const;
-        ObjectCollisionbox* getCollisionbox();
+        ObjectHitbox* getHitbox();
 
         //update velocities applies gravity to the velocities
         void updateVelocities(const float& delta);
@@ -40,7 +40,7 @@ class CollisionboxMovementController {
 
         void capVelocities();
 
-        ObjectCollisionbox* objectCollisionbox;
+        ObjectHitbox* objectHitbox;
 
         //units are all in meters/second
         //gravity only affects y-axis
