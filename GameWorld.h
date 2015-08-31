@@ -5,10 +5,6 @@
 #include "Enemy.h"
 #include "TurretEnemy.h"
 #include "OmniDirectionalTurret.h"
-#include "BackgroundManager.h"
-#include "Camera.h"
-#include "SpatialHash.h"
-#include "Player.h"
 
 #include <iostream>
 #include <vector>
@@ -16,10 +12,6 @@
 
 using std::cout;
 using std::endl;
-
-class Player;
-class PowerUp;
-class DestructibleBlock;
 
 struct EnemyCollection {
 
@@ -54,7 +46,6 @@ struct EnemySpawnerCollection {
 struct GameWorld {
 
 	GameWorld(sf::RenderWindow &window) :
-	    playerSpawnPosition(0, 0),
 	    worldState(NOT_FIGHTING_BOSS),
 		players(),
 		powerUps(),
@@ -74,8 +65,6 @@ struct GameWorld {
 		{
 
 		}
-
-    glm::vec2 playerSpawnPosition;
 
     //state of the current gameworld in terms of whether or not playeri s fighting bosses now
     enum WorldBossBattleState {

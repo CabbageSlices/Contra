@@ -103,7 +103,6 @@
 		<Unit filename="Gun.h" />
 		<Unit filename="HitboxMovementController.cpp" />
 		<Unit filename="HitboxMovementController.h" />
-		<Unit filename="LevelSavingLoading.h" />
 		<Unit filename="Main.cpp" />
 		<Unit filename="ObjectHitbox.cpp" />
 		<Unit filename="ObjectHitbox.h" />
@@ -130,8 +129,6 @@
 		<Unit filename="TileMap.h" />
 		<Unit filename="TurretEnemy.cpp" />
 		<Unit filename="TurretEnemy.h" />
-		<Unit filename="WorldSavingLoading.cpp" />
-		<Unit filename="WorldSavingLoading.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

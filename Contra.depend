@@ -438,7 +438,7 @@
 	"Enemy.h"
 	<iostream>
 
-1440993372 c:\users\nimesh\desktop\c++\github\contra\enemyspawners.h
+1439425951 c:\users\nimesh\desktop\c++\github\contra\enemyspawners.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
@@ -478,7 +478,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1440993292 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1439440087 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"Player.h"
@@ -487,6 +487,7 @@
 	"Gun.h"
 	"Camera.h"
 	"Enemy.h"
+	"EnemySpawners.h"
 	"Bullet.h"
 	"TurretEnemy.h"
 	"DestructibleBlock.h"
@@ -1003,7 +1004,7 @@
 	<string>
 	<map>
 
-1439441426 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
+1439437541 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
 	"DataLoaders.h"
 	"PreloadedData.h"
 	"Gun.h"
@@ -1054,27 +1055,12 @@
 	<memory>
 	<iostream>
 
-1440993292 c:\users\nimesh\desktop\c++\github\contra\gameworld.h
+1439431442 c:\users\nimesh\desktop\c++\github\contra\gameworld.h
 	"EnemySpawners.h"
 	"Enemy.h"
 	"TurretEnemy.h"
 	"OmniDirectionalTurret.h"
-	"BackgroundManager.h"
-	"Camera.h"
-	"SpatialHash.h"
-	"Player.h"
 	<iostream>
-	<vector>
-	<memory>
-
-1440993173 source:c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.cpp
-	"WorldSavingLoading.h"
-	"GameWorld.h"
-
-1440992758 c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.h
-	<fstream>
-	"SFML/System.hpp"
-	"SFML/Graphics.hpp"
 	<vector>
 	<memory>
 
