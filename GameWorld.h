@@ -1,10 +1,16 @@
 #ifndef GAMEWORLD_H_INCLUDED
 #define GAMEWORLD_H_INCLUDED
 
-#include "EnemySpawners.h"
 #include "Enemy.h"
 #include "TurretEnemy.h"
 #include "OmniDirectionalTurret.h"
+#include "Player.h"
+#include "PowerUp.h"
+#include "DestructibleBlock.h"
+#include "Camera.h"
+#include "SpatialHash.h"
+#include "BackgroundManager.h"
+#include "SpawnerData.h"
 
 #include <iostream>
 #include <vector>
@@ -47,6 +53,7 @@ struct GameWorld {
 
 	GameWorld(sf::RenderWindow &window) :
 	    worldState(NOT_FIGHTING_BOSS),
+	    initialPlayerSpawnPoint(0, 0),
 		players(),
 		powerUps(),
 		nonBossEnemyCollection(),
@@ -74,6 +81,8 @@ struct GameWorld {
         FIGHTING_BOSS,
 
     } worldState;
+
+    glm::vec2 initialPlayerSpawnPoint;
 
 	//entities
 	std::vector<std::shared_ptr<Player> > players;

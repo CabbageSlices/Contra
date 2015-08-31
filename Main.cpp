@@ -1,5 +1,6 @@
 #include "SFML/System.hpp"
 #include "SFML/Graphics.hpp"
+#include "GameWorld.h"
 #include "Player.h"
 #include "Tile.h"
 #include "TileMap.h"
@@ -17,7 +18,6 @@
 #include "BackgroundManager.h"
 #include "PowerUp.h"
 #include "Random.h"
-#include "GameWorld.h"
 
 #include <functional>
 #include <vector>
