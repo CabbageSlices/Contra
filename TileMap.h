@@ -20,11 +20,22 @@ class TileMap {
 
         void resize(const unsigned &width, const unsigned &height);
         void setTile(const sf::Vector2f& position, const TileType& type, const std::string &textureName, const sf::IntRect &textureRect);
+        void setTileDisplayChanges(const sf::Vector2f& position, const TileType& type, const std::string &textureName, const sf::IntRect &textureRect) {
+
+            setTile(position, type, textureName, textureRect);
+            displayChangedTiles();
+        }
 
         //return all the tiles enclosed in the given region
         //if any part of the region is out of bounds it will only return the tiles that are in bounds
         //region coordinates are in world position in pixels
         std::vector<std::shared_ptr<Tile> > getTilesInRegion(const glm::vec2 &upperLeft, const glm::vec2 &lowerRight) const;
+        const std::vector<std::shared_ptr<Tile> > &getAllTiles();
+
+        void displayChangedTiles() {
+
+            createRenderedAreas();
+        }
 
         void draw(sf::RenderWindow& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);
         void drawTiles(sf::RenderTarget& window, const glm::vec2 &upperLeft, const glm::vec2 &lowerRight);

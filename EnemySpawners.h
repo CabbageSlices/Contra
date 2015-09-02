@@ -19,7 +19,6 @@ void applyLoadedData(Enemy &enemy, EnemyType enemyType) {
     if(enemyType == EnemyType::ENEMY_GOOMBA) {
 
         enemy.load(dataCollection.goombaData);
-
     }
 }
 

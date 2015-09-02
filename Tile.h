@@ -35,7 +35,7 @@ class Tile {
 
         Tile(const glm::vec2 &worldPosition, const TileType& tileType);
 
-        static bool loadTexture(const std::string &textureFileName);
+        static bool loadTexture(const std::string &textureFilename);
         static void clearTextures();
 
         void setType(const TileType& tileType);
@@ -63,7 +63,7 @@ class Tile {
         sf::RectangleShape tile;
 
         //name of texture used by this tile
-        std::string textureName;
+        std::string textureFilename;
 
         sf::IntRect textureRect;
 };

@@ -18,6 +18,7 @@
 #include "BackgroundManager.h"
 #include "PowerUp.h"
 #include "Random.h"
+#include "WorldSavingLoading.h"
 
 #include <functional>
 #include <vector>
@@ -678,6 +679,8 @@ int main() {
     loadPlayerData(data, "player.txt");
     world.players[0]->load(data);
 
+    loadWorld("world1", world);
+
     while(window.isOpen()) {
 
         while(window.pollEvent(event)) {
@@ -693,15 +696,15 @@ int main() {
 
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
 
-                        world.tileMap.setTile(mousePosition, TileType::UPWARD_RIGHT_1_1, "tileset.png", sf::IntRect(0, 0, 64, 64));
+                        world.tileMap.setTileDisplayChanges(mousePosition, TileType::UPWARD_RIGHT_1_1, "tileset.png", sf::IntRect(0, 0, 64, 64));
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
 
-                        world.tileMap.setTile(mousePosition, TileType::UPWARD_LEFT_1_1, "tileset.png", sf::IntRect(0, 0, 64, 64));
+                        world.tileMap.setTileDisplayChanges(mousePosition, TileType::UPWARD_LEFT_1_1, "tileset.png", sf::IntRect(0, 0, 64, 64));
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
 
-                        world.tileMap.setTile(mousePosition, TileType::ONE_WAY, "tileset.png", sf::IntRect(0, 0, 64, 64));
+                        world.tileMap.setTileDisplayChanges(mousePosition, TileType::ONE_WAY, "tileset.png", sf::IntRect(0, 0, 64, 64));
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
@@ -725,14 +728,14 @@ int main() {
 
                     } else {
 
-                        world.tileMap.setTile(mousePosition, TileType::SOLID, "tileset.png", sf::IntRect(0, 0, 64, 64));
+                        world.tileMap.setTileDisplayChanges(mousePosition, TileType::SOLID, "tileset.png", sf::IntRect(0, 0, 64, 64));
                     }
 
                 }
 
                 if(event.mouseButton.button == sf::Mouse::Right) {
 
-                    world.tileMap.setTile(mousePosition, TileType::EMPTY, "tileset.png", sf::IntRect(0, 0, 0, 0));
+                    world.tileMap.setTileDisplayChanges(mousePosition, TileType::EMPTY, "tileset.png", sf::IntRect(0, 0, 0, 0));
                 }
             }
 
@@ -749,5 +752,7 @@ int main() {
         window.display();
 
     }
+
+    saveWorld("world1", world);
     return 0;
 }

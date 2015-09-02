@@ -1,8 +1,11 @@
 #include "Tile.h"
+#include <iostream>
 
 const int TILE_SIZE = 64;
 
 using std::string;
+using std::cout;
+using std::endl;
 
 std::map<std::string, sf::Texture> Tile::textures;
 
@@ -90,7 +93,7 @@ sf::Color getColorForTileType(const TileType& type) {
 Tile::Tile(const glm::vec2& worldPosition,  const TileType& tileType) :
     type(tileType),
     tile(sf::Vector2f(TILE_SIZE, TILE_SIZE)),
-    textureName(),
+    textureFilename("~"),
     textureRect(1, 1, 1, 1)
     {
         setupEmptyTileColor();
@@ -127,11 +130,12 @@ void Tile::setType(const TileType& tileType) {
     type = tileType;
 }
 
-bool Tile::setTexture(const std::string &textureName) {
+bool Tile::setTexture(const std::string &texFilename) {
 
-    if(loadTexture(textureName)) {
+    if(texFilename != "~" && loadTexture(texFilename)) {
 
-        tile.setTexture(&textures[textureName]);
+        textureFilename = texFilename;
+        tile.setTexture(&textures[textureFilename]);
         tile.setFillColor(sf::Color::White);
         tile.setOutlineThickness(0);
         return true;
@@ -140,9 +144,10 @@ bool Tile::setTexture(const std::string &textureName) {
     return false;
 }
 
-void Tile::setTextureRect(const sf::IntRect &textureRect) {
+void Tile::setTextureRect(const sf::IntRect &texRect) {
 
-    tile.setTextureRect(textureRect);
+    tile.setTextureRect(texRect);
+    textureRect = texRect;
 
     if(textureRect.width - textureRect.left == 0) {
 
@@ -164,7 +169,7 @@ TileType Tile::getType() const {
 
 std::string Tile::getTextureName() const {
 
-    return textureName;
+    return textureFilename;
 }
 
 sf::IntRect Tile::getTextureRect() const {

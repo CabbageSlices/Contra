@@ -96,6 +96,8 @@
 		<Unit filename="EnemySpawners.h" />
 		<Unit filename="EntityBase.cpp" />
 		<Unit filename="EntityBase.h" />
+		<Unit filename="FileManipulators.cpp" />
+		<Unit filename="FileManipulators.h" />
 		<Unit filename="GameWorld.h" />
 		<Unit filename="GlobalConstants.cpp" />
 		<Unit filename="GlobalConstants.h" />
@@ -121,6 +123,9 @@
 		<Unit filename="ShootingEntity.h" />
 		<Unit filename="SpatialHash.h" />
 		<Unit filename="SpatialHashEntry.h" />
+		<Unit filename="SpawnerData.h" />
+		<Unit filename="StringManipulator.cpp" />
+		<Unit filename="StringManipulator.h" />
 		<Unit filename="Tile.cpp" />
 		<Unit filename="Tile.h" />
 		<Unit filename="TileCollisionHandling.cpp" />
@@ -129,6 +134,8 @@
 		<Unit filename="TileMap.h" />
 		<Unit filename="TurretEnemy.cpp" />
 		<Unit filename="TurretEnemy.h" />
+		<Unit filename="WorldSavingLoading.cpp" />
+		<Unit filename="WorldSavingLoading.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

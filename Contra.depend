@@ -334,7 +334,7 @@
 	<map>
 	<vector>
 
-1435433133 c:\users\nimesh\desktop\c++\github\contra\tilemap.h
+1441223688 c:\users\nimesh\desktop\c++\github\contra\tilemap.h
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
 	"Tile.h"
@@ -342,7 +342,7 @@
 	<memory>
 	<vector>
 
-1439429860 c:\users\nimesh\desktop\c++\github\contra\tile.h
+1441222026 c:\users\nimesh\desktop\c++\github\contra\tile.h
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
 	"HitboxMovementController.h"
@@ -438,7 +438,7 @@
 	"Enemy.h"
 	<iostream>
 
-1440993586 c:\users\nimesh\desktop\c++\github\contra\enemyspawners.h
+1441051858 c:\users\nimesh\desktop\c++\github\contra\enemyspawners.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
@@ -450,6 +450,7 @@
 	"Enemy.h"
 	"TurretEnemy.h"
 	"OmniDirectionalTurret.h"
+	"SpawnerData.h"
 
 1439434715 source:c:\users\nimesh\desktop\c++\github\contra\entitybase.cpp
 	"EntityBase.h"
@@ -478,7 +479,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1441051064 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1441223579 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"GameWorld.h"
@@ -488,6 +489,7 @@
 	"Gun.h"
 	"Camera.h"
 	"Enemy.h"
+	"EnemySpawners.h"
 	"Bullet.h"
 	"TurretEnemy.h"
 	"DestructibleBlock.h"
@@ -498,6 +500,7 @@
 	"BackgroundManager.h"
 	"PowerUp.h"
 	"Random.h"
+	"WorldSavingLoading.h"
 	<functional>
 	<vector>
 	<memory>
@@ -535,7 +538,7 @@
 	"ObjectHitbox.h"
 	<iostream>
 
-1439441338 source:c:\users\nimesh\desktop\c++\github\contra\player.cpp
+1441222844 source:c:\users\nimesh\desktop\c++\github\contra\player.cpp
 	"Player.h"
 	<iostream>
 	<vector>
@@ -546,8 +549,9 @@
 1439425951 source:c:\users\nimesh\desktop\c++\github\contra\shootingentity.cpp
 	"ShootingEntity.h"
 
-1435433669 source:c:\users\nimesh\desktop\c++\github\contra\tile.cpp
+1441222026 source:c:\users\nimesh\desktop\c++\github\contra\tile.cpp
 	"Tile.h"
+	<iostream>
 
 1439429860 source:c:\users\nimesh\desktop\c++\github\contra\tilecollisionhandling.cpp
 	"TileCollisionHandling.h"
@@ -555,7 +559,7 @@
 	"GlobalConstants.h"
 	<iostream>
 
-1435433569 source:c:\users\nimesh\desktop\c++\github\contra\tilemap.cpp
+1441223505 source:c:\users\nimesh\desktop\c++\github\contra\tilemap.cpp
 	"TileMap.h"
 	"glm/glm.hpp"
 	<iostream>
@@ -1003,7 +1007,7 @@
 	<string>
 	<map>
 
-1439441426 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
+1441222711 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
 	"DataLoaders.h"
 	"PreloadedData.h"
 	"Gun.h"
@@ -1069,14 +1073,21 @@
 	<vector>
 	<memory>
 
-1441050968 source:c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.cpp
+1441223073 source:c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.cpp
 	"WorldSavingLoading.h"
 	"GameWorld.h"
+	"Tile.h"
+	"FileManipulators.h"
+	"StringManipulator.h"
+	<sstream>
+	<vector>
+	<memory>
 
-1441050614 c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.h
+1441070183 c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.h
 	<fstream>
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
+	"glm/glm.hpp"
 	<vector>
 	<memory>
 
@@ -1086,4 +1097,18 @@
 	"glm/glm.hpp"
 	<vector>
 	<memory>
+
+1441073036 source:c:\users\nimesh\desktop\c++\github\contra\filemanipulators.cpp
+	"FileManipulators.h"
+
+1441073032 c:\users\nimesh\desktop\c++\github\contra\filemanipulators.h
+	<fstream>
+	<string>
+	<sstream>
+
+1441221782 source:c:\users\nimesh\desktop\c++\github\contra\stringmanipulator.cpp
+	"StringManipulator.h"
+
+1441221782 c:\users\nimesh\desktop\c++\github\contra\stringmanipulator.h
+	<string>
 
