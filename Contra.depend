@@ -479,7 +479,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1441223579 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1441229000 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"GameWorld.h"
@@ -559,7 +559,7 @@
 	"GlobalConstants.h"
 	<iostream>
 
-1441223505 source:c:\users\nimesh\desktop\c++\github\contra\tilemap.cpp
+1441228754 source:c:\users\nimesh\desktop\c++\github\contra\tilemap.cpp
 	"TileMap.h"
 	"glm/glm.hpp"
 	<iostream>
@@ -1015,11 +1015,11 @@
 1438655735 source:c:\users\nimesh\desktop\c++\github\contra\preloadeddata.cpp
 	"PreloadedData.h"
 
-1435432054 source:c:\users\nimesh\desktop\c++\github\contra\backgroundmanager.cpp
+1441229043 source:c:\users\nimesh\desktop\c++\github\contra\backgroundmanager.cpp
 	"BackgroundManager.h"
 	<iostream>
 
-1435375070 c:\users\nimesh\desktop\c++\github\contra\backgroundmanager.h
+1441226902 c:\users\nimesh\desktop\c++\github\contra\backgroundmanager.h
 	"SFML/Graphics.hpp"
 	"SFML/System.hpp"
 	<map>
@@ -1073,17 +1073,18 @@
 	<vector>
 	<memory>
 
-1441223073 source:c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.cpp
+1441230169 source:c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.cpp
 	"WorldSavingLoading.h"
 	"GameWorld.h"
 	"Tile.h"
 	"FileManipulators.h"
 	"StringManipulator.h"
+	"BackgroundManager.h"
 	<sstream>
 	<vector>
 	<memory>
 
-1441070183 c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.h
+1441229514 c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.h
 	<fstream>
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"

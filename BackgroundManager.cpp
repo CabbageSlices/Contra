@@ -16,7 +16,8 @@ float BackgroundManager::IN_THE_HORIZON = 1.f;
 map<string, sf::Texture> BackgroundManager::loadedTextures;
 
 BackgroundManager::BackgroundManager() :
-    backgrounds()
+    backgrounds(),
+    backgroundDistanceSaveData()
     {
 
     }
@@ -55,11 +56,16 @@ void BackgroundManager::insertBackground(const string &backgroundFileName, const
     }
 
     backgrounds.insert(insertionPosition, backgroundPair);
+
+    //store this background and its distance from the view in the savedata container so that the game can save which background is located at what distance
+    auto backgroundDistancePair = std::make_pair(backgroundFileName, distanceFromView);
+    backgroundDistanceSaveData.push_back(backgroundDistancePair);
 }
 
 void BackgroundManager::clearBackgrounds() {
 
     backgrounds.clear();
+    backgroundDistanceSaveData.clear();
 }
 
 void BackgroundManager::clearLoadedBackgrounds() {
@@ -83,4 +89,9 @@ void BackgroundManager::draw(sf::RenderWindow &window) {
 
         window.draw(obj.first);
     }
+}
+
+std::vector<std::pair<std::string, float> > &BackgroundManager::getDataForSaving() {
+
+    return backgroundDistanceSaveData;
 }

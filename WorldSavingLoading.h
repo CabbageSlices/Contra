@@ -46,4 +46,5 @@ void saveDestructibleBlocks(std::fstream &file, std::vector<std::shared_ptr<Dest
 void loadWorld(const std::string &worldName, GameWorld &world);
 
 void loadTileMapData(std::fstream &file, TileMap &map, glm::vec2 worldSize);
+void loadBackgroundData(std::fstream &file, BackgroundManager &manager, sf::FloatRect worldSize);
 #endif // WORLDSAVINGLOADING_H_INCLUDED

@@ -31,12 +31,18 @@ class BackgroundManager {
 
         void draw(sf::RenderWindow &window);
 
+        std::vector<std::pair<std::string, float> > &getDataForSaving();
+
     private:
 
         static std::map<std::string, sf::Texture> loadedTextures;
 
         //pair a background image with its distance from the view
         std::vector<std::pair<sf::RectangleShape, float> > backgrounds;
+
+        //store a background's textuer filename along with its distance from the view
+        //this way background data can be saved and loaded
+        std::vector<std::pair<std::string, float> > backgroundDistanceSaveData;
 };
 
 #endif // BACKGROUNDMANAGER_H_INCLUDED

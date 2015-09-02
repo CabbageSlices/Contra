@@ -3,6 +3,7 @@
 #include "Tile.h"
 #include "FileManipulators.h"
 #include "StringManipulator.h"
+#include "BackgroundManager.h"
 
 #include <sstream>
 #include <vector>
@@ -45,7 +46,7 @@ void saveWorld(const string& worldName, GameWorld &world) {
 
     //save each aspect of the world
     saveTileMapData(file, world.tileMap);
-//    saveBackgroundData(file, world.backgrounds);
+    saveBackgroundData(file, world.backgrounds);
 //    saveWorldBoundsData(file, world.worldBounds, worldBoundsTag);
 //    saveWorldBoundsData(file, world.worldBoundsBossFight, worldBoundsBossFightTag);
 //    saveSpawnerCollection(file, world.nonBossEnemyCollection, nonBossEnemySpawnerTag);
@@ -82,6 +83,22 @@ void saveTileMapData(fstream &file, TileMap &map) {
     file << tileMapTag.second << endl;
 }
 
+void saveBackgroundData(std::fstream &file, BackgroundManager &manager) {
+
+    file << backgroundTag.first << endl;
+
+    auto backgroundSaveData = manager.getDataForSaving();
+
+    //save all background filenames and their associated distance from view
+    for(auto &data : backgroundSaveData) {
+
+        //first in pair is the background filename, second is the distance from view
+        file << data.first << " " << data.second << endl;
+    }
+
+    file << backgroundTag.second << endl;
+}
+
 void loadWorld(const std::string &worldName, GameWorld &world) {
 
     fstream file;
@@ -97,6 +114,7 @@ void loadWorld(const std::string &worldName, GameWorld &world) {
     }
 
     loadTileMapData(file, world.tileMap, glm::vec2(world.worldBounds.width, world.worldBounds.height));
+    loadBackgroundData(file, world.backgrounds, world.worldBounds);
 
     file.close();
 }
@@ -115,14 +133,11 @@ void loadTileMapData(std::fstream &file, TileMap &map, glm::vec2 worldSize) {
     string extracted;
     getline(file, extracted);
 
-    sf::Clock timer;
-
     while(extracted != tileMapTag.second && file) {
 
         //extract each peice of data from the line and use it to create a tile
         sf::Vector2f position;
 
-        timer.restart();
         position.x = atoi(extractFirstWordInString(extracted).c_str());
 
         position.y = atoi(extractFirstWordInString(extracted).c_str());
@@ -147,7 +162,32 @@ void loadTileMapData(std::fstream &file, TileMap &map, glm::vec2 worldSize) {
 
     map.displayChangedTiles();
 
-    cout << timer.getElapsedTime().asSeconds() << endl;
-
     //data is loaded
+}
+
+void loadBackgroundData(fstream &file, BackgroundManager &manager, sf::FloatRect worldSize) {
+
+    if(!readAfterLine(file, backgroundTag.first)) {
+
+        cout << "failed to load background data" << endl;
+        return;
+    }
+
+    manager.clearBackgrounds();
+
+    string extracted;
+    getline(file, extracted);
+
+    while(extracted != backgroundTag.second && file) {
+
+        //load each background file name and insert the background
+        string backgroundFileName = extractFirstWordInString(extracted);
+
+        float distanceFromView = atof(extractFirstWordInString(extracted).c_str());
+
+        manager.insertBackground(backgroundFileName, distanceFromView, worldSize);
+
+        extracted = "";
+        getline(file, extracted);
+    }
 }

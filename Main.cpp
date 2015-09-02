@@ -671,8 +671,8 @@ int main() {
     loadDataCollection(dataCollection);
 
     GameWorld world(window);
-    world.worldBounds = sf::FloatRect(0, 0, 2048 + 1024, 768 + 768);
-    world.worldBoundsBossFight = sf::FloatRect(0, 0, 1028 + 1028, 768 + 768);
+    world.worldBounds = sf::FloatRect(0, 0, 2048 + 1024, 768);
+    world.worldBoundsBossFight = sf::FloatRect(0, 0, 1028 + 1028, 768);
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
     world.players.push_back(make_shared<Player>());
     PreloadedPlayerData data;
