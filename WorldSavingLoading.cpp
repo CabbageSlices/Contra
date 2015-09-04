@@ -4,6 +4,7 @@
 #include "FileManipulators.h"
 #include "StringManipulator.h"
 #include "BackgroundManager.h"
+#include "SpawnerData.h"
 
 #include <sstream>
 #include <vector>
@@ -45,15 +46,24 @@ void saveWorld(const string& worldName, GameWorld &world) {
     }
 
     //save each aspect of the world
+    saveWorldBoundsData(file, world.worldBounds, worldBoundsTag);
+    saveWorldBoundsData(file, world.worldBoundsBossFight, worldBoundsBossFightTag);
     saveTileMapData(file, world.tileMap);
     saveBackgroundData(file, world.backgrounds);
-//    saveWorldBoundsData(file, world.worldBounds, worldBoundsTag);
-//    saveWorldBoundsData(file, world.worldBoundsBossFight, worldBoundsBossFightTag);
-//    saveSpawnerCollection(file, world.nonBossEnemyCollection, nonBossEnemySpawnerTag);
-//    saveSpawnerCollection(file, world.bossEnemyCollection, bossEnemySpawnerTag);
+    saveSpawnerCollection(file, world.nonBossEnemySpawners, nonBossEnemySpawnerTag);
+    saveSpawnerCollection(file, world.bossEnemySpawners, bossEnemySpawnerTag);
 //    saveDestructibleBlocks(file, world.destructibleBlocks, destructibleBlocksTag);
 
     file.close();
+}
+
+void saveWorldBoundsData(std::fstream &file, sf::FloatRect &bounds, const DataTagPair &tagPair) {
+
+    file << tagPair.first << endl;
+
+    file << bounds.left << " " << bounds.top << " " << bounds.width << " " << bounds.height << endl;
+
+    file << tagPair.second << endl;
 }
 
 void saveTileMapData(fstream &file, TileMap &map) {
@@ -99,6 +109,36 @@ void saveBackgroundData(std::fstream &file, BackgroundManager &manager) {
     file << backgroundTag.second << endl;
 }
 
+void saveSpawnerCollection(std::fstream &file, EnemySpawnerCollection &collection, const DataTagPair &spawnerTag) {
+
+    file << spawnerTag.first << endl;
+
+    //for each spawner collection save each spawner type along with its tags
+    //start with the normal enemies
+    saveSpawnPoints(file, collection.enemySpawnInfo.spawnPoints, basicEnemySpawnerTag);
+    saveSpawnPoints(file, collection.turretSpawnInfo.spawnPoints, turretEnemySpawnerTag);
+    saveSpawnPoints(file, collection.omnidirectionalTurretSpawnInfo.spawnPoints, omnidirectionalTurretSpawnerTag);
+
+    file << spawnerTag.second << endl;
+}
+
+void saveSpawnPoints(std::fstream &file, vector<shared_ptr<SpawnPoint> > &spawnPoints, const DataTagPair &enemyClassificationTag) {
+
+    file << enemyClassificationTag.first << endl;
+
+    for(auto &spawnPoint : spawnPoints) {
+
+        //save data in following order, each peice of data seperated by a space
+        //max # of enemies spawned, spawn position, spawn delay in MILLISECONDS, type of enemy spawned
+        file << spawnPoint->getMaxEnemiesSpawned() << " ";
+        file << spawnPoint->getSpawnPosition().x << " " << spawnPoint->getSpawnPosition().y << " ";
+        file << spawnPoint->getSpawnDelayInMilliseconds() << " ";
+        file << (int)spawnPoint->getTypeOfEnemySpawned() << endl;
+    }
+
+    file << enemyClassificationTag.second << endl;
+}
+
 void loadWorld(const std::string &worldName, GameWorld &world) {
 
     fstream file;
@@ -113,10 +153,33 @@ void loadWorld(const std::string &worldName, GameWorld &world) {
         return;
     }
 
+    loadWorldBoundsData(file, world.worldBounds, worldBoundsTag);
+    loadWorldBoundsData(file, world.worldBoundsBossFight, worldBoundsBossFightTag);
     loadTileMapData(file, world.tileMap, glm::vec2(world.worldBounds.width, world.worldBounds.height));
     loadBackgroundData(file, world.backgrounds, world.worldBounds);
 
     file.close();
+}
+
+void loadWorldBoundsData(std::fstream &file, sf::FloatRect &bounds, const DataTagPair &boundsTag) {
+
+    if(!readAfterLine(file, boundsTag.first)) {
+
+        cout << "Failed to find bounds data" << endl;
+        return;
+    }
+
+    string extractedData;
+    getline(file, extractedData);
+
+    //save format is "xPos yPos width height"
+    //extract each aspect of the world bounds
+    bounds.left = atof(extractFirstWordInString(extractedData).c_str());
+    bounds.top = atof(extractFirstWordInString(extractedData).c_str());
+    bounds.width = atof(extractFirstWordInString(extractedData).c_str());
+    bounds.height = atof(extractFirstWordInString(extractedData).c_str());
+
+    //data is loaded
 }
 
 void loadTileMapData(std::fstream &file, TileMap &map, glm::vec2 worldSize) {
@@ -169,7 +232,7 @@ void loadBackgroundData(fstream &file, BackgroundManager &manager, sf::FloatRect
 
     if(!readAfterLine(file, backgroundTag.first)) {
 
-        cout << "failed to load background data" << endl;
+        cout << "failed to find background data" << endl;
         return;
     }
 

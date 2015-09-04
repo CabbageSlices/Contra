@@ -13,6 +13,7 @@ class TileMap;
 class BackgroundManager;
 class EnemySpawnerCollection;
 class DestructibleBlock;
+class SpawnPoint;
 
 //every piece of data saved has a tag
 //this tagpair stores the begin and end tag for some type of data
@@ -36,15 +37,17 @@ extern const DataTagPair destructibleBlocksTag;
 
 void saveWorld(const std::string &worldName, GameWorld &world);
 
+void saveWorldBoundsData(std::fstream &file, sf::FloatRect &bounds, const DataTagPair &boundsTag);
 void saveTileMapData(std::fstream &file, TileMap &map);
 void saveBackgroundData(std::fstream &file, BackgroundManager &manager);
-void saveWorldBoundsData(std::fstream &file, sf::FloatRect &bounds, DataTagPair &boundsTag);
-void saveSpawnerCollection(std::fstream &file, EnemySpawnerCollection &collection, DataTagPair &spawnerTag);//used for both boss and non boss spawners so specify what tag should be usd
+void saveSpawnerCollection(std::fstream &file, EnemySpawnerCollection &collection, const DataTagPair &spawnerTag);//used for both boss and non boss spawners so specify what tag should be usd
+void saveSpawnPoints(std::fstream &file, std::vector<std::shared_ptr<SpawnPoint> > &spawnPoints, const DataTagPair &enemyClassificationTag);
 void saveDestructibleBlocks(std::fstream &file, std::vector<std::shared_ptr<DestructibleBlock> > &destructibleBlocks);
 
 
 void loadWorld(const std::string &worldName, GameWorld &world);
 
+void loadWorldBoundsData(std::fstream &file, sf::FloatRect &bounds, const DataTagPair &boundsTag);
 void loadTileMapData(std::fstream &file, TileMap &map, glm::vec2 worldSize);
 void loadBackgroundData(std::fstream &file, BackgroundManager &manager, sf::FloatRect worldSize);
 #endif // WORLDSAVINGLOADING_H_INCLUDED

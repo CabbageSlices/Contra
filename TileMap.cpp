@@ -203,7 +203,7 @@ void TileMap::createRenderedAreas() {
             area->texture.setView(view);
 
             //render tiles to the texture
-            drawTiles(area->texture, glm::vec2(left, top), glm::vec2(left + areaSize, top + areaSize));
+            drawTilesDebug(area->texture, glm::vec2(left, top), glm::vec2(left + areaSize, top + areaSize));
             area->texture.display();
 
             //create sprite from texture

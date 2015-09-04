@@ -59,6 +59,16 @@ struct SpawnPoint {
         return maxSpawnCount - enemiesSpawned;
     }
 
+    unsigned getMaxEnemiesSpawned() const {
+
+        return maxSpawnCount;
+    }
+
+    unsigned getSpawnDelayInMilliseconds() const {
+
+        return spawnDelay.asMilliseconds();
+    }
+
     void setTypeOfEnemySpawned(const EnemyType &type) {
 
         typeOfEnemySpawned = type;
