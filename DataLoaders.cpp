@@ -277,14 +277,14 @@ bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName) 
 
     data.hurtboxes[data.STATE_SHOOTING].push_back(sf::FloatRect(0, 2, 46, 100));
 
-    data.bulletOriginForState[CombinedAxis::UP_LEFT] = glm::vec2(140, 51);
-    data.bulletOriginForState[CombinedAxis::UP] = glm::vec2(140, 51);
-    data.bulletOriginForState[CombinedAxis::UP_RIGHT] = glm::vec2(140, 51);
-    data.bulletOriginForState[CombinedAxis::RIGHT] = glm::vec2(140, 51);
-    data.bulletOriginForState[CombinedAxis::DOWN_RIGHT] = glm::vec2(140, 51);
-    data.bulletOriginForState[CombinedAxis::DOWN] = glm::vec2(140, 51);
-    data.bulletOriginForState[CombinedAxis::DOWN_LEFT] = glm::vec2(140, 51);
-    data.bulletOriginForState[CombinedAxis::LEFT] = glm::vec2(140, 51);
+    data.bulletOriginForState[CombinedAxis::UP_LEFT] = glm::vec2(14, 51);
+    data.bulletOriginForState[CombinedAxis::UP] = glm::vec2(14, 51);
+    data.bulletOriginForState[CombinedAxis::UP_RIGHT] = glm::vec2(14, 51);
+    data.bulletOriginForState[CombinedAxis::RIGHT] = glm::vec2(14, 51);
+    data.bulletOriginForState[CombinedAxis::DOWN_RIGHT] = glm::vec2(14, 51);
+    data.bulletOriginForState[CombinedAxis::DOWN] = glm::vec2(14, 51);
+    data.bulletOriginForState[CombinedAxis::DOWN_LEFT] = glm::vec2(14, 51);
+    data.bulletOriginForState[CombinedAxis::LEFT] = glm::vec2(14, 51);
 
     //these objects don't collide with environment
     data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(1, 1, 1, 1));

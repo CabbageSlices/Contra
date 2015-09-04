@@ -5,6 +5,7 @@
 #include "StringManipulator.h"
 #include "BackgroundManager.h"
 #include "SpawnerData.h"
+#include "PreloadedData.h"
 
 #include <sstream>
 #include <vector>
@@ -157,6 +158,8 @@ void loadWorld(const std::string &worldName, GameWorld &world) {
     loadWorldBoundsData(file, world.worldBoundsBossFight, worldBoundsBossFightTag);
     loadTileMapData(file, world.tileMap, glm::vec2(world.worldBounds.width, world.worldBounds.height));
     loadBackgroundData(file, world.backgrounds, world.worldBounds);
+    loadSpawnerCollection(file, world.nonBossEnemySpawners, nonBossEnemySpawnerTag);
+    loadSpawnerCollection(file, world.bossEnemySpawners, bossEnemySpawnerTag);
 
     file.close();
 }
@@ -252,5 +255,61 @@ void loadBackgroundData(fstream &file, BackgroundManager &manager, sf::FloatRect
 
         extracted = "";
         getline(file, extracted);
+    }
+}
+
+void loadSpawnerCollection(std::fstream &file, EnemySpawnerCollection &collection, const DataTagPair &spawnerTag) {
+
+    if(!readAfterLine(file, spawnerTag.first)) {
+
+        cout << "failed to find spawner collection data" << endl;
+        return;
+    }
+
+    //load each type of spawnpoints
+    ///LOADING MUST OCCUR IN THE SAME ORDER AS THE DATA WAS SAVED
+    ///BECAUSE THE LOADING FUNCTION RELIES ON THE FILE READING TO PLACE THE STREAM READER AT THE CORRECT POSITION AFTER LOADING EACH TYPE OF ENEMY SPAWNER
+    ///AFTER THE FIRST TYPE OF ENEMY IS LOADED, THE CURSOR SHOULD BE PLACED AT THE BEGINNING OF THE DATA FOR THE SECOND TYPE OF ENEMY
+    ///DO NOT CHANGE LOADING ORDER
+    loadSpawnPoints(file, collection.enemySpawnInfo.spawnPoints, basicEnemySpawnerTag);
+    loadSpawnPoints(file, collection.turretSpawnInfo.spawnPoints, turretEnemySpawnerTag);
+    loadSpawnPoints(file, collection.omnidirectionalTurretSpawnInfo.spawnPoints, omnidirectionalTurretSpawnerTag);
+}
+
+void loadSpawnPoints(std::fstream &file, std::vector<std::shared_ptr<SpawnPoint> > &spawnPoints, const DataTagPair &enemyClassificationTag) {
+
+    //if the first line read isn't the beginning of the classification tag, then the file is in the wrong order
+    //so you cannot load the spawner data
+    string extractedData;
+    getline(file, extractedData);
+
+    if(extractedData != enemyClassificationTag.first) {
+
+        cout << "Could not load enemy spawn points" << endl;
+        return;
+    }
+
+    //now load the data for the given enemy type
+    getline(file, extractedData);
+
+    while(extractedData != enemyClassificationTag.second && file) {
+
+        //max # of enemies spawned, spawn position, spawn delay in MILLISECONDS, type of enemy spawned
+        unsigned enemyCount = 0;
+        glm::vec2 spawnPosition;
+        unsigned spawnDelayMilliseconds = 0;
+        EnemyType enemyType = EnemyType::ENEMY_GOOMBA;
+
+        enemyCount = atoi(extractFirstWordInString(extractedData).c_str());
+        spawnPosition.x = atoi(extractFirstWordInString(extractedData).c_str());
+        spawnPosition.y = atoi(extractFirstWordInString(extractedData).c_str());
+        spawnDelayMilliseconds = atoi(extractFirstWordInString(extractedData).c_str());
+        enemyType = (EnemyType)atoi(extractFirstWordInString(extractedData).c_str());
+
+        shared_ptr<SpawnPoint> spawnPoint = std::make_shared<SpawnPoint>(spawnPosition, sf::milliseconds(spawnDelayMilliseconds), enemyType, enemyCount);
+        spawnPoints.push_back(spawnPoint);
+
+        extractedData = "";
+        getline(file, extractedData);
     }
 }

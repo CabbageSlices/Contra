@@ -232,9 +232,10 @@ void updateEnemySpawners(GameWorld &world, EnemySpawnerCollection &spawnerCollec
 	spawnEnemyNearCamera(spawnerCollection.omnidirectionalTurretSpawnInfo, applyBossData);
 
 	//delete any spawner that has no more enemies left to spawn
-	removeEmptySpawners(spawnerCollection.enemySpawnInfo.spawnPoints);
-	removeEmptySpawners(spawnerCollection.turretSpawnInfo.spawnPoints);
-	removeEmptySpawners(spawnerCollection.omnidirectionalTurretSpawnInfo.spawnPoints);
+	///for now don't use this function
+//	removeEmptySpawners(spawnerCollection.enemySpawnInfo.spawnPoints);
+//	removeEmptySpawners(spawnerCollection.turretSpawnInfo.spawnPoints);
+//	removeEmptySpawners(spawnerCollection.omnidirectionalTurretSpawnInfo.spawnPoints);
 }
 
 void removeEmptySpawners(vector<shared_ptr<SpawnPoint> > &spawnPoints) {
@@ -708,9 +709,8 @@ int main() {
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
 
-                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6), 1);
-                        point->setTypeOfEnemySpawned(EnemyType::ENEMY_GOOMBA);
-                        world.bossEnemySpawners.enemySpawnInfo.spawnPoints.push_back(point);
+                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6), EnemyType::ENEMY_MUSHROOM, 1);
+                        world.bossEnemySpawners.omnidirectionalTurretSpawnInfo.spawnPoints.push_back(point);
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) {
 

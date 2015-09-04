@@ -110,7 +110,7 @@ TileMapBegin
 384 384 0 ~ 1  1  1  1
 448 384 0 ~ 1  1  1  1
 512 384 0 ~ 1  1  1  1
-576 384 0 ~ 1  1  1  1
+576 384 0 tileset.png 0  0  0  0
 640 384 0 ~ 1  1  1  1
 704 384 0 ~ 1  1  1  1
 768 384 0 ~ 1  1  1  1
@@ -124,12 +124,12 @@ TileMapBegin
 256 448 0 ~ 1  1  1  1
 320 448 0 ~ 1  1  1  1
 384 448 0 ~ 1  1  1  1
-448 448 0 ~ 1  1  1  1
+448 448 0 tileset.png 0  0  0  0
 512 448 0 ~ 1  1  1  1
-576 448 0 ~ 1  1  1  1
+576 448 0 tileset.png 0  0  0  0
 640 448 0 ~ 1  1  1  1
-704 448 0 ~ 1  1  1  1
-768 448 0 ~ 1  1  1  1
+704 448 0 tileset.png 0  0  0  0
+768 448 0 tileset.png 0  0  0  0
 832 448 0 ~ 1  1  1  1
 896 448 0 ~ 1  1  1  1
 960 448 0 ~ 1  1  1  1
@@ -139,29 +139,29 @@ TileMapBegin
 192 512 0 ~ 1  1  1  1
 256 512 0 ~ 1  1  1  1
 320 512 0 ~ 1  1  1  1
-384 512 0 ~ 1  1  1  1
+384 512 0 tileset.png 0  0  0  0
 448 512 0 ~ 1  1  1  1
-512 512 0 ~ 1  1  1  1
-576 512 0 ~ 1  1  1  1
-640 512 0 ~ 1  1  1  1
-704 512 0 ~ 1  1  1  1
-768 512 0 ~ 1  1  1  1
+512 512 0 tileset.png 0  0  0  0
+576 512 0 tileset.png 0  0  0  0
+640 512 0 tileset.png 0  0  0  0
+704 512 0 tileset.png 0  0  0  0
+768 512 0 tileset.png 0  0  0  0
 832 512 0 ~ 1  1  1  1
 896 512 0 ~ 1  1  1  1
 960 512 0 ~ 1  1  1  1
 0 576 0 ~ 1  1  1  1
 64 576 0 ~ 1  1  1  1
-128 576 0 ~ 1  1  1  1
+128 576 1 tileset.png 0  0  64  64
 192 576 0 ~ 1  1  1  1
 256 576 0 ~ 1  1  1  1
 320 576 0 ~ 1  1  1  1
 384 576 0 ~ 1  1  1  1
 448 576 0 ~ 1  1  1  1
-512 576 0 ~ 1  1  1  1
-576 576 1 tileset.png 0  0  64  64
-640 576 0 ~ 1  1  1  1
-704 576 0 ~ 1  1  1  1
-768 576 0 ~ 1  1  1  1
+512 576 0 tileset.png 0  0  0  0
+576 576 0 tileset.png 0  0  0  0
+640 576 0 tileset.png 0  0  0  0
+704 576 0 tileset.png 0  0  0  0
+768 576 0 tileset.png 0  0  0  0
 832 576 0 ~ 1  1  1  1
 896 576 0 ~ 1  1  1  1
 960 576 0 ~ 1  1  1  1
@@ -183,7 +183,7 @@ TileMapBegin
 960 640 0 ~ 1  1  1  1
 0 704 0 ~ 1  1  1  1
 64 704 0 ~ 1  1  1  1
-128 704 0 ~ 1  1  1  1
+128 704 1 tileset.png 0  0  64  64
 192 704 0 ~ 1  1  1  1
 256 704 0 ~ 1  1  1  1
 320 704 0 ~ 1  1  1  1
@@ -203,19 +203,26 @@ tree.png 0.75
 BackgroundEnd
 nonBossEnemySpawnersBegin
 basicEnemySpawnerBegin
+1 570 312 600 0
+1 887 245 600 0
 basicEnemySpawnerEnd
 turretSpawnerBegin
+1 864 510 600 1
+1 289 470 600 1
 turretSpawnerEnd
 omnidirectionalTurretSpawnerBegin
+1 420 142 600 2
 omnidirectionalTurretSpawnerEnd
 nonBossEnemySpawnersEnd
 bossEnemySpawnersBegin
 basicEnemySpawnerBegin
-1 292 329 600 0
-1 857 412 600 0
+1 441 256 600 0
+1 833 232 600 0
+1 822 558 600 0
 basicEnemySpawnerEnd
 turretSpawnerBegin
 turretSpawnerEnd
 omnidirectionalTurretSpawnerBegin
+1 145 170 600 2
 omnidirectionalTurretSpawnerEnd
 bossEnemySpawnersEnd

@@ -9,22 +9,24 @@
 
 struct SpawnPoint {
 
-    SpawnPoint(const sf::Vector2f &position, const sf::Time &delay, const unsigned &maxSpawns = 3) :
+    SpawnPoint(const sf::Vector2f &position, const sf::Time &delay, const EnemyType &type, const unsigned &maxSpawns = 3) :
         enemiesSpawned(0),
         maxSpawnCount(maxSpawns),
         spawnPosition(position.x, position.y),
         spawnTimer(),
-        spawnDelay(delay)
+        spawnDelay(delay),
+        typeOfEnemySpawned(type)
     {
 
     }
 
-    SpawnPoint(const glm::vec2 &position, const sf::Time &delay, const unsigned &maxSpawns = 3) :
+    SpawnPoint(const glm::vec2 &position, const sf::Time &delay, const EnemyType &type, const unsigned &maxSpawns = 3) :
         enemiesSpawned(0),
         maxSpawnCount(maxSpawns),
         spawnPosition(position),
         spawnTimer(),
-        spawnDelay(delay)
+        spawnDelay(delay),
+        typeOfEnemySpawned(type)
     {
 
     }
