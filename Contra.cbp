@@ -108,6 +108,9 @@
 		<Unit filename="Main.cpp" />
 		<Unit filename="ObjectHitbox.cpp" />
 		<Unit filename="ObjectHitbox.h" />
+		<Unit filename="ObjectTypeToFilename.cpp" />
+		<Unit filename="ObjectTypeToFilename.h" />
+		<Unit filename="ObjectTypes.h" />
 		<Unit filename="OmniDirectionalTurret.cpp" />
 		<Unit filename="OmniDirectionalTurret.h" />
 		<Unit filename="Player.cpp" />
