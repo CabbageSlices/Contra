@@ -26,7 +26,7 @@ class ShootingEntity : public EntityBase {
     protected:
 
         template<class PreloadedData>
-        void loadShootingEntityData(PreloadedData &data);
+        void loadShootingEntityData(const PreloadedData &data);
 
         virtual void scaleComponents(const float &xFactor, const float &yFactor);
 
@@ -40,7 +40,7 @@ class ShootingEntity : public EntityBase {
 };
 
 template<class PreloadedData>
-void ShootingEntity::loadShootingEntityData(PreloadedData &data) {
+void ShootingEntity::loadShootingEntityData(const PreloadedData &data) {
 
     bulletOriginForState.clear();
     bulletOriginForState.insert(data.bulletOriginForState.begin(), data.bulletOriginForState.end());

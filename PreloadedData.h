@@ -4,33 +4,12 @@
 #include "SFML/System.hpp"
 #include "SFML/Graphics.hpp"
 #include "Direction.h"
+#include "ObjectTypes.h"
+#include "ObjectTypeToFilename.h"
 #include <string>
 #include <map>
 #include <vector>
-
-enum EnemyType : int {
-
-    ENEMY_GOOMBA,
-    ENEMY_PIRANHA,
-    ENEMY_MUSHROOM,
-};
-
-enum BulletType : int {
-
-    BULLET_SLOW,
-    BULLET_FAST,
-    BULLET_MEDIUM,
-};
-
-enum GunType {
-
-    GUN_BASIC
-};
-
-enum PowerUpType {
-
-    MACHINE_GUN
-};
+#include <functional>
 
 //characteristics of an enemy that is changed when it turns into a boss
 struct BossProperties {
@@ -38,11 +17,6 @@ struct BossProperties {
     float scale;
     int health;
 };
-
-//matches a given enemy type to the scaling factor applied to it if the enemy if upgraded to a boss type
-//that is, if this type of enemy were to be used as a boss, how much should it be scaled by
-//key is the enemy type, value gives the scaling applied
-typedef std::map<EnemyType, BossProperties> BossData;
 
 struct PreloadedData {
 
@@ -168,17 +142,66 @@ struct PreloadedPowerUpData : public PreloadedData {
 
 struct PreloadedDataCollection {
 
-    PreloadedEnemyData goombaData;
-    PreloadedTurretData piranhaData;
-    PreloadedOmniDirectionalTurretData mushroomData;
-    PreloadedBulletData slowBulletData;
-    PreloadedBulletData mediumBulletData;
-    PreloadedBulletData fastBulletData;
-    PreloadedDestructibleBlockData basicDestructibleBlockData;
-    PreloadedPowerUpData powerUpData;
+    public:
 
-    BossData bossData;
+        //returns cached data
+        //returns null pointer on failure
+        const PreloadedEnemyData* getBasicEnemyData(const EnemyType &enemyType);
+        const PreloadedTurretData* getTurretEnemyData(const EnemyType &enemyType);
+        const PreloadedOmniDirectionalTurretData* getOmnidirectionalTurretData(const EnemyType &enemyType);
+
+        const PreloadedBulletData* getBulletData(const BulletType &bulletType);
+
+        const PreloadedDestructibleBlockData* getDestructibleBlockData(const DestructibleBlockType &blockType);
+
+        const PreloadedPowerUpData* getPowerUpData(const PowerUpType &powerUpType);
+
+        const BossProperties* getBossData(const EnemyType &enemyType);
+
+    private:
+
+        //collection of preloaded data paired with the entity whose data they represent
+        //since enemy types are all stored in one enum even though there are different preloadeddata types for different classes of enemies
+        //you have to make sure to store enemy types and preloaded data of a specific class of enemy in the correct container
+        std::map<EnemyType, PreloadedEnemyData> basicEnemyData;
+        std::map<EnemyType, PreloadedTurretData> turretEnemyData;
+        std::map<EnemyType, PreloadedOmniDirectionalTurretData> omnidirectionalTurretData;
+
+        std::map<BulletType, PreloadedBulletData> bulletData;
+
+        std::map<DestructibleBlockType, PreloadedDestructibleBlockData> destructibleBlockData;
+
+        std::map<PowerUpType, PreloadedPowerUpData> powerUpData;
+
+        //matches a given enemy type to the scaling factor applied to it if the enemy if upgraded to a boss type
+        //that is, if this type of enemy were to be used as a boss, how much should it be scaled by
+        //key is the enemy type, value gives the scaling applied
+        std::map<EnemyType, BossProperties> bossData;
 };
+
+//since all of the get data functions in the preloadedDataCollection follow the same format
+//create a template function that generalizes the procedure for any given type
+template<class DataType, class PreloadedData>
+const PreloadedData* getData(std::map<DataType, PreloadedData> &data, const DataType &dataType,
+                             std::function<bool(PreloadedData&, const std::string&)> dataLoader) {
+
+    if(data.count(dataType) != 0) {
+
+        return &data[dataType];
+    }
+
+    //create an empty cache for the given type
+    data[dataType];
+    std::string dataFilename = getFilenameForData(dataType);
+
+    if(!dataLoader(data[dataType], dataFilename)) {
+
+        data.erase(dataType);
+        return nullptr;
+    }
+
+    return &data[dataType];
+}
 
 extern PreloadedDataCollection dataCollection;
 

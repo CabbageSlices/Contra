@@ -169,7 +169,7 @@ void TurretEnemy::draw(sf::RenderWindow &window) {
     sprite.draw(window);
 }
 
-void TurretEnemy::load(PreloadedTurretData &data) {
+void TurretEnemy::load(const PreloadedTurretData &data) {
 
     loadBase(data);
     loadShootingEntityData(data);

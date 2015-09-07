@@ -14,28 +14,44 @@
 #include "OmniDirectionalTurret.h"
 #include "SpawnerData.h"
 
-void applyLoadedData(Enemy &enemy, EnemyType enemyType) {
+//returns true if data is applied, false if data isn't found
+bool applyLoadedData(Enemy &enemy, EnemyType enemyType) {
 
-    if(enemyType == EnemyType::ENEMY_GOOMBA) {
+    auto data = dataCollection.getBasicEnemyData(enemyType);
 
-        enemy.load(dataCollection.goombaData);
+    if(data) {
+
+       enemy.load(*data);
+       return true;
     }
+
+    return false;
 }
 
-void applyLoadedData(TurretEnemy &enemy, EnemyType enemyType) {
+bool applyLoadedData(TurretEnemy &enemy, EnemyType enemyType) {
 
-    if(enemyType == EnemyType::ENEMY_PIRANHA) {
+    auto data = dataCollection.getTurretEnemyData(enemyType);
 
-        enemy.load(dataCollection.piranhaData);
+    if(data) {
+
+        enemy.load(*data);
+        return true;
     }
+
+    return false;
 }
 
-void applyLoadedData(OmniDirectionalTurret &enemy, EnemyType enemyType) {
+bool applyLoadedData(OmniDirectionalTurret &enemy, EnemyType enemyType) {
 
-    if(enemyType == EnemyType::ENEMY_MUSHROOM) {
+    auto data = dataCollection.getOmnidirectionalTurretData(enemyType);
 
-        enemy.load(dataCollection.mushroomData);
+    if(data) {
+
+        enemy.load(*data);
+        return true;
     }
+
+    return false;
 }
 
 void spawnEntity(std::shared_ptr<Enemy> &enemy, InformationForSpawner<Enemy> &spawnInfo, std::shared_ptr<SpawnPoint> &closestPoint) {
@@ -176,14 +192,19 @@ bool spawnEnemy(InformationForSpawner<T> &spawnInfo, int(*findSpawnPoint)(Inform
         return false;
     }
 
-    applyLoadedData(*enemy, closestPoint->getTypeOfEnemySpawned());
+    if(!applyLoadedData(*enemy, closestPoint->getTypeOfEnemySpawned())) {
+
+        return false;
+    }
 
     //scale the enemy by some factor if it's a boss
     //only do so if there is even data about the scaling that should be applied
-    if(applyBossData && dataCollection.bossData.count(closestPoint->getTypeOfEnemySpawned()) != 0) {
+    if(applyBossData && dataCollection.getBossData(closestPoint->getTypeOfEnemySpawned()) ) {
 
-        float scaleFactor = dataCollection.bossData[closestPoint->getTypeOfEnemySpawned()].scale;
-        int health = dataCollection.bossData[closestPoint->getTypeOfEnemySpawned()].health;
+        auto bossData = dataCollection.getBossData(closestPoint->getTypeOfEnemySpawned());
+
+        float scaleFactor = bossData->scale;
+        int health = bossData->health;
 
         enemy->scale(scaleFactor, scaleFactor);
         enemy->setHealth(health);

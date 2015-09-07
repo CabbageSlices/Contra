@@ -93,7 +93,7 @@ void OmniDirectionalTurret::draw(sf::RenderWindow &window) {
     sprite.draw(window);
 }
 
-void OmniDirectionalTurret::load(PreloadedOmniDirectionalTurretData &data) {
+void OmniDirectionalTurret::load(const PreloadedOmniDirectionalTurretData &data) {
 
     loadBase(data);
     loadShootingEntityData(data);

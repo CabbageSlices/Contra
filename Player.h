@@ -46,7 +46,7 @@ class Player : public ShootingEntity{
         virtual void getHit(int damage = 1);//damage parameters is pretty much ignored, its only needed for inheritance purposes
         virtual void respondToCollision(const CollisionResponse &collisionResponse);
 
-        void load(PreloadedPlayerData &data);
+        void load(const PreloadedPlayerData &data);
 
         bool checkCanRespawn();
         void respawn(const sf::FloatRect &cameraBounds);//spawns at top of camera

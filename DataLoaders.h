@@ -20,7 +20,7 @@ bool loadBossData(std::map<EnemyType, BossProperties> &bossData, const std::stri
 bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFileName);
 
 bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName);
-bool loadEnemyData(PreloadedEnemyData &daa, const std::string &dataFileName);
+bool loadEnemyData(PreloadedEnemyData &data, const std::string &dataFileName);
 bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, const std::string &dataFileName);
 
 bool loadBulletData(PreloadedBulletData &data, const std::string &dataFileName);

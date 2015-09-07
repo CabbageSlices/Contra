@@ -106,7 +106,7 @@ void Enemy::draw(sf::RenderWindow &window) {
     entity.setSize(sf::Vector2f(box.width, box.height));
 }
 
-void Enemy::load(PreloadedEnemyData &data) {
+void Enemy::load(const PreloadedEnemyData &data) {
 
     STATE_WALKING_LEFT = data.STATE_WALKING_LEFT;
     STATE_WALKING_RIGHT = data.STATE_WALKING_RIGHT;

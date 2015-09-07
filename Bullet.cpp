@@ -31,7 +31,7 @@ Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWo
         hitboxMovementController.setVelocities(MOVEMENT_VELOCITY);
     }
 
-Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, PreloadedBulletData &data) :
+Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, const PreloadedBulletData &data) :
     EntityBase(glm::vec2(0, 0), directionWorldSpace, glm::vec2(20.f, 20.f), 1),
     lifeTime(sf::seconds(1.5)),
     timeElapsed(0),
@@ -96,7 +96,7 @@ void Bullet::handleTileCollision(TileMap& map) {
     }
 }
 
-void Bullet::load(PreloadedBulletData &data) {
+void Bullet::load(const PreloadedBulletData &data) {
 
     loadBase(data);
     scale(data.scale, data.scale);

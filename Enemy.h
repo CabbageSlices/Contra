@@ -33,7 +33,7 @@ class Enemy : public EntityBase {
 
         virtual void draw(sf::RenderWindow &window);
 
-        void load(PreloadedEnemyData &data);
+        void load(const PreloadedEnemyData &data);
 
     private:
 

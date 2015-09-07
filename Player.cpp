@@ -192,7 +192,7 @@ void Player::respondToCollision(const CollisionResponse &collisionResponse) {
     matchHitboxPosition();
 }
 
-void Player::load(PreloadedPlayerData &data) {
+void Player::load(const PreloadedPlayerData &data) {
 
     loadBase(data);
     loadShootingEntityData(data);

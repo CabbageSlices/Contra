@@ -36,7 +36,6 @@ using std::shared_ptr;
 using std::make_shared;
 using std::vector;
 
-void loadDataCollection(PreloadedDataCollection &collection);
 void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world);
 void handleObjectEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world);
 void handleObjectKeystate(sf::RenderWindow &window, GameWorld &world);
@@ -119,19 +118,6 @@ function<void(shared_ptr<DestructibleBlock>, shared_ptr<EntityBase>)> destructib
 unsigned powerUpDropPossibleOutcomes = 100;
 unsigned enemyPowerUpDropOccuranceThreshold = 7;
 unsigned turretPowerUpDropOccuranceThreshold = 10;
-
-void loadDataCollection(PreloadedDataCollection &collection) {
-
-    loadBossData(collection.bossData, "scaling.txt");
-    loadEnemyData(collection.goombaData, "goomba.txt");
-    loadTurretData(collection.piranhaData, "piranha.txt");
-    loadOmniDirectionalTurretData(collection.mushroomData, "mushroom.txt");
-    loadBulletData(collection.slowBulletData, "slow");
-    loadBulletData(collection.mediumBulletData, "medium");
-    loadBulletData(collection.fastBulletData, "fast");
-    loadDestrutibleBlockData(collection.basicDestructibleBlockData, "asdf");
-    loadPowerUpData(collection.powerUpData, "powerups.txt");
-}
 
 void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world) {
 
@@ -410,20 +396,11 @@ void spawnPowerUp(const unsigned &occuranceThreshold, const unsigned &possibleOu
 
     //randomly determine the type of powerup to give
     int powerUpType = getRand(PowerUpType::MACHINE_GUN, PowerUpType::MACHINE_GUN);
-    PreloadedPowerUpData *powerUpData = &dataCollection.powerUpData;
+    auto powerUpData = dataCollection.getPowerUpData((PowerUpType)powerUpType);
 
-    switch(powerUpType) {
+    if(!powerUpData) {
 
-        case PowerUpType::MACHINE_GUN: {
-
-            powerUpData = &dataCollection.powerUpData;
-            break;
-        }
-
-        default: {
-
-            powerUpData = &dataCollection.powerUpData;
-        }
+        return;
     }
 
     shared_ptr<PowerUp> powerUp = make_shared<PowerUp>(position, (PowerUpType)powerUpType, *powerUpData);
@@ -669,8 +646,6 @@ int main() {
 
     sf::Event event;
 
-    loadDataCollection(dataCollection);
-
     GameWorld world(window);
     world.worldBounds = sf::FloatRect(0, 0, 2048 + 1024, 768);
     world.worldBoundsBossFight = sf::FloatRect(0, 0, 1028 + 1028, 768);
@@ -714,6 +689,13 @@ int main() {
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) {
 
+                        auto blockData = dataCollection.getDestructibleBlockData(DestructibleBlockType::BLOCK_BRICK);
+
+                        if(!blockData) {
+
+                            continue;
+                        }
+
                         //snap the block to the grid
                         glm::vec2 position(mousePosition.x, mousePosition.y);
                         position /= static_cast<float>(TILE_SIZE);
@@ -722,7 +704,7 @@ int main() {
 
                         position *= static_cast<float>(TILE_SIZE);
 
-                        shared_ptr<DestructibleBlock> block = make_shared<DestructibleBlock>(position, dataCollection.basicDestructibleBlockData);
+                        shared_ptr<DestructibleBlock> block = make_shared<DestructibleBlock>(position, *blockData);
                         world.destructibleBlocks.push_back(block);
                         world.destructibleBlockHash.insert(block);
 

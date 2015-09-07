@@ -36,7 +36,7 @@ class TurretEnemy : public ShootingEntity {
         virtual bool checkCanGetHit();
         virtual void draw(sf::RenderWindow &window);
 
-        void load(PreloadedTurretData &data);
+        void load(const PreloadedTurretData &data);
 
     private:
 

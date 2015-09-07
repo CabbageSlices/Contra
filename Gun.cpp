@@ -120,19 +120,14 @@ void Gun::createBullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &dir
 
     shared_ptr<Bullet> bullet;
 
-    if(bulletType == BulletType::BULLET_SLOW) {
+    auto bulletData = dataCollection.getBulletData(bulletType);
 
-        bullet = make_shared<Bullet>(positionWorldSpace, directionWorldSpace, dataCollection.slowBulletData);
+    if(!bulletData) {
 
-
-    } else if(bulletType == BulletType::BULLET_MEDIUM){
-
-        bullet = make_shared<Bullet>(positionWorldSpace, directionWorldSpace, dataCollection.mediumBulletData);
-
-    } else if(bulletType == BulletType::BULLET_FAST) {
-
-        bullet = make_shared<Bullet>(positionWorldSpace, directionWorldSpace, dataCollection.fastBulletData);
+        return;
     }
+
+    bullet = make_shared<Bullet>(positionWorldSpace, directionWorldSpace, *bulletData);
 
     if(bullet) {
 

@@ -51,8 +51,8 @@ void saveWorld(const string& worldName, GameWorld &world) {
     saveWorldBoundsData(file, world.worldBoundsBossFight, worldBoundsBossFightTag);
     saveTileMapData(file, world.tileMap);
     saveBackgroundData(file, world.backgrounds);
-    saveSpawnerCollection(file, world.nonBossEnemySpawners, nonBossEnemySpawnerTag);
-    saveSpawnerCollection(file, world.bossEnemySpawners, bossEnemySpawnerTag);
+    saveEnemySpawnerCollection(file, world.nonBossEnemySpawners, nonBossEnemySpawnerTag);
+    saveEnemySpawnerCollection(file, world.bossEnemySpawners, bossEnemySpawnerTag);
 //    saveDestructibleBlocks(file, world.destructibleBlocks, destructibleBlocksTag);
 
     file.close();
@@ -110,20 +110,20 @@ void saveBackgroundData(std::fstream &file, BackgroundManager &manager) {
     file << backgroundTag.second << endl;
 }
 
-void saveSpawnerCollection(std::fstream &file, EnemySpawnerCollection &collection, const DataTagPair &spawnerTag) {
+void saveEnemySpawnerCollection(std::fstream &file, EnemySpawnerCollection &collection, const DataTagPair &spawnerTag) {
 
     file << spawnerTag.first << endl;
 
     //for each spawner collection save each spawner type along with its tags
     //start with the normal enemies
-    saveSpawnPoints(file, collection.enemySpawnInfo.spawnPoints, basicEnemySpawnerTag);
-    saveSpawnPoints(file, collection.turretSpawnInfo.spawnPoints, turretEnemySpawnerTag);
-    saveSpawnPoints(file, collection.omnidirectionalTurretSpawnInfo.spawnPoints, omnidirectionalTurretSpawnerTag);
+    saveEnemySpawnPoints(file, collection.enemySpawnInfo.spawnPoints, basicEnemySpawnerTag);
+    saveEnemySpawnPoints(file, collection.turretSpawnInfo.spawnPoints, turretEnemySpawnerTag);
+    saveEnemySpawnPoints(file, collection.omnidirectionalTurretSpawnInfo.spawnPoints, omnidirectionalTurretSpawnerTag);
 
     file << spawnerTag.second << endl;
 }
 
-void saveSpawnPoints(std::fstream &file, vector<shared_ptr<SpawnPoint> > &spawnPoints, const DataTagPair &enemyClassificationTag) {
+void saveEnemySpawnPoints(std::fstream &file, vector<shared_ptr<SpawnPoint> > &spawnPoints, const DataTagPair &enemyClassificationTag) {
 
     file << enemyClassificationTag.first << endl;
 
@@ -138,6 +138,13 @@ void saveSpawnPoints(std::fstream &file, vector<shared_ptr<SpawnPoint> > &spawnP
     }
 
     file << enemyClassificationTag.second << endl;
+}
+
+void saveDestructibleBlocks(fstream &file, vector<shared_ptr<DestructibleBlock> > &destructibleBlocks) {
+
+    file << destructibleBlocksTag.first << endl;
+
+
 }
 
 void loadWorld(const std::string &worldName, GameWorld &world) {
@@ -158,8 +165,8 @@ void loadWorld(const std::string &worldName, GameWorld &world) {
     loadWorldBoundsData(file, world.worldBoundsBossFight, worldBoundsBossFightTag);
     loadTileMapData(file, world.tileMap, glm::vec2(world.worldBounds.width, world.worldBounds.height));
     loadBackgroundData(file, world.backgrounds, world.worldBounds);
-    loadSpawnerCollection(file, world.nonBossEnemySpawners, nonBossEnemySpawnerTag);
-    loadSpawnerCollection(file, world.bossEnemySpawners, bossEnemySpawnerTag);
+    loadEnemySpawnerCollection(file, world.nonBossEnemySpawners, nonBossEnemySpawnerTag);
+    loadEnemySpawnerCollection(file, world.bossEnemySpawners, bossEnemySpawnerTag);
 
     file.close();
 }
@@ -258,7 +265,7 @@ void loadBackgroundData(fstream &file, BackgroundManager &manager, sf::FloatRect
     }
 }
 
-void loadSpawnerCollection(std::fstream &file, EnemySpawnerCollection &collection, const DataTagPair &spawnerTag) {
+void loadEnemySpawnerCollection(std::fstream &file, EnemySpawnerCollection &collection, const DataTagPair &spawnerTag) {
 
     if(!readAfterLine(file, spawnerTag.first)) {
 
@@ -271,12 +278,12 @@ void loadSpawnerCollection(std::fstream &file, EnemySpawnerCollection &collectio
     ///BECAUSE THE LOADING FUNCTION RELIES ON THE FILE READING TO PLACE THE STREAM READER AT THE CORRECT POSITION AFTER LOADING EACH TYPE OF ENEMY SPAWNER
     ///AFTER THE FIRST TYPE OF ENEMY IS LOADED, THE CURSOR SHOULD BE PLACED AT THE BEGINNING OF THE DATA FOR THE SECOND TYPE OF ENEMY
     ///DO NOT CHANGE LOADING ORDER
-    loadSpawnPoints(file, collection.enemySpawnInfo.spawnPoints, basicEnemySpawnerTag);
-    loadSpawnPoints(file, collection.turretSpawnInfo.spawnPoints, turretEnemySpawnerTag);
-    loadSpawnPoints(file, collection.omnidirectionalTurretSpawnInfo.spawnPoints, omnidirectionalTurretSpawnerTag);
+    loadEnemySpawnPoints(file, collection.enemySpawnInfo.spawnPoints, basicEnemySpawnerTag);
+    loadEnemySpawnPoints(file, collection.turretSpawnInfo.spawnPoints, turretEnemySpawnerTag);
+    loadEnemySpawnPoints(file, collection.omnidirectionalTurretSpawnInfo.spawnPoints, omnidirectionalTurretSpawnerTag);
 }
 
-void loadSpawnPoints(std::fstream &file, std::vector<std::shared_ptr<SpawnPoint> > &spawnPoints, const DataTagPair &enemyClassificationTag) {
+void loadEnemySpawnPoints(std::fstream &file, std::vector<std::shared_ptr<SpawnPoint> > &spawnPoints, const DataTagPair &enemyClassificationTag) {
 
     //if the first line read isn't the beginning of the classification tag, then the file is in the wrong order
     //so you cannot load the spawner data

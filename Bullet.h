@@ -18,7 +18,7 @@ class Bullet : public EntityBase {
     public:
 
         Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, const float &bulletVel = 6.f);
-        Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, PreloadedBulletData &data);
+        Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWorldSpace, const PreloadedBulletData &data);
 
         virtual ~Bullet() {
 
@@ -40,7 +40,7 @@ class Bullet : public EntityBase {
             return CollisionResponse();
         }
 
-        void load(PreloadedBulletData &data);
+        void load(const PreloadedBulletData &data);
 
         void determineState();
         void setState(const unsigned &newState);

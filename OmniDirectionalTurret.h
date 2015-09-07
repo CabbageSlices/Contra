@@ -21,7 +21,7 @@ class OmniDirectionalTurret : public ShootingEntity {
         virtual bool checkCanGetHit();
         virtual void draw(sf::RenderWindow &window);
 
-        void load(PreloadedOmniDirectionalTurretData &data);
+        void load(const PreloadedOmniDirectionalTurretData &data);
 
     private:
 
