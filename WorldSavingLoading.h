@@ -44,7 +44,6 @@ void saveEnemySpawnerCollection(std::fstream &file, EnemySpawnerCollection &coll
 void saveEnemySpawnPoints(std::fstream &file, std::vector<std::shared_ptr<SpawnPoint> > &spawnPoints, const DataTagPair &enemyClassificationTag);
 void saveDestructibleBlocks(std::fstream &file, std::vector<std::shared_ptr<DestructibleBlock> > &destructibleBlocks);
 
-
 void loadWorld(const std::string &worldName, GameWorld &world);
 
 void loadWorldBoundsData(std::fstream &file, sf::FloatRect &bounds, const DataTagPair &boundsTag);
@@ -52,4 +51,5 @@ void loadTileMapData(std::fstream &file, TileMap &map, glm::vec2 worldSize);
 void loadBackgroundData(std::fstream &file, BackgroundManager &manager, sf::FloatRect worldSize);
 void loadEnemySpawnerCollection(std::fstream &file, EnemySpawnerCollection &collection, const DataTagPair &spawnerTag);//used for both boss and non boss spawners so specify what tag should be usd
 void loadEnemySpawnPoints(std::fstream &file, std::vector<std::shared_ptr<SpawnPoint> > &spawnPoints, const DataTagPair &enemyClassificationTag);
+void loadDestructibleBlocks(std::fstream &file, std::vector<std::shared_ptr<DestructibleBlock> > &destructibleBlocks);
 #endif // WORLDSAVINGLOADING_H_INCLUDED

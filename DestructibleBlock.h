@@ -4,6 +4,7 @@
 #include "DynamicObject.h"
 #include "AnimatedSprite.h"
 #include "PreloadedData.h"
+#include "ObjectTypes.h"
 
 #include <memory>
 
@@ -11,7 +12,7 @@ class DestructibleBlock : public DynamicObject {
 
     public:
 
-        DestructibleBlock(const glm::vec2 &position, const PreloadedDestructibleBlockData &data);
+        DestructibleBlock(const glm::vec2 &position, const DestructibleBlockType& blockType, const PreloadedDestructibleBlockData &data);
 
         virtual ~DestructibleBlock() {
 
@@ -31,11 +32,18 @@ class DestructibleBlock : public DynamicObject {
 
         void load(const PreloadedDestructibleBlockData &data);
 
+        const DestructibleBlockType& getType() {
+
+            return blockType;
+        }
+
     private:
 
         unsigned STATE_SOLID;
         unsigned STATE_DESTROYING;
         unsigned STATE_DESTROYED;
+
+        DestructibleBlockType blockType;
 };
 
 #endif // DESTRUCTIBLEBLOCK_H_INCLUDED

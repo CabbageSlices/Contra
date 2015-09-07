@@ -402,15 +402,16 @@
 
 1432770771 c:\users\nimesh\desktop\c++\github\contra\globalconstants.h
 
-1439439219 source:c:\users\nimesh\desktop\c++\github\contra\destructibleblock.cpp
+1441663551 source:c:\users\nimesh\desktop\c++\github\contra\destructibleblock.cpp
 	"DestructibleBlock.h"
 	"CollisionResolution.h"
 	<iostream>
 
-1435276374 c:\users\nimesh\desktop\c++\github\contra\destructibleblock.h
+1441662820 c:\users\nimesh\desktop\c++\github\contra\destructibleblock.h
 	"DynamicObject.h"
 	"AnimatedSprite.h"
 	"PreloadedData.h"
+	"ObjectTypes.h"
 	<memory>
 
 1435085640 c:\users\nimesh\desktop\c++\github\contra\dynamicobject.h
@@ -452,7 +453,7 @@
 	"OmniDirectionalTurret.h"
 	"SpawnerData.h"
 
-1439434715 source:c:\users\nimesh\desktop\c++\github\contra\entitybase.cpp
+1441663042 source:c:\users\nimesh\desktop\c++\github\contra\entitybase.cpp
 	"EntityBase.h"
 
 1432770771 source:c:\users\nimesh\desktop\c++\github\contra\globalconstants.cpp
@@ -479,7 +480,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1441659888 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1441663141 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"GameWorld.h"
@@ -538,7 +539,7 @@
 	"ObjectHitbox.h"
 	<iostream>
 
-1441659718 source:c:\users\nimesh\desktop\c++\github\contra\player.cpp
+1441663335 source:c:\users\nimesh\desktop\c++\github\contra\player.cpp
 	"Player.h"
 	<iostream>
 	<vector>
@@ -1010,7 +1011,7 @@
 	<string>
 	<map>
 
-1441659596 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
+1441662056 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
 	"DataLoaders.h"
 	"PreloadedData.h"
 	"Gun.h"
@@ -1077,7 +1078,7 @@
 	<vector>
 	<memory>
 
-1441649074 source:c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.cpp
+1441665397 source:c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.cpp
 	"WorldSavingLoading.h"
 	"GameWorld.h"
 	"Tile.h"
@@ -1086,11 +1087,13 @@
 	"BackgroundManager.h"
 	"SpawnerData.h"
 	"PreloadedData.h"
+	"ObjectTypes.h"
+	"DestructibleBlock.h"
 	<sstream>
 	<vector>
 	<memory>
 
-1441649074 c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.h
+1441664282 c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.h
 	<fstream>
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"

@@ -7,14 +7,15 @@ using std::cout;
 using std::endl;
 using std::shared_ptr;
 
-DestructibleBlock::DestructibleBlock(const glm::vec2 &position, const PreloadedDestructibleBlockData &data) :
+DestructibleBlock::DestructibleBlock(const glm::vec2 &position, const DestructibleBlockType& type, const PreloadedDestructibleBlockData &data) :
     DynamicObject(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), 1),
     STATE_SOLID(0),
     STATE_DESTROYING(0),
-    STATE_DESTROYED(0)
+    STATE_DESTROYED(0),
+    blockType(type)
     {
-        setPosition(position);
         load(data);
+        setPosition(position);
 
         updateRendering();
     }
@@ -44,7 +45,7 @@ void DestructibleBlock::getHit(int damage) {
 
     setHealth(health - damage);
 
-    if(health == 0) {
+    if(health == 0 && currentState != STATE_DESTROYED) {
 
         setState(STATE_DESTROYING);
     }

@@ -6,6 +6,8 @@
 #include "BackgroundManager.h"
 #include "SpawnerData.h"
 #include "PreloadedData.h"
+#include "ObjectTypes.h"
+#include "DestructibleBlock.h"
 
 #include <sstream>
 #include <vector>
@@ -53,7 +55,7 @@ void saveWorld(const string& worldName, GameWorld &world) {
     saveBackgroundData(file, world.backgrounds);
     saveEnemySpawnerCollection(file, world.nonBossEnemySpawners, nonBossEnemySpawnerTag);
     saveEnemySpawnerCollection(file, world.bossEnemySpawners, bossEnemySpawnerTag);
-//    saveDestructibleBlocks(file, world.destructibleBlocks, destructibleBlocksTag);
+    saveDestructibleBlocks(file, world.destructibleBlocks);
 
     file.close();
 }
@@ -144,7 +146,15 @@ void saveDestructibleBlocks(fstream &file, vector<shared_ptr<DestructibleBlock> 
 
     file << destructibleBlocksTag.first << endl;
 
+    for(auto &block : destructibleBlocks) {
 
+        glm::vec2 position = block->getPosition();
+        DestructibleBlockType type = block->getType();
+
+        file << position.x << " " << position.y << " " << type << endl;
+    }
+
+    file << destructibleBlocksTag.second << endl;
 }
 
 void loadWorld(const std::string &worldName, GameWorld &world) {
@@ -167,6 +177,13 @@ void loadWorld(const std::string &worldName, GameWorld &world) {
     loadBackgroundData(file, world.backgrounds, world.worldBounds);
     loadEnemySpawnerCollection(file, world.nonBossEnemySpawners, nonBossEnemySpawnerTag);
     loadEnemySpawnerCollection(file, world.bossEnemySpawners, bossEnemySpawnerTag);
+    loadDestructibleBlocks(file, world.destructibleBlocks);
+
+    //enter all blocks into the hash
+    for(int i = 0; i < world.destructibleBlocks.size(); ++i) {
+
+        world.destructibleBlockHash.insert(world.destructibleBlocks[i]);
+    }
 
     file.close();
 }
@@ -315,6 +332,39 @@ void loadEnemySpawnPoints(std::fstream &file, std::vector<std::shared_ptr<SpawnP
 
         shared_ptr<SpawnPoint> spawnPoint = std::make_shared<SpawnPoint>(spawnPosition, sf::milliseconds(spawnDelayMilliseconds), enemyType, enemyCount);
         spawnPoints.push_back(spawnPoint);
+
+        extractedData = "";
+        getline(file, extractedData);
+    }
+}
+
+void loadDestructibleBlocks(std::fstream &file, std::vector<std::shared_ptr<DestructibleBlock> > &destructibleBlocks) {
+
+    if(!readAfterLine(file, destructibleBlocksTag.first)) {
+
+        cout << "failed to find destructible blocks data" << endl;
+        return;
+    }
+
+    string extractedData;
+    getline(file, extractedData);
+
+    while(extractedData != destructibleBlocksTag.second) {
+
+        glm::vec2 position;
+        DestructibleBlockType blockType;
+
+        position.x = atoi(extractFirstWordInString(extractedData).c_str());
+        position.y = atoi(extractFirstWordInString(extractedData).c_str());
+
+        blockType = (DestructibleBlockType)atoi(extractFirstWordInString(extractedData).c_str());
+        auto blockData = dataCollection.getDestructibleBlockData(blockType);
+
+        if(blockData) {
+
+            auto block = std::make_shared<DestructibleBlock>(position, blockType, *blockData);
+            destructibleBlocks.push_back(block);
+        }
 
         extractedData = "";
         getline(file, extractedData);

@@ -285,7 +285,8 @@ void updateWorldPhyics(GameWorld &world, const float &deltaTime) {
 	removeDeadEntities(world.bossEnemyCollection.enemies);
 	removeDeadEntities(world.bossEnemyCollection.turrets);
 
-	removeDeadHashEntries(world.destructibleBlocks, world.destructibleBlockHash);
+    ///for saving and loading testing don't remove destructible blocks
+	///removeDeadHashEntries(world.destructibleBlocks, world.destructibleBlockHash);
 }
 
 void updateCameraProperties(GameWorld &world, vector<glm::vec2> &playerPositions, const float &deltaTime) {
@@ -704,7 +705,7 @@ int main() {
 
                         position *= static_cast<float>(TILE_SIZE);
 
-                        shared_ptr<DestructibleBlock> block = make_shared<DestructibleBlock>(position, *blockData);
+                        shared_ptr<DestructibleBlock> block = make_shared<DestructibleBlock>(position, DestructibleBlockType::BLOCK_BRICK, *blockData);
                         world.destructibleBlocks.push_back(block);
                         world.destructibleBlockHash.insert(block);
 

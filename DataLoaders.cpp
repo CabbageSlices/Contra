@@ -478,6 +478,8 @@ bool loadDestrutibleBlockData(PreloadedDestructibleBlockData &data, const std::s
     data.animationTextureRects[data.STATE_DESTROYING].push_back(sf::IntRect(64, 128, 64, 64));
     data.animationTextureRects[data.STATE_DESTROYING].push_back(sf::IntRect(128, 128, 64, 64));
 
+    data.animationTextureRects[data.STATE_DESTROYED].push_back(sf::IntRect(1, 1, 1, 1));
+
     data.hurtboxes[data.STATE_SOLID].push_back(sf::FloatRect(0, 0, 64, 64));
     data.hurtboxes[data.STATE_DESTROYING].push_back(sf::FloatRect(1, 1, 1, 1));
     data.hurtboxes[data.STATE_DESTROYED].push_back(sf::FloatRect(1, 1, 1, 1));

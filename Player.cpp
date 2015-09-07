@@ -662,7 +662,7 @@ void Player::jump() {
         stopStandingOnPlatforms();
         wasJumpButtonPressed = true;
         hitbox.setActiveHitbox(0, jumpingHitboxState);
-        hitbox.move(glm::vec2(0, -hitbox.getActiveHitboxObjectSpace().height / 2));
+        ///hitbox.move(glm::vec2(0, -hitbox.getActiveHitboxObjectSpace().height / 2));
     }
 }
 

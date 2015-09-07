@@ -54,7 +54,7 @@ HitboxMovementController& EntityBase::getMovementController() {
 
 const glm::vec2 EntityBase::getPosition() const {
 
-    return hurtbox.getOrigin();
+    return hitbox.getOrigin();
 }
 
 void EntityBase::setHealth(const int &newVal) {
@@ -69,7 +69,7 @@ void EntityBase::setHealth(const int &newVal) {
 
 vector<shared_ptr<Tile> > EntityBase::getSurroundingTiles(const TileMap &map, const glm::vec2 &areaPadding) {
 
-    sf::FloatRect bounding = hurtbox.getActiveHitboxWorldSpace();
+    sf::FloatRect bounding = hitbox.getActiveHitboxWorldSpace();
 
     //calculate region encompassed by object
     //extedn the region slightly because slope tiles need extra information about object previous position if he leaves a tile
