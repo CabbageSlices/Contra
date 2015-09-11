@@ -22,17 +22,17 @@ BackgroundManager::BackgroundManager() :
 
     }
 
-void BackgroundManager::insertBackground(const string &backgroundFileName, const float &distanceFromView, const sf::FloatRect &worldBounds) {
+void BackgroundManager::insertBackground(const string &backgroundFilename, const float &distanceFromView, const sf::FloatRect &worldBounds) {
 
     //check if the given background has already been loaded
-    if(!loadedTextures.count(backgroundFileName) && !loadedTextures[backgroundFileName].loadFromFile(backgroundFileName)) {
+    if(!loadedTextures.count(backgroundFilename) && !loadedTextures[backgroundFilename].loadFromFile(backgroundFilename)) {
 
         //failed to load image so remove texturerect and exit
-        loadedTextures.erase(backgroundFileName);
+        loadedTextures.erase(backgroundFilename);
         return;
     }
 
-    sf::Texture &textureToUse = loadedTextures[backgroundFileName];
+    sf::Texture &textureToUse = loadedTextures[backgroundFilename];
     textureToUse.setRepeated(true);
 
     sf::RectangleShape newBackground(sf::Vector2f(worldBounds.width, worldBounds.height));
@@ -58,7 +58,7 @@ void BackgroundManager::insertBackground(const string &backgroundFileName, const
     backgrounds.insert(insertionPosition, backgroundPair);
 
     //store this background and its distance from the view in the savedata container so that the game can save which background is located at what distance
-    auto backgroundDistancePair = std::make_pair(backgroundFileName, distanceFromView);
+    auto backgroundDistancePair = std::make_pair(backgroundFilename, distanceFromView);
     backgroundDistanceSaveData.push_back(backgroundDistancePair);
 }
 

@@ -11,7 +11,7 @@ using std::shared_ptr;
 using std::cout;
 using std::endl;
 
-Player::Player(const PlayerKeys& keyConfiguration):
+Player::Player(glm::vec2 &spawnPosition, const PlayerKeys& keyConfiguration):
     ShootingEntity(glm::vec2(0, GRAVITY), glm::vec2(4.f, 4.05f), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), 3),
     STATE_STANDING_LEFT(0),
     STATE_STANDING_UP_FACING_LEFT(1),
@@ -62,6 +62,7 @@ Player::Player(const PlayerKeys& keyConfiguration):
         }
 
         entity.setSize(sf::Vector2f(50, 100));
+        setPosition(spawnPosition);
     }
 
 void Player::handleInputEvents(sf::Event& event, sf::RenderWindow& window) {
@@ -254,7 +255,7 @@ void Player::respawn(const sf::FloatRect &cameraBounds) {
 
     //move player slightly below camera beucase once they respawn if they hold jump then he wil always be able to jump
     //because he will be touchign top of screen so the game registers it as if he is standing on the ground
-    glm::vec2 spawnPosition(cameraBounds.left + hurtbox.getActiveHitboxObjectSpace().width, cameraBounds.top + 1);
+    glm::vec2 spawnPosition(cameraBounds.left + hitbox.getActiveHitboxObjectSpace().width, cameraBounds.top + 1);
     setPosition(spawnPosition);
 
     setLives(health - 1);

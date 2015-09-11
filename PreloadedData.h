@@ -22,7 +22,7 @@ struct PreloadedData {
 
     int health;
 
-    std::string textureFileName;
+    std::string textureFilename;
     sf::Time animationNextFrameTime;
 
     float scale = 1.0f;

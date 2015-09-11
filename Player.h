@@ -23,12 +23,20 @@ struct PlayerKeys {
     sf::Keyboard::Key fire = sf::Keyboard::G;
 };
 
+enum PlayerNumber : int {
+
+    PLAYER_1 = 1,
+    PLAYER_2,
+    PLAYER_3,
+    PLAYER_4
+};
+
 //since player inherits from EntityBase his lives is equal to the health
 class Player : public ShootingEntity{
 
     public:
 
-        Player(const PlayerKeys& keyConfiguration = PlayerKeys());
+        Player(glm::vec2 &spawnPosition, const PlayerKeys& keyConfiguration = PlayerKeys());
 
         virtual ~Player() {
 

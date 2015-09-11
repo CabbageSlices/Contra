@@ -111,7 +111,7 @@ void EntityBase::loadBase(const Data &data) {
     health = data.health;
 
     sprite.getSprite().setScale(data.scale, data.scale);
-    sprite.loadTexture(data.textureFileName);
+    sprite.loadTexture(data.textureFilename);
     sprite.setNextFrameTime(data.animationNextFrameTime);
 
     defaultHitboxState = data.defaultHitboxState;

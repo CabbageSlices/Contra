@@ -19,27 +19,15 @@ using std::shared_ptr;
 using std::string;
 using std::fstream;
 
-const string savedDataPath("levels/");
+const string savedWorldDataPath("data/levels/");
 const string saveFileExtention(".txt");
-
-const DataTagPair playerSpawnTag("PlayerSpawnBegin", "PlayerSpawnBegin");
-const DataTagPair tileMapTag("TileMapBegin", "TileMapEnd");
-const DataTagPair backgroundTag("BackgroundBegin", "BackgroundEnd");
-const DataTagPair worldBoundsTag("worldBoundsBegin", "worldBoundsEnd");
-const DataTagPair worldBoundsBossFightTag("bossWorldBoundsBegin", "bossWorldBoundsEnd");
-const DataTagPair nonBossEnemySpawnerTag("nonBossEnemySpawnersBegin", "nonBossEnemySpawnersEnd");
-const DataTagPair bossEnemySpawnerTag("bossEnemySpawnersBegin", "bossEnemySpawnersEnd");
-const DataTagPair basicEnemySpawnerTag("basicEnemySpawnerBegin", "basicEnemySpawnerEnd");
-const DataTagPair turretEnemySpawnerTag("turretSpawnerBegin", "turretSpawnerEnd");
-const DataTagPair omnidirectionalTurretSpawnerTag("omnidirectionalTurretSpawnerBegin", "omnidirectionalTurretSpawnerEnd");
-const DataTagPair destructibleBlocksTag("destructibleBlockBegin", "destructibleBlockEnd");
 
 void saveWorld(const string& worldName, GameWorld &world) {
 
     fstream file;
 
-    string fileName = savedDataPath + worldName + saveFileExtention;
-    file.open(savedDataPath + worldName + saveFileExtention, std::ios_base::out | std::ios_base::trunc);
+    string fileName = savedWorldDataPath + worldName + saveFileExtention;
+    file.open(savedWorldDataPath + worldName + saveFileExtention, std::ios_base::out | std::ios_base::trunc);
 
     if(!file) {
 
@@ -56,6 +44,7 @@ void saveWorld(const string& worldName, GameWorld &world) {
     saveEnemySpawnerCollection(file, world.nonBossEnemySpawners, nonBossEnemySpawnerTag);
     saveEnemySpawnerCollection(file, world.bossEnemySpawners, bossEnemySpawnerTag);
     saveDestructibleBlocks(file, world.destructibleBlocks);
+    savePlayerSpawnPosition(file, world.initialPlayerSpawnPoint);
 
     file.close();
 }
@@ -157,12 +146,21 @@ void saveDestructibleBlocks(fstream &file, vector<shared_ptr<DestructibleBlock> 
     file << destructibleBlocksTag.second << endl;
 }
 
+void savePlayerSpawnPosition(std::fstream &file, const glm::vec2 &spawnPosition) {
+
+    file << playerSpawnTag.first << endl;
+
+    file << spawnPosition.x << " " << spawnPosition.y << endl;
+
+    file << playerSpawnTag.second << endl;
+}
+
 void loadWorld(const std::string &worldName, GameWorld &world) {
 
     fstream file;
 
-    string fileName = savedDataPath + worldName + saveFileExtention;
-    file.open(savedDataPath + worldName + saveFileExtention, std::ios_base::in);
+    string fileName = savedWorldDataPath + worldName + saveFileExtention;
+    file.open(savedWorldDataPath + worldName + saveFileExtention, std::ios_base::in);
 
     if(!file) {
 
@@ -178,9 +176,10 @@ void loadWorld(const std::string &worldName, GameWorld &world) {
     loadEnemySpawnerCollection(file, world.nonBossEnemySpawners, nonBossEnemySpawnerTag);
     loadEnemySpawnerCollection(file, world.bossEnemySpawners, bossEnemySpawnerTag);
     loadDestructibleBlocks(file, world.destructibleBlocks);
+    loadPlayerSpawnPosition(file, world.initialPlayerSpawnPoint);
 
     //enter all blocks into the hash
-    for(int i = 0; i < world.destructibleBlocks.size(); ++i) {
+    for(unsigned i = 0; i < world.destructibleBlocks.size(); ++i) {
 
         world.destructibleBlockHash.insert(world.destructibleBlocks[i]);
     }
@@ -234,7 +233,7 @@ void loadTileMapData(std::fstream &file, TileMap &map, glm::vec2 worldSize) {
 
         TileType type = (TileType)atoi(extractFirstWordInString(extracted).c_str());
 
-        string textureFileName = extractFirstWordInString(extracted);
+        string textureFilename = extractFirstWordInString(extracted);
 
         sf::IntRect textureRect;
 
@@ -243,7 +242,7 @@ void loadTileMapData(std::fstream &file, TileMap &map, glm::vec2 worldSize) {
         textureRect.width = atoi(extractFirstWordInString(extracted).c_str());
         textureRect.height = atoi(extractFirstWordInString(extracted).c_str());
 
-        map.setTile(position, type, textureFileName, textureRect);
+        map.setTile(position, type, textureFilename, textureRect);
 
         extracted = "";
 
@@ -271,11 +270,11 @@ void loadBackgroundData(fstream &file, BackgroundManager &manager, sf::FloatRect
     while(extracted != backgroundTag.second && file) {
 
         //load each background file name and insert the background
-        string backgroundFileName = extractFirstWordInString(extracted);
+        string backgroundFilename = extractFirstWordInString(extracted);
 
         float distanceFromView = atof(extractFirstWordInString(extracted).c_str());
 
-        manager.insertBackground(backgroundFileName, distanceFromView, worldSize);
+        manager.insertBackground(backgroundFilename, distanceFromView, worldSize);
 
         extracted = "";
         getline(file, extracted);
@@ -349,7 +348,7 @@ void loadDestructibleBlocks(std::fstream &file, std::vector<std::shared_ptr<Dest
     string extractedData;
     getline(file, extractedData);
 
-    while(extractedData != destructibleBlocksTag.second) {
+    while(extractedData != destructibleBlocksTag.second && file) {
 
         glm::vec2 position;
         DestructibleBlockType blockType;
@@ -365,6 +364,27 @@ void loadDestructibleBlocks(std::fstream &file, std::vector<std::shared_ptr<Dest
             auto block = std::make_shared<DestructibleBlock>(position, blockType, *blockData);
             destructibleBlocks.push_back(block);
         }
+
+        extractedData = "";
+        getline(file, extractedData);
+    }
+}
+
+void loadPlayerSpawnPosition(std::fstream &file, glm::vec2 &spawnPosition) {
+
+    if(!readAfterLine(file, playerSpawnTag.first)) {
+
+        cout << "failed to find player spawn position data" << endl;
+        return;
+    }
+
+    string extractedData;
+    getline(file, extractedData);
+
+    while(extractedData != playerSpawnTag.second && file) {
+
+        spawnPosition.x = atoi(extractFirstWordInString(extractedData).c_str());
+        spawnPosition.y = atoi(extractFirstWordInString(extractedData).c_str());
 
         extractedData = "";
         getline(file, extractedData);

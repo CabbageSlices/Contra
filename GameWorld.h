@@ -32,6 +32,13 @@ struct EnemyCollection {
     std::vector<std::shared_ptr<Enemy> > enemies;
 	std::vector<std::shared_ptr<TurretEnemy> > turrets;
 	std::vector<std::shared_ptr<OmniDirectionalTurret> > omnidirectionalTurrets;
+
+	void clear() {
+
+        enemies.clear();
+        turrets.clear();
+        omnidirectionalTurrets.clear();
+	}
 };
 
 struct EnemySpawnerCollection {
@@ -43,6 +50,13 @@ struct EnemySpawnerCollection {
         {
 
         }
+
+    void clearSpawnPoints() {
+
+        enemySpawnInfo.spawnPoints.clear();
+        turretSpawnInfo.spawnPoints.clear();
+        omnidirectionalTurretSpawnInfo.spawnPoints.clear();
+    }
 
     InformationForSpawner<Enemy> enemySpawnInfo;
 	InformationForSpawner<TurretEnemy> turretSpawnInfo;
@@ -113,6 +127,26 @@ struct GameWorld {
 	//other stuff
 	SpatialHash<DestructibleBlock> destructibleBlockHash;
 	sf::Clock updateTimer;
+
+	void clearEverythingButPlayers() {
+
+        powerUps.clear();
+        tileMap.resize(0, 0);
+        destructibleBlocks.clear();
+        backgrounds.clearBackgrounds();
+        nonBossEnemySpawners.clearSpawnPoints();
+        bossEnemySpawners.clearSpawnPoints();
+        nonBossEnemyCollection.clear();
+        bossEnemyCollection.clear();
+        destructibleBlockHash.clear();
+        destructibleBlocks.clear();
+	}
+
+	void clearEverything() {
+
+        players.clear();
+        clearEverythingButPlayers();
+	}
 
 	bool shouldBeginBossFightTransition() {
 

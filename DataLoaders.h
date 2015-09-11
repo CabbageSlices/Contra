@@ -15,18 +15,18 @@ class PreloadedOmniDirectionalTurretData;
 enum EnemyType : int;
 struct BossProperties;
 
-bool loadBossData(std::map<EnemyType, BossProperties> &bossData, const std::string &dataFileName);
+bool loadBossData(std::map<EnemyType, BossProperties> &bossData, const std::string &dataFilename);
 
-bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFileName);
+bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFilename);
 
-bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName);
-bool loadEnemyData(PreloadedEnemyData &data, const std::string &dataFileName);
-bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, const std::string &dataFileName);
+bool loadTurretData(PreloadedTurretData &data, const std::string &dataFilename);
+bool loadEnemyData(PreloadedEnemyData &data, const std::string &dataFilename);
+bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, const std::string &dataFilename);
 
-bool loadBulletData(PreloadedBulletData &data, const std::string &dataFileName);
+bool loadBulletData(PreloadedBulletData &data, const std::string &dataFilename);
 
-bool loadDestrutibleBlockData(PreloadedDestructibleBlockData &data, const std::string &dataFileName);
+bool loadDestrutibleBlockData(PreloadedDestructibleBlockData &data, const std::string &dataFilename);
 
-bool loadPowerUpData(PreloadedPowerUpData &data, const std::string &dataFileName);
+bool loadPowerUpData(PreloadedPowerUpData &data, const std::string &dataFilename);
 
 #endif // DATALOADERS_H_INCLUDED

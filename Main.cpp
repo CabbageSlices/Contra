@@ -19,6 +19,7 @@
 #include "PowerUp.h"
 #include "Random.h"
 #include "WorldSavingLoading.h"
+#include "GameConfiguration.h"
 
 #include <functional>
 #include <vector>
@@ -646,17 +647,21 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(1024, 768), "Contra");
 
     sf::Event event;
-
+    GameConfiguration gameConfiguration;
     GameWorld world(window);
+
     world.worldBounds = sf::FloatRect(0, 0, 2048 + 1024, 768);
     world.worldBoundsBossFight = sf::FloatRect(0, 0, 1028 + 1028, 768);
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
-    world.players.push_back(make_shared<Player>());
+
     PreloadedPlayerData data;
     loadPlayerData(data, "player.txt");
-    world.players[0]->load(data);
 
+    world.clearEverything();
     loadWorld("world1", world);
+
+    world.players.push_back(make_shared<Player>(world.initialPlayerSpawnPoint, gameConfiguration.getKeysForPlayer(PlayerNumber::PLAYER_1)));
+    world.players[0]->load(data);
 
     while(window.isOpen()) {
 
@@ -737,5 +742,6 @@ int main() {
     }
 
     saveWorld("world1", world);
+    gameConfiguration.save();
     return 0;
 }

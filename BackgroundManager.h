@@ -23,7 +23,7 @@ class BackgroundManager {
 
         BackgroundManager();
 
-        void insertBackground(const std::string &backgroundFileName, const float &distanceFromView, const sf::FloatRect &worldBounds);
+        void insertBackground(const std::string &backgroundFilename, const float &distanceFromView, const sf::FloatRect &worldBounds);
         void clearBackgrounds();
         void clearLoadedBackgrounds();//also clears backgrounds since the textures become invalid
 

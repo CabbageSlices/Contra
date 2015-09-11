@@ -98,6 +98,8 @@
 		<Unit filename="EntityBase.h" />
 		<Unit filename="FileManipulators.cpp" />
 		<Unit filename="FileManipulators.h" />
+		<Unit filename="GameConfiguration.cpp" />
+		<Unit filename="GameConfiguration.h" />
 		<Unit filename="GameWorld.h" />
 		<Unit filename="GlobalConstants.cpp" />
 		<Unit filename="GlobalConstants.h" />
@@ -122,6 +124,8 @@
 		<Unit filename="PreloadedData.h" />
 		<Unit filename="Random.cpp" />
 		<Unit filename="Random.h" />
+		<Unit filename="SavedDataTags.cpp" />
+		<Unit filename="SavedDataTags.h" />
 		<Unit filename="ShootingEntity.cpp" />
 		<Unit filename="ShootingEntity.h" />
 		<Unit filename="SpatialHash.h" />

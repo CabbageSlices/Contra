@@ -40,6 +40,7 @@ class SpatialHash {
         void insert(std::shared_ptr<T> &entry);
         void remove(std::shared_ptr<T> &entry);
         void remove(std::shared_ptr<T> &entry, const sf::FloatRect &boundingBox); //remove the entity from the grid given its bounding box
+        void clear();
 
         std::unordered_set<std::shared_ptr<T> > getSurroundingEntites(const sf::FloatRect boundingBox);
 
@@ -99,6 +100,12 @@ template<class T> void SpatialHash<T>::remove(std::shared_ptr<T> &entry, const s
     sf::IntRect gridBounds = calculateEnclosedGrid(boundingBox);
 
     remove(entry, gridBounds);
+}
+
+template<class T> void SpatialHash<T>::clear() {
+
+    //remove all entries from the hash
+    hash.clear();
 }
 
 template<class T> std::unordered_set<std::shared_ptr<T> > SpatialHash<T>::getSurroundingEntites(const sf::FloatRect boundingBox) {

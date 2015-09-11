@@ -4,7 +4,7 @@
 
 using std::map;
 
-bool loadBossData(map<EnemyType, BossProperties> &bossData, const std::string &dataFileName) {
+bool loadBossData(map<EnemyType, BossProperties> &bossData, const std::string &dataFilename) {
 
     bossData[EnemyType::ENEMY_GOOMBA].scale = 2.f;
     bossData[EnemyType::ENEMY_GOOMBA].health = 5;
@@ -18,10 +18,10 @@ bool loadBossData(map<EnemyType, BossProperties> &bossData, const std::string &d
     return true;
 }
 
-bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFileName) {
+bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFilename) {
 
     data.health = 3;
-    data.textureFileName = "player.png";
+    data.textureFilename = "player.png";
     data.animationNextFrameTime = sf::milliseconds(100);
 
     data.gunType = GunType::GUN_BASIC;
@@ -202,7 +202,7 @@ bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFileName) 
     return true;
 }
 
-bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName) {
+bool loadTurretData(PreloadedTurretData &data, const std::string &dataFilename) {
 
     ///for now ignore the data file
     //load the different states
@@ -231,7 +231,7 @@ bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName) 
     data.health = 8;
 
     //load the sprite
-    data.textureFileName = "pirana.png";
+    data.textureFilename = "pirana.png";
 
     data.animationNextFrameTime = sf::milliseconds(75);
 
@@ -292,7 +292,7 @@ bool loadTurretData(PreloadedTurretData &data, const std::string &dataFileName) 
     return true;
 }
 
-bool loadEnemyData(PreloadedEnemyData &data, const std::string &dataFileName) {
+bool loadEnemyData(PreloadedEnemyData &data, const std::string &dataFilename) {
 
     data.STATE_WALKING_LEFT = 0;
     data.STATE_WALKING_RIGHT = 1;
@@ -301,7 +301,7 @@ bool loadEnemyData(PreloadedEnemyData &data, const std::string &dataFileName) {
 
     data.health = 1;
 
-    data.textureFileName = "enemy.png";
+    data.textureFilename = "enemy.png";
     data.animationNextFrameTime = sf::milliseconds(100);
 
     int textureRectWidth = 128;
@@ -330,7 +330,7 @@ bool loadEnemyData(PreloadedEnemyData &data, const std::string &dataFileName) {
     return true;
 }
 
-bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, const std::string &dataFileName) {
+bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, const std::string &dataFilename) {
 
     data.scale = 1;
     data.STATE_HIDING = 0;
@@ -348,7 +348,7 @@ bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, con
     data.shootingDelay = sf::seconds(2.f);
     data.health = 10;
 
-    data.textureFileName = "mushroom.png";
+    data.textureFilename = "mushroom.png";
 
     data.animationNextFrameTime = sf::milliseconds(90);
 
@@ -410,7 +410,7 @@ bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, con
     return true;
 }
 
-bool loadBulletData(PreloadedBulletData &data, const std::string &dataFileName) {
+bool loadBulletData(PreloadedBulletData &data, const std::string &dataFilename) {
 
     data.STATE_RIGHT = 0;
     data.STATE_UP_RIGHT = 1;
@@ -423,16 +423,16 @@ bool loadBulletData(PreloadedBulletData &data, const std::string &dataFileName) 
 
     data.velocity = 7.f;
 
-    if(dataFileName == "slow")
+    if(dataFilename == "slow")
     data.velocity = 3.5f;
 
-    if(dataFileName == "fast")
+    if(dataFilename == "fast")
     data.velocity = 10.5f;
 
     data.lifetime = sf::seconds(3.f);
 
     data.health = 1;
-    data.textureFileName = "bullet.png";
+    data.textureFilename = "bullet.png";
     data.animationNextFrameTime = sf::seconds(10);
 
     data.animationTextureRects[data.STATE_RIGHT].push_back(sf::IntRect(0, 0, 21, 21));
@@ -458,13 +458,13 @@ bool loadBulletData(PreloadedBulletData &data, const std::string &dataFileName) 
     return true;
 }
 
-bool loadDestrutibleBlockData(PreloadedDestructibleBlockData &data, const std::string &dataFileName) {
+bool loadDestrutibleBlockData(PreloadedDestructibleBlockData &data, const std::string &dataFilename) {
 
     data.STATE_SOLID = 0;
     data.STATE_DESTROYING = 1;
     data.STATE_DESTROYED = 2;
 
-    data.textureFileName = "BrickBreak.png";
+    data.textureFilename = "BrickBreak.png";
     data.animationNextFrameTime = sf::milliseconds(40);
 
     data.animationTextureRects[data.STATE_SOLID].push_back(sf::IntRect(0, 0, 64, 64));
@@ -491,7 +491,7 @@ bool loadDestrutibleBlockData(PreloadedDestructibleBlockData &data, const std::s
     return true;
 }
 
-bool loadPowerUpData(PreloadedPowerUpData &data, const std::string &dataFileName) {
+bool loadPowerUpData(PreloadedPowerUpData &data, const std::string &dataFilename) {
 
     data.health = 1;
 
@@ -500,7 +500,7 @@ bool loadPowerUpData(PreloadedPowerUpData &data, const std::string &dataFileName
     data.STATE_DISAPPEARING = 2;
     data.STATE_DISAPPEARED = 3;
 
-    data.textureFileName = "powerups.png";
+    data.textureFilename = "powerups.png";
     data.animationNextFrameTime = sf::milliseconds(200);
 
     data.FRAME_MACHINEGUN = 0;
