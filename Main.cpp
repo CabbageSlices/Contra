@@ -37,14 +37,6 @@ using std::shared_ptr;
 using std::make_shared;
 using std::vector;
 
-/**
-
-    TO ADD:
-
-    HAVE PLAYER CONSTRUCTOR BE PRIVATE AND FORCE PLAYERS TO BE CREATED THROUGH FUNCTIONS THAT WAY THE PLAYER'S PLAYER_NUMBER AND CONTROLS CAN BE SET AT CREATION,
-    AND THE PLAYERS CAN LOAD THE PLAYER DATA UPON CREATION
-**/
-
 void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world);
 void handleObjectEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world);
 void handleObjectKeystate(sf::RenderWindow &window, GameWorld &world);
