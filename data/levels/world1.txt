@@ -183,7 +183,7 @@ TileMapBegin
 960 640 0 ~ 1  1  1  1
 0 704 0 ~ 1  1  1  1
 64 704 0 ~ 1  1  1  1
-128 704 1 tileset.png 0  0  64  64
+128 704 0 tileset.png 0  0  0  0
 192 704 0 ~ 1  1  1  1
 256 704 0 ~ 1  1  1  1
 320 704 0 ~ 1  1  1  1
@@ -234,5 +234,5 @@ destructibleBlockBegin
 704 512 0
 destructibleBlockEnd
 PlayerSpawnBegin
-1024 1024
+0 0
 PlayerSpawnBegin

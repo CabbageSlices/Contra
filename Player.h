@@ -31,16 +31,18 @@ enum PlayerNumber : int {
     PLAYER_4
 };
 
+class GameConfiguration;
+
 //since player inherits from EntityBase his lives is equal to the health
 class Player : public ShootingEntity{
 
     public:
 
-        Player(glm::vec2 &spawnPosition, const PlayerKeys& keyConfiguration = PlayerKeys());
-
         virtual ~Player() {
 
         }
+
+        friend std::shared_ptr<Player> createPlayer(const glm::vec2 &spawnPosition, const PlayerNumber &number, GameConfiguration &gameConfig);
 
         void handleInputEvents(sf::Event& event, sf::RenderWindow& window);
         void handleKeystate(sf::RenderWindow& window);
@@ -63,6 +65,8 @@ class Player : public ShootingEntity{
         int getLives() const;
 
     private:
+
+        Player(const glm::vec2 &spawnPosition, const PlayerKeys& keyConfiguration = PlayerKeys());
 
         bool checkCanJump() const;
         bool checkCanJumpDown() const; //check if player can jump down from the current platform

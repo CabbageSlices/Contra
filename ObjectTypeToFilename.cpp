@@ -1,8 +1,10 @@
 #include "ObjectTypeToFilename.h"
+#include "Player.h"
 
 using std::string;
 
 const std::string enemyDataPath = "Data/EnemyData/";
+const std::string playerDataPath = "Data/PlayerData/";
 const std::string bulletDataPath = "Data/BulletData/";
 const std::string blockDataPath = "Data/BlockData/";
 const std::string gunDataPath = "Data/GunData/";
@@ -20,6 +22,27 @@ string getFilenameForData(const EnemyType &enemyType) {
 
         case EnemyType::ENEMY_MUSHROOM:
             return enemyDataPath + "mushroom.txt";
+
+        default:
+            return "";
+    }
+}
+
+string getFilenameForData(const int &playerNumber) {
+
+    switch(playerNumber) {
+
+        case (int)PlayerNumber::PLAYER_1:
+            return playerDataPath + "player1_data.txt";
+
+        case (int)PlayerNumber::PLAYER_2:
+            return playerDataPath + "player2_data.txt";
+
+        case (int)PlayerNumber::PLAYER_3:
+            return playerDataPath + "player3_data.txt";
+
+        case (int)PlayerNumber::PLAYER_4:
+            return playerDataPath + "player4_data.txt";
 
         default:
             return "";

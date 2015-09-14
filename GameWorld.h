@@ -11,6 +11,7 @@
 #include "SpatialHash.h"
 #include "BackgroundManager.h"
 #include "SpawnerData.h"
+#include "PreloadedData.h"
 
 #include <iostream>
 #include <vector>
@@ -18,6 +19,8 @@
 
 using std::cout;
 using std::endl;
+
+class GameConfiguration;
 
 struct EnemyCollection {
 
@@ -194,5 +197,7 @@ struct GameWorld {
         worldBounds = worldBoundsBossFight;
 	}
 };
+
+std::shared_ptr<Player> createPlayer(const glm::vec2 &spawnPosition, const PlayerNumber &number, GameConfiguration &gameConfig);
 
 #endif // GAMEWORLD_H_INCLUDED

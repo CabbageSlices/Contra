@@ -6,47 +6,55 @@ using std::function;
 
 PreloadedDataCollection dataCollection;
 
-const PreloadedEnemyData *PreloadedDataCollection::getBasicEnemyData(const EnemyType &enemyType) {
+const PreloadedEnemyData* PreloadedDataCollection::getBasicEnemyData(const EnemyType &enemyType) {
 
     function<bool(PreloadedEnemyData&, const string&)> loadingFunction = loadEnemyData;
     return getData(basicEnemyData, enemyType, loadingFunction);
 }
 
-const PreloadedTurretData *PreloadedDataCollection::getTurretEnemyData(const EnemyType &enemyType) {
+const PreloadedTurretData* PreloadedDataCollection::getTurretEnemyData(const EnemyType &enemyType) {
 
     function<bool(PreloadedTurretData&, const string&)> loadingFunction = loadTurretData;
     return getData(turretEnemyData, enemyType, loadingFunction);
 }
 
-const PreloadedOmniDirectionalTurretData *PreloadedDataCollection::getOmnidirectionalTurretData(const EnemyType &enemyType) {
+const PreloadedOmniDirectionalTurretData* PreloadedDataCollection::getOmnidirectionalTurretData(const EnemyType &enemyType) {
 
     function<bool(PreloadedOmniDirectionalTurretData&, const string&)> loadingFunction = loadOmniDirectionalTurretData;
     return getData(omnidirectionalTurretData, enemyType, loadingFunction);
 }
 
-const PreloadedBulletData *PreloadedDataCollection::getBulletData(const BulletType &bulletType) {
+const PreloadedBulletData* PreloadedDataCollection::getBulletData(const BulletType &bulletType) {
 
     function<bool(PreloadedBulletData&, const string&)> loadingFunction = loadBulletData;
     return getData(bulletData, bulletType, loadingFunction);
 }
 
-const PreloadedDestructibleBlockData *PreloadedDataCollection::getDestructibleBlockData(const DestructibleBlockType &blockType) {
+const PreloadedDestructibleBlockData* PreloadedDataCollection::getDestructibleBlockData(const DestructibleBlockType &blockType) {
 
     function<bool(PreloadedDestructibleBlockData&, const string&)> loadingFunction = loadDestrutibleBlockData;
     return getData(destructibleBlockData, blockType, loadingFunction);
 }
 
-const PreloadedPowerUpData *PreloadedDataCollection::getPowerUpData(const PowerUpType &powerUpType) {
+const PreloadedPowerUpData* PreloadedDataCollection::getPowerUpData(const PowerUpType &powerUpType) {
 
     function<bool(PreloadedPowerUpData&, const string&)> loadingFunction = loadPowerUpData;
     return getData(powerUpData, powerUpType, loadingFunction);
 }
 
-const BossProperties *PreloadedDataCollection::getBossData(const EnemyType &enemyType) {
+const PreloadedPlayerData* PreloadedDataCollection::getPlayerData(const int &playerNumber) {
+
+    function<bool(PreloadedPlayerData&, const string&)> loadingFunction = loadPlayerData;
+    return getData(playerData, playerNumber, loadingFunction);
+}
+
+const BossProperties* PreloadedDataCollection::getBossData(const EnemyType &enemyType) {
 
     ///function<bool(&, const string&)> loadingFunction = loadBossData;
     ///return getData(BossData, enemyType, loadingFunction);
     ///for now just let the load boss data function do all the work
+    ///because currently the load boss data function, unlike the other load data functions, uses the entire map and loads all components in a single call
+    ///while the other functions onl ytake in a single data object and loads data for that specific object type.
     ///later on, change the load boss data function so that it loads the boss data for only a specific enemy, rather than all of them
     if(bossData.count(enemyType) == 0) {
 

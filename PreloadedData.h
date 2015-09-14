@@ -156,6 +156,8 @@ struct PreloadedDataCollection {
 
         const PreloadedPowerUpData* getPowerUpData(const PowerUpType &powerUpType);
 
+        const PreloadedPlayerData* getPlayerData(const int &playerNumber);
+
         const BossProperties* getBossData(const EnemyType &enemyType);
 
     private:
@@ -172,6 +174,8 @@ struct PreloadedDataCollection {
         std::map<DestructibleBlockType, PreloadedDestructibleBlockData> destructibleBlockData;
 
         std::map<PowerUpType, PreloadedPowerUpData> powerUpData;
+
+        std::map<int, PreloadedPlayerData> playerData;
 
         //matches a given enemy type to the scaling factor applied to it if the enemy if upgraded to a boss type
         //that is, if this type of enemy were to be used as a boss, how much should it be scaled by

@@ -37,6 +37,14 @@ using std::shared_ptr;
 using std::make_shared;
 using std::vector;
 
+/**
+
+    TO ADD:
+
+    HAVE PLAYER CONSTRUCTOR BE PRIVATE AND FORCE PLAYERS TO BE CREATED THROUGH FUNCTIONS THAT WAY THE PLAYER'S PLAYER_NUMBER AND CONTROLS CAN BE SET AT CREATION,
+    AND THE PLAYERS CAN LOAD THE PLAYER DATA UPON CREATION
+**/
+
 void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world);
 void handleObjectEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world);
 void handleObjectKeystate(sf::RenderWindow &window, GameWorld &world);
@@ -648,20 +656,22 @@ int main() {
 
     sf::Event event;
     GameConfiguration gameConfiguration;
+    gameConfiguration.load();
     GameWorld world(window);
 
     world.worldBounds = sf::FloatRect(0, 0, 2048 + 1024, 768);
     world.worldBoundsBossFight = sf::FloatRect(0, 0, 1028 + 1028, 768);
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
 
-    PreloadedPlayerData data;
-    loadPlayerData(data, "player.txt");
-
     world.clearEverything();
     loadWorld("world1", world);
 
-    world.players.push_back(make_shared<Player>(world.initialPlayerSpawnPoint, gameConfiguration.getKeysForPlayer(PlayerNumber::PLAYER_1)));
-    world.players[0]->load(data);
+    auto player = createPlayer(world.initialPlayerSpawnPoint, PlayerNumber::PLAYER_1, gameConfiguration);
+
+    if(player) {
+
+        world.players.push_back(player);
+    }
 
     while(window.isOpen()) {
 

@@ -11,7 +11,7 @@ using std::shared_ptr;
 using std::cout;
 using std::endl;
 
-Player::Player(glm::vec2 &spawnPosition, const PlayerKeys& keyConfiguration):
+Player::Player(const glm::vec2 &spawnPosition, const PlayerKeys& keyConfiguration):
     ShootingEntity(glm::vec2(0, GRAVITY), glm::vec2(4.f, 4.05f), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), 3),
     STATE_STANDING_LEFT(0),
     STATE_STANDING_UP_FACING_LEFT(1),
