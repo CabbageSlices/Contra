@@ -65,6 +65,11 @@ class Tile {
         //name of texture used by this tile
         std::string textureFilename;
 
+        //draws the tile type as a line primitive
+        //that way you can tell what type of slope is there without having to run into it
+        //used for debugging and level editing
+        sf::VertexArray debugLines;
+
         sf::IntRect textureRect;
 };
 

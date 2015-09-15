@@ -124,7 +124,7 @@ void Player::updatePhysics(const float& deltaTime, const sf::FloatRect& worldBou
 
     if(!checkIsJumping()) {
 
-        hitbox.setActiveHitbox(0, defaultHitboxState);
+        sf::FloatRect newFloatrect = hitbox.getActiveHitboxWorldSpace();
     }
 
     hitboxMovementController.moveAlongXAxis(deltaTime, worldBounds);
@@ -675,7 +675,7 @@ void Player::jumpDown() {
 
         //when jumping down just push the player down into the ground since the collision detection code should allow him to pass
         //push him just out of the threshold so collision resolution won't occur
-        hurtbox.move(glm::vec2(0, fallThroughTopThreshold + 1.f));
+        hitbox.move(glm::vec2(0, fallThroughTopThreshold + 1.f));
 
         //also set his velocity to go downwards that way it looks a bit smoother
         hitboxMovementController.setVelocities(hitboxMovementController.getVelocities().x, 1.0f);

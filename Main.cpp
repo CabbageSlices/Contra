@@ -220,9 +220,9 @@ void updateEnemySpawners(GameWorld &world, EnemySpawnerCollection &spawnerCollec
 
 	//delete any spawner that has no more enemies left to spawn
 	///for now don't use this function
-//	removeEmptySpawners(spawnerCollection.enemySpawnInfo.spawnPoints);
-//	removeEmptySpawners(spawnerCollection.turretSpawnInfo.spawnPoints);
-//	removeEmptySpawners(spawnerCollection.omnidirectionalTurretSpawnInfo.spawnPoints);
+	removeEmptySpawners(spawnerCollection.enemySpawnInfo.spawnPoints);
+	removeEmptySpawners(spawnerCollection.turretSpawnInfo.spawnPoints);
+	removeEmptySpawners(spawnerCollection.omnidirectionalTurretSpawnInfo.spawnPoints);
 }
 
 void removeEmptySpawners(vector<shared_ptr<SpawnPoint> > &spawnPoints) {
@@ -651,12 +651,12 @@ int main() {
     gameConfiguration.load();
     GameWorld world(window);
 
-    world.worldBounds = sf::FloatRect(0, 0, 2048 + 1024, 768);
-    world.worldBoundsBossFight = sf::FloatRect(0, 0, 1028 + 1028, 768);
+    world.worldBounds = sf::FloatRect(0, 0, 6144, 1024);
+    world.worldBoundsBossFight = sf::FloatRect(6144 - 1028, 0, 0, 1024);
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
 
-    world.clearEverything();
-    loadWorld("world1", world);
+//    world.clearEverything();
+//    loadWorld("world1", world);
 
     auto player = createPlayer(world.initialPlayerSpawnPoint, PlayerNumber::PLAYER_1, gameConfiguration);
 
@@ -690,10 +690,32 @@ int main() {
 
                         world.tileMap.setTileDisplayChanges(mousePosition, TileType::ONE_WAY, "tileset.png", sf::IntRect(0, 0, 64, 64));
 
-                    } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) {
+                    } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
 
                         shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6), EnemyType::ENEMY_MUSHROOM, 1);
+
+                        if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
                         world.bossEnemySpawners.omnidirectionalTurretSpawnInfo.spawnPoints.push_back(point);
+                        else
+                        world.nonBossEnemySpawners.omnidirectionalTurretSpawnInfo.spawnPoints.push_back(point);
+
+                    } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::X)) {
+
+                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6), EnemyType::ENEMY_GOOMBA, 1);
+
+                        if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+                        world.bossEnemySpawners.enemySpawnInfo.spawnPoints.push_back(point);
+                        else
+                        world.nonBossEnemySpawners.enemySpawnInfo.spawnPoints.push_back(point);
+
+                    } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::C)) {
+
+                        shared_ptr<SpawnPoint> point = make_shared<SpawnPoint>(mousePosition, sf::seconds(0.6), EnemyType::ENEMY_PIRANHA, 1);
+
+                        if(sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+                        world.bossEnemySpawners.turretSpawnInfo.spawnPoints.push_back(point);
+                        else
+                        world.nonBossEnemySpawners.turretSpawnInfo.spawnPoints.push_back(point);
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::LAlt)) {
 

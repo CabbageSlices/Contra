@@ -94,12 +94,15 @@ Tile::Tile(const glm::vec2& worldPosition,  const TileType& tileType) :
     type(tileType),
     tile(sf::Vector2f(TILE_SIZE, TILE_SIZE)),
     textureFilename("~"),
+    debugLines(sf::Lines, 2),
     textureRect(1, 1, 1, 1)
     {
         setupEmptyTileColor();
         tile.setPosition(sf::Vector2f(worldPosition.x, worldPosition.y));
 
         tile.setFillColor(getColorForTileType(type));
+
+        debugLines[0].position = debugLines[1].position = sf::Vector2f(0, 0);
     }
 
 bool Tile::loadTexture(const string &textureFilename) {
@@ -128,6 +131,54 @@ void Tile::clearTextures() {
 void Tile::setType(const TileType& tileType) {
 
     type = tileType;
+
+    switch(tileType) {
+
+        case TileType::EMPTY: {
+
+            debugLines[0].position = debugLines[1].position = sf::Vector2f(0, 0);
+            return;
+        }
+
+        case TileType::SOLID: {
+
+            debugLines[0].position = tile.getPosition();
+            debugLines[1].position = tile.getPosition() + sf::Vector2f(tile.getGlobalBounds().width, 0);
+            return;
+        }
+
+        case TileType::PASS_THROUGH: {
+
+            debugLines[0].position = tile.getPosition();
+            debugLines[1].position = tile.getPosition();
+            return;
+        }
+
+        case TileType::UPWARD_RIGHT_1_1: {
+
+            debugLines[0].position = tile.getPosition() + sf::Vector2f(0, tile.getGlobalBounds().height);
+            debugLines[1].position = tile.getPosition() + sf::Vector2f(tile.getGlobalBounds().width, 0);
+            return;
+        }
+
+        case TileType::UPWARD_LEFT_1_1: {
+
+            debugLines[0].position = tile.getPosition();
+            debugLines[1].position = tile.getPosition() + tile.getSize();
+            return;
+        }
+
+        case TileType::ONE_WAY: {
+
+            debugLines[0].position = tile.getPosition();
+            debugLines[1].position = tile.getPosition() + sf::Vector2f(tile.getSize().x / 2, 0);
+            return;
+        }
+
+        default:
+            return;
+
+    }
 }
 
 bool Tile::setTexture(const std::string &texFilename) {
@@ -188,6 +239,7 @@ void Tile::draw(sf::RenderTarget& window) {
 void Tile::drawDebug(sf::RenderTarget& window) {
 
     window.draw(tile);
+    window.draw(debugLines);
 }
 
 void Tile::setupEmptyTileColor() {

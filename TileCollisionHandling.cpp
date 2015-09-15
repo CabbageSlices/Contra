@@ -205,9 +205,28 @@ bool handleUpSlopeTileCollision(shared_ptr<Tile>& tile, HitboxMovementController
 
         //calculate offset needed to move object so that it will be standing at bottom of slope
         float objectBottom = objectHitbox.top + objectHitbox.height;
-        float tileBottom = tileBoundingBox.top + tileIntercepts.y;// bottom of tile is the y-intercept because its the point on the slope with the largest y value that can be reached with the slope
+
+        //calculate bottom of slope
+        //for slopes going down to the right, the bottom will be the y position evaluated when x = tileSize
+        //this is because slopes going down to the right have a y intercept of 0, but you can't just use the tileSize as the bottom of the slope,
+        //because you might have half slopes, so you actually have to calculate the height of the slope at the edge of the tile
+
+        float tileBottom = tileBoundingBox.top;
+
+        //slopes going down to the right
+        if(tileSlope.y / tileSlope.x > 0) {
+
+            float heightRightEdge = (tileSlope.y / tileSlope.x) * tileBoundingBox.width;
+            tileBottom += heightRightEdge;
+
+        } else {
+
+            //slope going down to the left, the bottom of the slope is just the yintercept of the slope
+            tileBottom += tileIntercepts.y;
+        }
 
         float yOffset = tileBottom - objectBottom;
+        cout << tileIntercepts.y << endl;
 
         object.getHitbox()->move(glm::vec2(0, yOffset));
         return true;
