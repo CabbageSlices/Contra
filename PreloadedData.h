@@ -52,55 +52,15 @@ struct ShootingEntityPreloadedData : public PreloadedData{
 struct PreloadedPlayerData : public ShootingEntityPreloadedData {
 
     unsigned jumpingHitboxState = 1;
-
-    unsigned STATE_STANDING_LEFT;
-    unsigned STATE_STANDING_UP_FACING_LEFT;
-    unsigned STATE_STANDING_UP_FACING_RIGHT;
-    unsigned STATE_STANDING_RIGHT;
-
-    unsigned STATE_WALKING_DOWN_LEFT;
-    unsigned STATE_WALKING_LEFT;
-    unsigned STATE_WALKING_UP_LEFT;
-    unsigned STATE_WALKING_UP_RIGHT;
-    unsigned STATE_WALKING_RIGHT;
-    unsigned STATE_WALKING_DOWN_RIGHT;
-
-    unsigned STATE_CROUCHING_LEFT;
-    unsigned STATE_CROUCHING_RIGHT;
-
-    unsigned STATE_FALLING_DOWN_FACING_LEFT;
-    unsigned STATE_FALLING_DOWN_FACING_RIGHT;
-    unsigned STATE_FALLING_DOWN_LEFT;
-    unsigned STATE_FALLING_LEFT;
-    unsigned STATE_FALLING_UP_LEFT;
-    unsigned STATE_FALLING_UP_FACING_LEFT;
-    unsigned STATE_FALLING_UP_FACING_RIGHT;
-    unsigned STATE_FALLING_UP_RIGHT;
-    unsigned STATE_FALLING_RIGHT;
-    unsigned STATE_FALLING_DOWN_RIGHT;
-
-    unsigned STATE_JUMPING;
-
-    unsigned STATE_DYING_FACING_LEFT;
-    unsigned STATE_DYING_FACING_RIGHT;
-
-    unsigned STATE_DEAD;
 };
 
 struct PreloadedTurretData : public ShootingEntityPreloadedData {
-
-    unsigned STATE_HIDING, STATE_COMING_OUT_OF_HIDING, STATE_GOING_INTO_HIDING, STATE_SHOOTING;
-
-    //frames of the shooting animation
-    unsigned DOWN, DOWN_LEFT, LEFT, UP_LEFT, UP, UP_RIGHT, RIGHT, DOWN_RIGHT;
 
     sf::Time hiddenStateDuration;
     sf::Time exposedStateDuration;
 };
 
 struct PreloadedOmniDirectionalTurretData : public ShootingEntityPreloadedData {
-
-    unsigned STATE_HIDING, STATE_COMING_OUT_OF_HIDING, STATE_GOING_INTO_HIDING, STATE_EXPOSED, STATE_SHOOTING;
 
     sf::Time hiddenStateDuration;
     sf::Time exposedStateDuration;
@@ -110,20 +70,15 @@ struct PreloadedOmniDirectionalTurretData : public ShootingEntityPreloadedData {
 //struct to store preloaded data about an enemy so whenever a new enemy is created you don't have to open a file to retrieve info about it
 struct PreloadedEnemyData : public PreloadedData{
 
-    unsigned STATE_WALKING_LEFT;
-    unsigned STATE_WALKING_RIGHT;
-    unsigned STATE_FALLING_LEFT;
-    unsigned STATE_FALLING_RIGHT;
+    //empty for now
 };
 
 struct PreloadedDestructibleBlockData : public PreloadedData {
 
-    unsigned STATE_SOLID, STATE_DESTROYING, STATE_DESTROYED;
+    //empty for now
 };
 
 struct PreloadedBulletData : public PreloadedData {
-
-    unsigned STATE_RIGHT, STATE_UP_RIGHT, STATE_UP, STATE_UP_LEFT, STATE_LEFT, STATE_DOWN_LEFT, STATE_DOWN, STATE_DOWN_RIGHT;
 
     float velocity;
     sf::Time lifetime;
@@ -131,13 +86,7 @@ struct PreloadedBulletData : public PreloadedData {
 
 struct PreloadedPowerUpData : public PreloadedData {
 
-    unsigned STATE_SPAWNING;
-    unsigned STATE_SPAWNED;
-    unsigned STATE_DISAPPEARING;
-    unsigned STATE_DISAPPEARED;
-
-    //each frame of the spawned animation state refers to a different powerup image
-    unsigned FRAME_MACHINEGUN;
+    //empty for now
 };
 
 struct PreloadedDataCollection {

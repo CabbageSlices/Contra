@@ -39,10 +39,6 @@ class DestructibleBlock : public DynamicObject {
 
     private:
 
-        unsigned STATE_SOLID;
-        unsigned STATE_DESTROYING;
-        unsigned STATE_DESTROYED;
-
         DestructibleBlockType blockType;
 };
 

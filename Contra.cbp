@@ -85,6 +85,7 @@
 		<Unit filename="CollisionResponse.h" />
 		<Unit filename="DataLoaders.cpp" />
 		<Unit filename="DataLoaders.h" />
+		<Unit filename="DataTagPair.h" />
 		<Unit filename="DestructibleBlock.cpp" />
 		<Unit filename="DestructibleBlock.h" />
 		<Unit filename="Direction.cpp" />
@@ -94,6 +95,7 @@
 		<Unit filename="Enemy.cpp" />
 		<Unit filename="Enemy.h" />
 		<Unit filename="EnemySpawners.h" />
+		<Unit filename="EntityAnimationStates.h" />
 		<Unit filename="EntityBase.cpp" />
 		<Unit filename="EntityBase.h" />
 		<Unit filename="EntitySavedataTags.h" />

@@ -178,7 +178,8 @@ void updateWorld(sf::RenderWindow &window, GameWorld &world) {
         world.beginBossFight();
     }
 
-    float deltaTime = world.updateTimer.restart().asSeconds();
+    ///cap the deltatime to some fixed amount
+    float deltaTime = glm::min(world.updateTimer.restart().asSeconds(), sf::milliseconds(15).asSeconds());
 
 	updateWorldPhyics(world, deltaTime);
 	updateEnemySpawners(world, world.nonBossEnemySpawners);
@@ -219,7 +220,6 @@ void updateEnemySpawners(GameWorld &world, EnemySpawnerCollection &spawnerCollec
 	spawnEnemyNearCamera(spawnerCollection.omnidirectionalTurretSpawnInfo, applyBossData);
 
 	//delete any spawner that has no more enemies left to spawn
-	///for now don't use this function
 	removeEmptySpawners(spawnerCollection.enemySpawnInfo.spawnPoints);
 	removeEmptySpawners(spawnerCollection.turretSpawnInfo.spawnPoints);
 	removeEmptySpawners(spawnerCollection.omnidirectionalTurretSpawnInfo.spawnPoints);

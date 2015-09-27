@@ -64,22 +64,6 @@ class TurretEnemy : public ShootingEntity {
 
         sf::Time hiddenStateDuration;
         sf::Time exposedStateDuration;
-
-        //drawing states
-        unsigned STATE_HIDING;
-        unsigned STATE_COMING_OUT_OF_HIDING;
-        unsigned STATE_GOING_INTO_HIDING;
-        unsigned STATE_SHOOTING;
-
-        //texture rect index number for each direction the object faces when shooting
-        unsigned DOWN;
-        unsigned DOWN_LEFT;
-        unsigned LEFT;
-        unsigned UP_LEFT;
-        unsigned UP;
-        unsigned UP_RIGHT;
-        unsigned RIGHT;
-        unsigned DOWN_RIGHT;
 };
 
 #endif // TURRETENEMY_H_INCLUDED

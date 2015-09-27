@@ -1,5 +1,6 @@
 #include "Enemy.h"
 #include "GlobalConstants.h"
+#include "EntityAnimationStates.h"
 #include <vector>
 #include <iostream>
 
@@ -10,10 +11,6 @@ using std::shared_ptr;
 
 Enemy::Enemy(const glm::vec2 &positionWorldSpace, const Direction &initialDirection, const int initialHealth) :
     EntityBase(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY / 5, 0), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), initialHealth),
-    STATE_WALKING_LEFT(0),
-    STATE_WALKING_RIGHT(0),
-    STATE_FALLING_LEFT(0),
-    STATE_FALLING_RIGHT(0),
     direction()
     {
         setPosition(positionWorldSpace);
@@ -108,11 +105,6 @@ void Enemy::draw(sf::RenderWindow &window) {
 
 void Enemy::load(const PreloadedEnemyData &data) {
 
-    STATE_WALKING_LEFT = data.STATE_WALKING_LEFT;
-    STATE_WALKING_RIGHT = data.STATE_WALKING_RIGHT;
-    STATE_FALLING_LEFT = data.STATE_FALLING_LEFT;
-    STATE_FALLING_RIGHT = data.STATE_FALLING_RIGHT;
-
     loadBase(data);
     scale(data.scale, data.scale);
 
@@ -150,22 +142,22 @@ void Enemy::determineAnimationState() {
 
         if(velocities.y != 0) {
 
-            setState(STATE_FALLING_LEFT);
+            setState(EnemyEnums::STATE_FALLING_LEFT);
 
         } else {
 
-            setState(STATE_WALKING_LEFT);
+            setState(EnemyEnums::STATE_WALKING_LEFT);
         }
 
     } else {
 
         if(velocities.y != 0) {
 
-            setState(STATE_FALLING_RIGHT);
+            setState(EnemyEnums::STATE_FALLING_RIGHT);
 
         } else {
 
-            setState(STATE_WALKING_RIGHT);
+            setState(EnemyEnums::STATE_WALKING_RIGHT);
         }
     }
 }

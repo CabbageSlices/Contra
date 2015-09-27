@@ -49,15 +49,6 @@ class Bullet : public EntityBase {
         float timeElapsed;
 
         glm::vec2 direction;
-
-        unsigned STATE_RIGHT;
-        unsigned STATE_UP_RIGHT;
-        unsigned STATE_UP;
-        unsigned STATE_UP_LEFT;
-        unsigned STATE_LEFT;;
-        unsigned STATE_DOWN_LEFT;
-        unsigned STATE_DOWN;
-        unsigned STATE_DOWN_RIGHT;
 };
 
 #endif // BULLET_H_INCLUDED

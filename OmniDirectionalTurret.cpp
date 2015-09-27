@@ -1,4 +1,5 @@
 #include "OmniDirectionalTurret.h"
+#include "EntityAnimationStates.h"
 #include "TileMap.h"
 #include <memory>
 #include <iostream>
@@ -14,10 +15,7 @@ OmniDirectionalTurret::OmniDirectionalTurret(const glm::vec2 &position, const in
     shootingTimer(),
     hiddenStateDuration(),
     exposedStateDuration(),
-    shootingDelay(),
-    STATE_HIDING(0),
-    STATE_COMING_OUT_OF_HIDING(0),
-    STATE_GOING_INTO_HIDING(0)
+    shootingDelay()
     {
         setPosition(position);
 
@@ -49,32 +47,32 @@ void OmniDirectionalTurret::updateRendering() {
 
     if(sprite.animate()) {
 
-        if(currentState == STATE_COMING_OUT_OF_HIDING) {
+        if(currentState == OmniDirectionalTurretEnums::STATE_COMING_OUT_OF_HIDING) {
 
-            setState(STATE_EXPOSED);
+            setState(OmniDirectionalTurretEnums::STATE_EXPOSED);
             exposedStateTimer.restart();
             shootingTimer.restart();
 
-        } else if(currentState == STATE_GOING_INTO_HIDING) {
+        } else if(currentState == OmniDirectionalTurretEnums::STATE_GOING_INTO_HIDING) {
 
-            setState(STATE_HIDING);
+            setState(OmniDirectionalTurretEnums::STATE_HIDING);
             hiddenStateTimer.restart();
 
-        } else if(currentState == STATE_SHOOTING) {
+        } else if(currentState == OmniDirectionalTurretEnums::STATE_SHOOTING) {
 
             shoot();
             shootingTimer.restart();
-            setState(STATE_EXPOSED);
+            setState(OmniDirectionalTurretEnums::STATE_EXPOSED);
         }
     }
 
-    if(currentState == STATE_HIDING && hiddenStateTimer.getElapsedTime() > hiddenStateDuration) {
+    if(currentState == OmniDirectionalTurretEnums::STATE_HIDING && hiddenStateTimer.getElapsedTime() > hiddenStateDuration) {
 
-        setState(STATE_COMING_OUT_OF_HIDING);
+        setState(OmniDirectionalTurretEnums::STATE_COMING_OUT_OF_HIDING);
 
-    } else if(currentState == STATE_EXPOSED && exposedStateTimer.getElapsedTime() > exposedStateDuration) {
+    } else if(currentState == OmniDirectionalTurretEnums::STATE_EXPOSED && exposedStateTimer.getElapsedTime() > exposedStateDuration) {
 
-        setState(STATE_GOING_INTO_HIDING);
+        setState(OmniDirectionalTurretEnums::STATE_GOING_INTO_HIDING);
     }
 
     hurtbox.setActiveHitbox(sprite.getFrame(), currentState);
@@ -84,7 +82,7 @@ void OmniDirectionalTurret::updateRendering() {
 
 bool OmniDirectionalTurret::checkCanGetHit() {
 
-    return checkIsAlive() && currentState != STATE_HIDING;
+    return checkIsAlive() && currentState != OmniDirectionalTurretEnums::STATE_HIDING;
 }
 
 void OmniDirectionalTurret::draw(sf::RenderWindow &window) {
@@ -99,17 +97,11 @@ void OmniDirectionalTurret::load(const PreloadedOmniDirectionalTurretData &data)
     loadShootingEntityData(data);
     scale(data.scale, data.scale);
 
-    STATE_HIDING = data.STATE_HIDING;
-    STATE_COMING_OUT_OF_HIDING = data.STATE_COMING_OUT_OF_HIDING;
-    STATE_GOING_INTO_HIDING = data.STATE_GOING_INTO_HIDING;
-    STATE_EXPOSED = data.STATE_EXPOSED;
-    STATE_SHOOTING = data.STATE_SHOOTING;
-
     hiddenStateDuration = data.hiddenStateDuration;
     exposedStateDuration = data.exposedStateDuration;
     shootingDelay = data.shootingDelay;
 
-    setState(STATE_HIDING);
+    setState(OmniDirectionalTurretEnums::STATE_COMING_OUT_OF_HIDING);
     hiddenStateTimer.restart();
     exposedStateTimer.restart();
     shootingTimer.restart();
@@ -117,7 +109,7 @@ void OmniDirectionalTurret::load(const PreloadedOmniDirectionalTurretData &data)
 
 bool OmniDirectionalTurret::checkCanShoot() {
 
-    bool isExposed = (currentState == STATE_EXPOSED);
+    bool isExposed = (currentState == OmniDirectionalTurretEnums::STATE_EXPOSED);
     bool isDelayOver = (shootingTimer.getElapsedTime() > shootingDelay);
 
     return isExposed && isDelayOver;
@@ -125,7 +117,7 @@ bool OmniDirectionalTurret::checkCanShoot() {
 
 void OmniDirectionalTurret::beginShootingAnimation() {
 
-    setState(STATE_SHOOTING);
+    setState(OmniDirectionalTurretEnums::STATE_SHOOTING);
 }
 
 void OmniDirectionalTurret::shoot() {

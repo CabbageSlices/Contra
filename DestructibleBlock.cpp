@@ -1,5 +1,6 @@
 #include "DestructibleBlock.h"
 #include "CollisionResolution.h"
+#include "EntityAnimationStates.h"
 
 #include <iostream>
 
@@ -9,9 +10,6 @@ using std::shared_ptr;
 
 DestructibleBlock::DestructibleBlock(const glm::vec2 &position, const DestructibleBlockType& type, const PreloadedDestructibleBlockData &data) :
     DynamicObject(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), 1),
-    STATE_SOLID(0),
-    STATE_DESTROYING(0),
-    STATE_DESTROYED(0),
     blockType(type)
     {
         load(data);
@@ -22,9 +20,9 @@ DestructibleBlock::DestructibleBlock(const glm::vec2 &position, const Destructib
 
 void DestructibleBlock::updateRendering() {
 
-    if(sprite.animate() && sprite.getAnimationState() == STATE_DESTROYING) {
+    if(sprite.animate() && sprite.getAnimationState() == DestructibleBlockEnums::STATE_DESTROYING) {
 
-        setState(STATE_DESTROYED);
+        setState(DestructibleBlockEnums::STATE_DESTROYED);
     }
 
     sprite.getSprite().setPosition(hurtbox.getOrigin().x, hurtbox.getOrigin().y);
@@ -33,21 +31,21 @@ void DestructibleBlock::updateRendering() {
 
 bool DestructibleBlock::checkCanGetHit() {
 
-    return currentState == STATE_SOLID;
+    return currentState == DestructibleBlockEnums::STATE_SOLID;
 }
 
 bool DestructibleBlock::checkIsAlive() {
 
-    return currentState != STATE_DESTROYED;
+    return currentState != DestructibleBlockEnums::STATE_DESTROYED;
 }
 
 void DestructibleBlock::getHit(int damage) {
 
     setHealth(health - damage);
 
-    if(health == 0 && currentState != STATE_DESTROYED) {
+    if(health == 0 && currentState != DestructibleBlockEnums::STATE_DESTROYED) {
 
-        setState(STATE_DESTROYING);
+        setState(DestructibleBlockEnums::STATE_DESTROYING);
     }
 }
 
@@ -61,9 +59,5 @@ void DestructibleBlock::load(const PreloadedDestructibleBlockData &data) {
     loadBase(data);
     scale(data.scale, data.scale);
 
-    STATE_SOLID = data.STATE_SOLID;
-    STATE_DESTROYING = data.STATE_DESTROYING;
-    STATE_DESTROYED = data.STATE_DESTROYED;
-
-    setState(STATE_SOLID);
+    setState(DestructibleBlockEnums::STATE_SOLID);
 }

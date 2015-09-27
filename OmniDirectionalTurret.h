@@ -42,12 +42,6 @@ class OmniDirectionalTurret : public ShootingEntity {
         sf::Time hiddenStateDuration;
         sf::Time exposedStateDuration;
         sf::Time shootingDelay;
-
-        unsigned STATE_HIDING;
-        unsigned STATE_COMING_OUT_OF_HIDING;
-        unsigned STATE_GOING_INTO_HIDING;
-        unsigned STATE_EXPOSED;
-        unsigned STATE_SHOOTING;
 };
 
 #endif // OMNIDIRECTIONALTURRET_H_INCLUDED

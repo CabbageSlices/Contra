@@ -1,5 +1,6 @@
 #include "PowerUp.h"
 #include "GlobalConstants.h"
+#include "EntityAnimationStates.h"
 #include <iostream>
 
 using std::cout;
@@ -26,11 +27,6 @@ void applyPowerUp(shared_ptr<Gun> &gun, const PowerUpType &powerUpType) {
 
 PowerUp::PowerUp(const glm::vec2 &positionWorldSpace, const PowerUpType &powerUp, const PreloadedPowerUpData &powerupData) :
     DynamicObject(glm::vec2(0, GRAVITY), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY) / 3.f, glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), 1),
-    STATE_SPAWNING(0),
-    STATE_SPAWNED(0),
-    STATE_DISAPPEARING(0),
-    STATE_DISAPPEARED(0),
-    FRAME_MACHINEGUN(0),
     powerUpType(powerUp)
     {
         load(powerupData);
@@ -40,7 +36,7 @@ PowerUp::PowerUp(const glm::vec2 &positionWorldSpace, const PowerUpType &powerUp
 void PowerUp::updatePhysics(const float &deltaTime, const sf::FloatRect &worldBounds, TileMap &map) {
 
     //don't move powerup if its spawning or disappearing
-    if(!currentState != STATE_SPAWNED) {
+    if(!currentState != PowerUpEnums::STATE_SPAWNED) {
 
         return;
     }
@@ -58,19 +54,19 @@ void PowerUp::updateRendering() {
 
     if(sprite.animate()) {
 
-        if(currentState == STATE_SPAWNING) {
+        if(currentState == PowerUpEnums::STATE_SPAWNING) {
 
-            setState(STATE_SPAWNED);
+            setState(PowerUpEnums::STATE_SPAWNED);
 
-        } else if(currentState == STATE_DISAPPEARING) {
+        } else if(currentState == PowerUpEnums::STATE_DISAPPEARING) {
 
             //set health to 0 so object is listed as dead
             setHealth(0);
-            setState(STATE_DISAPPEARED);
+            setState(PowerUpEnums::STATE_DISAPPEARED);
         }
     }
 
-    if(currentState == STATE_SPAWNED) {
+    if(currentState == PowerUpEnums::STATE_SPAWNED) {
 
         //make sure the correct image for this powerup is being displayed
         setFrameForPowerUpType();
@@ -86,12 +82,12 @@ void PowerUp::draw(sf::RenderWindow &window) {
 
 bool PowerUp::checkCanGetHit() {
 
-    return currentState == STATE_SPAWNED;
+    return currentState == PowerUpEnums::STATE_SPAWNED;
 }
 
 void PowerUp::getHit(int damage) {
 
-    setState(STATE_DISAPPEARING);
+    setState(PowerUpEnums::STATE_DISAPPEARING);
 }
 
 PowerUpType PowerUp::getPowerUpType() const {
@@ -103,21 +99,14 @@ void PowerUp::load(const PreloadedPowerUpData &data) {
 
     loadBase(data);
 
-    STATE_SPAWNING = data.STATE_SPAWNING;
-    STATE_SPAWNED = data.STATE_SPAWNED;
-    STATE_DISAPPEARING = data.STATE_DISAPPEARING;
-    STATE_DISAPPEARED = data.STATE_DISAPPEARED;
-
-    FRAME_MACHINEGUN = data.FRAME_MACHINEGUN;
-
-    setState(STATE_SPAWNING);
+    setState(PowerUpEnums::STATE_SPAWNING);
 }
 
 void PowerUp::setFrameForPowerUpType() {
 
     if(powerUpType == PowerUpType::MACHINE_GUN) {
 
-        sprite.setFrame(FRAME_MACHINEGUN);
-        hurtbox.setActiveHitbox(FRAME_MACHINEGUN, STATE_SPAWNED);
+        sprite.setFrame(PowerUpEnums::FRAME_MACHINEGUN);
+        hurtbox.setActiveHitbox(PowerUpEnums::FRAME_MACHINEGUN, PowerUpEnums::STATE_SPAWNED);
     }
 }

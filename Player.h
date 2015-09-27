@@ -96,42 +96,6 @@ class Player : public ShootingEntity{
 
         void die();
 
-        //all possible animation states for the player
-        //when it says up/down facing left/right it means that player is looking straight up or down, but his body is still facing toward the left or right
-        //it doesn't mean he is movign
-        unsigned STATE_STANDING_LEFT;
-        unsigned STATE_STANDING_UP_FACING_LEFT;
-        unsigned STATE_STANDING_UP_FACING_RIGHT;
-        unsigned STATE_STANDING_RIGHT;
-
-        unsigned STATE_WALKING_DOWN_LEFT;
-        unsigned STATE_WALKING_LEFT;
-        unsigned STATE_WALKING_UP_LEFT;
-        unsigned STATE_WALKING_UP_RIGHT;
-        unsigned STATE_WALKING_RIGHT;
-        unsigned STATE_WALKING_DOWN_RIGHT;
-
-        unsigned STATE_CROUCHING_LEFT;
-        unsigned STATE_CROUCHING_RIGHT;
-
-        unsigned STATE_FALLING_DOWN_FACING_LEFT;
-        unsigned STATE_FALLING_DOWN_FACING_RIGHT;
-        unsigned STATE_FALLING_DOWN_LEFT;
-        unsigned STATE_FALLING_LEFT;
-        unsigned STATE_FALLING_UP_LEFT;
-        unsigned STATE_FALLING_UP_FACING_LEFT;
-        unsigned STATE_FALLING_UP_FACING_RIGHT;
-        unsigned STATE_FALLING_UP_RIGHT;
-        unsigned STATE_FALLING_RIGHT;
-        unsigned STATE_FALLING_DOWN_RIGHT;
-
-        unsigned STATE_JUMPING;
-
-        unsigned STATE_DYING_FACING_RIGHT;
-        unsigned STATE_DYING_FACING_LEFT;
-
-        unsigned STATE_DEAD;
-
         unsigned jumpingHitboxState;
 
         enum LifeState {

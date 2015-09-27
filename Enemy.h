@@ -43,11 +43,6 @@ class Enemy : public EntityBase {
         void determineHorizontalDirection();
         void determineAnimationState();
 
-        unsigned STATE_WALKING_LEFT;
-        unsigned STATE_WALKING_RIGHT;
-        unsigned STATE_FALLING_LEFT;
-        unsigned STATE_FALLING_RIGHT;
-
         Direction direction;
 };
 

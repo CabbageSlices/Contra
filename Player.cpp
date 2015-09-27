@@ -4,6 +4,7 @@
 #include <memory>
 #include "Gun.h"
 #include "Tile.h"
+#include "EntityAnimationStates.h"
 
 using std::make_shared;
 using std::vector;
@@ -13,32 +14,6 @@ using std::endl;
 
 Player::Player(const glm::vec2 &spawnPosition, const PlayerKeys& keyConfiguration):
     ShootingEntity(glm::vec2(0, GRAVITY), glm::vec2(4.f, 4.5f), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), 3),
-    STATE_STANDING_LEFT(0),
-    STATE_STANDING_UP_FACING_LEFT(1),
-    STATE_STANDING_UP_FACING_RIGHT(2),
-    STATE_STANDING_RIGHT(3),
-    STATE_WALKING_DOWN_LEFT(4),
-    STATE_WALKING_LEFT(5),
-    STATE_WALKING_UP_LEFT(6),
-    STATE_WALKING_UP_RIGHT(7),
-    STATE_WALKING_RIGHT(8),
-    STATE_WALKING_DOWN_RIGHT(9),
-    STATE_CROUCHING_LEFT(10),
-    STATE_CROUCHING_RIGHT(11),
-    STATE_FALLING_DOWN_FACING_LEFT(12),
-    STATE_FALLING_DOWN_FACING_RIGHT(13),
-    STATE_FALLING_DOWN_LEFT(14),
-    STATE_FALLING_LEFT(15),
-    STATE_FALLING_UP_LEFT(16),
-    STATE_FALLING_UP_FACING_LEFT(17),
-    STATE_FALLING_UP_FACING_RIGHT(18),
-    STATE_FALLING_UP_RIGHT(19),
-    STATE_FALLING_RIGHT(20),
-    STATE_FALLING_DOWN_RIGHT(21),
-    STATE_JUMPING(22),
-    STATE_DYING_FACING_RIGHT(23),
-    STATE_DYING_FACING_LEFT(24),
-    STATE_DEAD(25),
     jumpingHitboxState(0),
     lifeState(ALIVE),
     standingOnSolid(false),
@@ -143,12 +118,26 @@ void Player::updatePhysics(const float& deltaTime, const sf::FloatRect& worldBou
 
     gun->updatePhysics(deltaTime, worldBounds, map);
 
+    //if player is no longer in the air then his jump has finished
+    //so indicate that he didn't press the jump button so the animation doesn't draw the player jumping
+    //binary and operator with checkIsInAir is used because once the player lets go of the jump button
+    //there is no other function that sets the wasJumpButtonPressed to false
+    //which is why its only set to false if he is on the ground again, since to set it to true
+    //you would have to jump again in order to be in the air
+    wasJumpButtonPressed = checkIsInAir() && wasJumpButtonPressed;
+
+    //if player isn't jumping use the default hitbox
+    if(!checkIsJumping()) {
+
+        hitbox.setActiveHitbox(0, defaultHitboxState);
+    }
+
     matchHitboxPosition();
 }
 
 void Player::updateRendering() {
 
-    if(sprite.animate() && (currentState == STATE_DYING_FACING_LEFT || currentState == STATE_DYING_FACING_RIGHT)) {
+    if(sprite.animate() && (currentState == PlayerEnums::STATE_DYING_FACING_LEFT || currentState == PlayerEnums::STATE_DYING_FACING_RIGHT)) {
 
         die();
     }
@@ -156,7 +145,7 @@ void Player::updateRendering() {
     determineRenderingState();
     hurtbox.setActiveHitbox(sprite.getFrame(), currentState);
 
-    sf::FloatRect box = hurtbox.getActiveHitboxWorldSpace();
+    sf::FloatRect box = hitbox.getActiveHitboxWorldSpace();
     entity.setPosition(box.left, box.top);
     entity.setSize(sf::Vector2f(box.width, box.height));
 
@@ -197,40 +186,7 @@ void Player::load(const PreloadedPlayerData &data) {
 
     jumpingHitboxState = data.jumpingHitboxState;
 
-    STATE_STANDING_LEFT = data.STATE_STANDING_LEFT;
-    STATE_STANDING_UP_FACING_LEFT = data.STATE_STANDING_UP_FACING_LEFT;
-    STATE_STANDING_UP_FACING_RIGHT = data.STATE_STANDING_UP_FACING_RIGHT;
-    STATE_STANDING_RIGHT = data.STATE_STANDING_RIGHT;
-
-    STATE_WALKING_DOWN_LEFT = data.STATE_WALKING_DOWN_LEFT;
-    STATE_WALKING_LEFT = data.STATE_WALKING_LEFT;
-    STATE_WALKING_UP_LEFT = data.STATE_WALKING_UP_LEFT;
-    STATE_WALKING_UP_RIGHT = data.STATE_WALKING_UP_RIGHT;
-    STATE_WALKING_RIGHT = data.STATE_WALKING_RIGHT;
-    STATE_WALKING_DOWN_RIGHT = data.STATE_WALKING_DOWN_RIGHT;
-
-    STATE_CROUCHING_LEFT = data.STATE_CROUCHING_LEFT;
-    STATE_CROUCHING_RIGHT = data.STATE_CROUCHING_RIGHT;
-
-    STATE_FALLING_DOWN_FACING_LEFT = data.STATE_FALLING_DOWN_FACING_LEFT;
-    STATE_FALLING_DOWN_FACING_RIGHT = data.STATE_FALLING_DOWN_FACING_RIGHT;
-    STATE_FALLING_DOWN_LEFT = data.STATE_FALLING_DOWN_LEFT;
-    STATE_FALLING_LEFT = data.STATE_FALLING_LEFT;
-    STATE_FALLING_UP_LEFT = data.STATE_FALLING_UP_LEFT;
-    STATE_FALLING_UP_FACING_LEFT = data.STATE_FALLING_UP_FACING_LEFT;
-    STATE_FALLING_UP_FACING_RIGHT = data.STATE_FALLING_UP_FACING_RIGHT;
-    STATE_FALLING_UP_RIGHT = data.STATE_FALLING_UP_RIGHT;
-    STATE_FALLING_RIGHT = data.STATE_FALLING_RIGHT;
-    STATE_FALLING_DOWN_RIGHT = data.STATE_FALLING_DOWN_RIGHT;
-
-    STATE_JUMPING = data.STATE_JUMPING;
-
-    STATE_DYING_FACING_LEFT = data.STATE_DYING_FACING_LEFT;
-    STATE_DYING_FACING_RIGHT = data.STATE_DYING_FACING_RIGHT;
-
-    STATE_DEAD = data.STATE_DEAD;
-
-    setState(STATE_STANDING_RIGHT);
+    setState(PlayerEnums::STATE_STANDING_RIGHT);
     hitbox.setActiveHitbox(0, defaultHitboxState);
 }
 
@@ -337,12 +293,12 @@ void Player::determineRenderingState() {
 
         if(direction.horizontal == HorizontalDirection::LEFT) {
 
-            setState(STATE_DYING_FACING_LEFT);
+            setState(PlayerEnums::STATE_DYING_FACING_LEFT);
         }
 
         if(direction.horizontal == HorizontalDirection::RIGHT) {
 
-            setState(STATE_DYING_FACING_RIGHT);
+            setState(PlayerEnums::STATE_DYING_FACING_RIGHT);
         }
 
         return;
@@ -350,17 +306,13 @@ void Player::determineRenderingState() {
 
     if(lifeState == LifeState::DEAD) {
 
-        setState(STATE_DEAD);
+        setState(PlayerEnums::STATE_DEAD);
         return;
     }
 
-    //if player is no longer in the air then his jump has finished
-    //so indicate that he didn't press the jump button so the animation doesn't draw the player jumping
-    wasJumpButtonPressed = checkIsInAir() && wasJumpButtonPressed;
-
     if(checkIsJumping()) {
 
-        setState(STATE_JUMPING);
+        setState(PlayerEnums::STATE_JUMPING);
 
         return;
     }
@@ -373,13 +325,13 @@ void Player::determineRenderingState() {
 
             case CombinedAxis::LEFT : {
 
-                setState(STATE_FALLING_LEFT);
+                setState(PlayerEnums::STATE_FALLING_LEFT);
                 return;
             }
 
             case CombinedAxis::UP_LEFT : {
 
-                setState(STATE_FALLING_UP_LEFT);
+                setState(PlayerEnums::STATE_FALLING_UP_LEFT);
                 return;
             }
 
@@ -387,32 +339,32 @@ void Player::determineRenderingState() {
 
                 if(direction.horizontal == HorizontalDirection::LEFT) {
 
-                    setState(STATE_FALLING_UP_FACING_LEFT);
+                    setState(PlayerEnums::STATE_FALLING_UP_FACING_LEFT);
                     return;
                 }
 
                 if(direction.horizontal == HorizontalDirection::RIGHT) {
 
-                    setState(STATE_FALLING_UP_FACING_RIGHT);
+                    setState(PlayerEnums::STATE_FALLING_UP_FACING_RIGHT);
                     return;
                 }
             }
 
             case CombinedAxis::UP_RIGHT : {
 
-                setState(STATE_FALLING_UP_RIGHT);
+                setState(PlayerEnums::STATE_FALLING_UP_RIGHT);
                 return;
             }
 
             case CombinedAxis::RIGHT : {
 
-                setState(STATE_FALLING_RIGHT);
+                setState(PlayerEnums::STATE_FALLING_RIGHT);
                 return;
             }
 
             case CombinedAxis::DOWN_RIGHT : {
 
-                setState(STATE_FALLING_DOWN_RIGHT);
+                setState(PlayerEnums::STATE_FALLING_DOWN_RIGHT);
                 return;
             }
 
@@ -420,20 +372,20 @@ void Player::determineRenderingState() {
 
                 if(direction.horizontal == HorizontalDirection::LEFT) {
 
-                    setState(STATE_FALLING_DOWN_FACING_LEFT);
+                    setState(PlayerEnums::STATE_FALLING_DOWN_FACING_LEFT);
                     return;
                 }
 
                 if(direction.horizontal == HorizontalDirection::RIGHT) {
 
-                    setState(STATE_FALLING_DOWN_FACING_RIGHT);
+                    setState(PlayerEnums::STATE_FALLING_DOWN_FACING_RIGHT);
                     return;
                 }
             }
 
             default : {
 
-                setState(STATE_FALLING_DOWN_FACING_LEFT);
+                setState(PlayerEnums::STATE_FALLING_DOWN_FACING_LEFT);
                 return;
             }
         }
@@ -445,12 +397,12 @@ void Player::determineRenderingState() {
 
         if(direction.horizontal == HorizontalDirection::LEFT) {
 
-            setState(STATE_CROUCHING_LEFT);
+            setState(PlayerEnums::STATE_CROUCHING_LEFT);
         }
 
         if(direction.horizontal == HorizontalDirection::RIGHT) {
 
-            setState(STATE_CROUCHING_RIGHT);
+            setState(PlayerEnums::STATE_CROUCHING_RIGHT);
         }
 
         return;
@@ -460,24 +412,24 @@ void Player::determineRenderingState() {
 
         if(direction.vertical == VerticalDirection::STRAIGHT && direction.horizontal == HorizontalDirection::LEFT) {
 
-            setState(STATE_STANDING_LEFT);
+            setState(PlayerEnums::STATE_STANDING_LEFT);
         }
 
         if(direction.vertical == VerticalDirection::STRAIGHT && direction.horizontal == HorizontalDirection::RIGHT) {
 
-            setState(STATE_STANDING_RIGHT);
+            setState(PlayerEnums::STATE_STANDING_RIGHT);
         }
 
         if(direction.vertical == VerticalDirection::UP) {
 
             if(direction.horizontal == HorizontalDirection::LEFT) {
 
-                setState(STATE_STANDING_UP_FACING_LEFT);
+                setState(PlayerEnums::STATE_STANDING_UP_FACING_LEFT);
             }
 
             if(direction.horizontal == HorizontalDirection::RIGHT) {
 
-                setState(STATE_STANDING_UP_FACING_RIGHT);
+                setState(PlayerEnums::STATE_STANDING_UP_FACING_RIGHT);
             }
         }
 
@@ -487,37 +439,37 @@ void Player::determineRenderingState() {
     //player is moving and doing stuff now
     if(direction.vertical == VerticalDirection::STRAIGHT && direction.horizontal == HorizontalDirection::LEFT) {
 
-        setState(STATE_WALKING_LEFT);
+        setState(PlayerEnums::STATE_WALKING_LEFT);
         return;
     }
 
     if(direction.vertical == VerticalDirection::STRAIGHT && direction.horizontal == HorizontalDirection::RIGHT) {
 
-        setState(STATE_WALKING_RIGHT);
+        setState(PlayerEnums::STATE_WALKING_RIGHT);
         return;
     }
 
     if(direction.vertical == VerticalDirection::UP && direction.horizontal == HorizontalDirection::LEFT) {
 
-        setState(STATE_WALKING_UP_LEFT);
+        setState(PlayerEnums::STATE_WALKING_UP_LEFT);
         return;
     }
 
     if(direction.vertical == VerticalDirection::UP && direction.horizontal == HorizontalDirection::RIGHT) {
 
-        setState(STATE_WALKING_UP_RIGHT);
+        setState(PlayerEnums::STATE_WALKING_UP_RIGHT);
         return;
     }
 
     if(direction.vertical == VerticalDirection::DOWN && direction.horizontal == HorizontalDirection::LEFT) {
 
-        setState(STATE_WALKING_DOWN_LEFT);
+        setState(PlayerEnums::STATE_WALKING_DOWN_LEFT);
         return;
     }
 
     if(direction.vertical == VerticalDirection::DOWN && direction.horizontal == HorizontalDirection::RIGHT) {
 
-        setState(STATE_WALKING_DOWN_RIGHT);
+        setState(PlayerEnums::STATE_WALKING_DOWN_RIGHT);
         return;
     }
 }
@@ -525,7 +477,7 @@ void Player::determineRenderingState() {
 glm::vec2 Player::calculateGunfireOrigin() {
 
     //if player isn't jumping then his gunfire direction is dtermined by his currnet state
-    if(currentState != STATE_JUMPING) {
+    if(currentState != PlayerEnums::STATE_JUMPING) {
 
         return bulletOriginForState[currentState];
     }

@@ -1,6 +1,7 @@
 #include "Bullet.h"
 #include "TileCollisionHandling.h"
 #include "Enemy.h"
+#include "EntityAnimationStates.h"
 
 #include <vector>
 #include <iostream>
@@ -14,15 +15,7 @@ Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWo
     EntityBase(glm::vec2(0, 0), directionWorldSpace * bulletVel, glm::vec2(bulletVel, bulletVel), 1),
     lifeTime(sf::seconds(1.5)),
     timeElapsed(0),
-    direction(directionWorldSpace),
-    STATE_RIGHT(0),
-    STATE_UP_RIGHT(0),
-    STATE_UP(0),
-    STATE_UP_LEFT(0),
-    STATE_LEFT(0),
-    STATE_DOWN_LEFT(0),
-    STATE_DOWN(0),
-    STATE_DOWN_RIGHT(0)
+    direction(directionWorldSpace)
     {
         entity.setSize(sf::Vector2f(20, 20));
         hurtbox.setOrigin(positionWorldSpace - glm::vec2(10, 10));
@@ -35,15 +28,7 @@ Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWo
     EntityBase(glm::vec2(0, 0), directionWorldSpace, glm::vec2(20.f, 20.f), 1),
     lifeTime(sf::seconds(1.5)),
     timeElapsed(0),
-    direction(directionWorldSpace),
-    STATE_RIGHT(0),
-    STATE_UP_RIGHT(0),
-    STATE_UP(0),
-    STATE_UP_LEFT(0),
-    STATE_LEFT(0),
-    STATE_DOWN_LEFT(0),
-    STATE_DOWN(0),
-    STATE_DOWN_RIGHT(0)
+    direction(directionWorldSpace)
     {
         load(data);
 
@@ -101,15 +86,6 @@ void Bullet::load(const PreloadedBulletData &data) {
     loadBase(data);
     scale(data.scale, data.scale);
 
-    STATE_RIGHT = data.STATE_RIGHT;
-    STATE_UP_RIGHT = data.STATE_UP_RIGHT;
-    STATE_UP = data.STATE_UP;
-    STATE_UP_LEFT = data.STATE_UP_LEFT;
-    STATE_LEFT = data.STATE_LEFT;
-    STATE_DOWN_LEFT = data.STATE_DOWN_LEFT;
-    STATE_DOWN = data.STATE_DOWN;
-    STATE_DOWN_RIGHT = data.STATE_DOWN_RIGHT;
-
     MOVEMENT_VELOCITY = direction * data.velocity;
     lifeTime = data.lifetime;
 
@@ -123,41 +99,41 @@ void Bullet::determineState() {
 
         if(MOVEMENT_VELOCITY.y < 0) {
 
-            setState(STATE_UP);
+            setState(BulletEnums::STATE_UP);
 
         } else if(MOVEMENT_VELOCITY.y > 0) {
 
-            setState(STATE_DOWN);
+            setState(BulletEnums::STATE_DOWN);
         }
 
     } else if(MOVEMENT_VELOCITY.y == 0) {
 
         if(MOVEMENT_VELOCITY.x < 0) {
 
-            setState(STATE_LEFT);
+            setState(BulletEnums::STATE_LEFT);
 
         } else if(MOVEMENT_VELOCITY.x > 0) {
 
-            setState(STATE_RIGHT);
+            setState(BulletEnums::STATE_RIGHT);
         }
 
     } else {
 
         if(MOVEMENT_VELOCITY.y < 0 && MOVEMENT_VELOCITY.x < 0) {
 
-            setState(STATE_UP_LEFT);
+            setState(BulletEnums::STATE_UP_LEFT);
 
         } else if(MOVEMENT_VELOCITY.y < 0 && MOVEMENT_VELOCITY.x > 0) {
 
-            setState(STATE_UP_RIGHT);
+            setState(BulletEnums::STATE_UP_RIGHT);
 
         } else if(MOVEMENT_VELOCITY.y > 0 && MOVEMENT_VELOCITY.x < 0) {
 
-            setState(STATE_DOWN_LEFT);
+            setState(BulletEnums::STATE_DOWN_LEFT);
 
         } else if(MOVEMENT_VELOCITY.y > 0 && MOVEMENT_VELOCITY.x > 0) {
 
-            setState(STATE_DOWN_RIGHT);
+            setState(BulletEnums::STATE_DOWN_RIGHT);
         }
     }
 }

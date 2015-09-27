@@ -1,4 +1,5 @@
 #include "TurretEnemy.h"
+#include "EntityAnimationStates.h"
 #include "GlobalConstants.h"
 #include <cmath>
 #include <iostream>
@@ -14,19 +15,7 @@ TurretEnemy::TurretEnemy(const glm::vec2 &position, const int initialHealth) :
     hiddenStateTimer(),
     exposedStateTimer(),
     hiddenStateDuration(),
-    exposedStateDuration(),
-    STATE_HIDING(0),
-    STATE_COMING_OUT_OF_HIDING(0),
-    STATE_GOING_INTO_HIDING(0),
-    STATE_SHOOTING(0),
-    DOWN(0),
-    DOWN_LEFT(0),
-    LEFT(0),
-    UP_LEFT(0),
-    UP(0),
-    UP_RIGHT(0),
-    RIGHT(0),
-    DOWN_RIGHT(0)
+    exposedStateDuration()
     {
         setPosition(position);
 
@@ -40,7 +29,7 @@ void TurretEnemy::updatePhysics(const float& deltaTime, const sf::FloatRect& wor
 
     unsigned frame = sprite.getFrame();
 
-    if(currentState != STATE_SHOOTING) {
+    if(currentState != TurretEnemyEnums::STATE_SHOOTING) {
 
         //enemy isn't shooting so no need to fire new bullets
         //the gun needs to update though so keep this after the gun physics update
@@ -73,20 +62,20 @@ void TurretEnemy::updateRendering() {
 
     //don't animate when entity is shooting because the shooting frames aren't animated
     //use the sprites animation state instead of the enemies because if the enemy state changes but the sprite doesn't then the sprite won't draw the correct state
-    if(sprite.animate() && sprite.getAnimationState() != STATE_SHOOTING) {
+    if(sprite.animate() && sprite.getAnimationState() != TurretEnemyEnums::STATE_SHOOTING) {
 
         //animation finished so if its the transition animation then complete transitions
         //don't restart state timers if the current state isn't one of these
         //because turrets also animate while hiding and if you restart state timers at the end up the hiding animation
         //then the timers will be reset every frame so turret will stay hiding forever
-        if(currentState == STATE_COMING_OUT_OF_HIDING) {
+        if(currentState == TurretEnemyEnums::STATE_COMING_OUT_OF_HIDING) {
 
-            setState(STATE_SHOOTING);
+            setState(TurretEnemyEnums::STATE_SHOOTING);
             restartStateDurationTimers();
 
-        } else if(currentState == STATE_GOING_INTO_HIDING) {
+        } else if(currentState == TurretEnemyEnums::STATE_GOING_INTO_HIDING) {
 
-            setState(STATE_HIDING);
+            setState(TurretEnemyEnums::STATE_HIDING);
             restartStateDurationTimers();
         }
     }
@@ -94,55 +83,57 @@ void TurretEnemy::updateRendering() {
     //turret only really from hiding or shooting
     //determine if turret needs to start a transition animation
     //and if so which animation
-    if(currentState == STATE_HIDING && hiddenStateTimer.getElapsedTime() > hiddenStateDuration) {
+    if(currentState == TurretEnemyEnums::STATE_HIDING && hiddenStateTimer.getElapsedTime() > hiddenStateDuration) {
 
-        setState(STATE_COMING_OUT_OF_HIDING);
+        setState(TurretEnemyEnums::STATE_COMING_OUT_OF_HIDING);
         restartStateDurationTimers();
 
-    } else if(currentState == STATE_SHOOTING && exposedStateTimer.getElapsedTime() > exposedStateDuration) {
+    } else if(currentState == TurretEnemyEnums::STATE_SHOOTING && exposedStateTimer.getElapsedTime() > exposedStateDuration) {
 
-        setState(STATE_GOING_INTO_HIDING);
+        setState(TurretEnemyEnums::STATE_GOING_INTO_HIDING);
         restartStateDurationTimers();
 
-    } else if(currentState == STATE_SHOOTING) {
+    } else if(currentState == TurretEnemyEnums::STATE_SHOOTING) {
 
         if(direction.vertical == VerticalDirection::STRAIGHT) {
 
             if(direction.horizontal == HorizontalDirection::LEFT) {
 
-                sprite.setFrame(LEFT);
+                sprite.setFrame(TurretEnemyEnums::LEFT);
 
             }  else {
 
-                sprite.setFrame(RIGHT);
+                sprite.setFrame(TurretEnemyEnums::RIGHT);
             }
 
         } else if(direction.vertical == VerticalDirection::UP) {
 
             if(direction.isFacingCompletelyVertical) {
 
-                sprite.setFrame(UP);
+                sprite.setFrame(TurretEnemyEnums::UP);
 
             } else if(direction.horizontal == HorizontalDirection::LEFT) {
 
-                sprite.setFrame(UP_LEFT);
+                sprite.setFrame(TurretEnemyEnums::UP_LEFT);
 
             } else {
 
-                sprite.setFrame(UP_RIGHT);
+                sprite.setFrame(TurretEnemyEnums::UP_RIGHT);
             }
+
         } else if(direction.vertical == VerticalDirection::DOWN) {
 
             if(direction.isFacingCompletelyVertical) {
 
-                sprite.setFrame(DOWN);
+                sprite.setFrame(TurretEnemyEnums::DOWN);
+
             } else if(direction.horizontal == HorizontalDirection::LEFT) {
 
-                sprite.setFrame(DOWN_LEFT);
+                sprite.setFrame(TurretEnemyEnums::DOWN_LEFT);
 
             } else {
 
-                sprite.setFrame(DOWN_RIGHT);
+                sprite.setFrame(TurretEnemyEnums::DOWN_RIGHT);
             }
         }
 
@@ -160,7 +151,7 @@ void TurretEnemy::updateRendering() {
 
 bool TurretEnemy::checkCanGetHit() {
 
-    return checkIsAlive() && currentState != STATE_HIDING;
+    return checkIsAlive() && currentState != TurretEnemyEnums::STATE_HIDING;
 }
 
 void TurretEnemy::draw(sf::RenderWindow &window) {
@@ -175,24 +166,10 @@ void TurretEnemy::load(const PreloadedTurretData &data) {
     loadShootingEntityData(data);
     scale(data.scale, data.scale);
 
-    STATE_HIDING = data.STATE_HIDING;
-    STATE_COMING_OUT_OF_HIDING = data.STATE_COMING_OUT_OF_HIDING;
-    STATE_GOING_INTO_HIDING = data.STATE_GOING_INTO_HIDING;
-    STATE_SHOOTING = data.STATE_SHOOTING;
-
-    DOWN = data.DOWN;
-    DOWN_LEFT = data.DOWN_LEFT;
-    LEFT = data.LEFT;
-    UP_LEFT = data.UP_LEFT;
-    UP = data.UP;
-    UP_RIGHT = data.UP_RIGHT;
-    RIGHT = data.RIGHT;
-    DOWN_RIGHT = data.DOWN_RIGHT;
-
     hiddenStateDuration = data.hiddenStateDuration;
     exposedStateDuration = data.exposedStateDuration;
 
-    setState(STATE_HIDING);
+    setState(TurretEnemyEnums::STATE_COMING_OUT_OF_HIDING);
     restartStateDurationTimers();
 }
 

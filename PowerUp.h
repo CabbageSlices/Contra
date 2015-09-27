@@ -34,14 +34,6 @@ class PowerUp : public DynamicObject {
 
         void setFrameForPowerUpType();
 
-        unsigned STATE_SPAWNING;
-        unsigned STATE_SPAWNED;
-        unsigned STATE_DISAPPEARING;
-        unsigned STATE_DISAPPEARED;
-
-        //each frame of the spawned animation state refers to a different powerup image
-        unsigned FRAME_MACHINEGUN;
-
         PowerUpType powerUpType;
 };
 
