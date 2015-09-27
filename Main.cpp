@@ -628,7 +628,7 @@ void drawTiles(sf::RenderWindow &window, GameWorld &world) {
 	glm::vec2 topLeft(cameraBounds.left, cameraBounds.top);
 	glm::vec2 bottomRight(cameraBounds.left + cameraBounds.width, cameraBounds.top + cameraBounds.height);
 
-	world.tileMap.draw(window, topLeft, bottomRight);
+	world.tileMap.drawTilesDebug(window, topLeft, bottomRight);
 }
 
 template<class T>
@@ -652,11 +652,11 @@ int main() {
     GameWorld world(window);
 
     world.worldBounds = sf::FloatRect(0, 0, 6144, 1024);
-    world.worldBoundsBossFight = sf::FloatRect(6144 - 1028, 0, 0, 1024);
+    world.worldBoundsBossFight = sf::FloatRect(6144 - 2048, 0, 2048, 1024);
     world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
 
-//    world.clearEverything();
-//    loadWorld("world1", world);
+    world.clearEverything();
+    loadWorld("world1", world);
 
     auto player = createPlayer(world.initialPlayerSpawnPoint, PlayerNumber::PLAYER_1, gameConfiguration);
 
@@ -680,15 +680,15 @@ int main() {
 
                     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
 
-                        world.tileMap.setTileDisplayChanges(mousePosition, TileType::UPWARD_RIGHT_1_1, "tileset.png", sf::IntRect(0, 0, 64, 64));
+                        world.tileMap.setTile(mousePosition, TileType::UPWARD_RIGHT_1_1, "asimIsGay.jpg", sf::IntRect(0, 0, 64, 64));
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) {
 
-                        world.tileMap.setTileDisplayChanges(mousePosition, TileType::UPWARD_LEFT_1_1, "tileset.png", sf::IntRect(0, 0, 64, 64));
+                        world.tileMap.setTile(mousePosition, TileType::UPWARD_LEFT_1_1, "asimIsGay.jpg", sf::IntRect(0, 0, 64, 64));
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) {
 
-                        world.tileMap.setTileDisplayChanges(mousePosition, TileType::ONE_WAY, "tileset.png", sf::IntRect(0, 0, 64, 64));
+                        world.tileMap.setTile(mousePosition, TileType::ONE_WAY, "asimIsGay.jpg", sf::IntRect(0, 0, 64, 64));
 
                     } else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Z)) {
 
@@ -740,14 +740,14 @@ int main() {
 
                     } else {
 
-                        world.tileMap.setTileDisplayChanges(mousePosition, TileType::SOLID, "tileset.png", sf::IntRect(0, 0, 64, 64));
+                        world.tileMap.setTile(mousePosition, TileType::SOLID, "asimIsGay.jpg", sf::IntRect(0, 0, 64, 64));
                     }
 
                 }
 
                 if(event.mouseButton.button == sf::Mouse::Right) {
 
-                    world.tileMap.setTileDisplayChanges(mousePosition, TileType::EMPTY, "tileset.png", sf::IntRect(0, 0, 0, 0));
+                    world.tileMap.setTile(mousePosition, TileType::EMPTY, "asimIsGay.jpg", sf::IntRect(0, 0, 0, 0));
                 }
             }
 

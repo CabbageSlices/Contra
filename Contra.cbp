@@ -96,6 +96,7 @@
 		<Unit filename="EnemySpawners.h" />
 		<Unit filename="EntityBase.cpp" />
 		<Unit filename="EntityBase.h" />
+		<Unit filename="EntitySavedataTags.h" />
 		<Unit filename="FileManipulators.cpp" />
 		<Unit filename="FileManipulators.h" />
 		<Unit filename="GameConfiguration.cpp" />
@@ -125,8 +126,6 @@
 		<Unit filename="PreloadedData.h" />
 		<Unit filename="Random.cpp" />
 		<Unit filename="Random.h" />
-		<Unit filename="SavedDataTags.cpp" />
-		<Unit filename="SavedDataTags.h" />
 		<Unit filename="ShootingEntity.cpp" />
 		<Unit filename="ShootingEntity.h" />
 		<Unit filename="SpatialHash.h" />
@@ -142,6 +141,8 @@
 		<Unit filename="TileMap.h" />
 		<Unit filename="TurretEnemy.cpp" />
 		<Unit filename="TurretEnemy.h" />
+		<Unit filename="WorldSavedataTags.cpp" />
+		<Unit filename="WorldSavedataTags.h" />
 		<Unit filename="WorldSavingLoading.cpp" />
 		<Unit filename="WorldSavingLoading.h" />
 		<Extensions>

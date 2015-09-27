@@ -12,7 +12,7 @@ using std::cout;
 using std::endl;
 
 Player::Player(const glm::vec2 &spawnPosition, const PlayerKeys& keyConfiguration):
-    ShootingEntity(glm::vec2(0, GRAVITY), glm::vec2(4.f, 4.05f), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), 3),
+    ShootingEntity(glm::vec2(0, GRAVITY), glm::vec2(4.f, 4.5f), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), 3),
     STATE_STANDING_LEFT(0),
     STATE_STANDING_UP_FACING_LEFT(1),
     STATE_STANDING_UP_FACING_RIGHT(2),
@@ -47,7 +47,7 @@ Player::Player(const glm::vec2 &spawnPosition, const PlayerKeys& keyConfiguratio
     holdingJump(false),
     wasJumpButtonPressed(false),
     extraJumpTimer(),
-    extraJumpDuration(sf::milliseconds(200)),
+    extraJumpDuration(sf::milliseconds(210)),
     controls(keyConfiguration),
     respawnTimer(),
     respawnDelay(sf::seconds(1.5)),
@@ -120,11 +120,6 @@ void Player::updatePhysics(const float& deltaTime, const sf::FloatRect& worldBou
     if(!checkExtendJump()) {
 
         hitboxMovementController.updateVelocities(deltaTime);
-    }
-
-    if(!checkIsJumping()) {
-
-        sf::FloatRect newFloatrect = hitbox.getActiveHitboxWorldSpace();
     }
 
     hitboxMovementController.moveAlongXAxis(deltaTime, worldBounds);
@@ -663,7 +658,10 @@ void Player::jump() {
         stopStandingOnPlatforms();
         wasJumpButtonPressed = true;
         hitbox.setActiveHitbox(0, jumpingHitboxState);
-        ///hitbox.move(glm::vec2(0, -hitbox.getActiveHitboxObjectSpace().height / 2));
+
+        ///make player go slightly upwards when jumping because when he jumps his hitbox becomes smaller and the jump starts from the ground
+        ///this causes him to be smaller than a tile and allows him to go under tiles
+//        hitbox.move(glm::vec2(0, -hitbox.getActiveHitboxObjectSpace().height / 2));
     }
 }
 

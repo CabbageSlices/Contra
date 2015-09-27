@@ -480,7 +480,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1442200584 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1442794461 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"GameWorld.h"
@@ -511,7 +511,7 @@
 	<unordered_set>
 	<cstdlib>
 
-1442188423 c:\users\nimesh\desktop\c++\github\contra\player.h
+1443380732 c:\users\nimesh\desktop\c++\github\contra\player.h
 	"SFML/Graphics.hpp"
 	"GlobalConstants.h"
 	"TileCollisionHandling.h"
@@ -540,7 +540,7 @@
 	"ObjectHitbox.h"
 	<iostream>
 
-1442196284 source:c:\users\nimesh\desktop\c++\github\contra\player.cpp
+1442538594 source:c:\users\nimesh\desktop\c++\github\contra\player.cpp
 	"Player.h"
 	<iostream>
 	<vector>
@@ -555,7 +555,7 @@
 	"Tile.h"
 	<iostream>
 
-1442200733 source:c:\users\nimesh\desktop\c++\github\contra\tilecollisionhandling.cpp
+1442284676 source:c:\users\nimesh\desktop\c++\github\contra\tilecollisionhandling.cpp
 	"TileCollisionHandling.h"
 	"ObjectHitbox.h"
 	"GlobalConstants.h"
@@ -1095,12 +1095,12 @@
 	<vector>
 	<memory>
 
-1441933311 c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.h
+1443326326 c:\users\nimesh\desktop\c++\github\contra\worldsavingloading.h
 	<fstream>
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"glm/glm.hpp"
-	"SavedDataTags.h"
+	"WorldSavedataTags.h"
 	<vector>
 	<memory>
 
@@ -1139,9 +1139,9 @@
 	<utility>
 	<string>
 
-1441936945 source:c:\users\nimesh\desktop\c++\github\contra\gameconfiguration.cpp
+1443326326 source:c:\users\nimesh\desktop\c++\github\contra\gameconfiguration.cpp
 	"GameConfiguration.h"
-	"SavedDataTags.h"
+	"WorldSavedataTags.h"
 	"StringManipulator.h"
 	"FileManipulators.h"
 	<string>
@@ -1158,4 +1158,14 @@
 1442188700 source:c:\users\nimesh\desktop\c++\github\contra\gameworld.cpp
 	"GameWorld.h"
 	"GameConfiguration.h"
+
+1443379997 c:\users\nimesh\desktop\c++\github\contra\worldsavedatatags.h
+	"DataTagPair.h"
+
+1443379999 c:\users\nimesh\desktop\c++\github\contra\datatagpair.h
+	<utility>
+	<string>
+
+1443326326 source:c:\users\nimesh\desktop\c++\github\contra\worldsavedatatags.cpp
+	"WorldSavedataTags.h"
 
