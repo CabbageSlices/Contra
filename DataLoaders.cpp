@@ -163,7 +163,6 @@ bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFilename) 
 
     data.hurtboxes[PlayerEnums::STATE_DEAD].push_back(sf::FloatRect(1, 1, 1, 1));
 
-    ///aside from the default hitbox, if an object
     data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(47, 13, 47, 115));
     data.hitboxes[data.jumpingHitboxState].push_back(sf::FloatRect(40, 13 + 115 - 49, 49, 49));
 
