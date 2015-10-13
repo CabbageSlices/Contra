@@ -386,7 +386,7 @@
 	<vector>
 	<map>
 
-1439425951 c:\users\nimesh\desktop\c++\github\contra\direction.h
+1444586095 c:\users\nimesh\desktop\c++\github\contra\direction.h
 	"glm/glm.hpp"
 
 1439425951 source:c:\users\nimesh\desktop\c++\github\contra\camera.cpp
@@ -483,7 +483,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1444279641 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1444279732 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"GameWorld.h"
@@ -543,7 +543,7 @@
 	"ObjectHitbox.h"
 	<iostream>
 
-1443387445 source:c:\users\nimesh\desktop\c++\github\contra\player.cpp
+1444701758 source:c:\users\nimesh\desktop\c++\github\contra\player.cpp
 	"Player.h"
 	<iostream>
 	<vector>
@@ -1013,15 +1013,27 @@
 	<vector>
 	<functional>
 
-1441936929 c:\users\nimesh\desktop\c++\github\contra\dataloaders.h
+1444603952 c:\users\nimesh\desktop\c++\github\contra\dataloaders.h
 	<string>
 	<map>
+	<string>
+	<fstream>
+	<vector>
+	"SFML/Graphics.hpp"
+	"glm/glm.hpp"
+	"ObjectTypes.h"
+	"DataTagPair.h"
 
-1443390201 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
+1444607497 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
+	<iostream>
 	"DataLoaders.h"
 	"PreloadedData.h"
 	"EntityAnimationStates.h"
 	"Gun.h"
+	"EntitySavedataTags.h"
+	"FileManipulators.h"
+	"StringManipulator.h"
+	"cstdlib"
 
 1442186461 source:c:\users\nimesh\desktop\c++\github\contra\preloadeddata.cpp
 	"PreloadedData.h"
@@ -1133,7 +1145,7 @@
 1441221782 c:\users\nimesh\desktop\c++\github\contra\stringmanipulator.h
 	<string>
 
-1441656270 c:\users\nimesh\desktop\c++\github\contra\objecttypes.h
+1444511356 c:\users\nimesh\desktop\c++\github\contra\objecttypes.h
 
 1442186207 c:\users\nimesh\desktop\c++\github\contra\objecttypetofilename.h
 	"ObjectTypes.h"
@@ -1177,5 +1189,13 @@
 1443326326 source:c:\users\nimesh\desktop\c++\github\contra\worldsavedatatags.cpp
 	"WorldSavedataTags.h"
 
-1443386456 c:\users\nimesh\desktop\c++\github\contra\entityanimationstates.h
+1444513276 c:\users\nimesh\desktop\c++\github\contra\entityanimationstates.h
+
+1444588851 source:c:\users\nimesh\desktop\c++\github\contra\entitysavedatatags.cpp
+	"EntitySavedataTags.h"
+
+1444511356 c:\users\nimesh\desktop\c++\github\contra\entitysavedatatags.h
+	<utility>
+	<string>
+	"DataTagPair.h"
 

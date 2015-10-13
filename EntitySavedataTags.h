@@ -10,7 +10,7 @@ extern const DataTagPair entityHealthTag;
 extern const DataTagPair entityTextureFilenameTag;
 extern const DataTagPair entityAnimationNextFrameTimeTag;
 
-extern const DataTagPair entityScaleTag;
+extern const DataTagPair entityNormalFormScaleTag;
 
 extern const DataTagPair entityGunTypeTag;
 extern const DataTagPair entityGunfireDelayTag;
@@ -21,5 +21,13 @@ extern const DataTagPair entityAnimationTextureRectsTag;
 extern const DataTagPair entityHurtboxTag;
 
 extern const DataTagPair entityHitboxTag;
+
+extern const DataTagPair turretHiddenStateDurationTag;
+extern const DataTagPair turrentExposedStateDurationTag;
+
+extern const DataTagPair bulletVelocityTag;
+
+extern const DataTagPair entityBossFormHealthTag;
+extern const DataTagPair entityBossFormScaleTag;
 
 #endif // ENTITYSAVEDATATAGS_H_INCLUDED

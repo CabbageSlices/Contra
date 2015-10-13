@@ -3,14 +3,14 @@
 
 enum EnemyType : int {
 
-    ENEMY_GOOMBA,
+    ENEMY_GOOMBA = 0,
     ENEMY_PIRANHA,
     ENEMY_MUSHROOM,
 };
 
 enum BulletType : int {
 
-    BULLET_SLOW,
+    BULLET_SLOW = 0,
     BULLET_FAST,
     BULLET_MEDIUM,
 };
@@ -20,14 +20,14 @@ enum DestructibleBlockType : int {
     BLOCK_BRICK = 0,
 };
 
-enum GunType {
+enum GunType : int{
 
-    GUN_BASIC
+    GUN_BASIC = 0
 };
 
-enum PowerUpType {
+enum PowerUpType : int{
 
-    MACHINE_GUN
+    MACHINE_GUN = 0
 };
 
 #endif // OBJECTTYPES_H_INCLUDED

@@ -1,9 +1,18 @@
+#include <iostream>
 #include "DataLoaders.h"
 #include "PreloadedData.h"
 #include "EntityAnimationStates.h"
 #include "Gun.h"
+#include "EntitySavedataTags.h"
+#include "FileManipulators.h"
+#include "StringManipulator.h"
+#include "cstdlib"
 
+using std::cout;
+using std::endl;
+using std::fstream;
 using std::map;
+using std::string;
 
 bool loadBossData(map<EnemyType, BossProperties> &bossData, const std::string &dataFilename) {
 
@@ -19,152 +28,443 @@ bool loadBossData(map<EnemyType, BossProperties> &bossData, const std::string &d
     return true;
 }
 
+bool loadIntegerParameter(std::fstream &file, int &loadedData, const DataTagPair &tagPair) {
+
+    if(!readAfterLine(file, tagPair.first)) {
+
+        return false;
+    }
+
+    string extractedData;
+    getline(file, extractedData);
+
+    if(extractedData == tagPair.second) {
+
+        return false;
+    }
+
+    loadedData = atoi(extractFirstWordInString(extractedData).c_str());
+    return true;
+}
+
+bool loadEntityHealth(fstream &file, int &health) {
+
+    //find the health data
+    return loadIntegerParameter(file, health, entityHealthTag);
+}
+
+bool loadTextureFilename(fstream &file, string &textureFilename) {
+
+    if(!readAfterLine(file, entityTextureFilenameTag.first)) {
+
+        return false;
+    }
+
+    string extractedData;
+    getline(file, extractedData);
+
+    //no data loaded
+    if(extractedData == entityTextureFilenameTag.second) {
+
+        return false;
+    }
+
+    textureFilename = extractedData;
+    return true;
+}
+
+bool loadAnimationNextFrameTime(fstream &file, sf::Time &animationNextFrameTime) {
+
+    int timeInMilliseconds = 0;
+
+    if(!loadIntegerParameter(file, timeInMilliseconds, entityAnimationNextFrameTimeTag)) {
+
+        return false;
+    }
+
+    animationNextFrameTime = sf::milliseconds(timeInMilliseconds);
+    return true;
+}
+
+bool loadEntityScale(std::fstream &file, float &scale, const DataTagPair &tagPair) {
+
+    if(!readAfterLine(file, tagPair.first)) {
+
+        return false;
+    }
+
+    string extractedData;
+    getline(file, extractedData);
+
+    if(extractedData == tagPair.second) {
+
+        return false;
+    }
+
+    scale = atof(extractFirstWordInString(extractedData).c_str());
+    return true;
+}
+
+bool loadEntityGunType(std::fstream &file, GunType &gunType) {
+
+    int type = -1;
+
+    if(!loadIntegerParameter(file, type, entityGunTypeTag)) {
+
+        return false;
+    }
+
+    gunType = static_cast<GunType>(type);
+
+    return true;
+}
+
+bool loadEntityGunfireDelay(std::fstream &file, sf::Time &gunfireDelay) {
+
+    int delay = 0;
+
+    if(!loadIntegerParameter(file, delay, entityGunfireDelayTag)) {
+
+        return false;
+    }
+
+    gunfireDelay = sf::milliseconds(delay);
+
+    return true;
+}
+
+bool loadEntityBulletType(std::fstream &file, BulletType &bulletType) {
+
+    int type = 0;
+
+    if(!loadIntegerParameter(file, type, entityGunBulletTypeTag)) {
+
+        return false;
+    }
+
+    bulletType = static_cast<BulletType>(bulletType);
+
+    return true;
+}
+
+bool loadEntityBulletOrigin(std::fstream &file, std::map<unsigned, glm::vec2> &bulletOriginForState) {
+
+    if(!readAfterLine(file, entityBulletOriginTag.first)) {
+
+        return false;
+    }
+
+    string extractedData;
+    getline(file, extractedData);
+
+    while(extractedData != entityBulletOriginTag.second) {
+
+        //first number is the state for the bulllet
+        //next 2 numbers are the positions
+        unsigned state = 0;
+        glm::vec2 position;
+
+        state = atoi(extractFirstWordInString(extractedData).c_str());
+        position.x = atof(extractFirstWordInString(extractedData).c_str() );
+        position.y = atof(extractFirstWordInString(extractedData).c_str() );
+
+        bulletOriginForState[state] = position;
+
+        extractedData = "";
+        getline(file, extractedData);
+    }
+
+    return true;
+}
+
+bool loadEntityTextureRects(std::fstream &file, std::map<unsigned, std::vector<sf::IntRect> > &textureRects) {
+
+    if(!readAfterLine(file, entityAnimationTextureRectsTag.first)) {
+
+        return false;
+    }
+
+    string extractedData;
+    getline(file, extractedData);
+
+    while(extractedData != entityAnimationTextureRectsTag.second) {
+
+        //first number is the state
+        //next 4 numbers are the properties of the texture rect
+        unsigned state = 0;
+        sf::IntRect textureRect;
+
+        state = atoi(extractFirstWordInString(extractedData).c_str());
+        textureRect.left = atof(extractFirstWordInString(extractedData).c_str() );
+        textureRect.top = atof(extractFirstWordInString(extractedData).c_str() );
+        textureRect.width = atof(extractFirstWordInString(extractedData).c_str() );
+        textureRect.height = atof(extractFirstWordInString(extractedData).c_str() );
+
+        textureRects[state].push_back(textureRect);
+
+        extractedData = "";
+        getline(file, extractedData);
+    }
+
+    return true;
+}
+
+bool loadEntityCollisionBoxes(std::fstream &file, std::map<unsigned, std::vector<sf::FloatRect> > &collisionBoxes, const DataTagPair &tagPair) {
+
+    if(!readAfterLine(file, tagPair.first)) {
+
+        return false;
+    }
+
+    string extractedData;
+    getline(file, extractedData);
+
+    while(extractedData != tagPair.second) {
+
+        //first number is the state
+        //next 4 numbers are the properties of the texture rect
+        unsigned state = 0;
+        sf::FloatRect collisionRect;
+
+        state = atoi(extractFirstWordInString(extractedData).c_str());
+        collisionRect.left = atof(extractFirstWordInString(extractedData).c_str() );
+        collisionRect.top = atof(extractFirstWordInString(extractedData).c_str() );
+        collisionRect.width = atof(extractFirstWordInString(extractedData).c_str() );
+        collisionRect.height = atof(extractFirstWordInString(extractedData).c_str() );
+
+        collisionBoxes[state].push_back(collisionRect);
+
+        extractedData = "";
+        getline(file, extractedData);
+    }
+
+    return true;
+}
+
 bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFilename) {
 
-    data.health = 3;
-    data.textureFilename = "player.png";
-    data.animationNextFrameTime = sf::milliseconds(100);
+    fstream file;
+    file.open(dataFilename, std::ios_base::in);
 
-    data.gunType = GunType::GUN_BASIC;
-    data.gunfireDelay = FIRE_DELAY_MEDIUM;
-    data.bulletType = BulletType::BULLET_MEDIUM;
+    if(!file) {
 
-    data.bulletOriginForState[PlayerEnums::STATE_STANDING_LEFT] = glm::vec2(0, 57);
-    data.bulletOriginForState[PlayerEnums::STATE_STANDING_RIGHT] = glm::vec2(126, 62);
-    data.bulletOriginForState[PlayerEnums::STATE_STANDING_UP_FACING_LEFT] = glm::vec2(73, 0);
-    data.bulletOriginForState[PlayerEnums::STATE_STANDING_UP_FACING_RIGHT] = glm::vec2(48, 0);
-
-    data.bulletOriginForState[PlayerEnums::STATE_WALKING_DOWN_LEFT] = glm::vec2(15, 128);
-    data.bulletOriginForState[PlayerEnums::STATE_WALKING_LEFT] = glm::vec2(0, 56);
-    data.bulletOriginForState[PlayerEnums::STATE_WALKING_UP_LEFT] = glm::vec2(32, 14);
-    data.bulletOriginForState[PlayerEnums::STATE_WALKING_UP_RIGHT] = glm::vec2(109, 10);
-    data.bulletOriginForState[PlayerEnums::STATE_WALKING_RIGHT] = glm::vec2(128, 61);
-    data.bulletOriginForState[PlayerEnums::STATE_WALKING_DOWN_RIGHT] = glm::vec2(114, 128);
-
-    data.bulletOriginForState[PlayerEnums::STATE_CROUCHING_LEFT] = glm::vec2(-5, 102);
-    data.bulletOriginForState[PlayerEnums::STATE_CROUCHING_RIGHT] = glm::vec2(128, 104);
-
-    data.bulletOriginForState[PlayerEnums::STATE_FALLING_DOWN_FACING_LEFT] = glm::vec2(37, 112);
-    data.bulletOriginForState[PlayerEnums::STATE_FALLING_DOWN_FACING_RIGHT] = glm::vec2(51, 114);
-    data.bulletOriginForState[PlayerEnums::STATE_FALLING_RIGHT] = glm::vec2(128, 51);
-    data.bulletOriginForState[PlayerEnums::STATE_FALLING_DOWN_RIGHT] = glm::vec2(128, 110);
-    data.bulletOriginForState[PlayerEnums::STATE_FALLING_UP_RIGHT] = glm::vec2(120, 9);
-    data.bulletOriginForState[PlayerEnums::STATE_FALLING_UP_LEFT] = glm::vec2(74, 0);
-    data.bulletOriginForState[PlayerEnums::STATE_FALLING_UP_LEFT] = glm::vec2(0, 0);
-    data.bulletOriginForState[PlayerEnums::STATE_FALLING_DOWN_LEFT] = glm::vec2(13, 108);
-    data.bulletOriginForState[PlayerEnums::STATE_FALLING_LEFT] = glm::vec2(0, 47);
-
-    //bullet origin for each direction the player could face
-    //this is only usedw hen player is jumping since the jumping state can shoot in 8 directions without changing the animation state
-    data.bulletOriginForState[CombinedAxis::UP] = glm::vec2(50, 0);
-    data.bulletOriginForState[CombinedAxis::UP_RIGHT] = glm::vec2(100, 0);
-    data.bulletOriginForState[CombinedAxis::RIGHT] = glm::vec2(100, 64);
-    data.bulletOriginForState[CombinedAxis::DOWN_RIGHT] = glm::vec2(100, 100);
-    data.bulletOriginForState[CombinedAxis::DOWN] = glm::vec2(64, 100);
-    data.bulletOriginForState[CombinedAxis::DOWN_LEFT] = glm::vec2(0, 100);
-    data.bulletOriginForState[CombinedAxis::LEFT] = glm::vec2(0, 64);
-    data.bulletOriginForState[CombinedAxis::UP_LEFT] = glm::vec2(0, 0);
-
-    for(unsigned i = 0; i < 3; ++i) {
-
-        data.animationTextureRects[PlayerEnums::STATE_WALKING_RIGHT].push_back(sf::IntRect(0, 128 * i, 128, 128));
-        data.hurtboxes[PlayerEnums::STATE_WALKING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+        cout << "Failed to find file: " << dataFilename << endl;
+        return false;
     }
 
-    for(unsigned i = 0; i < 3; ++i) {
+    if(!loadEntityHealth(file, data.health)) {
 
-        data.animationTextureRects[PlayerEnums::STATE_WALKING_DOWN_RIGHT].push_back(sf::IntRect(128, 128 * i, 128, 128));
-        data.hurtboxes[PlayerEnums::STATE_WALKING_DOWN_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+        cout << "Failed to load health" << endl;
+        return false;
     }
 
-    for(unsigned i = 0; i < 3; ++i) {
+    if(!loadEntityScale(file, data.scale, entityNormalFormScaleTag)) {
 
-        data.animationTextureRects[PlayerEnums::STATE_WALKING_UP_RIGHT].push_back(sf::IntRect(256, 128 * i, 128, 128));
-        data.hurtboxes[PlayerEnums::STATE_WALKING_UP_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+        cout << "Failed to load scaling data" << endl;
+        return false;
     }
 
-    for(unsigned i = 0; i < 3; ++i) {
+    if(!loadTextureFilename(file, data.textureFilename)) {
 
-        data.animationTextureRects[PlayerEnums::STATE_WALKING_UP_LEFT].push_back(sf::IntRect(640, 128 * i, 128, 128));
-        data.hurtboxes[PlayerEnums::STATE_WALKING_UP_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+        cout << "Failed to load texture file name." << endl;
+        return false;
     }
 
-    for(unsigned i = 0; i < 3; ++i) {
+    if(!loadAnimationNextFrameTime(file, data.animationNextFrameTime)) {
 
-        data.animationTextureRects[PlayerEnums::STATE_WALKING_DOWN_LEFT].push_back(sf::IntRect(768, 128 * i, 128, 128));
-        data.hurtboxes[PlayerEnums::STATE_WALKING_DOWN_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+        cout << "Failed to load animation next frame time" << endl;
+        return false;
     }
 
-    for(unsigned i = 0; i < 3; ++i) {
+    if(!loadEntityGunType(file, data.gunType)) {
 
-        data.animationTextureRects[PlayerEnums::STATE_WALKING_LEFT].push_back(sf::IntRect(896, 128 * i, 128, 128));
-        data.hurtboxes[PlayerEnums::STATE_WALKING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+        cout << "Failed to load entity gun type" << endl;
+        return false;
     }
 
-    for(unsigned i = 0; i < 3; ++i) {
+    if(!loadEntityGunfireDelay(file, data.gunfireDelay)) {
 
-        data.animationTextureRects[PlayerEnums::STATE_JUMPING].push_back(sf::IntRect(384, 512 + 128 * i, 128, 128));
-        data.hurtboxes[PlayerEnums::STATE_JUMPING].push_back(sf::FloatRect(40, 79, 55, 55));
+        cout << "Failed to load entity gunfire delay" << endl;
+        return false;
     }
 
-    for(unsigned i = 0; i < 3; ++i) {
+    if(!loadEntityBulletType(file, data.bulletType)) {
 
-        data.animationTextureRects[PlayerEnums::STATE_DYING_FACING_LEFT].push_back(sf::IntRect(512 + 128 * i, 640, 128, 128));
-        data.hurtboxes[PlayerEnums::STATE_DYING_FACING_LEFT].push_back(sf::FloatRect(2, 2, 2, 2));
+        cout << "Failed to load entity bullet type" << endl;
+        return false;
     }
 
-    for(unsigned i = 0; i < 3; ++i) {
+    if(!loadEntityBulletOrigin(file, data.bulletOriginForState)) {
 
-        data.animationTextureRects[PlayerEnums::STATE_DYING_FACING_RIGHT].push_back(sf::IntRect(128 * i, 640, 128, 128));
-        data.hurtboxes[PlayerEnums::STATE_DYING_FACING_RIGHT].push_back(sf::FloatRect(2, 2, 2, 2));
+        cout << "Failed to load entity bullet origin" << endl;
+        return false;
     }
 
-    data.animationTextureRects[PlayerEnums::STATE_STANDING_RIGHT].push_back(sf::IntRect(0, 0, 128, 128));
-    data.animationTextureRects[PlayerEnums::STATE_STANDING_LEFT].push_back(sf::IntRect(896, 0, 128, 128));
-    data.animationTextureRects[PlayerEnums::STATE_STANDING_UP_FACING_LEFT].push_back(sf::IntRect(512, 0, 128, 128));
-    data.animationTextureRects[PlayerEnums::STATE_STANDING_UP_FACING_RIGHT].push_back(sf::IntRect(384, 0, 128, 128));
+    if(!loadEntityTextureRects(file, data.animationTextureRects)) {
 
-    data.animationTextureRects[PlayerEnums::STATE_CROUCHING_RIGHT].push_back(sf::IntRect(384, 128, 128, 128));
-    data.animationTextureRects[PlayerEnums::STATE_CROUCHING_LEFT].push_back(sf::IntRect(512, 128, 128, 128));
+        cout << "Failed to load entity texture rects" << endl;
+        return false;
+    }
 
-    data.animationTextureRects[PlayerEnums::STATE_FALLING_RIGHT].push_back(sf::IntRect(0, 384, 128, 128));
-    data.animationTextureRects[PlayerEnums::STATE_FALLING_DOWN_RIGHT].push_back(sf::IntRect(128, 384, 128, 128));
-    data.animationTextureRects[PlayerEnums::STATE_FALLING_UP_RIGHT].push_back(sf::IntRect(256, 384, 128, 128));
-    data.animationTextureRects[PlayerEnums::STATE_FALLING_UP_FACING_RIGHT].push_back(sf::IntRect(384, 384, 128, 128));
-    data.animationTextureRects[PlayerEnums::STATE_FALLING_UP_FACING_LEFT].push_back(sf::IntRect(512, 384, 128, 128));
-    data.animationTextureRects[PlayerEnums::STATE_FALLING_UP_LEFT].push_back(sf::IntRect(640, 384, 128, 128));
-    data.animationTextureRects[PlayerEnums::STATE_FALLING_DOWN_LEFT].push_back(sf::IntRect(768, 384, 128, 128));
-    data.animationTextureRects[PlayerEnums::STATE_FALLING_LEFT].push_back(sf::IntRect(896, 384, 128, 128));
-    data.animationTextureRects[PlayerEnums::STATE_FALLING_DOWN_FACING_RIGHT].push_back(sf::IntRect(128, 512, 128, 128));
-    data.animationTextureRects[PlayerEnums::STATE_FALLING_DOWN_FACING_LEFT].push_back(sf::IntRect(256, 512, 128, 128));
+    if(!loadEntityCollisionBoxes(file, data.hitboxes, entityHitboxTag)) {
 
-    data.animationTextureRects[PlayerEnums::STATE_DEAD].push_back(sf::IntRect(1, 1, 1, 1));
+        cout << "Failed to load hitboxes" << endl;
+        return false;
+    }
 
+    if(!loadEntityCollisionBoxes(file, data.hurtboxes, entityHurtboxTag)) {
 
+        cout << "Failed to load hurtboxes" << endl;
+        return false;
+    }
 
-    data.hurtboxes[PlayerEnums::STATE_STANDING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
-    data.hurtboxes[PlayerEnums::STATE_STANDING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
-    data.hurtboxes[PlayerEnums::STATE_STANDING_UP_FACING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
-    data.hurtboxes[PlayerEnums::STATE_STANDING_UP_FACING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+    return true;
 
-    data.hurtboxes[PlayerEnums::STATE_CROUCHING_RIGHT].push_back(sf::FloatRect(10, 79, 118, 49));
-    data.hurtboxes[PlayerEnums::STATE_CROUCHING_LEFT].push_back(sf::FloatRect(0, 81, 128, 47));
-
-    data.hurtboxes[PlayerEnums::STATE_FALLING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hurtboxes[PlayerEnums::STATE_FALLING_DOWN_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hurtboxes[PlayerEnums::STATE_FALLING_UP_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hurtboxes[PlayerEnums::STATE_FALLING_UP_FACING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hurtboxes[PlayerEnums::STATE_FALLING_UP_FACING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hurtboxes[PlayerEnums::STATE_FALLING_UP_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hurtboxes[PlayerEnums::STATE_FALLING_DOWN_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hurtboxes[PlayerEnums::STATE_FALLING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hurtboxes[PlayerEnums::STATE_FALLING_DOWN_FACING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
-    data.hurtboxes[PlayerEnums::STATE_FALLING_DOWN_FACING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
-
-    data.hurtboxes[PlayerEnums::STATE_DEAD].push_back(sf::FloatRect(1, 1, 1, 1));
-
-    data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(47, 13, 47, 115));
-    data.hitboxes[data.jumpingHitboxState].push_back(sf::FloatRect(40, 13 + 115 - 49, 49, 49));
+//    data.health = 3;
+//    data.textureFilename = "player.png";
+//    data.animationNextFrameTime = sf::milliseconds(100);
+//
+//    data.gunType = GunType::GUN_BASIC;
+//    data.gunfireDelay = FIRE_DELAY_MEDIUM;
+//    data.bulletType = BulletType::BULLET_MEDIUM;
+//
+//    data.bulletOriginForState[PlayerEnums::STATE_STANDING_LEFT] = glm::vec2(0, 57);
+//    data.bulletOriginForState[PlayerEnums::STATE_STANDING_RIGHT] = glm::vec2(126, 62);
+//    data.bulletOriginForState[PlayerEnums::STATE_STANDING_UP_FACING_LEFT] = glm::vec2(73, 0);
+//    data.bulletOriginForState[PlayerEnums::STATE_STANDING_UP_FACING_RIGHT] = glm::vec2(48, 0);
+//
+//    data.bulletOriginForState[PlayerEnums::STATE_WALKING_DOWN_LEFT] = glm::vec2(15, 128);
+//    data.bulletOriginForState[PlayerEnums::STATE_WALKING_LEFT] = glm::vec2(0, 56);
+//    data.bulletOriginForState[PlayerEnums::STATE_WALKING_UP_LEFT] = glm::vec2(32, 14);
+//    data.bulletOriginForState[PlayerEnums::STATE_WALKING_UP_RIGHT] = glm::vec2(109, 10);
+//    data.bulletOriginForState[PlayerEnums::STATE_WALKING_RIGHT] = glm::vec2(128, 61);
+//    data.bulletOriginForState[PlayerEnums::STATE_WALKING_DOWN_RIGHT] = glm::vec2(114, 128);
+//
+//    data.bulletOriginForState[PlayerEnums::STATE_CROUCHING_LEFT] = glm::vec2(-5, 102);
+//    data.bulletOriginForState[PlayerEnums::STATE_CROUCHING_RIGHT] = glm::vec2(128, 104);
+//
+//    data.bulletOriginForState[PlayerEnums::STATE_FALLING_DOWN_FACING_LEFT] = glm::vec2(37, 112);
+//    data.bulletOriginForState[PlayerEnums::STATE_FALLING_DOWN_FACING_RIGHT] = glm::vec2(51, 114);
+//    data.bulletOriginForState[PlayerEnums::STATE_FALLING_RIGHT] = glm::vec2(128, 51);
+//    data.bulletOriginForState[PlayerEnums::STATE_FALLING_DOWN_RIGHT] = glm::vec2(128, 110);
+//    data.bulletOriginForState[PlayerEnums::STATE_FALLING_UP_RIGHT] = glm::vec2(120, 9);
+//    data.bulletOriginForState[PlayerEnums::STATE_FALLING_UP_FACING_RIGHT] = glm::vec2(60, 0);
+//    data.bulletOriginForState[PlayerEnums::STATE_FALLING_UP_FACING_LEFT] = glm::vec2(74, 0);
+//    data.bulletOriginForState[PlayerEnums::STATE_FALLING_UP_LEFT] = glm::vec2(0, 0);
+//    data.bulletOriginForState[PlayerEnums::STATE_FALLING_DOWN_LEFT] = glm::vec2(13, 108);
+//    data.bulletOriginForState[PlayerEnums::STATE_FALLING_LEFT] = glm::vec2(0, 47);
+//
+//    //bullet origin for each direction the player could face
+//    //this is only usedw hen player is jumping since the jumping state can shoot in 8 directions without changing the animation state
+//    data.bulletOriginForState[CombinedAxis::UP] = glm::vec2(50, 0);
+//    data.bulletOriginForState[CombinedAxis::UP_RIGHT] = glm::vec2(100, 0);
+//    data.bulletOriginForState[CombinedAxis::RIGHT] = glm::vec2(100, 64);
+//    data.bulletOriginForState[CombinedAxis::DOWN_RIGHT] = glm::vec2(100, 100);
+//    data.bulletOriginForState[CombinedAxis::DOWN] = glm::vec2(64, 100);
+//    data.bulletOriginForState[CombinedAxis::DOWN_LEFT] = glm::vec2(0, 100);
+//    data.bulletOriginForState[CombinedAxis::LEFT] = glm::vec2(0, 64);
+//    data.bulletOriginForState[CombinedAxis::UP_LEFT] = glm::vec2(0, 0);
+//
+//    for(unsigned i = 0; i < 3; ++i) {
+//
+//        data.animationTextureRects[PlayerEnums::STATE_WALKING_RIGHT].push_back(sf::IntRect(0, 128 * i, 128, 128));
+//        data.hurtboxes[PlayerEnums::STATE_WALKING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+//    }
+//
+//    for(unsigned i = 0; i < 3; ++i) {
+//
+//        data.animationTextureRects[PlayerEnums::STATE_WALKING_DOWN_RIGHT].push_back(sf::IntRect(128, 128 * i, 128, 128));
+//        data.hurtboxes[PlayerEnums::STATE_WALKING_DOWN_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+//    }
+//
+//    for(unsigned i = 0; i < 3; ++i) {
+//
+//        data.animationTextureRects[PlayerEnums::STATE_WALKING_UP_RIGHT].push_back(sf::IntRect(256, 128 * i, 128, 128));
+//        data.hurtboxes[PlayerEnums::STATE_WALKING_UP_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+//    }
+//
+//    for(unsigned i = 0; i < 3; ++i) {
+//
+//        data.animationTextureRects[PlayerEnums::STATE_WALKING_UP_LEFT].push_back(sf::IntRect(640, 128 * i, 128, 128));
+//        data.hurtboxes[PlayerEnums::STATE_WALKING_UP_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+//    }
+//
+//    for(unsigned i = 0; i < 3; ++i) {
+//
+//        data.animationTextureRects[PlayerEnums::STATE_WALKING_DOWN_LEFT].push_back(sf::IntRect(768, 128 * i, 128, 128));
+//        data.hurtboxes[PlayerEnums::STATE_WALKING_DOWN_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+//    }
+//
+//    for(unsigned i = 0; i < 3; ++i) {
+//
+//        data.animationTextureRects[PlayerEnums::STATE_WALKING_LEFT].push_back(sf::IntRect(896, 128 * i, 128, 128));
+//        data.hurtboxes[PlayerEnums::STATE_WALKING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+//    }
+//
+//    for(unsigned i = 0; i < 3; ++i) {
+//
+//        data.animationTextureRects[PlayerEnums::STATE_JUMPING].push_back(sf::IntRect(384, 512 + 128 * i, 128, 128));
+//        data.hurtboxes[PlayerEnums::STATE_JUMPING].push_back(sf::FloatRect(40, 79, 55, 55));
+//    }
+//
+//    for(unsigned i = 0; i < 3; ++i) {
+//
+//        data.animationTextureRects[PlayerEnums::STATE_DYING_FACING_LEFT].push_back(sf::IntRect(512 + 128 * i, 640, 128, 128));
+//        data.hurtboxes[PlayerEnums::STATE_DYING_FACING_LEFT].push_back(sf::FloatRect(2, 2, 2, 2));
+//    }
+//
+//    for(unsigned i = 0; i < 3; ++i) {
+//
+//        data.animationTextureRects[PlayerEnums::STATE_DYING_FACING_RIGHT].push_back(sf::IntRect(128 * i, 640, 128, 128));
+//        data.hurtboxes[PlayerEnums::STATE_DYING_FACING_RIGHT].push_back(sf::FloatRect(2, 2, 2, 2));
+//    }
+//
+//    data.animationTextureRects[PlayerEnums::STATE_STANDING_RIGHT].push_back(sf::IntRect(0, 0, 128, 128));
+//    data.animationTextureRects[PlayerEnums::STATE_STANDING_LEFT].push_back(sf::IntRect(896, 0, 128, 128));
+//    data.animationTextureRects[PlayerEnums::STATE_STANDING_UP_FACING_LEFT].push_back(sf::IntRect(512, 0, 128, 128));
+//    data.animationTextureRects[PlayerEnums::STATE_STANDING_UP_FACING_RIGHT].push_back(sf::IntRect(384, 0, 128, 128));
+//
+//    data.animationTextureRects[PlayerEnums::STATE_CROUCHING_RIGHT].push_back(sf::IntRect(384, 128, 128, 128));
+//    data.animationTextureRects[PlayerEnums::STATE_CROUCHING_LEFT].push_back(sf::IntRect(512, 128, 128, 128));
+//
+//    data.animationTextureRects[PlayerEnums::STATE_FALLING_RIGHT].push_back(sf::IntRect(0, 384, 128, 128));
+//    data.animationTextureRects[PlayerEnums::STATE_FALLING_DOWN_RIGHT].push_back(sf::IntRect(128, 384, 128, 128));
+//    data.animationTextureRects[PlayerEnums::STATE_FALLING_UP_RIGHT].push_back(sf::IntRect(256, 384, 128, 128));
+//    data.animationTextureRects[PlayerEnums::STATE_FALLING_UP_FACING_RIGHT].push_back(sf::IntRect(384, 384, 128, 128));
+//    data.animationTextureRects[PlayerEnums::STATE_FALLING_UP_FACING_LEFT].push_back(sf::IntRect(512, 384, 128, 128));
+//    data.animationTextureRects[PlayerEnums::STATE_FALLING_UP_LEFT].push_back(sf::IntRect(640, 384, 128, 128));
+//    data.animationTextureRects[PlayerEnums::STATE_FALLING_DOWN_LEFT].push_back(sf::IntRect(768, 384, 128, 128));
+//    data.animationTextureRects[PlayerEnums::STATE_FALLING_LEFT].push_back(sf::IntRect(896, 384, 128, 128));
+//    data.animationTextureRects[PlayerEnums::STATE_FALLING_DOWN_FACING_RIGHT].push_back(sf::IntRect(128, 512, 128, 128));
+//    data.animationTextureRects[PlayerEnums::STATE_FALLING_DOWN_FACING_LEFT].push_back(sf::IntRect(256, 512, 128, 128));
+//
+//    data.animationTextureRects[PlayerEnums::STATE_DEAD].push_back(sf::IntRect(1, 1, 1, 1));
+//
+//
+//
+//    data.hurtboxes[PlayerEnums::STATE_STANDING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+//    data.hurtboxes[PlayerEnums::STATE_STANDING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+//    data.hurtboxes[PlayerEnums::STATE_STANDING_UP_FACING_LEFT].push_back(sf::FloatRect(51, 31, 37, 97));
+//    data.hurtboxes[PlayerEnums::STATE_STANDING_UP_FACING_RIGHT].push_back(sf::FloatRect(51, 31, 37, 97));
+//
+//    data.hurtboxes[PlayerEnums::STATE_CROUCHING_RIGHT].push_back(sf::FloatRect(10, 79, 118, 49));
+//    data.hurtboxes[PlayerEnums::STATE_CROUCHING_LEFT].push_back(sf::FloatRect(0, 81, 128, 47));
+//
+//    data.hurtboxes[PlayerEnums::STATE_FALLING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+//    data.hurtboxes[PlayerEnums::STATE_FALLING_DOWN_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+//    data.hurtboxes[PlayerEnums::STATE_FALLING_UP_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+//    data.hurtboxes[PlayerEnums::STATE_FALLING_UP_FACING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+//    data.hurtboxes[PlayerEnums::STATE_FALLING_UP_FACING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+//    data.hurtboxes[PlayerEnums::STATE_FALLING_UP_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+//    data.hurtboxes[PlayerEnums::STATE_FALLING_DOWN_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+//    data.hurtboxes[PlayerEnums::STATE_FALLING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+//    data.hurtboxes[PlayerEnums::STATE_FALLING_DOWN_FACING_RIGHT].push_back(sf::FloatRect(36, 25, 60, 89));
+//    data.hurtboxes[PlayerEnums::STATE_FALLING_DOWN_FACING_LEFT].push_back(sf::FloatRect(36, 25, 60, 89));
+//
+//    data.hurtboxes[PlayerEnums::STATE_DEAD].push_back(sf::FloatRect(1, 1, 1, 1));
+//
+//    data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(47, 13, 47, 115));
+//    data.hitboxes[data.jumpingHitboxState].push_back(sf::FloatRect(40, 13 + 115 - 49, 49, 49));
 
     return true;
 }

@@ -20,14 +20,16 @@ namespace CombinedAxis {
 
     enum Direction : unsigned {
 
+        //have these start are really large numbers
+        //that way their underlying int values don't conflict with any other object's enums
         UP_LEFT = 2100,
         UP = 2101,
         UP_RIGHT = 2102,
         RIGHT = 2103,
         DOWN_RIGHT = 2104,
         DOWN = 2105,
-        DOWN_LEFT = 2107,
-        LEFT = 2108,
+        DOWN_LEFT = 2106,
+        LEFT = 2107,
     };
 }
 

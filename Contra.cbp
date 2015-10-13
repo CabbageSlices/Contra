@@ -98,6 +98,7 @@
 		<Unit filename="EntityAnimationStates.h" />
 		<Unit filename="EntityBase.cpp" />
 		<Unit filename="EntityBase.h" />
+		<Unit filename="EntitySavedataTags.cpp" />
 		<Unit filename="EntitySavedataTags.h" />
 		<Unit filename="FileManipulators.cpp" />
 		<Unit filename="FileManipulators.h" />
