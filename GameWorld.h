@@ -78,12 +78,13 @@ struct GameWorld {
 		tileMap(),
 		destructibleBlocks(),
 		backgrounds(),
-		worldBounds(0, 0, 0, 0),
 		camera(window),
 		viewPositionLastFrame(0, 0),
+		worldBoundsDefault(0, 0, 0, 0),
 		worldBoundsBossFight(0, 0, 0, 0),
-		nonBossEnemySpawners(nonBossEnemyCollection, worldBounds),
-		bossEnemySpawners(bossEnemyCollection, worldBounds),
+		worldBoundsInUse(0, 0, 0, 0),
+		nonBossEnemySpawners(nonBossEnemyCollection, worldBoundsInUse),
+		bossEnemySpawners(bossEnemyCollection, worldBoundsInUse),
 		destructibleBlockHash(256, 256),
 		updateTimer()
 		{
@@ -112,14 +113,20 @@ struct GameWorld {
 	std::vector<std::shared_ptr<DestructibleBlock> > destructibleBlocks;
 	BackgroundManager backgrounds;
 
-	//world properties
-	sf::FloatRect worldBounds;
+	//camera properties
 	Camera camera;
 	sf::Vector2f viewPositionLastFrame;
+
+	//world bounds for normal gameplay
+	sf::FloatRect worldBoundsDefault;
 
 	//world bounds for when the player is fighting a boss
 	//this is different from normal world bounds so that the player can't go offscreen while the boss is there
 	sf::FloatRect worldBoundsBossFight;
+
+	//world bounds currently being used
+	//this is the bounds used during gameplay, the other saved world bounds are only for saving and loading
+	sf::FloatRect worldBoundsInUse;
 
 	//spawner properties for non boss enemy types
     EnemySpawnerCollection nonBossEnemySpawners;
@@ -194,7 +201,7 @@ struct GameWorld {
 	void beginBossFight() {
 
         worldState = FIGHTING_BOSS;
-        worldBounds = worldBoundsBossFight;
+        worldBoundsInUse = worldBoundsBossFight;
 	}
 };
 

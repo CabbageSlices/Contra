@@ -1,0 +1,75 @@
+EntityGunTypeBegin
+0
+EntityGunTypeEnd
+EntityNormalFormScaleBegin
+1
+EntityNormalFormScaleEnd
+EntityGunfireDelayBegin
+1800
+EntityGunfireDelayEnd
+EntityGunBulletTypeBegin
+0
+EntityGunBulletTypeEnd
+TurretHiddenStateDurationBegin
+2500
+TurretHiddenStateDurationEnd
+TurretExposedStateDurationBegin
+5000
+TurretExposedStateDurationEnd
+EntityHealthBegin
+8
+EntityHealthEnd
+EntityTextureFilenameBegin
+pirana.png
+EntityTextureFilenameEnd
+EntityAnimationNextFrameTimeBegin
+75
+EntityAnimationNextFrameTimeEnd
+EntityAnimationTextureRectsBegin
+0 0 0 0 0
+1 91 0 28 100
+1 162 0 38 100
+1 243 0 35 100
+1 328 0 31 100
+1 426 0 32 100
+2 426 0 32 100
+2 328 0 31 100
+2 243 0 35 100
+2 162 0 38 100
+2 91 0 28 100
+3 156 100 44 100
+3 156 100 44 100
+3 80 100 33 100
+3 237 100 40 100
+3 321 100 41 100
+3 246 200 40 100
+3 71 200 33 100
+3 161 200 44 100
+EntityAnimationTextureRectsEnd
+EntityHurtboxBegin
+0 1 1 1 1
+1 0 88 28 12
+1 0 75 38 25
+1 0 58 35 44
+1 0 35 31 62
+1 0 15 32 87
+2 0 15 32 87
+2 0 35 31 62
+2 0 58 35 44
+2 0 75 38 25
+2 0 88 28 12
+3 0 2 46 100
+EntityHurtboxEnd
+EntityBulletOriginBegin
+2100 14 51
+2101 14 51
+2102 14 51
+2103 14 51
+2104 14 51
+2105 14 51
+2106 14 51
+2107 14 51
+EntityBulletOriginEnd
+EntityHitboxBegin
+0 1 1 1 1
+EntityHitboxEnd

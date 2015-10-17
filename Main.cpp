@@ -211,9 +211,9 @@ void updateEnemySpawners(GameWorld &world, EnemySpawnerCollection &spawnerCollec
 	spawnerCollection.turretSpawnInfo.currentCameraBounds = world.camera.getCameraBounds();
 	spawnerCollection.omnidirectionalTurretSpawnInfo.currentCameraBounds = world.camera.getCameraBounds();
 
-	spawnerCollection.enemySpawnInfo.worldBounds = world.worldBounds;
-	spawnerCollection.turretSpawnInfo.worldBounds = world.worldBounds;
-	spawnerCollection.omnidirectionalTurretSpawnInfo.worldBounds = world.worldBounds;
+	spawnerCollection.enemySpawnInfo.worldBounds = world.worldBoundsInUse;
+	spawnerCollection.turretSpawnInfo.worldBounds = world.worldBoundsInUse;
+	spawnerCollection.omnidirectionalTurretSpawnInfo.worldBounds = world.worldBoundsInUse;
 
 	spawnEnemyNearCamera(spawnerCollection.enemySpawnInfo, applyBossData);
 	spawnEnemyNearCamera(spawnerCollection.turretSpawnInfo, applyBossData);
@@ -262,7 +262,7 @@ void updateWorldPhyics(GameWorld &world, const float &deltaTime) {
 
 	for(auto &it : world.players) {
 
-		it->updatePhysics(deltaTime, world.worldBounds, world.tileMap);
+		it->updatePhysics(deltaTime, world.worldBoundsInUse, world.tileMap);
 
 		if(it->checkCanRespawn()) {
 
@@ -299,7 +299,7 @@ void updateCameraProperties(GameWorld &world, vector<glm::vec2> &playerPositions
     if(world.worldState != GameWorld::TRANSITIONING_TO_BOSS_FIGHT) {
 
         world.camera.calculateProperties(playerPositions);
-        world.camera.update(deltaTime, world.worldBounds);
+        world.camera.update(deltaTime, world.worldBoundsInUse);
 
     } else {
 
@@ -307,14 +307,16 @@ void updateCameraProperties(GameWorld &world, vector<glm::vec2> &playerPositions
         //and towards the center of the boss world bounds
         //so that when the world size is forcibly set to the boss world bounds
         //the camera doesn't just jump from one position and size to another
-        glm::vec2 cameraTargetPosition(world.worldBoundsBossFight.left + world.worldBounds.width / 2,
-                                       world.worldBounds.top + world.worldBounds.height / 2);
+        glm::vec2 cameraTargetPosition(world.worldBoundsBossFight.left + world.worldBoundsBossFight.width / 2,
+                                       world.worldBoundsBossFight.top + world.worldBoundsBossFight.height / 2);
 
         world.camera.setTargetSize(world.camera.getDefaultSize());
         world.camera.setTargetPosition(cameraTargetPosition);
 
         //slow down the speed that the camera transitions at for a cooler effect
-        world.camera.update(deltaTime / 2.5f, world.worldBounds);
+        //use use the default world bounds for the camera's bounds because while the camera is transitioing to boss fight world bounds, the camera isn't inside the bossfight bounds
+        //so if you use the boss fight bounds, camera will snap to the inside of the boss fight
+        world.camera.update(deltaTime / 2.5f, world.worldBoundsDefault);
     }
 }
 
@@ -322,7 +324,7 @@ void updateEnemyCollectionPhysics(EnemyCollection &collection, const float &delt
 
     for(unsigned i = 0; i < collection.enemies.size(); ++i) {
 
-		collection.enemies[i]->updatePhysics(delta, world.worldBounds, world.tileMap);
+		collection.enemies[i]->updatePhysics(delta, world.worldBoundsInUse, world.tileMap);
 
 		if(!collection.enemies[i]->checkIsAlive()) {
 
@@ -332,7 +334,7 @@ void updateEnemyCollectionPhysics(EnemyCollection &collection, const float &delt
 
 	for(unsigned i = 0; i < collection.turrets.size(); ++i) {
 
-		collection.turrets[i]->updatePhysics(delta, world.worldBounds, world.tileMap, playerPositions);
+		collection.turrets[i]->updatePhysics(delta, world.worldBoundsInUse, world.tileMap, playerPositions);
 
 		if(!collection.turrets[i]->checkIsAlive()) {
 
@@ -342,7 +344,7 @@ void updateEnemyCollectionPhysics(EnemyCollection &collection, const float &delt
 
 	for(unsigned i = 0; i < collection.omnidirectionalTurrets.size(); ++i) {
 
-		collection.omnidirectionalTurrets[i]->updatePhysics(delta, world.worldBounds, world.tileMap);
+		collection.omnidirectionalTurrets[i]->updatePhysics(delta, world.worldBoundsInUse, world.tileMap);
 
 		if(!collection.omnidirectionalTurrets[i]->checkIsAlive()) {
 
@@ -651,9 +653,10 @@ int main() {
     gameConfiguration.load();
     GameWorld world(window);
 
-    world.worldBounds = sf::FloatRect(0, 0, 6144, 1024);
+    world.worldBoundsDefault = sf::FloatRect(0, 0, 6144, 1024);
     world.worldBoundsBossFight = sf::FloatRect(6144 - 2048, 0, 2048, 1024);
-    world.tileMap.resize(world.worldBounds.width, world.worldBounds.height);
+    world.worldBoundsInUse = world.worldBoundsDefault;
+    world.tileMap.resize(world.worldBoundsDefault.width, world.worldBoundsDefault.height);
 
     world.clearEverything();
     loadWorld("world1", world);

@@ -1,0 +1,41 @@
+EntityHealthBegin
+1
+EntityHealthEnd
+EntityTextureFilenameBegin
+enemy.png
+EntityTextureFilenameEnd
+EntityAnimationNextFrameTimeBegin
+100
+EntityAnimationNextFrameTimeEnd
+EntityAnimationTextureRectsBegin
+0 0 0 128 128
+0 128 0 128 128
+0 256 0 128 128
+0 384 0 128 128
+0 512 0 128 128
+1 0 128 128 128
+1 128 128 128 128
+1 256 128 128 128
+1 384 128 128 128
+1 512 128 128 128
+2 0 256 128 128
+3 128 256 128 128
+EntityAnimationTextureRectsEnd
+EntityHurtboxBegin
+0 24 50 82 78
+1 24 50 82 78
+2 24 59 74 69
+3 32 59 74 69
+EntityHurtboxEnd
+EntityHitboxBegin
+0 24 50 82 78
+EntityHitboxEnd
+EntityNormalFormScaleBegin
+1
+EntityNormalFormScaleEnd
+EntityBossFormHealthBegin
+5
+EntityBossformHealthEnd
+EntityBossFormScaleBegin
+2
+EntityBossFormScaleEnd

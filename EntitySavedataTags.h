@@ -23,7 +23,7 @@ extern const DataTagPair entityHurtboxTag;
 extern const DataTagPair entityHitboxTag;
 
 extern const DataTagPair turretHiddenStateDurationTag;
-extern const DataTagPair turrentExposedStateDurationTag;
+extern const DataTagPair turretExposedStateDurationTag;
 
 extern const DataTagPair bulletVelocityTag;
 

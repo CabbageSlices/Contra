@@ -37,7 +37,7 @@ void saveWorld(const string& worldName, GameWorld &world) {
     }
 
     //save each aspect of the world
-    saveWorldBoundsData(file, world.worldBounds, worldBoundsTag);
+    saveWorldBoundsData(file, world.worldBoundsDefault, worldBoundsDefaultTag);
     saveWorldBoundsData(file, world.worldBoundsBossFight, worldBoundsBossFightTag);
     saveTileMapData(file, world.tileMap);
     saveBackgroundData(file, world.backgrounds);
@@ -169,10 +169,10 @@ void loadWorld(const std::string &worldName, GameWorld &world) {
         return;
     }
 
-    loadWorldBoundsData(file, world.worldBounds, worldBoundsTag);
+    loadWorldBoundsData(file, world.worldBoundsDefault, worldBoundsDefaultTag);
     loadWorldBoundsData(file, world.worldBoundsBossFight, worldBoundsBossFightTag);
-    loadTileMapData(file, world.tileMap, glm::vec2(world.worldBounds.width, world.worldBounds.height));
-    loadBackgroundData(file, world.backgrounds, world.worldBounds);
+    loadTileMapData(file, world.tileMap, glm::vec2(world.worldBoundsDefault.width, world.worldBoundsDefault.height));
+    loadBackgroundData(file, world.backgrounds, world.worldBoundsDefault);
     loadEnemySpawnerCollection(file, world.nonBossEnemySpawners, nonBossEnemySpawnerTag);
     loadEnemySpawnerCollection(file, world.bossEnemySpawners, bossEnemySpawnerTag);
     loadDestructibleBlocks(file, world.destructibleBlocks);
@@ -183,6 +183,9 @@ void loadWorld(const std::string &worldName, GameWorld &world) {
 
         world.destructibleBlockHash.insert(world.destructibleBlocks[i]);
     }
+
+    //begin using the default world bounds
+    world.worldBoundsInUse = world.worldBoundsDefault;
 
     file.close();
 }

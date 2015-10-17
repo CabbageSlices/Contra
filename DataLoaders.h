@@ -11,6 +11,7 @@
 #include "ObjectTypes.h"
 #include "DataTagPair.h"
 
+class PreloadedData;
 class PreloadedPlayerData;
 class PreloadedTurretData;
 class PreloadedEnemyData;
@@ -18,6 +19,7 @@ class PreloadedBulletData;
 class PreloadedDestructibleBlockData;
 class PreloadedPowerUpData;
 class PreloadedOmniDirectionalTurretData;
+class ShootingEntityPreloadedData;
 
 enum EnemyType : int;
 struct BossProperties;
@@ -28,14 +30,18 @@ bool loadIntegerParameter(std::fstream &file, int &loadedData, const DataTagPair
 
 bool loadEntityHealth(std::fstream &file, int &health);
 bool loadTextureFilename(std::fstream &file, std::string &textureFilename);
-bool loadAnimationNextFrameTime(std::fstream &file, sf::Time &animationNextFrameTime);
+bool loadTimeInMilliseconds(std::fstream &file, sf::Time &loadedTime, const DataTagPair &tagPair);
 bool loadEntityScale(std::fstream &file, float &scale, const DataTagPair &tagPair);
 bool loadEntityGunType(std::fstream &file, GunType &gunType);
-bool loadEntityGunfireDelay(std::fstream &file, sf::Time &gunfireDelay);
 bool loadEntityBulletType(std::fstream &file, BulletType &bulletType);
 bool loadEntityBulletOrigin(std::fstream &file, std::map<unsigned, glm::vec2> &bulletOriginForState);
 bool loadEntityTextureRects(std::fstream &file, std::map<unsigned, std::vector<sf::IntRect> > &textureRects);
 bool loadEntityCollisionBoxes(std::fstream &file, std::map<unsigned, std::vector<sf::FloatRect> > &hurtboxes, const DataTagPair &tagPair);
+
+bool loadEntityBaseData(std::fstream &file, PreloadedData &data);
+
+//loads ALL parts of the shooting entity data, including the entity base
+bool loadShootingEntityData(std::fstream &file, ShootingEntityPreloadedData &data);
 
 bool loadPlayerData(PreloadedPlayerData &data, const std::string &dataFilename);
 

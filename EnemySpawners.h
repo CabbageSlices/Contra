@@ -189,11 +189,15 @@ bool spawnEnemy(InformationForSpawner<T> &spawnInfo, int(*findSpawnPoint)(Inform
 
     if(!enemy) {
 
+        //spawner failed somehow so make it stop trying to spawn
+        closestPoint->stopSpawning();
         return false;
     }
 
     if(!applyLoadedData(*enemy, closestPoint->getTypeOfEnemySpawned())) {
 
+        //spawner failed somehow so make it stop trying to spawn
+        closestPoint->stopSpawning();
         return false;
     }
 

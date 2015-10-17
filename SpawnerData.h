@@ -76,6 +76,12 @@ struct SpawnPoint {
         typeOfEnemySpawned = type;
     }
 
+    void stopSpawning() {
+
+        //spawner stops working once max sapwn limit is reached
+        enemiesSpawned = maxSpawnCount + 1;
+    }
+
     private:
 
         unsigned enemiesSpawned;
