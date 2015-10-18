@@ -21,6 +21,7 @@ const DataTagPair turretExposedStateDurationTag("TurretExposedStateDurationBegin
 const DataTagPair turretShootingDelayTag("TurretShootingDelayBegin", "turretShootingDelayEnd");
 
 const DataTagPair bulletVelocityTag("BulletVelocityBegin", "BulletVelocityEnd");
+const DataTagPair bulletLifetimeTag("BulletLifetimeBegin", "BulletLifetimeEnd");
 
 const DataTagPair entityBossFormHealthTag("EntityBossFormHealthBegin", "EntityBossFormHealthEnd");
 const DataTagPair entityBossFormScaleTag("EntityBossFormScaleBegin", "EntityBossFormScaleEnd");

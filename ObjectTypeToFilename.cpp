@@ -93,12 +93,11 @@ string getFilenameForData(const GunType &gunType) {
 
 string getFilenameForData(const PowerUpType &powerUpType) {
 
+    ///all powerup data is stored on one file
+    ///a single powerup will have the animation stuff for all powerup types
     switch(powerUpType) {
 
-        case PowerUpType::MACHINE_GUN:
-            return powerUpDataPath + "machine_gun.txt";
-
         default:
-            return "";
+            return powerUpDataPath + "powerup.txt";
     }
 }

@@ -174,6 +174,16 @@ void Player::respondToCollision(const CollisionResponse &collisionResponse) {
     standingOnSolid = collisionResponse.pushedToTop || standingOnSolid;
     standingOnPassablePlatform = collisionResponse.canFallThroughGround || standingOnPassablePlatform;
 
+    //see updatephysics function for explanation of why you set was jumpbuttonpressed to this.
+    //reset wasjumpbuttonpressed becasue if player is now standing on a solid platform we need to indicate that he is no longer jumping
+    wasJumpButtonPressed = checkIsInAir() && wasJumpButtonPressed;
+
+    //if player isn't jumping use the default hitbox
+    if(!checkIsJumping()) {
+
+        hitbox.setActiveHitbox(0, defaultHitboxState);
+    }
+
     matchHitboxPosition();
 }
 

@@ -27,6 +27,7 @@ extern const DataTagPair turretExposedStateDurationTag;
 extern const DataTagPair turretShootingDelayTag;
 
 extern const DataTagPair bulletVelocityTag;
+extern const DataTagPair bulletLifetimeTag;
 
 extern const DataTagPair entityBossFormHealthTag;
 extern const DataTagPair entityBossFormScaleTag;

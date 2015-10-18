@@ -117,7 +117,7 @@ function<void(shared_ptr<DestructibleBlock>, shared_ptr<EntityBase>)> destructib
 //when an enemy dies theres a certain chance it will drop a power up
 //these values determine the likelihood of a powerup being dropped
 unsigned powerUpDropPossibleOutcomes = 100;
-unsigned enemyPowerUpDropOccuranceThreshold = 7;
+unsigned enemyPowerUpDropOccuranceThreshold = 100;
 unsigned turretPowerUpDropOccuranceThreshold = 10;
 
 void handleWindowEvents(sf::RenderWindow &window, sf::Event &event, GameWorld &world) {

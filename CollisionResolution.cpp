@@ -78,7 +78,12 @@ void destructibleBlockEntityCollision(shared_ptr<DestructibleBlock> block, share
     CollisionResponse response;
 
     //check if object is standing on top of block
-    response.pushedToTop = (minimumTranslation.y < 0);
+    //only do so if object isn't moving in the direction that he is being pushed
+    //because when object collides in the corner of the block while jumping and moving horizontally, its treated as a vertical collision
+    //if object is moving in the same direction that it's being pushed then it will trigger a vertical collision response in the object,
+    //even though it shouldn't
+    //so only set pushedToTop to true if object is moved to the top AND he is falling
+    response.pushedToTop = (minimumTranslation.y < 0 && entity->getMovementController().getVelocities().y >= 0);
 
     //if block was hit from the bottom then destory the block, only do so if object was jumping
     if(minimumTranslation.y > 0 && entity->getMovementController().getVelocities().y < 0) {
@@ -91,9 +96,16 @@ void destructibleBlockEntityCollision(shared_ptr<DestructibleBlock> block, share
 
     //if a vertical translation is there it means there was a vertical collision resolution
     //so stop the entity from moving in the y direction
-    if(minimumTranslation.y != 0) {
+    //only do so if object isn't moving in the direction that he is being pushed
+    //that is, if he is being pushed upwards to resolve collision, don't set his velocity to 0 if he is jumping
+    //similarily if he is being pushed downwards, don't set hsi velocity to 0 if he is falling
+    //this is because in the case of corner collisions, the entity might be moving in the same direction that he is being pushed,
+    //and if his velocity is forcibly set to 0 he will freeze in the air even when he shouldn't
+    //so only set his velocity to 0 if he is moving in the direction opposite to the one he is being pushed in
+    if((minimumTranslation.y > 0 && entity->getMovementController().getVelocities().y <= 0) || (minimumTranslation.y < 0 && entity->getMovementController().getVelocities().y >= 0)) {
 
         entity->getMovementController().setVelocities(entity->getMovementController().getVelocities().x, 0);
+
     }
 
     //make entity respond to collision

@@ -1,0 +1,41 @@
+BulletVelocityBegin
+10.5
+BulletVelocityEnd
+BulletLifetimeBegin
+3000
+BulletLifetimeEnd
+EntityHealthBegin
+1
+EntityHealthEnd
+EntityTextureFilenameBegin
+bullet.png
+EntityTextureFilenameEnd
+EntityAnimationNextFrameTimeBegin
+10000
+EntityAnimationNextFrameTimeEnd
+EntityNormalFormScaleBegin
+1
+EntityNormalFormScaleEnd
+EntityAnimationTextureRectsBegin
+0 0 0 21 21
+1 0 0 21 21
+2 0 0 21 21
+3 0 0 21 21
+4 0 0 21 21
+5 0 0 21 21
+6 0 0 21 21
+7 0 0 21 21
+EntityAnimationTextureRectsEnd
+EntityHurtboxBegin
+0 0 0 21 21
+1 0 0 21 21
+2 0 0 21 21
+3 0 0 21 21
+4 0 0 21 21
+5 0 0 21 21
+6 0 0 21 21
+7 0 0 21 21
+EntityHurtboxEnd
+EntityHitboxBegin
+0 0 21 21
+EntityHitboxEnd

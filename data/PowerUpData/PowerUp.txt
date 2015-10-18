@@ -1,0 +1,35 @@
+EntityHealthBegin
+1
+EntityHealthEnd
+EntityTextureFilenameBegin
+powerups.png
+EntityTextureFilenameEnd
+EntityAnimationNextFrameTimeBegin
+200
+EntityAnimationNextFrameTimeEnd
+EntityNormalFormScaleBegin
+1
+EntityNormalFormScaleEnd
+EntityAnimationTextureRectsBegin
+0 0 0 128 128
+0 128 0 128 128
+0 256 0 128 128
+0 384 0 128 128
+0 512 0 128 128
+1 0 128 128 128
+2 0 256 128 128
+2 128 256 128 128
+2 256 256 128 128
+2 384 256 128 128
+2 512 256 128 128
+3 1 1 1 1
+EntityAnimationTextureRectsEnd
+EntityHurtboxBegin
+0 1 1 1 1
+1 25 17 87 87
+2 1 1 1 1
+3 1 1 1 1
+EntityHurtboxEnd
+EntityHitboxBegin
+0 25 17 87 87
+EntityHitboxEnd

@@ -27,11 +27,11 @@ struct BossProperties;
 bool loadBossData(std::map<EnemyType, BossProperties> &bossData, const std::string &dataFilename);
 
 bool loadIntegerParameter(std::fstream &file, int &loadedData, const DataTagPair &tagPair);
+bool loadFloatParameter(std::fstream &file, float &loadedData, const DataTagPair &tagPair);
 
 bool loadEntityHealth(std::fstream &file, int &health);
 bool loadTextureFilename(std::fstream &file, std::string &textureFilename);
 bool loadTimeInMilliseconds(std::fstream &file, sf::Time &loadedTime, const DataTagPair &tagPair);
-bool loadEntityScale(std::fstream &file, float &scale, const DataTagPair &tagPair);
 bool loadEntityGunType(std::fstream &file, GunType &gunType);
 bool loadEntityBulletType(std::fstream &file, BulletType &bulletType);
 bool loadEntityBulletOrigin(std::fstream &file, std::map<unsigned, glm::vec2> &bulletOriginForState);

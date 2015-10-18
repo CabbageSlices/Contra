@@ -11,8 +11,8 @@ enum EnemyType : int {
 enum BulletType : int {
 
     BULLET_SLOW = 0,
-    BULLET_FAST,
     BULLET_MEDIUM,
+    BULLET_FAST,
 };
 
 enum DestructibleBlockType : int {

@@ -47,6 +47,25 @@ bool loadIntegerParameter(std::fstream &file, int &loadedData, const DataTagPair
     return true;
 }
 
+bool loadFloatParameter(std::fstream &file, float &loadedData, const DataTagPair &tagPair) {
+
+    if(!readAfterLine(file, tagPair.first)) {
+
+        return false;
+    }
+
+    string extractedData;
+    getline(file, extractedData);
+
+    if(extractedData == tagPair.second) {
+
+        return false;
+    }
+
+    loadedData = atof(extractFirstWordInString(extractedData).c_str());
+    return true;
+}
+
 bool loadEntityHealth(fstream &file, int &health) {
 
     //find the health data
@@ -83,25 +102,6 @@ bool loadTimeInMilliseconds(std::fstream &file, sf::Time &loadedTime, const Data
     }
 
     loadedTime = sf::milliseconds(timeInMilliseconds);
-    return true;
-}
-
-bool loadEntityScale(std::fstream &file, float &scale, const DataTagPair &tagPair) {
-
-    if(!readAfterLine(file, tagPair.first)) {
-
-        return false;
-    }
-
-    string extractedData;
-    getline(file, extractedData);
-
-    if(extractedData == tagPair.second) {
-
-        return false;
-    }
-
-    scale = atof(extractFirstWordInString(extractedData).c_str());
     return true;
 }
 
@@ -142,7 +142,7 @@ bool loadEntityBulletType(std::fstream &file, BulletType &bulletType) {
         return false;
     }
 
-    bulletType = static_cast<BulletType>(bulletType);
+    bulletType = static_cast<BulletType>(type);
 
     return true;
 }
@@ -249,7 +249,7 @@ bool loadEntityBaseData(fstream &file, PreloadedData &data) {
         return false;
     }
 
-    if(!loadEntityScale(file, data.scale, entityNormalFormScaleTag)) {
+    if(!loadFloatParameter(file, data.scale, entityNormalFormScaleTag)) {
 
         cout << "Failed to load scaling data" << endl;
         return false;
@@ -422,75 +422,72 @@ bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, con
 
 bool loadBulletData(PreloadedBulletData &data, const std::string &dataFilename) {
 
-    data.velocity = 7.f;
+    fstream file;
+    file.open(dataFilename, std::ios_base::in);
 
-    if(dataFilename == "slow")
-    data.velocity = 3.5f;
+    if(!file) {
 
-    if(dataFilename == "fast")
-    data.velocity = 10.5f;
+        cout << "Failed to open file: " << dataFilename << endl;
+        return false;
+    }
 
-    data.lifetime = sf::seconds(3.f);
+    if(!loadEntityBaseData(file, data)) {
 
-    data.health = 1;
-    data.textureFilename = "bullet.png";
-    data.animationNextFrameTime = sf::seconds(10);
+        return false;
+    }
 
-    data.animationTextureRects[BulletEnums::STATE_RIGHT].push_back(sf::IntRect(0, 0, 21, 21));
-    data.animationTextureRects[BulletEnums::STATE_UP_RIGHT].push_back(sf::IntRect(0, 0, 21, 21));
-    data.animationTextureRects[BulletEnums::STATE_UP].push_back(sf::IntRect(0, 0, 21, 21));
-    data.animationTextureRects[BulletEnums::STATE_UP_LEFT].push_back(sf::IntRect(0, 0, 21, 21));
-    data.animationTextureRects[BulletEnums::STATE_LEFT].push_back(sf::IntRect(0, 0, 21, 21));
-    data.animationTextureRects[BulletEnums::STATE_DOWN_LEFT].push_back(sf::IntRect(0, 0, 21, 21));
-    data.animationTextureRects[BulletEnums::STATE_DOWN].push_back(sf::IntRect(0, 0, 21, 21));
-    data.animationTextureRects[BulletEnums::STATE_DOWN_RIGHT].push_back(sf::IntRect(0, 0, 21, 21));
+    if(!loadFloatParameter(file, data.velocity, bulletVelocityTag)) {
 
-    data.hurtboxes[BulletEnums::STATE_RIGHT].push_back(sf::FloatRect(0, 0, 21, 21));
-    data.hurtboxes[BulletEnums::STATE_UP_RIGHT].push_back(sf::FloatRect(0, 0, 21, 21));
-    data.hurtboxes[BulletEnums::STATE_UP].push_back(sf::FloatRect(0, 0, 21, 21));
-    data.hurtboxes[BulletEnums::STATE_UP_LEFT].push_back(sf::FloatRect(0, 0, 21, 21));
-    data.hurtboxes[BulletEnums::STATE_LEFT].push_back(sf::FloatRect(0, 0, 21, 21));
-    data.hurtboxes[BulletEnums::STATE_DOWN_LEFT].push_back(sf::FloatRect(0, 0, 21, 21));
-    data.hurtboxes[BulletEnums::STATE_DOWN].push_back(sf::FloatRect(0, 0, 21, 21));
-    data.hurtboxes[BulletEnums::STATE_DOWN_RIGHT].push_back(sf::FloatRect(0, 0, 21, 21));
+        cout << "Failed to load bullet velocity" << endl;
+        return false;
+    }
 
-    data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(0, 0, 21, 21));
+    if(!loadTimeInMilliseconds(file, data.lifetime, bulletLifetimeTag)) {
+
+        cout << "Failed to load bullet lifetime" << endl;
+        return false;
+    }
 
     return true;
 }
 
 bool loadDestrutibleBlockData(PreloadedDestructibleBlockData &data, const std::string &dataFilename) {
 
-    data.textureFilename = "BrickBreak.png";
-    data.animationNextFrameTime = sf::milliseconds(40);
+    fstream file;
+    file.open(dataFilename, std::ios_base::in);
 
-    data.animationTextureRects[DestructibleBlockEnums::STATE_SOLID].push_back(sf::IntRect(0, 0, 64, 64));
+    if(!file) {
 
-    data.animationTextureRects[DestructibleBlockEnums::STATE_DESTROYING].push_back(sf::IntRect(64, 0, 64, 64));
-    data.animationTextureRects[DestructibleBlockEnums::STATE_DESTROYING].push_back(sf::IntRect(128, 0, 64, 64));
-    data.animationTextureRects[DestructibleBlockEnums::STATE_DESTROYING].push_back(sf::IntRect(0, 64, 64, 64));
-    data.animationTextureRects[DestructibleBlockEnums::STATE_DESTROYING].push_back(sf::IntRect(64, 64, 64, 64));
-    data.animationTextureRects[DestructibleBlockEnums::STATE_DESTROYING].push_back(sf::IntRect(128, 64, 64, 64));
-    data.animationTextureRects[DestructibleBlockEnums::STATE_DESTROYING].push_back(sf::IntRect(0, 128, 64, 64));
-    data.animationTextureRects[DestructibleBlockEnums::STATE_DESTROYING].push_back(sf::IntRect(64, 128, 64, 64));
-    data.animationTextureRects[DestructibleBlockEnums::STATE_DESTROYING].push_back(sf::IntRect(128, 128, 64, 64));
+        cout << "failed to open file: " << dataFilename << endl;
+        return false;
+    }
 
-    data.animationTextureRects[DestructibleBlockEnums::STATE_DESTROYED].push_back(sf::IntRect(1, 1, 1, 1));
+    if(!loadEntityBaseData(file, data)) {
 
-    data.hurtboxes[DestructibleBlockEnums::STATE_SOLID].push_back(sf::FloatRect(0, 0, 64, 64));
-    data.hurtboxes[DestructibleBlockEnums::STATE_DESTROYING].push_back(sf::FloatRect(1, 1, 1, 1));
-    data.hurtboxes[DestructibleBlockEnums::STATE_DESTROYED].push_back(sf::FloatRect(1, 1, 1, 1));
-
-    data.health = 1;
-
-    data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(0, 0, 64, 64));
+        return false;
+    }
 
     return true;
 }
 
 bool loadPowerUpData(PreloadedPowerUpData &data, const std::string &dataFilename) {
 
-    data.health = 1;
+    fstream file;
+    file.open(dataFilename, std::ios_base::in);
+
+    if(!file) {
+
+        cout << "Failed to open file: " << dataFilename << endl;
+        return false;
+    }
+
+    if(!loadEntityBaseData(file, data)) {
+
+        return false;
+    }
+
+    return true;
+    /*data.health = 1;
 
     data.textureFilename = "powerups.png";
     data.animationNextFrameTime = sf::milliseconds(200);
@@ -512,5 +509,5 @@ bool loadPowerUpData(PreloadedPowerUpData &data, const std::string &dataFilename
 
     data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(25, 17, 87, 87));
 
-    return true;
+    return true;*/
 }
