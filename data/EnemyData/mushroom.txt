@@ -1,0 +1,85 @@
+EntityNormalFormScaleBegin
+1
+EntityNormalFormScaleEnd
+EntityGunTypeBegin
+0
+EntityGunTypeEnd
+EntityGunfireDelayBegin
+0
+EntityGunfireDelayEnd
+EntityGunBulletTypeBegin
+1
+EntityGunBulletTypeEnd
+TurretHiddenStateDurationBegin
+3500
+TurretHiddenStateDurationEnd
+TurretExposedStateDurationBegin
+6000
+TurretExposedStateDurationEnd
+TurretShootingDelayBegin
+2000
+TurretShootingDelayEnd
+EntityHealthBegin
+10
+EntityHealthEnd
+EntityTextureFilenameBegin
+mushroom.png
+EntityTextureFilenameEnd
+EntityAnimationNextFrameTimeBegin
+90
+EntityAnimationNextFrameTimeEnd
+EntityAnimationTextureRectsBegin
+0 1 1 1 1
+1 0 0 256 256
+1 256 0 256 256
+1 512 0 256 256
+1 768 0 256 256
+2 768 0 256 256
+2 512 0 256 256
+2 256 0 256 256
+2 0 0 256 256
+3 769 0 256 256
+4 0 256 256 256
+4 256 256 256 256
+4 512 256 256 256
+4 768 256 256 256
+4 768 256 256 256
+4 768 256 256 256
+EntityAnimationTextureRectsEnd
+EntityHurtboxBegin
+0 1 1 1 1
+1 44 217 126 38
+1 68 178 130 78
+1 79 105 123 151
+1 60 15 160 241
+2 60 15 160 241
+2 79 105 123 151
+2 68 178 130 78
+2 44 217 126 38
+3 52 10 175 245
+4 27 47 154 209
+4 47 37 143 219
+4 38 56 153 200
+4 26 50 204 206
+4 26 50 204 206
+4 26 50 204 206
+EntityHurtboxEnd
+EntityBulletOriginBegin
+2100 140 51
+2101 140 51
+2102 140 51
+2103 140 51
+2104 140 51
+2105 140 51
+2106 140 51
+2107 140 51
+EntityBulletOriginEnd
+EntityHitboxBegin
+0 1 1 1 1
+EntityHitboxEnd
+EntityBossFormScaleBegin
+2
+EntityBossFormScaleEnd
+EntityBossFormHealthBegin
+20
+EntityBossFormHealthEnd

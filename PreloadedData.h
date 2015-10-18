@@ -64,7 +64,8 @@ struct PreloadedOmniDirectionalTurretData : public ShootingEntityPreloadedData {
 
     sf::Time hiddenStateDuration;
     sf::Time exposedStateDuration;
-    sf::Time shootingDelay;
+    sf::Time shootingDelay;//shooting delay is different from fire delay, firedelay is delay to fire a second bullet
+    //shooting delay is delay to shoot next SET of bullets
 };
 
 //struct to store preloaded data about an enemy so whenever a new enemy is created you don't have to open a file to retrieve info about it

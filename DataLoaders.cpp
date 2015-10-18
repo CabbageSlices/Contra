@@ -386,75 +386,36 @@ bool loadEnemyData(PreloadedEnemyData &data, const std::string &dataFilename) {
 
 bool loadOmniDirectionalTurretData(PreloadedOmniDirectionalTurretData &data, const std::string &dataFilename) {
 
-    data.scale = 1;
+    std::fstream file;
+    file.open(dataFilename, std::ios_base::in);
 
-    data.gunType = GunType::GUN_BASIC;
-    data.gunfireDelay = sf::seconds(0);
-    data.bulletType = BulletType::BULLET_MEDIUM;
+    if(!file) {
 
-    data.hiddenStateDuration = sf::seconds(3.5);
-    data.exposedStateDuration = sf::seconds(6);
-    data.shootingDelay = sf::seconds(2.f);
-    data.health = 10;
-
-    data.textureFilename = "mushroom.png";
-
-    data.animationNextFrameTime = sf::milliseconds(90);
-
-    data.animationTextureRects[OmniDirectionalTurretEnums::STATE_HIDING].push_back(sf::IntRect(1, 1, 1, 1));
-
-    for(unsigned i = 0; i < 4; ++i) {
-
-        data.animationTextureRects[OmniDirectionalTurretEnums::STATE_COMING_OUT_OF_HIDING].push_back(sf::IntRect(256 * i, 0, 256, 256));
+        cout << "Failed to open file: " << dataFilename << endl;
     }
 
-    for(unsigned i = 0; i < 4; ++i) {
+    if(!loadShootingEntityData(file, data)) {
 
-        data.animationTextureRects[OmniDirectionalTurretEnums::STATE_GOING_INTO_HIDING].push_back(sf::IntRect(769 - 256 * i, 0, 256, 256));
+        return false;
     }
 
-    for(unsigned i = 0; i < 4; ++i) {
+    if(!loadTimeInMilliseconds(file, data.hiddenStateDuration, turretHiddenStateDurationTag)) {
 
-        data.animationTextureRects[OmniDirectionalTurretEnums::STATE_SHOOTING].push_back(sf::IntRect(256 * i, 256, 256, 256));
+        cout << "Failed to load hidden state duration" << endl;
+        return false;
     }
 
-    data.animationTextureRects[OmniDirectionalTurretEnums::STATE_SHOOTING].push_back(sf::IntRect(769, 256, 256, 256));
-    data.animationTextureRects[OmniDirectionalTurretEnums::STATE_SHOOTING].push_back(sf::IntRect(769, 256, 256, 256));
+    if(!loadTimeInMilliseconds(file, data.exposedStateDuration, turretExposedStateDurationTag)) {
 
-    data.animationTextureRects[OmniDirectionalTurretEnums::STATE_EXPOSED].push_back(sf::IntRect(769, 0, 256, 256));
+        cout << "Failed to load exposed state duration" << endl;
+        return false;
+    }
 
+    if(!loadTimeInMilliseconds(file, data.shootingDelay, turretShootingDelayTag)) {
 
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_HIDING].push_back(sf::FloatRect(1, 1, 1, 1));
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_EXPOSED].push_back(sf::FloatRect(52, 10, 175, 245));
-
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(44, 217, 126, 38));
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(68, 178, 130, 78));
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(79, 105, 123, 151));
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_COMING_OUT_OF_HIDING].push_back(sf::FloatRect(60, 15, 160, 241));
-
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(60, 15, 160, 241));
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(79, 105, 123, 151));
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(68, 178, 130, 78));
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_GOING_INTO_HIDING].push_back(sf::FloatRect(44, 217, 126, 38));
-
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_SHOOTING].push_back(sf::FloatRect(27, 47, 154, 209));
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_SHOOTING].push_back(sf::FloatRect(47, 293 - 256, 143, 219));
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_SHOOTING].push_back(sf::FloatRect(38, 312 - 256, 153, 200));
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
-    data.hurtboxes[OmniDirectionalTurretEnums::STATE_SHOOTING].push_back(sf::FloatRect(26, 306 - 256, 204, 206));
-
-    data.bulletOriginForState[CombinedAxis::UP_LEFT] = glm::vec2(140, 51);
-    data.bulletOriginForState[CombinedAxis::UP] = glm::vec2(140, 51);
-    data.bulletOriginForState[CombinedAxis::UP_RIGHT] = glm::vec2(140, 51);
-    data.bulletOriginForState[CombinedAxis::RIGHT] = glm::vec2(140, 51);
-    data.bulletOriginForState[CombinedAxis::DOWN_RIGHT] = glm::vec2(140, 51);
-    data.bulletOriginForState[CombinedAxis::DOWN] = glm::vec2(140, 51);
-    data.bulletOriginForState[CombinedAxis::DOWN_LEFT] = glm::vec2(140, 51);
-    data.bulletOriginForState[CombinedAxis::LEFT] = glm::vec2(140, 51);
-
-    //these turrets don't collide with blocks
-    data.hitboxes[data.defaultHitboxState].push_back(sf::FloatRect(1, 1, 1, 1));
+        cout << "Failed to load shooting delay" << endl;
+        return false;
+    }
 
     return true;
 }

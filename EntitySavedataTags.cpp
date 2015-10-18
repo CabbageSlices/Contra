@@ -18,6 +18,7 @@ const DataTagPair entityHitboxTag("EntityHitboxBegin", "EntityHitboxEnd");
 
 const DataTagPair turretHiddenStateDurationTag("TurretHiddenStateDurationBegin", "TurretHiddenStateDurationEnd");
 const DataTagPair turretExposedStateDurationTag("TurretExposedStateDurationBegin", "TurretExposedStateDurationEnd");
+const DataTagPair turretShootingDelayTag("TurretShootingDelayBegin", "turretShootingDelayEnd");
 
 const DataTagPair bulletVelocityTag("BulletVelocityBegin", "BulletVelocityEnd");
 
