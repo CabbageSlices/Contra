@@ -30,6 +30,11 @@ Bullet::Bullet(const glm::vec2 &positionWorldSpace, const glm::vec2 &directionWo
     timeElapsed(0),
     direction(directionWorldSpace)
     {
+        /**
+            CONSTRUCTOR CALLS THE VIRTUAL FUNCTION, SCALECOMPONENTS
+            IF ANY DERIVATIVE OF THIS CLASS OVERRIDES THE SCALECOMPONENTS FUNCTION THEN THAT DERIVED CLASS WON'T WORK PROPERLY
+        **/
+
         load(data);
 
         setPosition(positionWorldSpace);

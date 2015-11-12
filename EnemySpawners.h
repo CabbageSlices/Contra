@@ -15,6 +15,14 @@
 #include "SpawnerData.h"
 
 //returns true if data is applied, false if data isn't found
+bool applyLoadedData(Enemy &enemy, EnemyType enemyType);
+bool applyLoadedData(TurretEnemy &enemy, EnemyType enemyType);
+bool applyLoadedData(OmniDirectionalTurret &enemy, EnemyType enemyType);
+void spawnEntity(std::shared_ptr<Enemy> &enemy, InformationForSpawner<Enemy> &spawnInfo, std::shared_ptr<SpawnPoint> &closestPoint);
+void spawnEntity(std::shared_ptr<TurretEnemy> &enemy, InformationForSpawner<TurretEnemy> &spawnInfo, std::shared_ptr<SpawnPoint> &closestPoint);
+void spawnEntity(std::shared_ptr<OmniDirectionalTurret> &enemy, InformationForSpawner<OmniDirectionalTurret> &spawnInfo, std::shared_ptr<SpawnPoint> &closestPoint);
+
+///for whatever reason if i move these functions to the .cpp file i get a linker error, function is undefined, when called by the template functions at the bottom
 bool applyLoadedData(Enemy &enemy, EnemyType enemyType) {
 
     auto data = dataCollection.getBasicEnemyData(enemyType);

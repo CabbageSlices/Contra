@@ -78,6 +78,8 @@
 		<Unit filename="BackgroundManager.h" />
 		<Unit filename="Bullet.cpp" />
 		<Unit filename="Bullet.h" />
+		<Unit filename="Button.cpp" />
+		<Unit filename="Button.h" />
 		<Unit filename="Camera.cpp" />
 		<Unit filename="Camera.h" />
 		<Unit filename="CollisionResolution.cpp" />
@@ -104,6 +106,9 @@
 		<Unit filename="FileManipulators.h" />
 		<Unit filename="GameConfiguration.cpp" />
 		<Unit filename="GameConfiguration.h" />
+		<Unit filename="GameStateBase.h" />
+		<Unit filename="GameStatePlayingLevel.cpp" />
+		<Unit filename="GameStatePlayingLevel.h" />
 		<Unit filename="GameWorld.cpp" />
 		<Unit filename="GameWorld.h" />
 		<Unit filename="GlobalConstants.cpp" />
@@ -123,6 +128,8 @@
 		<Unit filename="Player.cpp" />
 		<Unit filename="Player.h" />
 		<Unit filename="PlayerManager.h" />
+		<Unit filename="PlayingLevelFunctions.cpp" />
+		<Unit filename="PlayingLevelFunctions.h" />
 		<Unit filename="PowerUp.cpp" />
 		<Unit filename="PowerUp.h" />
 		<Unit filename="PreloadedData.cpp" />
@@ -134,6 +141,8 @@
 		<Unit filename="SpatialHash.h" />
 		<Unit filename="SpatialHashEntry.h" />
 		<Unit filename="SpawnerData.h" />
+		<Unit filename="StateManager.cpp" />
+		<Unit filename="StateManager.h" />
 		<Unit filename="StringManipulator.cpp" />
 		<Unit filename="StringManipulator.h" />
 		<Unit filename="Tile.cpp" />
@@ -144,6 +153,8 @@
 		<Unit filename="TileMap.h" />
 		<Unit filename="TurretEnemy.cpp" />
 		<Unit filename="TurretEnemy.h" />
+		<Unit filename="UserInterfaceComponent.cpp" />
+		<Unit filename="UserInterfaceComponent.h" />
 		<Unit filename="WorldSavedataTags.cpp" />
 		<Unit filename="WorldSavedataTags.h" />
 		<Unit filename="WorldSavingLoading.cpp" />

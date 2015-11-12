@@ -210,6 +210,13 @@ bool Player::checkCanRespawn() {
     return lifeState == DEAD && health > 0 && respawnTimer.getElapsedTime() > respawnDelay;
 }
 
+void Player::spawn(const glm::vec2 &spawnPosition) {
+
+    //pretty much just used to set the psotiion of the player
+    setPosition(spawnPosition);
+    respawnInvinsibilityTimer.restart();
+}
+
 void Player::respawn(const sf::FloatRect &cameraBounds) {
 
     lifeState = ALIVE;
@@ -621,9 +628,9 @@ void Player::jump() {
         wasJumpButtonPressed = true;
         hitbox.setActiveHitbox(0, jumpingHitboxState);
 
-        ///make player go slightly upwards when jumping because when he jumps his hitbox becomes smaller and the jump starts from the ground
-        ///this causes him to be smaller than a tile and allows him to go under tiles
-//        hitbox.move(glm::vec2(0, -hitbox.getActiveHitboxObjectSpace().height / 2));
+        ///make player go slightly upwards when jumping, because when he jumps his hitbox becomes smaller and the jump starts from the ground,
+        ///and this causes him to be smaller than a tile and allows him to go under tiles
+        hitbox.move(glm::vec2(0, -hitbox.getActiveHitboxObjectSpace().height / 2));
     }
 }
 

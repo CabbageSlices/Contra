@@ -59,6 +59,7 @@ class Player : public ShootingEntity{
         void load(const PreloadedPlayerData &data);
 
         bool checkCanRespawn();
+        void spawn(const glm::vec2 &spawnPosition);
         void respawn(const sf::FloatRect &cameraBounds);//spawns at top of camera
         void setLives(const int &newLives);
 

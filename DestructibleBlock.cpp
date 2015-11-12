@@ -12,6 +12,10 @@ DestructibleBlock::DestructibleBlock(const glm::vec2 &position, const Destructib
     DynamicObject(glm::vec2(0, 0), glm::vec2(0, 0), glm::vec2(0, 0), 1),
     blockType(type)
     {
+        /**
+            CONSTRUCTOR CALLS THE VIRTUAL FUNCTION, SCALECOMPONENTS
+            IF ANY DERIVATIVE OF THIS CLASS OVERRIDES THE SCALECOMPONENTS FUNCTION THEN THAT DERIVED CLASS WON'T WORK PROPERLY
+        **/
         load(data);
         setPosition(position);
 
