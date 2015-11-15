@@ -14,6 +14,9 @@ class UserInterfaceComponent {
     public:
 
         UserInterfaceComponent(const sf::Vector2f &screenResolution, const sf::Vector2f &initialSz, const sf::Vector2f &initialPos);
+        virtual ~UserInterfaceComponent() {
+
+        }
 
         //take in a render target incase UI is drawn to seperate texutre or something
         void draw(sf::RenderTarget &target);
@@ -43,6 +46,10 @@ class InteractiveUserInterfaceComponent : public UserInterfaceComponent {
     public:
 
         InteractiveUserInterfaceComponent(const sf::Vector2f &screenResolution, const sf::Vector2f &initialSz, const sf::Vector2f &initialPos);
+
+        virtual ~InteractiveUserInterfaceComponent() {
+
+        }
 
         //seperate input handling functions for keystate and inputs
         //This way if a UI element can respon when a mouse is hovering over it, instead of having to trigger an event

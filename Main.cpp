@@ -21,7 +21,9 @@
 #include "GameConfiguration.h"
 #include "Button.h"
 #include "StateManager.h"
-#include "GameStatePlayingLevel.h"
+#include "GameStateMainMenu.h"
+#include "Button.h"
+#include "DefaultSettings.h"
 
 #include <functional>
 #include <vector>
@@ -655,29 +657,16 @@ int main() {
     GameConfiguration gameConfiguration;
     gameConfiguration.load();
 
-    glm::vec2 screenResolution(1280, 720);
-
-    sf::RenderWindow window(sf::VideoMode(screenResolution.x, screenResolution.y), "Contra");
+    sf::RenderWindow window(sf::VideoMode(DEFAULT_SCREEN_RESOLUTION.x, DEFAULT_SCREEN_RESOLUTION.y), "Contra");
     sf::Event event;
 
     StateManager stateManager;
 
-    //create the players to play in the world
-    std::vector<shared_ptr<Player> > players;
+    shared_ptr<GameState> mainMenu = make_shared<GameStateMainMenu>(window, stateManager);
 
-    //give arbritary spawn positions since the game world sets them to their correct position
-    auto player = createPlayer(glm::vec2(0, 0), PlayerNumber::PLAYER_1, gameConfiguration);
+    if(mainMenu) {
 
-    if(player) {
-
-        players.push_back(player);
-    }
-
-    shared_ptr<GameState> playingState = make_shared<GameStatePlayingLevel>("world1", players, window);
-
-    if(playingState) {
-
-        stateManager.push(playingState);
+        stateManager.push(mainMenu);
     }
 
     sf::Clock timer;

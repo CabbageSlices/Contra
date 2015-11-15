@@ -483,7 +483,7 @@
 	<glm/glm.hpp>
 	<iostream>
 
-1447290109 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
+1447621680 source:c:\users\nimesh\desktop\c++\github\contra\main.cpp
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 	"GameWorld.h"
@@ -507,7 +507,9 @@
 	"GameConfiguration.h"
 	"Button.h"
 	"StateManager.h"
-	"GameStatePlayingLevel.h"
+	"GameStateMainMenu.h"
+	"Button.h"
+	"DefaultSettings.h"
 	<functional>
 	<vector>
 	<memory>
@@ -1026,7 +1028,7 @@
 	"ObjectTypes.h"
 	"DataTagPair.h"
 
-1445194045 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
+1447294266 source:c:\users\nimesh\desktop\c++\github\contra\dataloaders.cpp
 	<iostream>
 	"DataLoaders.h"
 	"PreloadedData.h"
@@ -1201,18 +1203,23 @@
 	<string>
 	"DataTagPair.h"
 
-1445816238 source:c:\users\nimesh\desktop\c++\github\contra\userinterfacecomponent.cpp
+1447618549 source:c:\users\nimesh\desktop\c++\github\contra\userinterfacecomponent.cpp
 	"UserInterfaceComponent.h"
 
-1445816046 c:\users\nimesh\desktop\c++\github\contra\userinterfacecomponent.h
+1447618549 c:\users\nimesh\desktop\c++\github\contra\userinterfacecomponent.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 
-1445816046 c:\users\nimesh\desktop\c++\github\contra\button.h
+1447618549 c:\users\nimesh\desktop\c++\github\contra\button.h
 	"UserInterfaceComponent.h"
+	"SFML/Graphics.hpp"
+	"SFML/System.hpp"
+	<string>
+	<functional>
 
-1445816102 source:c:\users\nimesh\desktop\c++\github\contra\button.cpp
+1447618873 source:c:\users\nimesh\desktop\c++\github\contra\button.cpp
 	"Button.h"
+	<iostream>
 
 1446763285 source:c:\users\nimesh\desktop\c++\github\contra\statemanager.cpp
 	"StateManager.h"
@@ -1266,4 +1273,24 @@
 	"TurretEnemy.h"
 	"EnemySpawners.h"
 	"Random.h"
+
+1447617510 source:c:\users\nimesh\desktop\c++\github\contra\defaultsettings.cpp
+	"DefaultSettings.h"
+
+1447617510 c:\users\nimesh\desktop\c++\github\contra\defaultsettings.h
+	"SFML/System.hpp"
+
+1447621696 source:c:\users\nimesh\desktop\c++\github\contra\gamestatemainmenu.cpp
+	"GameStateMainMenu.h"
+	"DefaultSettings.h"
+	"StateManager.h"
+	"GameStatePlayingLevel.h"
+	"GameConfiguration.h"
+	<memory>
+	<functional>
+	<vector>
+
+1447619092 c:\users\nimesh\desktop\c++\github\contra\gamestatemainmenu.h
+	"GameStateBase.h"
+	"Button.h"
 

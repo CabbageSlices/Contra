@@ -88,6 +88,8 @@
 		<Unit filename="DataLoaders.cpp" />
 		<Unit filename="DataLoaders.h" />
 		<Unit filename="DataTagPair.h" />
+		<Unit filename="DefaultSettings.cpp" />
+		<Unit filename="DefaultSettings.h" />
 		<Unit filename="DestructibleBlock.cpp" />
 		<Unit filename="DestructibleBlock.h" />
 		<Unit filename="Direction.cpp" />
@@ -107,6 +109,8 @@
 		<Unit filename="GameConfiguration.cpp" />
 		<Unit filename="GameConfiguration.h" />
 		<Unit filename="GameStateBase.h" />
+		<Unit filename="GameStateMainMenu.cpp" />
+		<Unit filename="GameStateMainMenu.h" />
 		<Unit filename="GameStatePlayingLevel.cpp" />
 		<Unit filename="GameStatePlayingLevel.h" />
 		<Unit filename="GameWorld.cpp" />

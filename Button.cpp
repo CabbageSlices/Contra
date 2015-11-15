@@ -1,10 +1,25 @@
 #include "Button.h"
+#include <iostream>
 
-Button::Button(const sf::Vector2f &screenResolution, const sf::Vector2f &topLeftPosition) :
+using std::cout;
+using std::endl;
+using std::string;
+using std::function;
+
+Button::Button(const sf::Vector2f &screenResolution, const string &buttonImagePath,const sf::Vector2f &topLeftPosition) :
     InteractiveUserInterfaceComponent(screenResolution, sf::Vector2f(100, 50), topLeftPosition),
-    button(sf::Vector2f(100, 50))
+    sprite(),
+    texture(),
+    onClick()
     {
-        button.setPosition(topLeftPosition);
+        texture.loadFromFile(buttonImagePath);
+        sprite.setTexture(texture);
+
+        //use texture rect as size because i might change the button class to use a single texture and each button is linked to a specific texture rect
+        initialSize.x = sprite.getTextureRect().width;
+        initialSize.y = sprite.getTextureRect().height;
+
+        sprite.setPosition(topLeftPosition);
     }
 
 void Button::handleScreenResize(const sf::Vector2f &newScreenResolution) {
@@ -13,32 +28,44 @@ void Button::handleScreenResize(const sf::Vector2f &newScreenResolution) {
     float horizontalScaling = (1.f / defaultScreenResolution.x) * newScreenResolution.x;
     float verticalScaling = (1.f / defaultScreenResolution.y) * newScreenResolution.y;
 
-    sf::Vector2f newSize = initialSize * horizontalScaling;
-    sf::Vector2f newPosition = initialPosition * verticalScaling;
+    sf::Vector2f newPosition(initialPosition.x * horizontalScaling, initialPosition.y * verticalScaling);
 
-    button.setSize(newSize);
-    button.setPosition(newPosition);
+    //for now don't scale the size since changing screen aspect ratios make them look retarded
+    sprite.setScale(horizontalScaling, verticalScaling);
+
+    sprite.setPosition(newPosition);
+}
+
+void Button::setOnClickFunction(const function<void()> &onClickFunction) {
+
+    onClick = onClickFunction;
 }
 
 void Button::drawInternal(sf::RenderTarget &target) {
 
-    target.draw(button);
+    target.draw(sprite);
 }
 
 void Button::handleMouseInputEvents(sf::Event &event, sf::RenderWindow &window, const sf::Vector2f &mousePos) {
 
-    //nothing for now, but do something when clicked
+    if(event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+
+        if(sprite.getGlobalBounds().contains(mousePos)) {
+
+            onClick();
+        }
+    }
 }
 
 void Button::handleMouseStateEvents(sf::RenderWindow &window, const sf::Vector2f &mousePos) {
 
     //darken button when mouse hovers over it
-    if(button.getGlobalBounds().contains(mousePos)) {
+    if(sprite.getGlobalBounds().contains(mousePos)) {
 
-        button.setFillColor(sf::Color(155, 155, 155, 255));
+        sprite.setColor(sf::Color(155, 155, 155, 255));
 
     } else {
 
-        button.setFillColor(sf::Color::White);
+        sprite.setColor(sf::Color::White);
     }
 }
