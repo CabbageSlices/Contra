@@ -113,6 +113,7 @@
 		<Unit filename="GameStateLevelIntro.h" />
 		<Unit filename="GameStateMainMenu.cpp" />
 		<Unit filename="GameStateMainMenu.h" />
+		<Unit filename="GameStateOptionsMenu.h" />
 		<Unit filename="GameStateOutro.cpp" />
 		<Unit filename="GameStateOutro.h" />
 		<Unit filename="GameStatePlayingLevel.cpp" />
@@ -136,6 +137,8 @@
 		<Unit filename="Player.cpp" />
 		<Unit filename="Player.h" />
 		<Unit filename="PlayerManager.h" />
+		<Unit filename="PlayerStatsUI.cpp" />
+		<Unit filename="PlayerStatsUI.h" />
 		<Unit filename="PlayingLevelFunctions.cpp" />
 		<Unit filename="PlayingLevelFunctions.h" />
 		<Unit filename="PowerUp.cpp" />
@@ -154,6 +157,8 @@
 		<Unit filename="StateManager.h" />
 		<Unit filename="StringManipulator.cpp" />
 		<Unit filename="StringManipulator.h" />
+		<Unit filename="TextUIComponent.cpp" />
+		<Unit filename="TextUIComponent.h" />
 		<Unit filename="Tile.cpp" />
 		<Unit filename="Tile.h" />
 		<Unit filename="TileCollisionHandling.cpp" />

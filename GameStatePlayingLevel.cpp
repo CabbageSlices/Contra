@@ -14,15 +14,19 @@ using std::make_shared;
 GameStatePlayingLevel::GameStatePlayingLevel(const string &levelToLoad, vector<shared_ptr<Player> > &players, sf::RenderWindow &window) :
     GameState(false),
     world(window),
-    levelName(levelToLoad)
+    levelName(levelToLoad),
+    playerStats(sf::Vector2f(0, 0), "font.ttf")
     {
         world.players.insert(world.players.end(), players.begin(), players.end());
+        playerStats.setTargetPlayer(players[0]);
 
         //when the level starts, the players should all be spawned at their initial position
         for(auto &player : world.players) {
 
             player->spawn(world.initialPlayerSpawnPoint);
         }
+
+        playerStats.handleScreenResize(sf::Vector2f(window.getSize().x, window.getSize().y));
 
         //do some level loading
         //what if levle loading fails? i dunno, throwing exceptions aren't a good idea in constructors or destructors
@@ -41,6 +45,7 @@ void GameStatePlayingLevel::handleInputEvents(sf::Event &event, sf::RenderWindow
     if(event.type == sf::Event::Resized) {
 
         world.camera.setupDefaultProperties(window);
+        playerStats.handleScreenResize(sf::Vector2f(window.getSize().x, window.getSize().y));
     }
 
     if(world.worldState != GameWorld::TRANSITIONING_TO_BOSS_FIGHT) {
@@ -86,6 +91,8 @@ void GameStatePlayingLevel::update(float deltaTime, sf::RenderWindow &window, St
 
 	handleEntityCollisions(world);
 	updateWorldRendering(window, world);
+
+	playerStats.update();
 }
 
 void GameStatePlayingLevel::draw(sf::RenderWindow &window, StateManager &stateManager) {
@@ -100,6 +107,8 @@ void GameStatePlayingLevel::draw(sf::RenderWindow &window, StateManager &stateMa
 	drawEnemyCollection(window, world.bossEnemyCollection);
 	drawEntities(window, world.destructibleBlocks);
 	drawEntities(window, world.powerUps);
+
+	playerStats.draw(window);
 }
 
 bool GameStatePlayingLevel::allBossesDefeated() {

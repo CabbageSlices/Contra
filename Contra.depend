@@ -518,7 +518,7 @@
 	<unordered_set>
 	<cstdlib>
 
-1447287521 c:\users\nimesh\desktop\c++\github\contra\player.h
+1448142728 c:\users\nimesh\desktop\c++\github\contra\player.h
 	"SFML/Graphics.hpp"
 	"GlobalConstants.h"
 	"TileCollisionHandling.h"
@@ -547,7 +547,7 @@
 	"ObjectHitbox.h"
 	<iostream>
 
-1447287584 source:c:\users\nimesh\desktop\c++\github\contra\player.cpp
+1448142817 source:c:\users\nimesh\desktop\c++\github\contra\player.cpp
 	"Player.h"
 	<iostream>
 	<vector>
@@ -1181,7 +1181,7 @@
 1441936430 source:c:\users\nimesh\desktop\c++\github\contra\saveddatatags.cpp
 	"SavedDataTags.h"
 
-1447627614 source:c:\users\nimesh\desktop\c++\github\contra\gameworld.cpp
+1448138429 source:c:\users\nimesh\desktop\c++\github\contra\gameworld.cpp
 	"GameWorld.h"
 	"GameConfiguration.h"
 
@@ -1205,10 +1205,10 @@
 	<string>
 	"DataTagPair.h"
 
-1447643347 source:c:\users\nimesh\desktop\c++\github\contra\userinterfacecomponent.cpp
+1448140028 source:c:\users\nimesh\desktop\c++\github\contra\userinterfacecomponent.cpp
 	"UserInterfaceComponent.h"
 
-1447643347 c:\users\nimesh\desktop\c++\github\contra\userinterfacecomponent.h
+1448139900 c:\users\nimesh\desktop\c++\github\contra\userinterfacecomponent.h
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 
@@ -1219,7 +1219,7 @@
 	<string>
 	<functional>
 
-1447646677 source:c:\users\nimesh\desktop\c++\github\contra\button.cpp
+1448140089 source:c:\users\nimesh\desktop\c++\github\contra\button.cpp
 	"Button.h"
 	<iostream>
 
@@ -1237,17 +1237,20 @@
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 
-1447647374 source:c:\users\nimesh\desktop\c++\github\contra\gamestateplayinglevel.cpp
+1448143651 source:c:\users\nimesh\desktop\c++\github\contra\gamestateplayinglevel.cpp
 	"GameStatePlayingLevel.h"
 	"WorldSavingLoading.h"
 	"PlayingLevelFunctions.h"
 	"StateManager.h"
+	"GameStateLevelIntro.h"
+	"GameStateOutro.h"
 	<cstdlib>
 
-1447646881 c:\users\nimesh\desktop\c++\github\contra\gamestateplayinglevel.h
+1448143385 c:\users\nimesh\desktop\c++\github\contra\gamestateplayinglevel.h
 	"GameStateBase.h"
 	"GameWorld.h"
 	"SFML/Graphics.hpp"
+	"PlayerStatsUI.h"
 	<string>
 	<vector>
 	<memory>
@@ -1277,13 +1280,13 @@
 	"EnemySpawners.h"
 	"Random.h"
 
-1447617510 source:c:\users\nimesh\desktop\c++\github\contra\defaultsettings.cpp
+1448140751 source:c:\users\nimesh\desktop\c++\github\contra\defaultsettings.cpp
 	"DefaultSettings.h"
 
-1447617510 c:\users\nimesh\desktop\c++\github\contra\defaultsettings.h
+1448139404 c:\users\nimesh\desktop\c++\github\contra\defaultsettings.h
 	"SFML/System.hpp"
 
-1448135959 source:c:\users\nimesh\desktop\c++\github\contra\gamestatemainmenu.cpp
+1448143314 source:c:\users\nimesh\desktop\c++\github\contra\gamestatemainmenu.cpp
 	"GameStateMainMenu.h"
 	"DefaultSettings.h"
 	"StateManager.h"
@@ -1295,9 +1298,10 @@
 	<functional>
 	<vector>
 
-1447619092 c:\users\nimesh\desktop\c++\github\contra\gamestatemainmenu.h
+1448143314 c:\users\nimesh\desktop\c++\github\contra\gamestatemainmenu.h
 	"GameStateBase.h"
 	"Button.h"
+	"TextUIComponent.h"
 
 1447625955 source:c:\users\nimesh\desktop\c++\github\contra\spawnerdata.cpp
 	"SpawnerData.h"
@@ -1323,4 +1327,28 @@
 1448135959 source:c:\users\nimesh\desktop\c++\github\contra\gamestateoutro.cpp
 	"GameStateOutro.h"
 	"DefaultSettings.h"
+
+1448142671 c:\users\nimesh\desktop\c++\github\contra\textuicomponent.h
+	"UserInterfaceComponent.h"
+	"SFML/Graphics.hpp"
+	"SFML/System.hpp"
+	<map>
+	<string>
+
+1448143269 source:c:\users\nimesh\desktop\c++\github\contra\textuicomponent.cpp
+	"TextUIComponent.h"
+	"DefaultSettings.h"
+
+1448143478 source:c:\users\nimesh\desktop\c++\github\contra\playerstatsui.cpp
+	"PlayerStatsUI.h"
+	"Player.h"
+	"DefaultSettings.h"
+	<sstream>
+
+1448143476 c:\users\nimesh\desktop\c++\github\contra\playerstatsui.h
+	"TextUIComponent.h"
+	"SFML/System.hpp"
+	"SFML/Graphics.hpp"
+	<string>
+	<Memory>
 

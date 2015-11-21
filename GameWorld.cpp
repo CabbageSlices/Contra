@@ -6,7 +6,7 @@ std::shared_ptr<Player> createPlayer(const glm::vec2 &spawnPosition, const Playe
     const PreloadedPlayerData &data = *dataCollection.getPlayerData(number);
     const PlayerKeys& keys = gameConfig.getKeysForPlayer(number);
 
-    std::shared_ptr<Player> player(new Player(spawnPosition, keys));
+    std::shared_ptr<Player> player(new Player(spawnPosition, number, keys));
     player->load(data);
 
     return player;

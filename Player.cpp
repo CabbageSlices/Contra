@@ -12,10 +12,28 @@ using std::shared_ptr;
 using std::cout;
 using std::endl;
 
-Player::Player(const glm::vec2 &spawnPosition, const PlayerKeys& keyConfiguration):
+std::string playerNumberToString(const PlayerNumber &number) {
+
+    switch(number) {
+
+        case PlayerNumber::PLAYER_1:
+            return "Player 1";
+        case PlayerNumber::PLAYER_2:
+            return "Player 2";
+        case PlayerNumber::PLAYER_3:
+            return "Player 3";
+        case PlayerNumber::PLAYER_4:
+            return "Player 4";
+        default:
+            return "";
+    }
+}
+
+Player::Player(const glm::vec2 &spawnPosition, const PlayerNumber &number, const PlayerKeys& keyConfiguration):
     ShootingEntity(glm::vec2(0, GRAVITY), glm::vec2(4.f, 4.5f), glm::vec2(TERMINAL_VELOCITY, TERMINAL_VELOCITY), 3),
     jumpingHitboxState(0),
     lifeState(ALIVE),
+    playerNumber(number),
     standingOnSolid(false),
     standingOnTile(false),
     standingOnPassablePlatform(false),
@@ -251,6 +269,11 @@ void Player::setLives(const int &newLives) {
 int Player::getLives() const {
 
     return health;
+}
+
+PlayerNumber Player::getPlayerNumber() const {
+
+    return playerNumber;
 }
 
 bool Player::checkCanJump() const {

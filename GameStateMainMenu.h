@@ -3,6 +3,7 @@
 
 #include "GameStateBase.h"
 #include "Button.h"
+#include "TextUIComponent.h"
 
 class StateManager;
 

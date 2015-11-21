@@ -64,10 +64,11 @@ class Player : public ShootingEntity{
         void setLives(const int &newLives);
 
         int getLives() const;
+        PlayerNumber getPlayerNumber() const;
 
     private:
 
-        Player(const glm::vec2 &spawnPosition, const PlayerKeys& keyConfiguration = PlayerKeys());
+        Player(const glm::vec2 &spawnPosition, const PlayerNumber &number, const PlayerKeys& keyConfiguration = PlayerKeys());
 
         bool checkCanJump() const;
         bool checkCanJumpDown() const; //check if player can jump down from the current platform
@@ -107,6 +108,8 @@ class Player : public ShootingEntity{
 
         } lifeState;
 
+        PlayerNumber playerNumber;
+
         //seperate flags to keep track of player standing on blocks/ground and tiles
         bool standingOnSolid;
         bool standingOnTile;
@@ -128,5 +131,7 @@ class Player : public ShootingEntity{
         sf::Clock respawnInvinsibilityTimer;
         sf::Time respawnInvinsibilityDuration;
 };
+
+std::string playerNumberToString(const PlayerNumber &number);
 
 #endif // PLAYER_H_INCLUDED

@@ -25,13 +25,12 @@ Button::Button(const sf::Vector2f &defaultScreenRes, const string &buttonImagePa
 void Button::handleScreenResize(const sf::Vector2f &newScreenResolution) {
 
     //scale UI position and size according to screen resolution
-    float horizontalScaling = (1.f / defaultScreenResolution.x) * newScreenResolution.x;
-    float verticalScaling = (1.f / defaultScreenResolution.y) * newScreenResolution.y;
+    sf::Vector2f scalingFactor = calculateUIScalingFactor(defaultScreenResolution, newScreenResolution);
 
-    sf::Vector2f newPosition(initialPosition.x * horizontalScaling, initialPosition.y * verticalScaling);
+    sf::Vector2f newPosition(initialPosition.x * scalingFactor.x, initialPosition.y * scalingFactor.y);
 
     //for now don't scale the size since changing screen aspect ratios make them look retarded
-    sprite.setScale(horizontalScaling, verticalScaling);
+    sprite.setScale(scalingFactor);
 
     sprite.setPosition(newPosition);
 }

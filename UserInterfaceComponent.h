@@ -8,6 +8,7 @@
 //where the top left corner of the view lies at the point (0, 0) in the world
 //useful for UI elements that never move
 sf::View calculateDefaultViewForCurrentSize(sf::RenderTarget &target);
+const sf::Vector2f calculateUIScalingFactor(const sf::Vector2f &defaultScreenResolution, const sf::Vector2f &newScreenResolution);
 
 class UserInterfaceComponent {
 

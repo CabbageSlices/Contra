@@ -4,6 +4,7 @@
 #include "GameStateBase.h"
 #include "GameWorld.h"
 #include "SFML/Graphics.hpp"
+#include "PlayerStatsUI.h"
 
 #include <string>
 #include <vector>
@@ -36,6 +37,8 @@ class GameStatePlayingLevel : public GameState {
         GameWorld world;
 
         std::string levelName;
+
+        PlayerStatsUI playerStats;
 };
 
 #endif // GAMESTATEPLAYINGLEVEL_H_INCLUDED

@@ -8,6 +8,15 @@ sf::View calculateDefaultViewForCurrentSize(sf::RenderTarget &target) {
     return sf::View(viewCenter, viewSize);
 }
 
+const sf::Vector2f calculateUIScalingFactor(const sf::Vector2f &defaultScreenResolution, const sf::Vector2f &newScreenResolution) {
+
+    //scaling formula is, on some given axis, (initialValue / defaultScreenResolution) * newScreenResolution
+    //the division is calcualting how much of the inital value exists at each pixel in the resolution, so a unit value basically,
+    //and then you multiply it by the new resolution to get the current value
+    //the scaling factor is used to scale the initial value so this calcualtes the factor assuming its being used to multiply the intiial value
+    return sf::Vector2f(newScreenResolution.x / defaultScreenResolution.x, newScreenResolution.y / defaultScreenResolution.y);
+}
+
 UserInterfaceComponent::UserInterfaceComponent(const sf::Vector2f &defaultScreenRes, const sf::Vector2f &initialSz, const sf::Vector2f &initialPos) :
     defaultScreenResolution(defaultScreenRes),
     initialSize(initialSz),
