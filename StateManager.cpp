@@ -43,7 +43,9 @@ void StateManager::handleInputEvents(sf::Event &event, sf::RenderWindow &window)
         return;
     }
 
-    states.back()->handleInputEvents(event, window, *this);
+    //always get an external pointer to use the state, that way if the state pops itself off the stack, the pointer doesn't get deleted
+    State state = states.back();
+    state->handleInputEvents(event, window, *this);
 }
 
 void StateManager::handleStateEvents(sf::RenderWindow &window) {
@@ -54,7 +56,9 @@ void StateManager::handleStateEvents(sf::RenderWindow &window) {
         return;
     }
 
-    states.back()->handleStateEvents(window, *this);
+    //always get an external pointer to use the state, that way if the state pops itself off the stack, the pointer doesn't get deleted
+    State state = states.back();
+    state->handleStateEvents(window, *this);
 }
 
 void StateManager::update(const float &delta, sf::RenderWindow &window) {
@@ -65,7 +69,9 @@ void StateManager::update(const float &delta, sf::RenderWindow &window) {
         return;
     }
 
-    states.back()->update(delta, window, *this);
+    //always get an external pointer to use the state, that way if the state pops itself off the stack, the pointer doesn't get deleted
+    State state = states.back();
+    state->update(delta, window, *this);
 }
 
 void StateManager::draw(sf::RenderWindow &window) {
@@ -91,7 +97,9 @@ void StateManager::draw(sf::RenderWindow &window) {
     //draw all states starting from the oldest one that can be drawn
     while(indexFirstStateToDraw < states.size()) {
 
-        states[indexFirstStateToDraw]->draw(window, *this);
+        //always get an external pointer to use the state, that way if the state pops itself off the stack, the pointer doesn't get deleted
+        State state = states[indexFirstStateToDraw];
+        state->draw(window, *this);
         ++indexFirstStateToDraw;
     }
 }

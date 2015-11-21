@@ -109,8 +109,12 @@
 		<Unit filename="GameConfiguration.cpp" />
 		<Unit filename="GameConfiguration.h" />
 		<Unit filename="GameStateBase.h" />
+		<Unit filename="GameStateLevelIntro.cpp" />
+		<Unit filename="GameStateLevelIntro.h" />
 		<Unit filename="GameStateMainMenu.cpp" />
 		<Unit filename="GameStateMainMenu.h" />
+		<Unit filename="GameStateOutro.cpp" />
+		<Unit filename="GameStateOutro.h" />
 		<Unit filename="GameStatePlayingLevel.cpp" />
 		<Unit filename="GameStatePlayingLevel.h" />
 		<Unit filename="GameWorld.cpp" />
@@ -144,6 +148,7 @@
 		<Unit filename="ShootingEntity.h" />
 		<Unit filename="SpatialHash.h" />
 		<Unit filename="SpatialHashEntry.h" />
+		<Unit filename="SpawnerData.cpp" />
 		<Unit filename="SpawnerData.h" />
 		<Unit filename="StateManager.cpp" />
 		<Unit filename="StateManager.h" />

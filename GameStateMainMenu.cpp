@@ -3,6 +3,8 @@
 #include "StateManager.h"
 #include "GameStatePlayingLevel.h"
 #include "GameConfiguration.h"
+#include "GameStateLevelIntro.h"
+#include "GameStateOutro.h"
 
 #include <memory>
 #include <functional>
@@ -24,6 +26,12 @@ GameStateMainMenu::GameStateMainMenu(sf::RenderWindow &window, StateManager &sta
 void GameStateMainMenu::handleInputEvents(sf::Event &event, sf::RenderWindow &window, StateManager &StateManager) {
 
     playGame.handleInputEvents(event, window);
+
+    if(event.type == sf::Event::Resized) {
+
+        sf::Vector2f newScreenResolution(event.size.width, event.size.height);
+        playGame.handleScreenResize(newScreenResolution);
+    }
 }
 
 void GameStateMainMenu::handleStateEvents(sf::RenderWindow &window, StateManager &stateManager) {
@@ -56,8 +64,20 @@ void GameStateMainMenu::setupButtonFunctions(sf::RenderWindow &window, StateMana
             players.push_back(player1);
 
             //begin playing from level 1
+            //insert outro effect and make it so it starts at the first level
             shared_ptr<GameState> playingState = make_shared<GameStatePlayingLevel>("world1", players, window);
-            stateManager.push(playingState);
+
+            //create a level intro that plays before the level begins
+            shared_ptr<GameState> levelIntro = make_shared<GameStateLevelIntro>(window);
+
+            vector<State> statesFollowingOutro;
+
+            //once outro finishes it will push these states onto the stack
+            statesFollowingOutro.push_back(playingState);
+            statesFollowingOutro.push_back(levelIntro);
+
+            shared_ptr<GameState> outro = make_shared<GameStateOutro>(window, false, statesFollowingOutro);
+            stateManager.push(outro);
         }
     );
 

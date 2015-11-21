@@ -11,3 +11,43 @@ std::shared_ptr<Player> createPlayer(const glm::vec2 &spawnPosition, const Playe
 
     return player;
 }
+
+bool canSpawnEnemy(EnemySpawnerCollection &spawnerCollection) {
+
+    if(activeSpawnPointsRemaining(spawnerCollection.enemySpawnInfo.spawnPoints)) {
+
+        return true;
+    }
+
+    if(activeSpawnPointsRemaining(spawnerCollection.turretSpawnInfo.spawnPoints)) {
+
+        return true;
+    }
+
+    if(activeSpawnPointsRemaining(spawnerCollection.omnidirectionalTurretSpawnInfo.spawnPoints)) {
+
+        return true;
+    }
+
+    return false;
+}
+
+bool enemiesRemaining(EnemyCollection &enemyCollection) {
+
+    if(enemyCollection.enemies.size() > 0) {
+
+        return true;
+    }
+
+    if(enemyCollection.omnidirectionalTurrets.size() > 0) {
+
+        return true;
+    }
+
+    if(enemyCollection.turrets.size() > 0) {
+
+        return true;
+    }
+
+    return false;
+}

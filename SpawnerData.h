@@ -4,6 +4,7 @@
 #include "SFML/System.hpp"
 #include "SFML/Graphics.hpp"
 #include "glm/glm.hpp"
+#include "ObjectTypes.h"
 #include <vector>
 #include <memory>
 
@@ -93,6 +94,8 @@ struct SpawnPoint {
 
         EnemyType typeOfEnemySpawned;
 };
+
+bool activeSpawnPointsRemaining(std::vector<std::shared_ptr<SpawnPoint> > &spawnPoints);
 
 //information that a spawner can use for spawning
 template<class T>

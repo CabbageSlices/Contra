@@ -16,6 +16,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <string>
 
 using std::cout;
 using std::endl;
@@ -70,6 +71,7 @@ struct GameWorld {
 
 	GameWorld(sf::RenderWindow &window) :
 	    worldState(NOT_FIGHTING_BOSS),
+	    nameOfPrecedingLevel(),
 	    initialPlayerSpawnPoint(0, 0),
 		players(),
 		powerUps(),
@@ -99,6 +101,8 @@ struct GameWorld {
         FIGHTING_BOSS,
 
     } worldState;
+
+    std::string nameOfPrecedingLevel;
 
     glm::vec2 initialPlayerSpawnPoint;
 
@@ -206,5 +210,7 @@ struct GameWorld {
 };
 
 std::shared_ptr<Player> createPlayer(const glm::vec2 &spawnPosition, const PlayerNumber &number, GameConfiguration &gameConfig);
+bool canSpawnEnemy(EnemySpawnerCollection &spawnerCollection);
+bool enemiesRemaining(EnemyCollection &enemyCollection);
 
 #endif // GAMEWORLD_H_INCLUDED

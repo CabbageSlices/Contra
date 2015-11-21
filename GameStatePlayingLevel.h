@@ -11,7 +11,7 @@
 
 class Player;
 
-class GameStatePlayingLevel : public GameState{
+class GameStatePlayingLevel : public GameState {
 
     public:
 
@@ -29,6 +29,9 @@ class GameStatePlayingLevel : public GameState{
         virtual void draw(sf::RenderWindow &window, StateManager &stateManager);
 
     private:
+
+        bool allBossesDefeated();
+        void goToNextLevel(sf::RenderWindow &window, StateManager &stateManager);
 
         GameWorld world;
 

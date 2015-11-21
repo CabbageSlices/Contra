@@ -6,8 +6,8 @@ using std::endl;
 using std::string;
 using std::function;
 
-Button::Button(const sf::Vector2f &screenResolution, const string &buttonImagePath,const sf::Vector2f &topLeftPosition) :
-    InteractiveUserInterfaceComponent(screenResolution, sf::Vector2f(100, 50), topLeftPosition),
+Button::Button(const sf::Vector2f &defaultScreenRes, const string &buttonImagePath,const sf::Vector2f &topLeftPosition) :
+    InteractiveUserInterfaceComponent(defaultScreenRes, sf::Vector2f(100, 50), topLeftPosition),
     sprite(),
     texture(),
     onClick()

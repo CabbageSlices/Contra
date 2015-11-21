@@ -13,7 +13,7 @@ class UserInterfaceComponent {
 
     public:
 
-        UserInterfaceComponent(const sf::Vector2f &screenResolution, const sf::Vector2f &initialSz, const sf::Vector2f &initialPos);
+        UserInterfaceComponent(const sf::Vector2f &defaultScreenRes, const sf::Vector2f &initialSz, const sf::Vector2f &initialPos);
         virtual ~UserInterfaceComponent() {
 
         }
@@ -45,7 +45,7 @@ class InteractiveUserInterfaceComponent : public UserInterfaceComponent {
 
     public:
 
-        InteractiveUserInterfaceComponent(const sf::Vector2f &screenResolution, const sf::Vector2f &initialSz, const sf::Vector2f &initialPos);
+        InteractiveUserInterfaceComponent(const sf::Vector2f &defaultScreenResolution, const sf::Vector2f &initialSz, const sf::Vector2f &initialPos);
 
         virtual ~InteractiveUserInterfaceComponent() {
 

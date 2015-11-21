@@ -8,8 +8,8 @@ sf::View calculateDefaultViewForCurrentSize(sf::RenderTarget &target) {
     return sf::View(viewCenter, viewSize);
 }
 
-UserInterfaceComponent::UserInterfaceComponent(const sf::Vector2f &screenResolution, const sf::Vector2f &initialSz, const sf::Vector2f &initialPos) :
-    defaultScreenResolution(screenResolution),
+UserInterfaceComponent::UserInterfaceComponent(const sf::Vector2f &defaultScreenRes, const sf::Vector2f &initialSz, const sf::Vector2f &initialPos) :
+    defaultScreenResolution(defaultScreenRes),
     initialSize(initialSz),
     initialPosition(initialPos)
     {
@@ -32,8 +32,8 @@ void UserInterfaceComponent::draw(sf::RenderTarget &target) {
     target.setView(currentView);
 }
 
-InteractiveUserInterfaceComponent::InteractiveUserInterfaceComponent(const sf::Vector2f &screenResolution, const sf::Vector2f &initialSz, const sf::Vector2f &initialPos) :
-    UserInterfaceComponent(screenResolution, initialSz, initialPos)
+InteractiveUserInterfaceComponent::InteractiveUserInterfaceComponent(const sf::Vector2f &defaultScreenRes, const sf::Vector2f &initialSz, const sf::Vector2f &initialPos) :
+    UserInterfaceComponent(defaultScreenRes, initialSz, initialPos)
     {
 
     }
