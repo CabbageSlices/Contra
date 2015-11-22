@@ -3,8 +3,9 @@
 #include "StateManager.h"
 #include "GameStatePlayingLevel.h"
 #include "GameConfiguration.h"
-#include "GameStateLevelIntro.h"
-#include "GameStateOutro.h"
+#include "GameStateTransition.h"
+#include "StateOutroEffects.h"
+#include "StateIntroEffects.h"
 
 #include <memory>
 #include <functional>
@@ -68,15 +69,18 @@ void GameStateMainMenu::setupButtonFunctions(sf::RenderWindow &window, StateMana
             shared_ptr<GameState> playingState = make_shared<GameStatePlayingLevel>("world1", players, window);
 
             //create a level intro that plays before the level begins
-            shared_ptr<GameState> levelIntro = make_shared<GameStateLevelIntro>(window);
+            shared_ptr<GameStateTransition> levelIntro = make_shared<GameStateTransition>(window, true, false);
+            shared_ptr<StateTransitionEffect> introEffect = make_shared<BlackCoverWipeRightIntro>();
+            levelIntro->setTransitionEffect(introEffect);
 
-            vector<State> statesFollowingOutro;
+            shared_ptr<GameStateTransition> outro = make_shared<GameStateTransition>(window, true, false);
+            outro->insertFollowingState(playingState);
+            outro->insertFollowingState(levelIntro);
 
-            //once outro finishes it will push these states onto the stack
-            statesFollowingOutro.push_back(playingState);
-            statesFollowingOutro.push_back(levelIntro);
+            //create the transition effect
+            shared_ptr<StateTransitionEffect> transitionEffect = make_shared<BlackCoverWipeRightOutro>();
+            outro->setTransitionEffect(transitionEffect);
 
-            shared_ptr<GameState> outro = make_shared<GameStateOutro>(window, false, statesFollowingOutro);
             stateManager.push(outro);
         }
     );

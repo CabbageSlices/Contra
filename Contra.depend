@@ -1237,7 +1237,7 @@
 	"SFML/System.hpp"
 	"SFML/Graphics.hpp"
 
-1448143651 source:c:\users\nimesh\desktop\c++\github\contra\gamestateplayinglevel.cpp
+1448143749 source:c:\users\nimesh\desktop\c++\github\contra\gamestateplayinglevel.cpp
 	"GameStatePlayingLevel.h"
 	"WorldSavingLoading.h"
 	"PlayingLevelFunctions.h"
@@ -1286,14 +1286,15 @@
 1448139404 c:\users\nimesh\desktop\c++\github\contra\defaultsettings.h
 	"SFML/System.hpp"
 
-1448143314 source:c:\users\nimesh\desktop\c++\github\contra\gamestatemainmenu.cpp
+1448227266 source:c:\users\nimesh\desktop\c++\github\contra\gamestatemainmenu.cpp
 	"GameStateMainMenu.h"
 	"DefaultSettings.h"
 	"StateManager.h"
 	"GameStatePlayingLevel.h"
 	"GameConfiguration.h"
 	"GameStateLevelIntro.h"
-	"GameStateOutro.h"
+	"GameStateTransition.h"
+	"StateOutroEffects.h"
 	<memory>
 	<functional>
 	<vector>
@@ -1351,4 +1352,43 @@
 	"SFML/Graphics.hpp"
 	<string>
 	<Memory>
+
+1448223145 source:c:\users\nimesh\desktop\c++\github\contra\imageuicomponent.cpp
+	"ImageUIComponent.h"
+
+1448222968 c:\users\nimesh\desktop\c++\github\contra\imageuicomponent.h
+	"UserInterfaceComponent.h"
+	<string>
+	<map>
+
+1448225477 source:c:\users\nimesh\desktop\c++\github\contra\gamestatetransition.cpp
+	"GameStateTransition.h"
+	"StateTransitionEffect.h"
+
+1448225319 c:\users\nimesh\desktop\c++\github\contra\gamestatetransition.h
+	"SFML/Graphics.hpp"
+	"SFML/System.hpp"
+	"GameStateBase.h"
+	"StateManager.h"
+	<memory>
+
+1448226800 c:\users\nimesh\desktop\c++\github\contra\statetransitioneffect.h
+	"SFML/Graphics.hpp"
+	"SFML/System.hpp"
+
+1448226500 source:c:\users\nimesh\desktop\c++\github\contra\statetransitioneffect.cpp
+	"StateTransitionEffect.h"
+	"DefaultSettings.h"
+
+1448226962 source:c:\users\nimesh\desktop\c++\github\contra\stateoutroeffects.cpp
+	"StateOutroEffects.h"
+
+1448226952 c:\users\nimesh\desktop\c++\github\contra\stateoutroeffects.h
+	"StateTransitionEffect.h"
+
+1448227564 source:c:\users\nimesh\desktop\c++\github\contra\stateintroeffects.cpp
+	"StateIntroEffects.h"
+
+1448227528 c:\users\nimesh\desktop\c++\github\contra\stateintroeffects.h
+	"StateTransitionEffect.h"
 

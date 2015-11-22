@@ -109,6 +109,7 @@
 		<Unit filename="GameConfiguration.cpp" />
 		<Unit filename="GameConfiguration.h" />
 		<Unit filename="GameStateBase.h" />
+		<Unit filename="GameStateGameOver.h" />
 		<Unit filename="GameStateLevelIntro.cpp" />
 		<Unit filename="GameStateLevelIntro.h" />
 		<Unit filename="GameStateMainMenu.cpp" />
@@ -118,6 +119,8 @@
 		<Unit filename="GameStateOutro.h" />
 		<Unit filename="GameStatePlayingLevel.cpp" />
 		<Unit filename="GameStatePlayingLevel.h" />
+		<Unit filename="GameStateTransition.cpp" />
+		<Unit filename="GameStateTransition.h" />
 		<Unit filename="GameWorld.cpp" />
 		<Unit filename="GameWorld.h" />
 		<Unit filename="GlobalConstants.cpp" />
@@ -126,6 +129,8 @@
 		<Unit filename="Gun.h" />
 		<Unit filename="HitboxMovementController.cpp" />
 		<Unit filename="HitboxMovementController.h" />
+		<Unit filename="ImageUIComponent.cpp" />
+		<Unit filename="ImageUIComponent.h" />
 		<Unit filename="Main.cpp" />
 		<Unit filename="ObjectHitbox.cpp" />
 		<Unit filename="ObjectHitbox.h" />
@@ -153,8 +158,14 @@
 		<Unit filename="SpatialHashEntry.h" />
 		<Unit filename="SpawnerData.cpp" />
 		<Unit filename="SpawnerData.h" />
+		<Unit filename="StateIntroEffects.cpp" />
+		<Unit filename="StateIntroEffects.h" />
 		<Unit filename="StateManager.cpp" />
 		<Unit filename="StateManager.h" />
+		<Unit filename="StateOutroEffects.cpp" />
+		<Unit filename="StateOutroEffects.h" />
+		<Unit filename="StateTransitionEffect.cpp" />
+		<Unit filename="StateTransitionEffect.h" />
 		<Unit filename="StringManipulator.cpp" />
 		<Unit filename="StringManipulator.h" />
 		<Unit filename="TextUIComponent.cpp" />
